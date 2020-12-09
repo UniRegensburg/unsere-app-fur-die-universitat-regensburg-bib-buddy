@@ -1,6 +1,6 @@
 # Bib Buddy
 
-![Bib Buddy Logo - the text Bib Buddy with quotation marks that resemble a smilie.]https://github.com/UniRegensburg/unsere-app-fur-die-universitat-regensburg-bib-buddy/blob/main/Design/Logo/BibBuddy.png "Bib Buddy Logo")
+![Bib Buddy Logo - the text Bib Buddy with quotation marks that resemble a smilie.](https://github.com/UniRegensburg/unsere-app-fur-die-universitat-regensburg-bib-buddy/blob/main/Design/Logo/BibBuddy.png "Bib Buddy Logo")
 
 Bib Buddy offers a platform for concentrated literary work. For that, we create an open atmosphere for your thoughts and ideas during research. Our service makes your literary work as intuitive as never before!
 
