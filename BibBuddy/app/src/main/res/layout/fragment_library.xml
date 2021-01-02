@@ -2,11 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_library"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation = "vertical">
+
+    <ListView
+        android:id="@+id/list_view_library"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TODO Bibliothek" />
+        android:id="@+id/list_view_library_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/empty_list"
+
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"/>
 
 </RelativeLayout>

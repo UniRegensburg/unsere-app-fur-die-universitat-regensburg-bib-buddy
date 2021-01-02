@@ -7,4 +7,7 @@
     <string name="navigation_search">Suche</string>
     <string name="navigation_library">Bibliothek</string>
     <string name="navigation_notes">Notizen</string>
+
+    <!-- Common -->
+    <string name="empty_list">Keine Einträge vorhanden</string>
 </resources>
