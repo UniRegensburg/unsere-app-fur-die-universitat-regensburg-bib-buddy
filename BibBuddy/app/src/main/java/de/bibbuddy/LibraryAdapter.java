@@ -10,15 +10,16 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LibraryAdapter implements ListAdapter {
 
-   ArrayList<LibraryItem> libraryList;
-   Context context;
+   private final List<LibraryItem> libraryList;
+   private final Context context;
 
-   public LibraryAdapter(Context context, ArrayList<LibraryItem> libraryList) {
-      this.libraryList = libraryList;
+   public LibraryAdapter(Context context, List<LibraryItem> libraryList) {
       this.context = context;
+      this.libraryList = libraryList;
    }
 
 
@@ -72,16 +73,20 @@ public class LibraryAdapter implements ListAdapter {
          convertView = layoutInflater.inflate(R.layout.list_view_item_library, parent, false);
 
          TextView name = convertView.findViewById(R.id.item_name);
-         name.setText(libraryData.mName);
+         name.setText(libraryData.getName());
 
          ImageView image = convertView.findViewById(R.id.library_icon);
-         image.setImageResource(libraryData.mImage);
+         image.setImageResource(libraryData.getImage());
 
          convertView.setTag(libraryData);
 
       }
 
       return convertView;
+   }
+
+   public void refreshList(ArrayList<LibraryItem> list) {
+
    }
 
    @Override
@@ -91,14 +96,16 @@ public class LibraryAdapter implements ListAdapter {
 
    @Override
    public int getViewTypeCount() {
-      if(libraryList.size() > 0) {
+      if (libraryList.size() > 0) {
          return libraryList.size();
       }
+
       return 1; // without it an error appears when the list is empty
    }
 
    @Override
    public boolean isEmpty() {
+      //  libraryListView.setEmptyView(view.findViewById(R.id.list_view_library_empty));
       return false;
    }
 }
