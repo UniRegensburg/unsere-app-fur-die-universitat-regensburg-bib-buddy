@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryAdapter implements ListAdapter {
@@ -85,10 +84,6 @@ public class LibraryAdapter implements ListAdapter {
       return convertView;
    }
 
-   public void refreshList(ArrayList<LibraryItem> list) {
-
-   }
-
    @Override
    public int getItemViewType(int position) {
       return position;
@@ -105,7 +100,6 @@ public class LibraryAdapter implements ListAdapter {
 
    @Override
    public boolean isEmpty() {
-      //  libraryListView.setEmptyView(view.findViewById(R.id.list_view_library_empty));
       return false;
    }
 }
