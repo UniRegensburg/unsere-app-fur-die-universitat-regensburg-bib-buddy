@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Bib Buddy</string>
-    <string name="app_description">Bib Buddy Home</string>
+    <string name="app_description">eine offene Atmosphäre für deine Gedanken und Ideen bei der Recherche. Unser Service macht deine Literatur-Arbeit so intuitiv wie nie!</string>
+
+    <!-- Image Descriptions -->
+    <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
 
     <!-- Navigation Bar -->
     <string name="navigation_home">Home</string>

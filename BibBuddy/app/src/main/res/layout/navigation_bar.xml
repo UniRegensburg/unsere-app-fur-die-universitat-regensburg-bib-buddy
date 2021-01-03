@@ -4,9 +4,12 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation_bar"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingTop="8dp"
+        android:paddingBottom="10dp"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/navigation_menu" />
 
