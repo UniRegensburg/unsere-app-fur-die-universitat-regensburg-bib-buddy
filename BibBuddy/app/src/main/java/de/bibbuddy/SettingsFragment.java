@@ -9,18 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.widget.TextView;
+public class SettingsFragment extends Fragment {
 
-public class HomeFragment extends Fragment {
-
-//   public HomeFragment() {
-//      super(R.layout.fragment_home);
+   // public SearchFragment() {
+//      super(R.layout.fragment_settings);
 //   }
    @Nullable
    @Override
    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.fragment_home,container,false);
+      View view = inflater.inflate(R.layout.fragment_settings,container,false);
       return view;
    }
 }
+
 

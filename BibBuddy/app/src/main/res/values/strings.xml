@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">Bib Buddy</string>
-    <string name="app_description">Bib Buddy Home</string>
+    <string name="app_description">eine offene Atmosphäre für deine Gedanken und Ideen bei der Recherche. Unser Service macht deine Literatur-Arbeit so intuitiv wie nie!</string>
 
-    <!-- Navigation Bar -->
+    <!-- Image Descriptions -->
+    <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
+    <string name="description_settings">A black gear icon, visualizing settings.</string>
+
+    <!-- Navigation Items -->
     <string name="navigation_home">Home</string>
     <string name="navigation_search">Suche</string>
     <string name="navigation_library">Bibliothek</string>
     <string name="navigation_notes">Notizen</string>
+    <string name="navigation_settings">Einstellugnen</string>
 </resources>
