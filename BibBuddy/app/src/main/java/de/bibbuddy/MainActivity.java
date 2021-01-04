@@ -3,6 +3,8 @@ package de.bibbuddy;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.text.SpannableString;
 
@@ -108,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
             break;
          case "notes":
             headerText.setText(getString(R.string.navigation_notes));
+            break;
+         case "settings":
+            headerText.setText(getString(R.string.navigation_settings));
             break;
          default:
             headerText.setText("BibBuddy");

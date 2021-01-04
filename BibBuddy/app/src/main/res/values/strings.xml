@@ -4,10 +4,12 @@
 
     <!-- Image Descriptions -->
     <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
+    <string name="description_settings">A black gear icon, visualizing settings.</string>
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Items -->
     <string name="navigation_home">Home</string>
     <string name="navigation_search">Suche</string>
     <string name="navigation_library">Bibliothek</string>
     <string name="navigation_notes">Notizen</string>
+    <string name="navigation_settings">Einstellugnen</string>
 </resources>

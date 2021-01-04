@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/bibbuddy_icon"
+        android:icon="@drawable/house"
         android:title="@string/navigation_home" />
     <item
         android:id="@+id/navigation_search"
-        android:icon="@android:drawable/ic_search_category_default"
+        android:icon="@drawable/magnifyingglass"
         android:title="@string/navigation_search" />
     <item
         android:id="@+id/navigation_library"
-        android:icon="@android:drawable/ic_menu_gallery"
+        android:icon="@drawable/books"
         android:title="@string/navigation_library" />
     <item
         android:id="@+id/navigation_notes"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/pen"
         android:title="@string/navigation_notes" />
 
 </menu>
