@@ -6,8 +6,7 @@ public class LibraryItem {
    private final Integer id;
    private final Integer parentId;
 
-   public LibraryItem(String name, Integer image, Integer id)
-   {
+   public LibraryItem(String name, Integer image, Integer id) {
       this(name, image, id, null);
    }
 
