@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4db31d6c-8e9b-4af6-b82d-2cf7e92e777c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/BibBuddy/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/BibBuddy/.idea/gradle.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1mN9Q9uN66Y7eduaaunr0o8g7p3" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/BibBuddy" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4db31d6c-8e9b-4af6-b82d-2cf7e92e777c" name="Default Changelist" comment="" />
+      <created>1609323162848</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1609323162848</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="656" y="119" key="#Unnamed" timestamp="1609323444181">
+      <screen x="0" y="0" width="1920" height="1035" />
+    </state>
+    <state x="656" y="119" key="#Unnamed/0.0.1920.1035@0.0.1920.1035" timestamp="1609323444181" />
+    <state x="424" y="176" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1609326746628">
+      <screen x="0" y="0" width="1920" height="1035" />
+    </state>
+    <state x="424" y="176" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1035@0.0.1920.1035" timestamp="1609326746628" />
+    <state x="697" y="310" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1609323443368">
+      <screen x="0" y="0" width="1920" height="1035" />
+    </state>
+    <state x="697" y="310" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1035@0.0.1920.1035" timestamp="1609323443368" />
+    <state x="748" y="276" key="FileChooserDialogImpl" timestamp="1609326779325">
+      <screen x="0" y="0" width="1920" height="1035" />
+    </state>
+    <state x="748" y="276" key="FileChooserDialogImpl/0.0.1920.1035@0.0.1920.1035" timestamp="1609326779325" />
+  </component>
+</project>
