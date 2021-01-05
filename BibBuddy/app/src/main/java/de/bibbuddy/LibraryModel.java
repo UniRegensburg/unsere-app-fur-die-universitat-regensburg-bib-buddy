@@ -7,7 +7,7 @@ public class LibraryModel {
 
    private List<LibraryItem> libraryList;
 
-   Integer previousShelfId;
+   private Integer previousShelfId;
 
    private List<LibraryItem> getTopLevelLibraryList() {
       libraryList = new ArrayList<>();
