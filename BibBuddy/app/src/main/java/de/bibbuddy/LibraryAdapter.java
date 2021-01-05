@@ -103,6 +103,6 @@ public class LibraryAdapter implements ListAdapter {
 
    @Override
    public boolean isEmpty() {
-      return false;
+      return libraryList.isEmpty();
    }
 }
