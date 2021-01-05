@@ -91,7 +91,10 @@ public class LibraryAdapter implements ListAdapter {
 
    @Override
    public int getViewTypeCount() {
-      if (libraryList.size() > 0) {
+      if (libraryList.isEmpty())
+         return 1;
+         
+      return libraryList.size();
          return libraryList.size();
       }
 
