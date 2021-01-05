@@ -1,6 +1,12 @@
 package de.bibbuddy;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.text.SpannableString;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
 
-      bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation_bar);
+      bottomNavigationView = (BottomNavigationView) findViewById(R.id.header);
       fragmentManager = getSupportFragmentManager();
 
       if (savedInstanceState == null) {
@@ -85,5 +91,31 @@ public class MainActivity extends AppCompatActivity {
       fragmentTransaction.setReorderingAllowed(true);
       fragmentTransaction.addToBackStack(null);
       fragmentTransaction.commit();
+      updateHeader(tag);
+   }
+
+   private void updateHeader(String tag) {
+      //change header text according to fragment
+      View headerTextView = findViewById(R.id.headerText);
+      TextView headerText = (TextView) headerTextView;
+      switch (tag) {
+         case "home":
+            headerText.setText(getString(R.string.navigation_home));
+            break;
+         case "search":
+            headerText.setText(getString(R.string.navigation_search));
+            break;
+         case "library":
+            headerText.setText(getString(R.string.navigation_library));
+            break;
+         case "notes":
+            headerText.setText(getString(R.string.navigation_notes));
+            break;
+         case "settings":
+            headerText.setText(getString(R.string.navigation_settings));
+            break;
+         default:
+            headerText.setText("BibBuddy");
+      }
    }
 }
