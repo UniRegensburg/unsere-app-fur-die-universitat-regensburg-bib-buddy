@@ -1,12 +1,8 @@
 package de.bibbuddy;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.text.SpannableString;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
    BottomNavigationView bottomNavigationView;
    FragmentManager fragmentManager;
+
+   DatabaseHelper dbHelper;
 
    private HomeFragment homeFragment;
    private final String HOME_FRAGMENT_TAG = "home";
@@ -47,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
       }
 
       setupBottomNavigationView();
+
+      dbHelper = new DatabaseHelper(this);
+
    }
 
    private void setupBottomNavigationView() {
