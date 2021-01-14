@@ -63,7 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + LAST_NAME + " VARCHAR, "
                     + TITLE + " VARCHAR, "
                     + CREATE_DATE + " DATETIME NOT NULL, "
-                    + MOD_DATE + " DATETIME NOT NULL"
+                    + MOD_DATE + " DATETIME  "
                     + ");";
 
 
@@ -135,7 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ADD_INFOS + " TEXT, "
                     + CREATE_DATE + " DATETIME NOT NULL, "
                     + MOD_DATE + " DATETIME NOT NULL, "
-                    + AUTHOR_ID + " INTEGER, "
+                    + AUTHOR_ID + " INTEGER NOT NULL, "
                     + NOTE_ID + " INTEGER, "
 
                     + " CONSTRAINT " + TABLE_NAME_BOOK + "_FK_1 FOREIGN KEY (" + AUTHOR_ID
