@@ -81,9 +81,7 @@ public class BookDAO implements IBookDAO {
                     cursor.getString(7), // Edition
                     cursor.getString(8), // Add Infos
                     Integer.parseInt(cursor.getString(9)), // Create date
-                    Integer.parseInt(cursor.getString(10)), // Mod date
-                    Long.parseLong(cursor.getString(11)), // Author id
-                    Long.parseLong(cursor.getString(12)) // Note id
+                    Integer.parseInt(cursor.getString(10)) // Mod date
             );
 
             cursor.close();
@@ -117,8 +115,6 @@ public class BookDAO implements IBookDAO {
                 book.setAddInfos(cursor.getString(8));
                 book.setCreateDate(Integer.parseInt(cursor.getString(9)));
                 book.setModDate(Integer.parseInt(cursor.getString(10)));
-                book.setAuthorId(Long.parseLong(cursor.getString(11)));
-                book.setNoteId(Long.parseLong(cursor.getString(12)));
 
                 bookList.add(book);
 
