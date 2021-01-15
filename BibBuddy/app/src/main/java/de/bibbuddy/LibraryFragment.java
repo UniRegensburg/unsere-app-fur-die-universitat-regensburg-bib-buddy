@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
@@ -20,9 +22,17 @@ public class LibraryFragment extends Fragment {
    private LibraryModel libraryModel;
    private ListView libraryListView;
 
+   @Override
+   public void onCreate(@Nullable Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+
+      createBackBtnListener();
+   }
+
    @Nullable
    @Override
    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+      // Called to have the fragment instantiate its user interface view.
       View view = inflater.inflate(R.layout.fragment_library, container, false);
 
       context = view.getContext();
@@ -34,11 +44,25 @@ public class LibraryFragment extends Fragment {
       libraryListView.setAdapter(new LibraryAdapter(context, libraryList));
       createLibraryListViewListener(context, libraryListView);
 
-      // TODO find out why text is not displayed when list is empty
       libraryListView.setEmptyView(view.findViewById(R.id.list_view_library_empty));
-      //  android:visibility="gone" for fragment_library.xml
 
       return view;
+   }
+
+   private void createBackBtnListener() {
+      Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+
+      toolbar.setNavigationOnClickListener(v -> {
+         Integer shelfId = libraryModel.getParentShelfId();
+         updateHeader(libraryModel.getShelfName(shelfId));
+
+         if (shelfId == null) {
+            Toast.makeText(context, "bereits die oberste Ebene", Toast.LENGTH_SHORT).show();
+            return;
+         }
+
+         updateLibraryListView(libraryModel.getPreviousLibraryList(shelfId));
+      });
    }
 
 
@@ -46,9 +70,9 @@ public class LibraryFragment extends Fragment {
       libraryListView.setOnItemClickListener((parent, view, position, id) -> {
          LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
 
-         Toast.makeText(context, position + " geklickt", Toast.LENGTH_SHORT).show();
-
          if (libraryItem instanceof ShelfItem) {
+            updateHeader(libraryItem.getName());
+
             Integer previousShelfId = libraryItem.getId();
             libraryModel.setPreviousShelfId(previousShelfId);
             updateLibraryListView(previousShelfId);
@@ -67,5 +91,13 @@ public class LibraryFragment extends Fragment {
       createLibraryListViewListener(context, libraryListView);
    }
 
-}
+   private void updateLibraryListView(List libraryList) {
+      libraryListView.setAdapter(new LibraryAdapter(context, libraryList));
+      createLibraryListViewListener(context, libraryListView);
+   }
 
+   private void updateHeader(String name) {
+      TextView headerText = getActivity().findViewById(R.id.headerText);
+      headerText.setText(name);
+   }
+}
