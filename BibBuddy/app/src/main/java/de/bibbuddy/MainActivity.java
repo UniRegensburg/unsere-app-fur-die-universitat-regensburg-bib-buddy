@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -30,14 +31,19 @@ public class MainActivity extends AppCompatActivity {
    private NotesFragment notesFragment;
    private final String NOTES_FRAGMENT_TAG = "notes";
 
+   static DatabaseHelper databaseHelper;
+
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
 
+      databaseHelper = new DatabaseHelper(getApplicationContext());
+
       bottomNavigationView = (BottomNavigationView) findViewById(R.id.header);
       fragmentManager = getSupportFragmentManager();
+
 
       if (savedInstanceState == null) {
          homeFragment = new HomeFragment();

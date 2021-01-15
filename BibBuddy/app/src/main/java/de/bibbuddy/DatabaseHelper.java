@@ -1,8 +1,19 @@
 package de.bibbuddy;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -49,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     // Database Information
-    private static final String DB_NAME = "BibBuddyStorage.db"; // DB
+    public static final String DB_NAME = "BibBuddyStorage.db"; // DB
 
     // database version
     private static final int DB_VERSION = 1;
@@ -215,7 +226,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
     }
 
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_AUTHOR);
@@ -235,6 +245,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onCreate(db);
+    }
+
+
+    /*
+        Take / migrate / merge following note based methods to Note Data Object-class
+    */
+
+    /*
+        Adding a new note: _ID is autoincrementing
+     */
+    public void addNote(String name, int type, String text, String createDate, String modDate, int noteFileId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("type", type);
+        values.put("name", name);
+        values.put("text", text);
+        values.put("creation_date", createDate);
+        values.put("modifikation_date", modDate);
+        values.put("note_file_id", noteFileId);
+        db.insert(TABLE_NAME_NOTE, null , values);
+        db.close();
+    }
+
+    /*
+        Updating a single note
+         selecting it by given id
+     */
+    public void updateNote(int id,String name, int type, String text, String createDate, String modDate, int noteFileId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("id", id);
+        values.put("type", type);
+        values.put("name", name);
+        values.put("text", text);
+        values.put("creation_date", createDate);
+        values.put("modifikation_date", modDate);
+        values.put("note_file_id", noteFileId);
+        db.update(TABLE_NAME_NOTE, values, _ID + " = " + id,null);
+        db.close();
     }
 
 }
