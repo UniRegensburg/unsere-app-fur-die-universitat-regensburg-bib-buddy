@@ -12,13 +12,11 @@ public class Book {
     private String addInfos;
     private Integer createDate;
     private Integer modDate;
-    private Long authorId;
-    private Long noteId;
 
 
     public Book(Long id, String isbn, String title, String subttle, Integer pubYear,
                 String publisher, String volume, String edition, String addInfos,
-                Integer createDate, Integer modDate, Long authorId, Long noteId) {
+                Integer createDate, Integer modDate) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
@@ -30,8 +28,6 @@ public class Book {
         this.addInfos = addInfos;
         this.createDate = createDate;
         this.modDate = modDate;
-        this.authorId = authorId;
-        this.noteId = noteId;
     }
 
     public Book() {
@@ -125,19 +121,4 @@ public class Book {
         this.modDate = modDate;
     }
 
-    public Long getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
-    }
-
-    public Long getNoteId() {
-        return noteId;
-    }
-
-    public void setNoteId(Long noteId) {
-        this.noteId = noteId;
-    }
 }

@@ -18,6 +18,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_BOOK_LINK = "book_link";
     public static final String TABLE_NAME_BOOK_TAG_LNK = "book_tag_lnk";
     public static final String TABLE_NAME_NOTE_TAG_LNK = "note_tag_lnk";
+    public static final String TABLE_NAME_BOOK_NOTE_LNK = "book_note_lnk";
+    public static final String TABLE_NAME_AUTHOR_BOOK_LNK = "author_book_lnk";
 
     // Table columns
     public static final String _ID = "id";
@@ -134,15 +136,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + EDITION + " VARCHAR, "
                     + ADD_INFOS + " TEXT, "
                     + CREATE_DATE + " DATETIME NOT NULL, "
-                    + MOD_DATE + " DATETIME NOT NULL, "
-                    + AUTHOR_ID + " INTEGER NOT NULL, "
-                    + NOTE_ID + " INTEGER, "
+                    + MOD_DATE + " DATETIME NOT NULL "
 
-                    + " CONSTRAINT " + TABLE_NAME_BOOK + "_FK_1 FOREIGN KEY (" + AUTHOR_ID
-                    + ") REFERENCES " + TABLE_NAME_AUTHOR + "(" + _ID + "),"
-
-                    + " CONSTRAINT " + TABLE_NAME_BOOK + "_FK_2 FOREIGN KEY (" + NOTE_ID
-                    + ") REFERENCES " + TABLE_NAME_NOTE + "(" + _ID + ")"
                     + " );";
 
 
@@ -209,6 +204,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + " );";
 
 
+    private static final String CREATE_TABLE_BOOK_NOTE_LNK =
+            "CREATE TABLE " + TABLE_NAME_BOOK_NOTE_LNK
+                    + "( "
+                    + _ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                    + BOOK_ID + " INTEGER NOT NULL, "
+                    + NOTE_ID + " INTEGER NOT NULL, "
+
+                    + " CONSTRAINT " + TABLE_NAME_BOOK_NOTE_LNK + "_FK_1 FOREIGN KEY (" + BOOK_ID
+                    + ") REFERENCES " + TABLE_NAME_BOOK + "(" + _ID + "),"
+
+                    + " CONSTRAINT " + TABLE_NAME_BOOK_NOTE_LNK + "_FK_2 FOREIGN KEY (" + NOTE_ID
+                    + ") REFERENCES " + TABLE_NAME_NOTE + "(" + _ID + ")"
+                    + " );";
+
+
+    private static final String CREATE_TABLE_AUTHOR_BOOK_LNK =
+            "CREATE TABLE " + TABLE_NAME_AUTHOR_BOOK_LNK
+                    + "( "
+                    + _ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                    + AUTHOR_ID + " INTEGER NOT NULL, "
+                    + BOOK_ID + " INTEGER NOT NULL, "
+
+                    + " CONSTRAINT " + TABLE_NAME_AUTHOR_BOOK_LNK + "_FK_1 FOREIGN KEY (" + AUTHOR_ID
+                    + ") REFERENCES " + TABLE_NAME_AUTHOR + "(" + _ID + "),"
+
+                    + " CONSTRAINT " + TABLE_NAME_AUTHOR_BOOK_LNK + "_FK_2 FOREIGN KEY (" + BOOK_ID
+                    + ") REFERENCES " + TABLE_NAME_BOOK + "(" + _ID + ")"
+                    + " );";
+
+
     // Constructor
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -229,6 +254,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_BOOK_LINK);
         db.execSQL(CREATE_TABLE_BOOK_TAG_LNK);
         db.execSQL(CREATE_TABLE_NOTE_TAG_LNK);
+        db.execSQL(CREATE_TABLE_BOOK_NOTE_LNK);
+        db.execSQL(CREATE_TABLE_AUTHOR_BOOK_LNK);
     }
 
 
