@@ -34,7 +34,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
         backgroundColor = context.getColor(R.color.colorAccent);
         clearPaint = new Paint();
         clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        deleteDrawable = ContextCompat.getDrawable(context, R.drawable.delete_icon);
+        deleteDrawable = ContextCompat.getDrawable(context, R.drawable.trashcan);
     }
 
 
@@ -48,6 +48,12 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
         return false;
     }
 
+
+    /*
+        TODO: Clarify:
+         might be more aesthetic/more usable to implement deletion note and the undo option here
+         instead of an extra toast on the bottom of the display
+     */
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);

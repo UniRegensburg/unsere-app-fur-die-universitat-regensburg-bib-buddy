@@ -57,7 +57,7 @@ public class NotesFragment extends Fragment {
     }
 
     /*
-        To-do: Take this add button to single book view / book fragment
+       TODO: Take this add button to single book view / book fragment
     */
     private void setupAddButton() {
         View addButtonView = view.findViewById(R.id.addButton);

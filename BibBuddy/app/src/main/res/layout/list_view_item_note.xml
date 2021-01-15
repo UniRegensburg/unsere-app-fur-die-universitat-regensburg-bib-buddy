@@ -19,14 +19,15 @@
         android:paddingRight="8dp">
 
         <TextView
-            android:id="@+id/txtTitle"
+            android:id="@+id/noteTitle"
             android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:text=""
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"/>
 
         <ImageView
-            android:id="@+id/imgView"
+            android:id="@+id/noteType"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
