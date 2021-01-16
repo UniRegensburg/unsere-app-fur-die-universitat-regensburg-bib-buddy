@@ -247,44 +247,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
-    /*
-        Take / migrate / merge following note based methods to Note Data Object-class
-    */
-
-    /*
-        Adding a new note: _ID is autoincrementing
-     */
-    public void addNote(String name, int type, String text, String createDate, String modDate, int noteFileId){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("type", type);
-        values.put("name", name);
-        values.put("text", text);
-        values.put("creation_date", createDate);
-        values.put("modifikation_date", modDate);
-        values.put("note_file_id", noteFileId);
-        db.insert(TABLE_NAME_NOTE, null , values);
-        db.close();
-    }
-
-    /*
-        Updating a single note
-         selecting it by given id
-     */
-    public void updateNote(int id,String name, int type, String text, String createDate, String modDate, int noteFileId){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("id", id);
-        values.put("type", type);
-        values.put("name", name);
-        values.put("text", text);
-        values.put("creation_date", createDate);
-        values.put("modifikation_date", modDate);
-        values.put("note_file_id", noteFileId);
-        db.update(TABLE_NAME_NOTE, values, _ID + " = " + id,null);
-        db.close();
-    }
-
 }
 

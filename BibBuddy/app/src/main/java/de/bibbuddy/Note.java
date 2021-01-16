@@ -9,7 +9,6 @@ public class Note {
     private Integer modDate;
     private Long noteFileId;
 
-
     public Note(Long id, String name, Integer type, String text, Integer createDate, Integer modDate, Long noteFileId) {
         this.id = id;
         this.name = name;
@@ -20,8 +19,17 @@ public class Note {
         this.noteFileId = noteFileId;
     }
 
-    public Note() {
+    //id is autoincrementing on database
+    public Note(String name, Integer type, String text, Integer createDate, Integer modDate, Long noteFileId) {
+        this.name = name;
+        this.type = type;
+        this.text = text;
+        this.createDate = createDate;
+        this.modDate = modDate;
+        this.noteFileId = noteFileId;
     }
+
+    public Note(){};
 
     public Long getId() {
         return id;

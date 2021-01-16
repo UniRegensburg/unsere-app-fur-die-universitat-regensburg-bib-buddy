@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -24,12 +25,15 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     private final Drawable deleteDrawable;
     private final RecyclerViewAdapter adapter;
     private final RecyclerView recyclerView;
+    private boolean removed = false;
     Context context;
+    NoteDAO noteDAO;
 
     SwipeToDeleteCallback(Context context, RecyclerViewAdapter adapter, RecyclerView recyclerView) {
         this.context = context;
         this.adapter = adapter;
         this.recyclerView = recyclerView;
+        this.noteDAO = new NoteDAO(MainActivity.databaseHelper);
         background = new ColorDrawable();
         backgroundColor = context.getColor(R.color.colorAccent);
         clearPaint = new Paint();
@@ -89,25 +93,36 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         final int position = viewHolder.getAdapterPosition();
-        final NoteItem item = adapter.getData().get(position);
+        final Note note = adapter.getData().get(position);
         adapter.removeItem(position);
         adapter.notifyDataSetChanged();
-        NoteItem noteItem = TextNoteEditorFragment.getNotes().get(position);
-        TextNoteEditorFragment.deleteNote(noteItem.getId());
+        removed = true;
         Snackbar snackbar = Snackbar
                 .make(NotesFragment.view, R.string.delete_snackbar, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter.restoreItem(item, position);
-                MainActivity.databaseHelper.addNote(noteItem.getName(), noteItem.getType(), noteItem.getText(), noteItem.getCreateDate(), noteItem.getModDate(), noteItem.getNoteFileId());
+                adapter.restoreItem(note, position);
                 recyclerView.scrollToPosition(position);
                 adapter.notifyDataSetChanged();
+                removed = false;
             }
         });
 
         snackbar.setActionTextColor(context.getColor(R.color.colorAccent));
         snackbar.show();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+
+            public void run() {
+                if (removed) {
+                    noteDAO.delete(note.getId());
+                }
+            }
+
+        }, 3000);
+
     }
 
 }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,90 +22,34 @@ import androidx.fragment.app.Fragment;
 
 public class TextNoteEditorFragment extends Fragment {
 
-    private int noteId = 0;
+    private Long noteId;
     private View view;
     private RichTextEditor richTextEditor;
     private boolean highlighted = false;
-
-    /*
-        TODO: Delete when replaced by correct db methods
-     */
-    public static void deleteNote(int id) {
-        SQLiteDatabase db = MainActivity.databaseHelper.getWritableDatabase();
-        db.execSQL("DELETE FROM " + DatabaseHelper.TABLE_NAME_NOTE + " WHERE " + DatabaseHelper._ID + " = " + id);
-        db.close();
-    }
-
-    public static NoteItem getNote(int id) {
-        SQLiteDatabase db = MainActivity.databaseHelper.getReadableDatabase();
-        String[] field = {DatabaseHelper._ID, DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID};
-        Cursor c = db.query(DatabaseHelper.TABLE_NAME_NOTE, field, DatabaseHelper._ID + " = " + id, null, null, null, null);
-        c.moveToFirst();
-        System.out.println(c.getColumnCount());
-        int itemId = c.getColumnIndex(DatabaseHelper._ID);
-        int name = c.getColumnIndex(DatabaseHelper.NAME);
-        int type = c.getColumnIndex(DatabaseHelper.TYPE);
-        int text = c.getColumnIndex(DatabaseHelper.TEXT);
-        int createDate = c.getColumnIndex(DatabaseHelper.CREATE_DATE);
-        int modDate = c.getColumnIndex(DatabaseHelper.MOD_DATE);
-        int noteFileId = c.getColumnIndex(DatabaseHelper.NOTE_FILE_ID);
-
-        int itemId1 = c.getInt(itemId);
-        String itemName = c.getString(name);
-        int itemType = c.getInt(type);
-        String itemText = c.getString(text);
-        String itemCreateDate = c.getString(createDate);
-        String itemModDate = c.getString(modDate);
-        int itemNoteFileId = c.getInt(noteFileId);
-
-        NoteItem noteItem = new NoteItem(itemId1, itemName, itemType, itemText, itemCreateDate, itemModDate, itemNoteFileId);
-        c.close();
-        return noteItem;
-    }
-
-    public static ArrayList<NoteItem> getNotes() {
-        SQLiteDatabase db = MainActivity.databaseHelper.getReadableDatabase();
-        ArrayList<NoteItem> notes = new ArrayList<>();
-        String[] field = {DatabaseHelper._ID, DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID};
-        Cursor c = db.query(DatabaseHelper.TABLE_NAME_NOTE, field, null, null, null, null, null);
-
-        int id = c.getColumnIndex(DatabaseHelper._ID);
-        int name = c.getColumnIndex(DatabaseHelper.NAME);
-        int type = c.getColumnIndex(DatabaseHelper.TYPE);
-        int text = c.getColumnIndex(DatabaseHelper.TEXT);
-        int createDate = c.getColumnIndex(DatabaseHelper.CREATE_DATE);
-        int modDate = c.getColumnIndex(DatabaseHelper.MOD_DATE);
-        int noteFileId = c.getColumnIndex(DatabaseHelper.NOTE_FILE_ID);
-
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            int itemId = c.getInt(id);
-            String itemName = c.getString(name);
-            int itemType = c.getInt(type);
-            String itemText = c.getString(text);
-            String itemCreateDate = c.getString(createDate);
-            String itemModDate = c.getString(modDate);
-            int itemNoteFileId = c.getInt(noteFileId);
-            notes.add(new NoteItem(itemId, itemName, itemType, itemText, itemCreateDate, itemModDate, itemNoteFileId));
-        }
-        c.close();
-        return notes;
-    }
+    Note note;
+    private int modDate;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
         richTextEditor = view.findViewById(R.id.editor);
+        NoteDAO noteDAO = new NoteDAO(MainActivity.databaseHelper);
         // Fetch data that is passed from NotesFragment and accessing it using key and value
         if (getArguments() != null) {
-            richTextEditor.setText(NotesFragment.notes.get(getArguments().getInt("noteId")).getText());
-            noteId = NotesFragment.notes.get(getArguments().getInt("noteId")).getId();
+            noteId = getArguments().getLong("noteId");
+            note = noteDAO.findById(noteId);
+            richTextEditor.setText(noteDAO.findById(noteId).getText());
+            modDate = note.getModDate();
         } else {
-            MainActivity.databaseHelper.addNote("", 0, "", String.valueOf(Calendar.getInstance().getTime()), String.valueOf(Calendar.getInstance().getTime()), NotesFragment.notes.size());
             Cursor c = MainActivity.databaseHelper.getReadableDatabase().query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null, null, null, null);
             c.moveToLast();
-            noteId = c.getInt(c.getColumnIndex(DatabaseHelper._ID));
+            Date date = new Date();
+            int actualDate = (int) date.getTime();
+            note = new Note("",0, "", actualDate, actualDate, (long) c.getCount());
             c.close();
+            noteDAO.create(note);
+            noteId = note.getId();
         }
         richTextEditor.setSelection(richTextEditor.getEditableText().length());
         setupTextWatcher();
@@ -133,6 +78,8 @@ public class TextNoteEditorFragment extends Fragment {
 
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
+                Date date = new Date();
+                modDate = (int) date.getTime();
             }
         };
         richTextEditor.addTextChangedListener(textWatcher);
@@ -389,17 +336,12 @@ public class TextNoteEditorFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Editable text = richTextEditor.getText();
+        NoteDAO noteDAO = new NoteDAO(MainActivity.databaseHelper);
         if (text.length() != 0) {
-            String date;
-            if (getArguments() != null) {
-                date = getNote(noteId).getCreateDate();
-            } else {
-                date = String.valueOf(Calendar.getInstance().getTime());
-            }
-            MainActivity.databaseHelper.updateNote(noteId, String.valueOf(text), 0, String.valueOf(text), date, String.valueOf(Calendar.getInstance().getTime()), noteId);
+            noteDAO.updateNote(noteId, String.valueOf(text), note.getType(), String.valueOf(text), note.getCreateDate(),
+                    modDate, note.getNoteFileId());
         } else {
-            NoteItem noteItem = getNote(noteId);
-            deleteNote(noteItem.getId());
+            noteDAO.delete(Long.valueOf(noteId));
         }
     }
 

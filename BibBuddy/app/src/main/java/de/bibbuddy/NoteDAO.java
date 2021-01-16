@@ -29,7 +29,7 @@ public class NoteDAO implements INoteDAO {
             contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
             contentValues.put(DatabaseHelper.NOTE_FILE_ID, note.getNoteFileId());
 
-            long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
+            long id = db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, contentValues);
 
             note.setId(id);
         } catch (SQLiteException ex) {
@@ -110,6 +110,22 @@ public class NoteDAO implements INoteDAO {
         db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
                 new String[]{String.valueOf(id)});
 
+        db.close();
+    }
+
+    //Update a single note selected by given id
+    public void updateNote(Long id, String name, int type, String text, int createDate, int modDate, Long noteFileId){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("id", id);
+        values.put("name", name);
+        values.put("type", type);
+        values.put("text", text);
+        values.put("creation_date", createDate);
+        values.put("modifikation_date", modDate);
+        values.put("note_file_id", noteFileId);
+        dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
+                DatabaseHelper._ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 
