@@ -3,6 +3,8 @@ package de.bibbuddy;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataValidation {
     private static final String[] FORMATS = {
@@ -17,7 +19,7 @@ public class DataValidation {
 
     //date format to which the input strings should be converted
     private static final String FORMAT_CONV="dd.MM.yyyy";
-    
+
     //checks for the type of the input (String, Integer or Date)
     public boolean isInputString(Object inputObj){
         return inputObj instanceof String;
@@ -96,6 +98,15 @@ public class DataValidation {
                 return true;
             return false;
         }
+        return false;
+    }
+
+    //checks for special characters that are not latin letters or numbers
+    public boolean hasSpecialChars(String inputStr) {
+        Pattern my_pattern = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Matcher my_match = my_pattern.matcher(inputStr);
+        boolean check = my_match.find();
+        if (check) return true;
         return false;
     }
 }
