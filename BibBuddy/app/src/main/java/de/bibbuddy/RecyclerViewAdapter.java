@@ -1,17 +1,16 @@
 package de.bibbuddy;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +18,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private final List<Note> data;
     private final MainActivity activity;
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView modDate;
+        private final TextView title;
+
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.noteTitle);
+            modDate = itemView.findViewById(R.id.noteModDate);
+        }
+
+    }
 
     public RecyclerViewAdapter(List<Note> data, MainActivity activity) {
         this.data = data;
@@ -38,7 +50,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_view_item_note, parent, false);
+        View itemView;
+        Context context = parent.getContext();
+        itemView = LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -49,6 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        Long id = data.get(position).getId();
         String text = data.get(position).getText();
         if(text.contains("\n")){
             text = text.substring(0, text.indexOf("\n")) + "...";
@@ -57,7 +72,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             text = text.substring(0, 35) + " ...";
         }
         holder.title.setText(text);
-        Long id = data.get(position).getId();
+        String dateString = getDate(data.get(position).getModDate());
+        holder.modDate.setText(dateString);
+
         /*
             Set up onClick-listener to enable editing an item of the recyclerview
              by opening the text editor fragment given the item's text as default text
@@ -77,6 +94,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         });
     }
 
+    private String getDate(Long date){
+        Date d = new Date(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+        String string = simpleDateFormat.format(d);
+        String day = string.substring(8,10);
+        String month = string.substring(5,7);
+        String year = string.substring(0,4);
+        String time = string.substring(11,16);
+
+        string = day + "." + month + "." + year + " " + time + " Uhr";
+
+        return string;
+    }
+
     @Override
     public int getItemCount() {
         return data.size();
@@ -89,22 +121,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void removeItem(int position) {
         data.remove(position);
         notifyItemRemoved(position);
-    }
-
-    public void restoreItem(Note note, int position) {
-        data.add(position, note);
-        notifyItemInserted(position);
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-
-        private final TextView title;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.noteTitle);
-        }
-
     }
 
 }

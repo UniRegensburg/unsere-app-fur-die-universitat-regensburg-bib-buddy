@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,11 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -26,15 +21,17 @@ public class TextNoteEditorFragment extends Fragment {
     private View view;
     private RichTextEditor richTextEditor;
     private boolean highlighted = false;
-    Note note;
-    private int modDate;
+    private Note note;
+    private Long modDate;
+    private DatabaseHelper databaseHelper;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
         richTextEditor = view.findViewById(R.id.editor);
-        NoteDAO noteDAO = new NoteDAO(MainActivity.databaseHelper);
+        databaseHelper = new DatabaseHelper(getContext());
+        NoteDAO noteDAO = new NoteDAO(databaseHelper);
         // Fetch data that is passed from NotesFragment and accessing it using key and value
         if (getArguments() != null) {
             noteId = getArguments().getLong("noteId");
@@ -42,11 +39,13 @@ public class TextNoteEditorFragment extends Fragment {
             richTextEditor.setText(noteDAO.findById(noteId).getText());
             modDate = note.getModDate();
         } else {
-            Cursor c = MainActivity.databaseHelper.getReadableDatabase().query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null, null, null, null);
+            Cursor c = databaseHelper.getReadableDatabase().query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null, null, null, null);
             c.moveToLast();
-            Date date = new Date();
-            int actualDate = (int) date.getTime();
-            note = new Note("",0, "", actualDate, actualDate, (long) c.getCount());
+            Long currentDate = new Date().getTime();
+
+            //TODO: A note file has to be created and saved onto database first to get an autoincrement note file id
+            // meanwhile using rownumber (c.getCount()) as note file id
+            note = new Note("",0, "", currentDate, currentDate, (long) c.getCount());
             c.close();
             noteDAO.create(note);
             noteId = note.getId();
@@ -69,17 +68,13 @@ public class TextNoteEditorFragment extends Fragment {
     private void setupTextWatcher() {
         TextWatcher textWatcher = new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {}
 
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
-                Date date = new Date();
-                modDate = (int) date.getTime();
+                modDate = new Date().getTime();
             }
         };
         richTextEditor.addTextChangedListener(textWatcher);
@@ -336,12 +331,12 @@ public class TextNoteEditorFragment extends Fragment {
     public void onPause() {
         super.onPause();
         Editable text = richTextEditor.getText();
-        NoteDAO noteDAO = new NoteDAO(MainActivity.databaseHelper);
+        NoteDAO noteDAO = new NoteDAO(databaseHelper);
         if (text.length() != 0) {
             noteDAO.updateNote(noteId, String.valueOf(text), note.getType(), String.valueOf(text), note.getCreateDate(),
                     modDate, note.getNoteFileId());
         } else {
-            noteDAO.delete(Long.valueOf(noteId));
+            noteDAO.delete(noteId);
         }
     }
 

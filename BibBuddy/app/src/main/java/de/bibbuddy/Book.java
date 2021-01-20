@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 public class Book {
+    
     private Long id;
     private String isbn;
     private String title;

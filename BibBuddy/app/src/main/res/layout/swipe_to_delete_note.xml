@@ -16,31 +16,22 @@
         android:layout_height="match_parent"
         android:paddingBottom="8dp"
         android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingRight="8dp"
+        android:backgroundTint="@color/gray_background">
 
         <TextView
-            android:id="@+id/noteModDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:layout_alignParentTop="true"/>
-
-        <TextView
-            android:id="@+id/noteTitle"
-            android:layout_width="310dp"
-            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"/>
+            android:text="@string/delete_snackbar"/>
 
-        <ImageView
-            android:id="@+id/noteType"
-            android:layout_width="30dp"
+        <ImageButton
+            android:id="@+id/undo_delete_note"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/description_text_note"
-            android:src="@drawable/document"/>
+            android:src="@drawable/undo" />
 
     </RelativeLayout>
 

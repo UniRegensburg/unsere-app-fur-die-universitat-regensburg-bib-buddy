@@ -39,7 +39,7 @@
     <string name="toast_alignLeft">Linksbündig</string>
     <string name="toast_alignRight">Rechtsbündig</string>
     <string name="toast_alignCenter">Zentriert</string>
-    <string name="delete_snackbar">Die Notiz wurde entfernt.</string>
+    <string name="delete_notification">Die Notiz wurde entfernt.</string>
 
 </resources>
 

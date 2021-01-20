@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class NotesFragment extends Fragment {
 
     static List<Note> notes;
-    static View view;
-    RecyclerViewAdapter adapter;
+    private View view;
+    private RecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
 
 
@@ -27,7 +26,8 @@ public class NotesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_notes, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        NoteDAO noteDAO = new NoteDAO(MainActivity.databaseHelper);
+        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+        NoteDAO noteDAO = new NoteDAO(databaseHelper);
         notes = noteDAO.findAll();
 
         setupRecyclerView();
@@ -43,6 +43,16 @@ public class NotesFragment extends Fragment {
     private void setupRecyclerView() {
         adapter = new RecyclerViewAdapter(notes, (MainActivity) getActivity());
         recyclerView.setAdapter(adapter);
+        /*
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.onDraw(c, parent, state);
+                SwipeToDeleteCallback.onDraw(c);
+            }
+        });
+    */
     }
 
     /*
@@ -66,27 +76,23 @@ public class NotesFragment extends Fragment {
         pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.add_text_note: {
-                        TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-                        getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")
-                                .addToBackStack(null)
-                                .commit();
-                        break;
-                    }
+                if (item.getItemId() == R.id.add_text_note) {
+                    TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")
+                            .addToBackStack(null)
+                            .commit();
 
                     /*
-                        To-do: add features to add voice notes and pictures
-                     */
-                    //case R.id.add_voice_note:
-                    //     break;
+                        TODO: add features to add voice notes and pictures
 
-                    // case R.id.add_picture:
-                    //      break;
-
-                    default:
+                    case R.id.add_voice_note:
                         break;
+
+                    case R.id.add_picture:
+                        break;
+                     */
+
                 }
                 return true;
             }
