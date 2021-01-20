@@ -1,11 +1,11 @@
 package de.bibbuddy;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,19 +31,18 @@ public class MainActivity extends AppCompatActivity {
    private NotesFragment notesFragment;
    private final String NOTES_FRAGMENT_TAG = "notes";
 
-   static DatabaseHelper databaseHelper;
-
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
 
-      databaseHelper = new DatabaseHelper(getApplicationContext());
+      Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+      setSupportActionBar(toolbar);
+      getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-      bottomNavigationView = (BottomNavigationView) findViewById(R.id.header);
+      bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
       fragmentManager = getSupportFragmentManager();
-
 
       if (savedInstanceState == null) {
          homeFragment = new HomeFragment();
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                updateFragment(R.id.fragment_container_view, notesFragment, NOTES_FRAGMENT_TAG);
                break;
          }
-         
+
          return true;
       });
    }
@@ -102,27 +101,32 @@ public class MainActivity extends AppCompatActivity {
    }
 
    private void updateHeader(String tag) {
-      //change header text according to fragment
+      // change header text according to fragment
       View headerTextView = findViewById(R.id.headerText);
       TextView headerText = (TextView) headerTextView;
       switch (tag) {
          case "home":
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_home));
             break;
          case "search":
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_search));
             break;
          case "library":
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             headerText.setText(getString(R.string.navigation_library));
             break;
          case "notes":
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_notes));
             break;
          case "settings":
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_settings));
             break;
          default:
-            headerText.setText("BibBuddy");
+            headerText.setText(getString(R.string.app_name));
       }
    }
 }

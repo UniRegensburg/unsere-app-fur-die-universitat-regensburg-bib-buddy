@@ -1,39 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/white"
-    android:clipToPadding="false"
-    android:paddingBottom="10dp">
+    android:elevation="10dp"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:elevation="10dp"
-        android:padding="10dp">
+    <ImageView
+        android:id="@+id/headerLogo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="@string/description_logo"
+        app:srcCompat="@drawable/bibbuddy_icon" />
 
-        <ImageView
-            android:id="@+id/headerLogo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/description_logo"
-            android:translationX="10dp"
-            app:srcCompat="@drawable/bibbuddy_icon" />
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-black"
+        android:maxLines="1"
+        android:paddingStart="10dp"
+        android:scrollHorizontally="true"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/headerText"
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-black"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:translationX="65dp" />
+</androidx.appcompat.widget.Toolbar>
 
-    </RelativeLayout>
-
-</FrameLayout>
