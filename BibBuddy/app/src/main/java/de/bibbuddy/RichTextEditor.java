@@ -112,101 +112,65 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     }
 
     protected void styleValid(int style, int start, int end) {
-        switch (style) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                if (start >= end) {
-                    return;
-                }
-                this.getEditableText().setSpan(new StyleSpan(style), start, end, 33);
-                return;
-            default:
+        if (style == 0 || style == 1 || style == 2 || style == 3) {
+            this.getEditableText().setSpan(new StyleSpan(style), start, end, 33);
+            return;
         }
     }
 
     protected void styleInvalid(int style, int start, int end) {
-        switch (style) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                if (start >= end) {
-                    return;
-                } else {
-                    StyleSpan[] spans = this.getEditableText().getSpans(start, end, StyleSpan.class);
-                    ArrayList<RichTextEditorPart> list = new ArrayList();
-                    StyleSpan[] arrSpan = spans;
-                    int spanLength = spans.length;
+        StyleSpan[] spans = this.getEditableText().getSpans(start, end, StyleSpan.class);
+        ArrayList<RichTextEditorPart> list = new ArrayList<>();
+        StyleSpan[] arrSpan = spans;
+        int spanLength = spans.length;
 
-                    for (int i = 0; i < spanLength; i++) {
-                        StyleSpan span = arrSpan[i];
-                        if (span.getStyle() == style) {
-                            list.add(new RichTextEditorPart(this.getEditableText().getSpanStart(span), this.getEditableText().getSpanEnd(span)));
-                            this.getEditableText().removeSpan(span);
-                        }
-                    }
-
-                    for (RichTextEditorPart part : list) {
-                        if (part.isValid()) {
-                            if (part.getStart() < start) {
-                                this.styleValid(style, part.getStart(), start);
-                            }
-
-                            if (part.getEnd() > end) {
-                                this.styleValid(style, end, part.getEnd());
-                            }
-                        }
-                    }
-
-                    return;
-                }
-            default:
+        for (int i = 0; i < spanLength; i++) {
+            StyleSpan span = arrSpan[i];
+            if (span.getStyle() == style) {
+                list.add(new RichTextEditorPart(this.getEditableText().getSpanStart(span), this.getEditableText().getSpanEnd(span)));
+                this.getEditableText().removeSpan(span);
+            }
         }
+
+        for (RichTextEditorPart part : list) {
+            if (part.isValid()) {
+                if (part.getStart() < start) {
+                    this.styleValid(style, part.getStart(), start);
+                }
+                if (part.getEnd() > end) {
+                    this.styleValid(style, end, part.getEnd());
+                }
+            }
+        }
+
     }
 
     protected boolean containStyle(int style, int start, int end) {
-        switch (style) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                if (start > end) {
-                    return false;
-                } else {
-                    if (start == end) {
-                        if (start - 1 >= 0 && start + 1 <= this.getEditableText().length()) {
-                            StyleSpan[] before = this.getEditableText().getSpans(start - 1, start, StyleSpan.class);
-                            StyleSpan[] after = this.getEditableText().getSpans(start, start + 1, StyleSpan.class);
-                            return before.length > 0 && after.length > 0 && before[0].getStyle() == style && after[0].getStyle() == style;
-                        }
-
-                        return false;
-                    }
-
-                    StringBuilder builder = new StringBuilder();
-                    int i = start;
-
-                    for (; i < end; i++) {
-                        StyleSpan[] spans = this.getEditableText().getSpans(i, i + 1, StyleSpan.class);
-                        StyleSpan[] arrSpan = spans;
-                        int spanLength = spans.length;
-
-                        for (int j = 0; j < spanLength; j++) {
-                            StyleSpan span = arrSpan[i];
-                            if (span.getStyle() == style) {
-                                builder.append(this.getEditableText().subSequence(i, i + 1).toString());
-                                break;
-                            }
-                        }
-                    }
-
-                    return this.getEditableText().subSequence(start, end).toString().equals(builder.toString());
+        if (style == 0 || style == 1 || style == 2 || style == 3) {
+            if (start == end) {
+                if (start - 1 >= 0 && start + 1 <= this.getEditableText().length()) {
+                    StyleSpan[] before = this.getEditableText().getSpans(start - 1, start, StyleSpan.class);
+                    StyleSpan[] after = this.getEditableText().getSpans(start, start + 1, StyleSpan.class);
+                    return before.length > 0 && after.length > 0 && before[0].getStyle() == style && after[0].getStyle() == style;
                 }
-            default:
                 return false;
+            }
+            StringBuilder builder = new StringBuilder();
+            for (int i = start ;i < end; i++) {
+                StyleSpan[] spans = this.getEditableText().getSpans(i, i + 1, StyleSpan.class);
+                StyleSpan[] arrSpan = spans;
+                int spanLength = spans.length;
+                for (int j = 0; j < spanLength; j++) {
+                    StyleSpan span = arrSpan[j];
+                    if (span.getStyle() == style) {
+                        builder.append(this.getEditableText().subSequence(j, j + 1).toString());
+                        break;
+                    }
+                }
+            }
+            return this.getEditableText().subSequence(start, end).toString().equals(builder.toString());
         }
+        return false;
     }
 
     public void underline(boolean valid) {
@@ -228,7 +192,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     protected void underlineInvalid(int start, int end) {
         if (start < end) {
             UnderlineSpan[] spans = this.getEditableText().getSpans(start, end, UnderlineSpan.class);
-            List<RichTextEditorPart> list = new ArrayList();
+            ArrayList<RichTextEditorPart> list = new ArrayList<>();
             UnderlineSpan[] arrSpan = spans;
             int spanLength = spans.length;
 
@@ -238,18 +202,16 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
                 this.getEditableText().removeSpan(span);
             }
 
-            Iterator i = list.iterator();
+            for (RichTextEditorPart part : list) {
+                if (!part.isValid()) {
+                    continue;
+                }
+                if (part.getStart() < start) {
+                    this.underlineValid(part.getStart(), start);
+                }
 
-            while (i.hasNext()) {
-                RichTextEditorPart part = (RichTextEditorPart) i.next();
-                if (part.isValid()) {
-                    if (part.getStart() < start) {
-                        this.underlineValid(part.getStart(), start);
-                    }
-
-                    if (part.getEnd() > end) {
-                        this.underlineValid(end, part.getEnd());
-                    }
+                if (part.getEnd() > end) {
+                    this.underlineValid(end, part.getEnd());
                 }
             }
 
@@ -261,21 +223,18 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             return false;
         } else if (start != end) {
             StringBuilder builder = new StringBuilder();
-
             for (int i = start; i < end; i++) {
                 if (this.getEditableText().getSpans(i, i + 1, UnderlineSpan.class).length > 0) {
                     builder.append(this.getEditableText().subSequence(i, i + 1).toString());
                 }
             }
-
             return this.getEditableText().subSequence(start, end).toString().equals(builder.toString());
         } else if (start - 1 >= 0 && start + 1 <= this.getEditableText().length()) {
             UnderlineSpan[] before = this.getEditableText().getSpans(start - 1, start, UnderlineSpan.class);
             UnderlineSpan[] after = this.getEditableText().getSpans(start, start + 1, UnderlineSpan.class);
             return before.length > 0 && after.length > 0;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void strikethrough(boolean valid) {
@@ -297,7 +256,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     protected void strikethroughInvalid(int start, int end) {
         if (start < end) {
             StrikethroughSpan[] spans = this.getEditableText().getSpans(start, end, StrikethroughSpan.class);
-            List<RichTextEditorPart> list = new ArrayList();
+            List<RichTextEditorPart> list = new ArrayList<>();
             StrikethroughSpan[] arrSpan = spans;
             int spanLength = spans.length;
 
@@ -307,10 +266,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
                 this.getEditableText().removeSpan(span);
             }
 
-            Iterator i = list.iterator();
-
-            while (i.hasNext()) {
-                RichTextEditorPart part = (RichTextEditorPart) i.next();
+            for (RichTextEditorPart part : list) {
                 if (part.isValid()) {
                     if (part.getStart() < start) {
                         this.strikethroughValid(part.getStart(), start);
@@ -342,9 +298,8 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             StrikethroughSpan[] before = this.getEditableText().getSpans(start - 1, start, StrikethroughSpan.class);
             StrikethroughSpan[] after = this.getEditableText().getSpans(start, start + 1, StrikethroughSpan.class);
             return before.length > 0 && after.length > 0;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public void bullet(boolean valid) {
@@ -431,7 +386,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
     protected boolean containBullet() {
         String[] lines = TextUtils.split(this.getEditableText().toString(), "\n");
-        List<Integer> list = new ArrayList();
+        List<Integer> list = new ArrayList<>();
 
         for (int i = 0; i < lines.length; i++) {
             int lineStart = 0;
@@ -452,16 +407,13 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         }
 
         Iterator iterator = list.iterator();
-
         Integer i;
         do {
             if (!iterator.hasNext()) {
                 return true;
             }
-
             i = (Integer) iterator.next();
         } while (this.containBullet(i));
-
         return false;
     }
 
@@ -478,13 +430,12 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             end = start + lines[index].length();
             if (start >= end) {
                 return false;
-            } else {
-                BulletSpan[] spans = this.getEditableText().getSpans(start, end, BulletSpan.class);
-                return spans.length > 0;
             }
-        } else {
-            return false;
+            BulletSpan[] spans = this.getEditableText().getSpans(start, end, BulletSpan.class);
+            return spans.length > 0;
         }
+        return false;
+
     }
 
     public void quote(boolean valid) {
@@ -538,7 +489,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             if (this.containQuote(i)) {
 
                 int lineStart = 0;
-                int lineEnd = 1;
+                int lineEnd;
 
                 for (lineEnd = 0; lineEnd < i; lineEnd++) {
                     lineStart = lineStart + lines[lineEnd].length() + 1;
@@ -546,35 +497,39 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
                 lineEnd = lineStart + lines[i].length();
 
-                if (lineStart < lineEnd) {
-                    int quoteStart = 0;
-                    int quoteEnd = 0;
-
-                    if (lineStart <= this.getSelectionStart() && this.getSelectionEnd() <= lineEnd) {
-                        quoteStart = lineStart;
-                        quoteEnd = lineEnd;
-                    } else if (this.getSelectionStart() <= lineStart && lineEnd <= this.getSelectionEnd()) {
-                        quoteStart = lineStart;
-                        quoteEnd = lineEnd;
-                    }
-
-                    if (quoteStart < quoteEnd) {
-                        QuoteSpan[] spans = this.getEditableText().getSpans(quoteStart, quoteEnd, QuoteSpan.class);
-                        int spanLength = spans.length;
-                        for (int j = 0; j < spanLength; j++) {
-                            QuoteSpan span = spans[j];
-                            this.getEditableText().removeSpan(span);
-                        }
-                    }
-                }
+                removeQuote(lineStart,lineEnd);
             }
         }
 
     }
 
+    private void removeQuote(int start, int end){
+        if (start < end) {
+            int quoteStart = 0;
+            int quoteEnd = 0;
+
+            if (start <= this.getSelectionStart() && this.getSelectionEnd() <= end) {
+                quoteStart = start;
+                quoteEnd = end;
+            } else if (this.getSelectionStart() <= start && end <= this.getSelectionEnd()) {
+                quoteStart = start;
+                quoteEnd = end;
+            }
+
+            if (quoteStart < quoteEnd) {
+                QuoteSpan[] spans = this.getEditableText().getSpans(quoteStart, quoteEnd, QuoteSpan.class);
+                int spanLength = spans.length;
+                for (int j = 0; j < spanLength; j++) {
+                    QuoteSpan span = spans[j];
+                    this.getEditableText().removeSpan(span);
+                }
+            }
+        }
+    }
+
     protected boolean containQuote() {
         String[] lines = TextUtils.split(this.getEditableText().toString(), "\n");
-        List<Integer> list = new ArrayList();
+        List<Integer> list = new ArrayList<>();
 
         for (int i = 0; i < lines.length; i++) {
             int lineStart = 0;
@@ -604,7 +559,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
             i = (Integer) iterator.next();
         } while (this.containQuote(i));
-
         return false;
     }
 
@@ -620,13 +574,11 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             end = start + lines[index].length();
             if (start >= end) {
                 return false;
-            } else {
-                QuoteSpan[] spans = this.getEditableText().getSpans(start, end, QuoteSpan.class);
-                return spans.length > 0;
             }
-        } else {
-            return false;
+            QuoteSpan[] spans = this.getEditableText().getSpans(start, end, QuoteSpan.class);
+            return spans.length > 0;
         }
+        return false;
     }
 
     protected void alignLeft() {
@@ -686,56 +638,49 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     }
 
     private void adjustAlignment(int style, int start, int end){
-        switch (style) {
-            case 0:
-            case 1:
-                if (start >= end) {
-                    this.getEditableText().setSpan(new AlignmentSpan() {
-
-                        @Override
-                        public Layout.Alignment getAlignment() {
-                            Alignment alignment = Alignment.ALIGN_NORMAL;
-                            return alignment;
-                        }
-                    }, start, end, 33);
-                }
+        if (style == 0 || style == 1) {
+            if (start >= end) {
                 this.getEditableText().setSpan(new AlignmentSpan() {
 
                     @Override
-                    public Layout.Alignment getAlignment() {
+                    public Alignment getAlignment() {
                         Alignment alignment = Alignment.ALIGN_NORMAL;
                         return alignment;
                     }
                 }, start, end, 33);
-                break;
-            case 2:
-                if (start >= end) {
-                    return;
-                }
-                this.getEditableText().setSpan(new AlignmentSpan() {
+            }
+            this.getEditableText().setSpan(new AlignmentSpan() {
 
-                    @Override
-                    public Layout.Alignment getAlignment() {
-                        Alignment alignment = Alignment.ALIGN_OPPOSITE;
-                        return alignment;
-                    }
-                }, start, end, 33);
-                break;
-            case 3:
-                if (start >= end) {
-                    return;
+                @Override
+                public Alignment getAlignment() {
+                    Alignment alignment = Alignment.ALIGN_NORMAL;
+                    return alignment;
                 }
-                this.getEditableText().setSpan(new AlignmentSpan() {
+            }, start, end, 33);
+        } else if (style == 2) {
+            if (start >= end) {
+                return;
+            }
+            this.getEditableText().setSpan(new AlignmentSpan() {
 
-                    @Override
-                    public Layout.Alignment getAlignment() {
-                        Alignment alignment = Alignment.ALIGN_CENTER;
-                        return alignment;
-                    }
-                }, start, end, 33);
-                break;
-            default:
-                break;
+                @Override
+                public Alignment getAlignment() {
+                    Alignment alignment = Alignment.ALIGN_OPPOSITE;
+                    return alignment;
+                }
+            }, start, end, 33);
+        } else if (style == 3) {
+            if (start >= end) {
+                return;
+            }
+            this.getEditableText().setSpan(new AlignmentSpan() {
+
+                @Override
+                public Alignment getAlignment() {
+                    Alignment alignment = Alignment.ALIGN_CENTER;
+                    return alignment;
+                }
+            }, start, end, 33);
         }
     }
 
@@ -751,9 +696,8 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             }
             this.setSelection(this.getEditableText().length());
             this.historyWorking = false;
-        } else {
-            return;
         }
+        return;
     }
 
     public void undo() {
@@ -769,36 +713,32 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     public boolean redoValid() {
         if (this.historyEnable && this.historySize > 0 && this.historyList.size() > 0 && !this.historyWorking) {
             return this.historyCursor < this.historyList.size() - 1 || this.historyCursor >= this.historyList.size() - 1 && this.inputLast != null;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean undoValid() {
         if (this.historyEnable && this.historySize > 0 && !this.historyWorking) {
             return this.historyList.size() > 0 && this.historyCursor > 0;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean contains(int format) {
-        switch (format) {
-            case 1:
-                return this.containStyle(1, this.getSelectionStart(), this.getSelectionEnd());
-            case 2:
-                return this.containStyle(2, this.getSelectionStart(), this.getSelectionEnd());
-            case 3:
-                return this.containUnderline(this.getSelectionStart(), this.getSelectionEnd());
-            case 4:
-                return this.containStrikethrough(this.getSelectionStart(), this.getSelectionEnd());
-            case 5:
-                return this.containBullet();
-            case 6:
-                return this.containQuote();
-            default:
-                return false;
+        if (format == 1) {
+            return this.containStyle(1, this.getSelectionStart(), this.getSelectionEnd());
+        } else if (format == 2) {
+            return this.containStyle(2, this.getSelectionStart(), this.getSelectionEnd());
+        } else if (format == 3) {
+            return this.containUnderline(this.getSelectionStart(), this.getSelectionEnd());
+        } else if (format == 4) {
+            return this.containStrikethrough(this.getSelectionStart(), this.getSelectionEnd());
+        } else if (format == 5) {
+            return this.containBullet();
+        } else if (format == 6) {
+            return this.containQuote();
         }
+        return false;
     }
 
     public void beforeTextChanged(CharSequence text, int start, int count, int after) {
