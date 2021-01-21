@@ -10,103 +10,166 @@ import java.util.List;
 
 public class ShelfDAO implements IShelfDAO {
 
-    private final DatabaseHelper dbHelper;
+   private final DatabaseHelper dbHelper;
 
-    public ShelfDAO(DatabaseHelper dbHelper) {
-        this.dbHelper = dbHelper;
-    }
+   public ShelfDAO(DatabaseHelper dbHelper) {
+      this.dbHelper = dbHelper;
+   }
 
-    @Override
-    public boolean create(Shelf shelf) {
-        long currentTime = System.currentTimeMillis() / 1_000L;
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+   @Override
+   public boolean create(Shelf shelf) {
+      long currentTime = System.currentTimeMillis() / 1_000L;
+      SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        try {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(DatabaseHelper.NAME, shelf.getName());
-            contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
-            contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-            contentValues.put(DatabaseHelper.SHELF_ID, shelf.getShelfId());
+      try {
+         ContentValues contentValues = new ContentValues();
+         contentValues.put(DatabaseHelper.NAME, shelf.getName());
+         contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
+         contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
+         contentValues.put(DatabaseHelper.SHELF_ID, shelf.getShelfId());
 
-            long id = db.insert(DatabaseHelper.TABLE_NAME_SHELF, null, contentValues);
+         long id = db.insert(DatabaseHelper.TABLE_NAME_SHELF, null, contentValues);
 
-            shelf.setId(id);
+         shelf.setId(id);
 
-        } catch (SQLiteException ex) {
-            return false;
-        } finally {
-            db.close();
-        }
+      } catch (SQLiteException ex) {
+         return false;
+      } finally {
+         db.close();
+      }
 
-        return true;
-    }
+      return true;
+   }
 
-    @Override
-    public Shelf findById(long id) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+   @Override
+   public Shelf findById(long id) {
+      SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_SHELF, new String[]{DatabaseHelper._ID,
-                        DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.SHELF_ID},
-                DatabaseHelper._ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
+      Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_SHELF, new String[]{DatabaseHelper._ID,
+                                     DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.SHELF_ID},
+                               DatabaseHelper._ID + "=?",
+                               new String[]{String.valueOf(id)}, null, null, null, null);
 
-        Shelf shelf = null;
-        if (cursor != null) {
-            cursor.moveToFirst();
+      Shelf shelf = null;
+      if (cursor != null) {
+         cursor.moveToFirst();
 
-            shelf = new Shelf(
-                    Long.parseLong(cursor.getString(0)), // Id
-                    cursor.getString(1), // Name
-                    Integer.parseInt(cursor.getString(4)), // Create date
-                    Integer.parseInt(cursor.getString(5)), // Mod date
-                    Long.parseLong(cursor.getString(0)) // Shelf id
-            );
-            cursor.close();
-        }
-        return shelf;
-    }
+         shelf = new Shelf();
 
+         shelf.setId(Long.parseLong(cursor.getString(0))); // Id
+         shelf.setName(cursor.getString(1)); // Name
+         shelf.setCreateDate(Integer.parseInt(cursor.getString(2))); // Create date
+         shelf.setModDate(Integer.parseInt(cursor.getString(3))); // Mod date
 
-    // get all shelves in a list view
-    @Override
-    public List<Shelf> findAll() {
-        List<Shelf> shelfList = new ArrayList<Shelf>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
+         if (cursor.getString(4) == null) { // without it an error occurs
+            shelf.setShelfId(null);
+         } else {
+            shelf.setShelfId(Long.parseLong(cursor.getString(4))); // Shelf id
+         }
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                Shelf shelf = new Shelf();
-
-                shelf.setId(Long.parseLong(cursor.getString(0)));
-                shelf.setName(cursor.getString(1));
-                shelf.setCreateDate(Integer.parseInt(cursor.getString(2)));
-                shelf.setModDate(Integer.parseInt(cursor.getString(3)));
-                shelf.setShelfId(Long.parseLong(cursor.getString(4)));
-
-                // Adding shelf to list
-                shelfList.add(shelf);
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-
-        return shelfList;
-    }
+         cursor.close();
+      }
+      return shelf;
+   }
 
 
-    // delete single shelf entry
-    @Override
-    public void delete(Long id) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.delete(DatabaseHelper.TABLE_NAME_SHELF, DatabaseHelper._ID + " = ?",
+   // get all shelves in a list view
+   @Override
+   public List<Shelf> findAll() {
+      List<Shelf> shelfList = new ArrayList<Shelf>();
+      // Select All Query
+      String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
+
+      SQLiteDatabase db = dbHelper.getWritableDatabase();
+      Cursor cursor = db.rawQuery(selectQuery, null);
+
+      // looping through all rows and adding to list
+      if (cursor.moveToFirst()) {
+         do {
+            Shelf shelf = new Shelf();
+
+            shelf.setId(Long.parseLong(cursor.getString(0)));
+            shelf.setName(cursor.getString(1));
+            shelf.setCreateDate(Integer.parseInt(cursor.getString(2)));
+            shelf.setModDate(Integer.parseInt(cursor.getString(3)));
+            shelf.setShelfId(Long.parseLong(cursor.getString(4)));
+
+            // Adding shelf to list
+            shelfList.add(shelf);
+         } while (cursor.moveToNext());
+         cursor.close();
+      }
+
+      return shelfList;
+   }
+
+
+   // delete single shelf entry
+   @Override
+   public void delete(Long id) {
+      SQLiteDatabase db = dbHelper.getWritableDatabase();
+      db.delete(DatabaseHelper.TABLE_NAME_SHELF, DatabaseHelper._ID + " = ?",
                 new String[]{String.valueOf(id)});
 
-        db.close();
-    }
+      db.close();
+   }
 
+   private String partSqlQuery(Long id) {
+      if (id == null) {
+         return " IS NULL";
+      } else {
+         return " = " + id;
+      }
+   }
+
+   public List<Shelf> findAllByParentId(Long id) {
+      // Find all shelves with the given parent id
+      List<Shelf> shelfList = new ArrayList<Shelf>();
+      String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF
+            + " WHERE " + DatabaseHelper.SHELF_ID + partSqlQuery(id);
+
+      SQLiteDatabase db = dbHelper.getWritableDatabase();
+      Cursor cursor = db.rawQuery(selectQuery, null);
+
+      // looping through all rows and adding to list
+      if (cursor.moveToFirst()) {
+         do {
+            Shelf shelf = new Shelf();
+
+            shelf.setId(Long.parseLong(cursor.getString(0)));
+            shelf.setName(cursor.getString(1));
+            shelf.setCreateDate(Integer.parseInt(cursor.getString(2)));
+            shelf.setModDate(Integer.parseInt(cursor.getString(3)));
+
+            if (id == null) {
+               shelf.setShelfId(null);
+            } else {
+               shelf.setShelfId(Long.parseLong(cursor.getString(4)));
+            }
+            // Adding shelf to list
+            shelfList.add(shelf);
+         } while (cursor.moveToNext());
+         cursor.close();
+      }
+
+      return shelfList;
+   }
+
+   public Long findLatestId() {
+      SQLiteDatabase db = dbHelper.getReadableDatabase();
+      String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
+            + DatabaseHelper.TABLE_NAME_SHELF + " ORDER BY " + DatabaseHelper._ID + " DESC LIMIT 1";
+
+      Cursor cursor = db.rawQuery(selectQuery, null);
+
+      Long id = null;
+      if (cursor != null) {
+         cursor.moveToFirst();
+         id = cursor.getLong(0); // Id
+         cursor.close();
+      }
+
+      return id;
+   }
 
 }

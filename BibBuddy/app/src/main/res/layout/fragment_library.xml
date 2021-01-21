@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_library"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:translationY="100dp"
-    android:orientation = "vertical">
+    android:orientation="vertical"
+    android:paddingTop="60dp">
 
-    <ListView
-        android:id="@+id/list_view_library"
+    <ImageButton
+        android:id="@+id/btn_add_shelf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@string/add_shelf"
+        app:srcCompat="@drawable/ic_add_new_shelf" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_add_shelf"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/library_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_add_shelf"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager" />
 
     <TextView
         android:id="@+id/list_view_library_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/btn_add_shelf"
+        android:paddingStart="10dp"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 </RelativeLayout>

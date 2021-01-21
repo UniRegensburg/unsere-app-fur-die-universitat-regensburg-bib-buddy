@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_library_add_shelf"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#B0B2BC"
+    android:layout_marginTop="250dp">
+
+    <EditText
+        android:id="@+id/input_shelf_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_shelf_name"
+        android:inputType="text"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
+
+    <Button
+        android:id="@+id/btn_shelf_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_shelf_name"
+        android:layout_marginStart="10dp"
+        android:text="@string/cancel" />
+
+    <Button
+        android:id="@+id/btn_confirm_shelf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/input_shelf_name"
+        android:layout_marginStart="50dp"
+        android:layout_toEndOf="@id/btn_shelf_cancel"
+        android:text="@string/add_shelf" />
+
+
+</RelativeLayout>

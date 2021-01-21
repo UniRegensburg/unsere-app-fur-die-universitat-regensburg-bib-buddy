@@ -15,4 +15,10 @@
     <!-- Common -->
     <string name="empty_list">Keine Einträge vorhanden</string>
     <string name="navigation_settings">Einstellugnen</string>
+    <string name="cancel">abbrechen</string>
+
+    <!-- Library -->
+    <string name="add_shelf">Regal hinzufügen</string>
+    <string name="input_shelf_name">Neuen Regalnamen eingeben</string>
+
 </resources>
