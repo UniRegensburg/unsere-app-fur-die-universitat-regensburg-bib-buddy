@@ -33,6 +33,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     public static final int FORMAT_STRIKETHROUGH = 4;
     public static final int FORMAT_BULLET = 5;
     public static final int FORMAT_QUOTE = 6;
+    
     private final List<Editable> historyList = new LinkedList();
     private boolean historyEnable = true;
     private int historySize = 100;
