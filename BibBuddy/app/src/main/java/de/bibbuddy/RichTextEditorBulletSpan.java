@@ -16,9 +16,6 @@ public class RichTextEditorBulletSpan extends BulletSpan {
     private final int bulletRadius = 10;
     private final int bulletGapWidth = 20;
 
-    public RichTextEditorBulletSpan() {
-    }
-
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(this.bulletColor);

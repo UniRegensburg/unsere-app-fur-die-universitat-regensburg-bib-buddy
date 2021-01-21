@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import java.util.Date;
 
 public class TextNoteEditorFragment extends Fragment {
 
@@ -45,7 +45,7 @@ public class TextNoteEditorFragment extends Fragment {
 
             //TODO: A note file has to be created and saved onto database first to get an autoincrement note file id
             // meanwhile using rownumber (c.getCount()) as note file id
-            note = new Note("",0, "", currentDate, currentDate, (long) c.getCount());
+            note = new Note("", 0, "", currentDate, currentDate, (long) c.getCount());
             c.close();
             noteDAO.create(note);
             noteId = note.getId();
@@ -68,9 +68,11 @@ public class TextNoteEditorFragment extends Fragment {
     private void setupTextWatcher() {
         TextWatcher textWatcher = new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {

@@ -29,7 +29,8 @@ public class Note {
         this.noteFileId = noteFileId;
     }
 
-    public Note(){};
+    public Note() {
+    }
 
     public Long getId() {
         return id;

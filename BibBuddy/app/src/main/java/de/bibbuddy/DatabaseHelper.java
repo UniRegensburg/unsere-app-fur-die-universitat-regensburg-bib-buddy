@@ -59,10 +59,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String NOTE_FILE_ID = "note_file_id";
     public static final String BOOK_ORIGIN_ID = "book_origin_id";
     public static final String BOOK_REF_ID = "book_referred_id";
-
-
+    
     // Database Information
-    public static final String DB_NAME = "BibBuddyStorage.db"; // DB
+    private static final String DB_NAME = "BibBuddyStorage.db"; // DB
 
     // database version
     private static final int DB_VERSION = 1;
