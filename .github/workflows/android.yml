@@ -1,0 +1,82 @@
+#This is a workflow that creates, downloads, uploads and releases APK-file.
+name: APK Workflow
+
+#Event triggers
+#execute the jobs everytime when a pull_request to the main-branch is created
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  runtests:
+    name: Run Setup Tests
+    runs-on: ubuntu-latest
+    steps:
+      
+      #Checkout a Git repository and set up Java JDK
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 1.8
+      
+      #command: run the test
+      - name: Run Build Test
+        #Working directory is the folder with the project
+        working-directory: ./BibBuddy
+        run: bash ./gradlew runtests --stacktrace
+
+  apk:
+    name: APK
+
+    #to run this job, the job build_test should be successful  
+    #otherwise: this job will be skipped
+    needs: runtests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 1.8
+
+      - name: Build APK
+        working-directory: ./BibBuddy
+        run: bash ./gradlew assembleDebug --stacktrace
+
+      #Upload the APK as a build artifact that can be used by subsequent workflow steps
+      - name: Upload APK
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: apk_file
+          path: ./BibBuddy/app/build/outputs/apk/debug/app-debug.apk 
+
+      #Download a build artifact that was previously uploaded in the workflow by the upload-artifact action
+      - name: Download APK
+        uses: actions/download-artifact@v2.0.8
+        with:
+          name: apk_file
+
+      #Create a release for a tag in your repository           
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          #The name of the tag for this release
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: This is a release of the created APK
+          
+          #Additional inputs (see https://github.com/actions/create-release)
+          #body_path: A file with contents describing the release. Optional, and not needed if using body.
+          #draft: true to create a draft (unpublished) release, false to create a published one. Default: false
+          #prerelease: true to identify the release as a prerelease. false to identify the release as a full release. Default: false
+          #commitish : Any branch or commit SHA the Git tag is created from, unused if the Git tag already exists. Default: SHA of current commit
+          #owner: The name of the owner of the repo. Used to identify the owner of the repository. Used when cutting releases for external repositories. Default: Current owner
+          #repo: The name of the repository. Used to identify the repository on which to release. Used when cutting releases for external repositories. Default: Current repository
