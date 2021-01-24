@@ -26,7 +26,7 @@
 
     <!-- Text Note Editor Items -->
     <string name="deleted_note">Gelöscht</string>
-    <string name="undo">Rückgängig</string>
+    <string name="undo">RÜCKGÄNGIG</string>
     <string name="redo">Wiederholen</string>
 
     <!-- Text Note Editor Toast -->
