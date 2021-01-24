@@ -31,6 +31,19 @@ public class Book {
         this.modDate = modDate;
     }
 
+    // id, creation_date and mod_date are set in the database
+    public Book(String isbn, String title, String subttle, Integer pubYear,
+                String publisher, String volume, String edition, String addInfos) {
+        this.isbn = isbn;
+        this.title = title;
+        this.subttle = subttle;
+        this.pubYear = pubYear;
+        this.publisher = publisher;
+        this.volume = volume;
+        this.edition = edition;
+        this.addInfos = addInfos;
+    }
+
     public Book() {
     }
 

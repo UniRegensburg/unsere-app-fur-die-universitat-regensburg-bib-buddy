@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
    private final String HOME_FRAGMENT_TAG = "home";
