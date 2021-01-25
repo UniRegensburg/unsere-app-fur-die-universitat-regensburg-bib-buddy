@@ -387,7 +387,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         do {
             if (!iterator.hasNext())
                 return true;
-            i = (Integer) iterator.next();
+            i = iterator.next();
         } while (this.containBullet(i));
         return false;
     }
@@ -519,7 +519,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         do {
             if (!iterator.hasNext())
                 return true;
-            i = (Integer) iterator.next();
+            i = iterator.next();
         } while (this.containQuote(i));
         return false;
     }
