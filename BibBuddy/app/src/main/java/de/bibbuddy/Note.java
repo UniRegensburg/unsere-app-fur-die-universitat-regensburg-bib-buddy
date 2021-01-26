@@ -5,13 +5,22 @@ public class Note {
     private String name;
     private Integer type;
     private String text;
-    private Integer createDate;
-    private Integer modDate;
+    private Long createDate;
+    private Long modDate;
     private Long noteFileId;
 
-
-    public Note(Long id, String name, Integer type, String text, Integer createDate, Integer modDate, Long noteFileId) {
+    public Note(Long id, String name, Integer type, String text, Long createDate, Long modDate, Long noteFileId) {
         this.id = id;
+        this.name = name;
+        this.type = type;
+        this.text = text;
+        this.createDate = createDate;
+        this.modDate = modDate;
+        this.noteFileId = noteFileId;
+    }
+
+    //id is autoincrementing on database
+    public Note(String name, Integer type, String text, Long createDate, Long modDate, Long noteFileId) {
         this.name = name;
         this.type = type;
         this.text = text;
@@ -55,19 +64,19 @@ public class Note {
         this.text = text;
     }
 
-    public Integer getCreateDate() {
+    public Long getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Integer createDate) {
+    public void setCreateDate(Long createDate) {
         this.createDate = createDate;
     }
 
-    public Integer getModDate() {
+    public Long getModDate() {
         return modDate;
     }
 
-    public void setModDate(Integer modDate) {
+    public void setModDate(Long modDate) {
         this.modDate = modDate;
     }
 

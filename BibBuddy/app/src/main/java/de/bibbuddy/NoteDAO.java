@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoteDAO implements INoteDAO {
-    private final DatabaseHelper dbHelper;
 
+    private final DatabaseHelper dbHelper;
     public NoteDAO(DatabaseHelper dbHelper) {
         this.dbHelper = dbHelper;
     }
@@ -21,6 +21,14 @@ public class NoteDAO implements INoteDAO {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         try {
+
+            //Create new Note File and fetch its autoincrementing id key
+            ContentValues noteFile = new ContentValues();
+            noteFile.put(DatabaseHelper.FILE,"");
+            db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE,null, noteFile);
+            Cursor c = db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null,null, null, null, null, null);
+            c.moveToLast();
+
             ContentValues contentValues = new ContentValues();
             contentValues.put(DatabaseHelper.NAME, note.getName());
             contentValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
@@ -29,7 +37,10 @@ public class NoteDAO implements INoteDAO {
             contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
             contentValues.put(DatabaseHelper.NOTE_FILE_ID, note.getNoteFileId());
 
-            long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
+            //TODO: Check if note_file_id is autoincrementing?
+            //contentValues.put(DatabaseHelper.NOTE_FILE_ID, c.getInt(0));
+
+            long id = db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, contentValues);
 
             note.setId(id);
         } catch (SQLiteException ex) {
@@ -54,14 +65,13 @@ public class NoteDAO implements INoteDAO {
         Note note = null;
         if (cursor != null) {
             cursor.moveToFirst();
-
             note = new Note(
                     Long.parseLong(cursor.getString(0)), // Id
                     cursor.getString(1), // Name
                     Integer.parseInt(cursor.getString(2)), // Type
                     cursor.getString(3), // Text
-                    Integer.parseInt(cursor.getString(4)), // Create date
-                    Integer.parseInt(cursor.getString(5)), // Mod date
+                    Long.parseLong(cursor.getString(4)), // Create date
+                    Long.parseLong(cursor.getString(5)), // Mod date
                     Long.parseLong(cursor.getString(6)) // Note file id
             );
             cursor.close();
@@ -88,8 +98,8 @@ public class NoteDAO implements INoteDAO {
                 note.setName(cursor.getString(1));
                 note.setType(Integer.parseInt(cursor.getString(2)));
                 note.setText(cursor.getString(3));
-                note.setCreateDate(Integer.parseInt(cursor.getString(4)));
-                note.setModDate(Integer.parseInt(cursor.getString(5)));
+                note.setCreateDate(Long.parseLong(cursor.getString(4)));
+                note.setModDate(Long.parseLong(cursor.getString(5)));
                 note.setNoteFileId(Long.parseLong(cursor.getString(6)));
 
                 // Adding note to list
@@ -110,6 +120,22 @@ public class NoteDAO implements INoteDAO {
         db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
                 new String[]{String.valueOf(id)});
 
+        db.close();
+    }
+
+    //Update a single note selected by given id
+    public void updateNote(Long id, String name, int type, String text, Long createDate, Long modDate, Long noteFileId){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("id", id);
+        values.put("name", name);
+        values.put("type", type);
+        values.put("text", text);
+        values.put("creation_date", createDate);
+        values.put("modifikation_date", modDate);
+        values.put("note_file_id", noteFileId);
+        dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
+                DatabaseHelper._ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
     }
 
