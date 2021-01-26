@@ -120,6 +120,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
             public void run() {
                 if (removed) {
                     noteDAO.delete(note.getId());
+                    adapter.removeItem(position);
                     adapter.notifyDataSetChanged();
                 }
             }
