@@ -9,16 +9,19 @@ import android.widget.PopupMenu;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class NotesFragment extends Fragment {
 
+    @VisibleForTesting
     static List<Note> notes;
-    private View view;
-    private RecyclerViewAdapter adapter;
-    private RecyclerView recyclerView;
+    View view;
+    RecyclerViewAdapter adapter;
+    RecyclerView recyclerView;
+    NoteDAO noteDAO;
 
 
     @Nullable
@@ -27,7 +30,7 @@ public class NotesFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_notes, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        NoteDAO noteDAO = new NoteDAO(databaseHelper);
+        noteDAO = new NoteDAO(databaseHelper);
         notes = noteDAO.findAll();
 
         setupRecyclerView();
