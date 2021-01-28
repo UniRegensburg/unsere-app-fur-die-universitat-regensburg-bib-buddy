@@ -1,6 +1,5 @@
 package de.bibbuddy;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,12 +7,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -75,12 +72,14 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
         background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
         background.draw(c);
 
-        drawSwipeIcons(viewHolder);
+        drawSwipeIcon(viewHolder);
+
+        itemView.setTag(1);
 
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
 
-    private void drawSwipeIcons(RecyclerView.ViewHolder viewHolder) {
+    private void drawSwipeIcon(RecyclerView.ViewHolder viewHolder) {
         View itemView = viewHolder.itemView;
         int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
         int iconMargin = (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
