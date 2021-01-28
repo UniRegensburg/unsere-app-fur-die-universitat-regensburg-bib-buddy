@@ -5,18 +5,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
 
 
-public class LibraryAddShelfFragment extends Fragment {
+public class LibraryAddShelfFragment extends DialogFragment {
 
    private final AddShelfLibraryListener listener;
 
@@ -32,15 +31,22 @@ public class LibraryAddShelfFragment extends Fragment {
 
       Bundle bundle = this.getArguments();
       setupButtons(view, bundle);
+      setupInput(view);
 
       return view;
    }
 
-   private void closeFragment() {
-      FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-      FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-      fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.fragment_container_add_shelf));
-      fragmentTransaction.commit();
+   private void setupInput(View view) {
+      view.findViewById(R.id.input_shelf_name).requestFocus();
+      InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+   }
+
+   public void closeFragment() {
+      onDestroyView();
+
+      InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
    }
 
    private void setupButtons(View view, Bundle bundle) {
@@ -67,20 +73,19 @@ public class LibraryAddShelfFragment extends Fragment {
             String shelfName = editShelfName.getText().toString();
 
             if (shelfName.isEmpty() || shelfName.trim().isEmpty()) {
-               Toast.makeText(context, "Bitte einen gültigen Namen angeben." +
-                     "\nReine Whitespaces sind nicht erlaubt.", Toast.LENGTH_SHORT).show();
+               Toast.makeText(context, getString(R.string.invalid_name), Toast.LENGTH_SHORT).show();
                return;
             }
 
             String[] shelfNames = bundle.getStringArray(LibraryKeys.SHELF_NAMES);
             for (String name : shelfNames) {
                if (shelfName.equals(name)) {
-                  Toast.makeText(context, "Name existiert bereits in diesem Regal", Toast.LENGTH_SHORT).show();
+                  Toast.makeText(context, getString(R.string.name_exists), Toast.LENGTH_SHORT).show();
                   return;
                }
             }
 
-            Toast.makeText(context, "Regal wurde hinzugefügt", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getString(R.string.shelf_added), Toast.LENGTH_SHORT).show();
             Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
             listener.onShelfAdded(shelfName, shelfId);
             closeFragment();

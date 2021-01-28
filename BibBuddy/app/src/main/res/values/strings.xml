@@ -15,10 +15,16 @@
     <!-- Common -->
     <string name="empty_list">Keine Einträge vorhanden</string>
     <string name="navigation_settings">Einstellugnen</string>
-    <string name="cancel">abbrechen</string>
+    <string name="back">zurück</string>
+    <string name="add">+</string>
+    <string name="items">Items</string>
+    <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
 
     <!-- Library -->
-    <string name="add_shelf">Regal hinzufügen</string>
+    <string name="back_to">&lt; zurück zu</string>
+    <string name="add_shelf">hinzufügen</string>
     <string name="input_shelf_name">Neuen Regalnamen eingeben</string>
+    <string name="shelf_added">Regal wurde hinzugefügt</string>
+    <string name="name_exists">Name existiert bereits in diesem Regal</string>
 
 </resources>

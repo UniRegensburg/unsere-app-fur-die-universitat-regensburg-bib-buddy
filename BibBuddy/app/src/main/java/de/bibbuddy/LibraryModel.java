@@ -27,6 +27,10 @@ public class LibraryModel {
       libraryList.add(new ShelfItem(name, id, parentId));
    }
 
+   public Long getCurrentShelfId() {
+      return currentShelfId;
+   }
+
    public List<LibraryItem> getCurrentLibraryList() {
       return libraryList;
    }
@@ -67,10 +71,19 @@ public class LibraryModel {
 
    private String getShelfName(Long id) {
       if (id == null) {
-         return "Bibliothek";
+         return context.getString(R.string.navigation_library);
       }
 
       return shelfDAO.findById(id).getName();
    }
 
+   public String getPreviousShelfName() {
+      Long parentId = shelfDAO.findById(currentShelfId).getShelfId();
+
+      if (parentId == null) {
+         return context.getString(R.string.navigation_library);
+      }
+
+      return shelfDAO.findById(parentId).getName();
+   }
 }

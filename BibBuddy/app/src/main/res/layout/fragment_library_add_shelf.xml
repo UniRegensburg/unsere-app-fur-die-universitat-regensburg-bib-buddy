@@ -3,34 +3,36 @@
     android:id="@+id/fragment_library_add_shelf"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#B0B2BC"
-    android:layout_marginTop="250dp">
+    android:layout_above="@id/fragment_library"
+    android:background="@color/grey_light"
+    android:padding="20dp">
 
     <EditText
         android:id="@+id/input_shelf_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:background="@color/white"
+        android:focusable="true"
         android:hint="@string/input_shelf_name"
-        android:inputType="text"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"/>
+        android:inputType="text" />
 
     <Button
         android:id="@+id/btn_shelf_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_shelf_name"
-        android:layout_marginStart="10dp"
-        android:text="@string/cancel" />
+        android:text="@string/back"
+        android:theme="@style/Button.Grey" />
 
     <Button
         android:id="@+id/btn_confirm_shelf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_shelf_name"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="20dp"
         android:layout_toEndOf="@id/btn_shelf_cancel"
-        android:text="@string/add_shelf" />
-
+        android:text="@string/add_shelf"
+        android:theme="@style/Button.Pink" />
 
 </RelativeLayout>
