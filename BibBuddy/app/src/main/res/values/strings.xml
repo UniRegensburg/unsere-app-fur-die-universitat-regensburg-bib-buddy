@@ -6,6 +6,9 @@
     <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
     <string name="description_settings">A black gear icon, visualizing settings.</string>
 
+    <string name="description_text_note">Text Note Icon</string>
+    <string name="description_add_note">Add note button</string>
+
     <!-- Navigation Items -->
     <string name="navigation_home">Home</string>
     <string name="navigation_search">Suche</string>
@@ -27,4 +30,28 @@
     <string name="shelf_added">Regal wurde hinzugefügt</string>
     <string name="name_exists">Name existiert bereits in diesem Regal</string>
 
+    <!-- Adding Notes Items -->
+    <string name="create_text_note">Textnotiz</string>
+    <string name="create_voice_note">Sprachnotiz</string>
+    <string name="take_picture_note">Foto</string>
+
+    <!-- Text Note Editor Items -->
+    <string name="deleted_note">Gelöscht</string>
+    <string name="undo">RÜCKGÄNGIG</string>
+    <string name="redo">Wiederholen</string>
+
+    <!-- Text Note Editor Toast -->
+    <string name="toast_bold">Fett</string>
+    <string name="toast_italic">Kursiv</string>
+    <string name="toast_underline">Unterstreichen</string>
+    <string name="toast_strikethrough">Durchstreichen</string>
+    <string name="toast_bullet">Aufzählung</string>
+    <string name="toast_quote">Zitat</string>
+    <string name="toast_alignLeft">Linksbündig</string>
+    <string name="toast_alignRight">Rechtsbündig</string>
+    <string name="toast_alignCenter">Zentriert</string>
+    <string name="delete_notification">Die Notiz wurde entfernt.</string>
+
+
 </resources>
+

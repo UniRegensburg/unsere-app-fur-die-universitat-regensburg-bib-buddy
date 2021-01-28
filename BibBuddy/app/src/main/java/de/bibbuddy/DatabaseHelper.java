@@ -1,8 +1,19 @@
 package de.bibbuddy;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseLockedException;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.ContactsContract;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -48,8 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String NOTE_FILE_ID = "note_file_id";
     public static final String BOOK_ORIGIN_ID = "book_origin_id";
     public static final String BOOK_REF_ID = "book_referred_id";
-
-
+    
     // Database Information
     private static final String DB_NAME = "BibBuddyStorage.db"; // DB
 
@@ -239,7 +249,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
         SQLiteDatabase db = this.getWritableDatabase();
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {
