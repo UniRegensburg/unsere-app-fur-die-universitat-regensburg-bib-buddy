@@ -1,21 +1,5 @@
 package de.bibbuddy;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.widget.ImageView;
-
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
-import org.junit.Test;
-
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
-import androidx.test.espresso.matcher.ViewMatchers;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
@@ -25,6 +9,19 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.ImageView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.core.app.ActivityScenario;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.contrib.RecyclerViewActions;
+import androidx.test.espresso.matcher.ViewMatchers;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
+import org.junit.Test;
 
 public class NotesFragmentUITest {
 
@@ -41,37 +38,37 @@ public class NotesFragmentUITest {
         ActivityScenario scenario = ActivityScenario.launch(MainActivity.class);
         onView(withId(R.id.navigation_notes)).perform(click());
         onView(withId(R.id.fragment_notes)).check(matches(isDisplayed()));
-        scenario.onActivity(new ActivityScenario.ActivityAction<MainActivity>() {
-            @Override
-            public void perform(MainActivity activity) {
-                nF = (NotesFragment) activity.getSupportFragmentManager().getFragments().get(0);
-                NotesFragment.notes.clear();
+        scenario.onActivity(
+                new ActivityScenario.ActivityAction<MainActivity>() {
+                    @Override
+                    public void perform(MainActivity activity) {
+                        nF = (NotesFragment) activity.getSupportFragmentManager().getFragments().get(0);
+                        NotesFragment.notes.clear();
 
-                //TODO:  Needs to be adjusted as soon as more note types are added
-                Note note = new Note(exampleText, 0, exampleText, exampleLong, exampleLong, exampleLong);
-                nF.noteDAO.create(note);
-                NotesFragment.notes.add(note);
-                nF.adapter.notifyDataSetChanged();
-            }
-        });
+                        // TODO:  Needs to be adjusted as soon as more note types are added
+                        Note note =
+                                new Note(exampleText, 0, exampleText, exampleLong, exampleLong, exampleLong);
+                        nF.noteDao.create(note);
+                        NotesFragment.notes.add(note);
+                        nF.adapter.notifyDataSetChanged();
+                    }
+                });
 
         onView(ViewMatchers.withId(R.id.recyclerView))
-                .perform(RecyclerViewActions.scrollTo(
-                        hasDescendant(withText(exampleText))
-                ));
+                .perform(RecyclerViewActions.scrollTo(hasDescendant(withText(exampleText))));
         RecyclerView recyclerView = nF.getView().findViewById(R.id.recyclerView);
         itemView = recyclerView.getChildAt(0);
         idText = itemView.getId();
 
-        /*
-        nF.recyclerView.getAdapter().notifyDataSetChanged();
-        itemView = nF.recyclerView.getChildAt(0);
-        id = itemView.getId();
-        itemView = nF.recyclerView.getChildAt(1);
-        id2 = itemView.getId();
-        itemView = nF.recyclerView.getChildAt(2);
-        id3 = itemView.getId();
-        */
+    /*
+    nF.recyclerView.getAdapter().notifyDataSetChanged();
+    itemView = nF.recyclerView.getChildAt(0);
+    id = itemView.getId();
+    itemView = nF.recyclerView.getChildAt(1);
+    id2 = itemView.getId();
+    itemView = nF.recyclerView.getChildAt(2);
+    id3 = itemView.getId();
+    */
 
     }
 
@@ -80,19 +77,19 @@ public class NotesFragmentUITest {
         onView(withId(R.id.fragment_notes)).check(matches(isDisplayed()));
     }
 
-    //TODO: Needs to be adjusted as soon as more note types are added
+    // TODO: Needs to be adjusted as soon as more note types are added
     @Test
     public void RecyclerViewList_IsShown() {
         onView(withId(idText)).check(matches(isDisplayed()));
         onView(withId(R.id.noteTitle)).check(matches(isDisplayed()));
         onView(withId(R.id.noteType)).check(matches(isDisplayed()));
 
-        //onView(withId(R.id.noteType)).check(matches(withId(R.drawable.microphone));
-        //onView(withId(R.id.noteType)).check(matches(withId(R.drawable.picture)));
+        // onView(withId(R.id.noteType)).check(matches(withId(R.drawable.microphone));
+        // onView(withId(R.id.noteType)).check(matches(withId(R.drawable.picture)));
 
     }
 
-    //TODO: Needs to be adjusted as soon as more note types are added
+    // TODO: Needs to be adjusted as soon as more note types are added
     @Test
     public void addButtonAndAddMenu_AreShown() {
         onView(withId(R.id.addButton)).check(matches(isDisplayed()));
@@ -102,23 +99,23 @@ public class NotesFragmentUITest {
         onView(withText(R.string.take_picture_note)).check(matches(isDisplayed()));
     }
 
-    //TODO: Needs to be adjusted as soon as more note types are added
+    // TODO: Needs to be adjusted as soon as more note types are added
     @Test
     public void Editor_IsOpened_OnItemClick() {
         ViewActions.closeSoftKeyboard();
         onView(withId(idText)).perform(click());
         onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
 
-        /*
-        onView(withId(id2)).perform(click());
-        onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
-        onView(withId(id3)).perform(click());
-        onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
-        */
+    /*
+    onView(withId(id2)).perform(click());
+    onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
+    onView(withId(id3)).perform(click());
+    onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
+    */
 
     }
 
-    //TODO: Needs to be adjusted as soon as more note types are added
+    // TODO: Needs to be adjusted as soon as more note types are added
     @Test
     public void Editor_IsOpened_OnAddButtonClick() {
         onView(withId(R.id.addButton)).perform(click());
@@ -126,12 +123,12 @@ public class NotesFragmentUITest {
         onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
         ViewActions.closeSoftKeyboard();
 
-        /*
-        onView(withText(nF.getString(R.string.create_voice_note))).perform(click());
-        onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
-        onView(withText(nF.getString(R.string.create_picture_note))).perform(click());
-        onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
-         */
+    /*
+    onView(withText(nF.getString(R.string.create_voice_note))).perform(click());
+    onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
+    onView(withText(nF.getString(R.string.create_picture_note))).perform(click());
+    onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
+     */
 
     }
 
@@ -190,7 +187,6 @@ public class NotesFragmentUITest {
             return drawable.equals(expectedDrawable);
         }
 
-
         @Override
         public void describeTo(Description description) {
             description.appendText("with drawable from resource id: ");
@@ -202,5 +198,4 @@ public class NotesFragmentUITest {
             }
         }
     }
-
 }
