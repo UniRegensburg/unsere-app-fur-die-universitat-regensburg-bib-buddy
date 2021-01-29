@@ -14,23 +14,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+   private final String HOME_FRAGMENT_TAG = "home";
+   private final String SEARCH_FRAGMENT_TAG = "search";
+   private final String LIBRARY_FRAGMENT_TAG = "library";
+   private final String NOTES_FRAGMENT_TAG = "notes";
    BottomNavigationView bottomNavigationView;
    FragmentManager fragmentManager;
-
    DatabaseHelper dbHelper;
-
    private HomeFragment homeFragment;
-   private final String HOME_FRAGMENT_TAG = "home";
-
    private SearchFragment searchFragment;
-   private final String SEARCH_FRAGMENT_TAG = "search";
-
    private LibraryFragment libraryFragment;
-   private final String LIBRARY_FRAGMENT_TAG = "library";
-
    private NotesFragment notesFragment;
-   private final String NOTES_FRAGMENT_TAG = "notes";
-
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -106,23 +100,18 @@ public class MainActivity extends AppCompatActivity {
       TextView headerText = (TextView) headerTextView;
       switch (tag) {
          case "home":
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_home));
             break;
          case "search":
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_search));
             break;
          case "library":
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             headerText.setText(getString(R.string.navigation_library));
             break;
          case "notes":
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_notes));
             break;
          case "settings":
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             headerText.setText(getString(R.string.navigation_settings));
             break;
          default:
