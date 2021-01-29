@@ -23,8 +23,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="gray_background">#757575</color>
     <color name="gray_quote">#C9C9C9</color>
-    <color name="yellow">#FFBB33</color>
-
     <color name="alert_red">#FA3C3C</color>
 
 </resources>
