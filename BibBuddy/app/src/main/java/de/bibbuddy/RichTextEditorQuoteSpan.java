@@ -13,7 +13,7 @@ public class RichTextEditorQuoteSpan extends QuoteSpan {
     private final int quoteGapWidth;
 
     public RichTextEditorQuoteSpan(int quoteColor, int quoteStripeWidth, int quoteGapWidth) {
-        this.quoteColor = quoteColor != 0 ? quoteColor : -16776961;
+        this.quoteColor = quoteColor;
         this.quoteStripeWidth = quoteStripeWidth != 0 ? quoteStripeWidth : 2;
         this.quoteGapWidth = quoteGapWidth != 0 ? quoteGapWidth : 2;
     }

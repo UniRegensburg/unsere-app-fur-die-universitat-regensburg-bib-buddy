@@ -6,19 +6,6 @@
     android:layout_height="wrap_content"
     android:translationY="100dp">
 
-    <ImageButton
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@null"
-        android:contentDescription="@string/description_add_note"
-        android:scaleX="0.15"
-        android:scaleY="0.15"
-        android:translationX="120dp"
-        android:translationY="210dp"
-        app:srcCompat="@drawable/plus" />
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="https://schemas.android.com/tools"
         android:id="@+id/coordinatorLayout"
         android:layout_width="wrap_content"
@@ -50,6 +37,19 @@
         </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <ImageButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@null"
+        android:contentDescription="@string/description_add_note"
+        android:scaleX="0.15"
+        android:scaleY="0.15"
+        android:translationX="120dp"
+        android:translationY="210dp"
+        app:srcCompat="@drawable/plus" />
 
 </RelativeLayout>
 

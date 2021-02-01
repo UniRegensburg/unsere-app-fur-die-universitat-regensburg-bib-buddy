@@ -6,13 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import org.jsoup.Jsoup;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
@@ -65,6 +66,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Long id = data.get(position).getId();
         String text = data.get(position).getText();
+        text = Jsoup.parse(text).text();
         if(text.contains("\n")){
             text = text.substring(0, text.indexOf("\n")) + "...";
         }
