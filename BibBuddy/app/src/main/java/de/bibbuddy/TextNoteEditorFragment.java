@@ -1,6 +1,5 @@
 package de.bibbuddy;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -37,15 +36,10 @@ public class TextNoteEditorFragment extends Fragment {
             noteId = getArguments().getLong("noteId");
             note = noteDAO.findById(noteId);
             richTextEditor.setText(Html.fromHtml(noteDAO.findById(noteId).getText(), 33));
-            System.out.println(Html.fromHtml(noteDAO.findById(noteId).getText()));
             modDate = note.getModDate();
         } else {
-            Cursor c = databaseHelper.getReadableDatabase().query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null, null, null, null);
-            c.moveToLast();
             Long currentDate = new Date().getTime();
-
             note = new Note("", 0, "", currentDate, currentDate);
-            c.close();
             noteDAO.create(note);
             noteId = note.getId();
         }

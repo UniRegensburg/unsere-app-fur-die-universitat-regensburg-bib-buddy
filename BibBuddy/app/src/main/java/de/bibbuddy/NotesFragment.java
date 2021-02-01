@@ -27,7 +27,7 @@ public class NotesFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_notes, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        NoteDAO noteDAO = new NoteDAO(databaseHelper);
+       NoteDAO noteDAO = new NoteDAO(databaseHelper);
         notes = noteDAO.findAll();
 
         setupRecyclerView();
@@ -60,7 +60,7 @@ public class NotesFragment extends Fragment {
          by using ItemTouchHelper given a default SwipeToDeleteCallback-class
      */
     private void enableSwipeToDelete() {
-        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext(), adapter, recyclerView);
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext(), adapter, (MainActivity) getActivity());
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(recyclerView);
     }
