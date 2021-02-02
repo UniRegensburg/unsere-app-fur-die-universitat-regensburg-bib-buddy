@@ -18,6 +18,11 @@ public class Shelf {
     public Shelf() {
     }
 
+    public Shelf(String name, Long shelfId) {
+        this.name = name;
+        this.shelfId = shelfId;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,26 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="2dp">
 
-    <ImageView
-        android:id="@+id/library_icon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:padding="5dp"
-        android:contentDescription="@string/library_icon" />
-
-
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:padding="2dp"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/library_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="5dp"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/library_icon"
+            android:text="Medium Text"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/image_note"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_name"
+            android:layout_marginStart="10dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/pen">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/note_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_name"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/image_note"
+            android:padding="2dp"
+            android:text="@string/navigation_notes"
+            android:textColor="@color/black" />
+
+        <ImageView
+            android:id="@+id/image_book"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_name"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/note_name"
+            android:contentDescription="TODO"
+            android:src="@drawable/books">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/text_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_name"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/image_book"
+            android:padding="2dp"
+            android:text="@string/items"
+            android:textColor="@color/black" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

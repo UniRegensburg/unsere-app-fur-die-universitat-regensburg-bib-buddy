@@ -1,16 +1,17 @@
 package de.bibbuddy;
 
 public class LibraryItem {
+
    private final String name;
    private final int image;
-   private final Integer id;
-   private final Integer parentId;
+   private final Long id;
+   private final Long parentId;
 
-   public LibraryItem(String name, Integer image, Integer id) {
+   public LibraryItem(String name, int image, Long id) {
       this(name, image, id, null);
    }
 
-   public LibraryItem(String name, int image, Integer id, Integer parentId) {
+   public LibraryItem(String name, int image, Long id, Long parentId) {
       this.name = name;
       this.image = image;
       this.id = id;
@@ -25,11 +26,12 @@ public class LibraryItem {
       return image;
    }
 
-   public Integer getId() {
+   public Long getId() {
       return id;
    }
 
-   public Integer getParentId() {
+   public Long getParentId() {
       return parentId;
    }
+
 }

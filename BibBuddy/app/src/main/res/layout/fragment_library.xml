@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_library"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:translationY="100dp">
+    android:layout_height="match_parent"
+    android:layout_marginTop="58dp"
+    android:layout_marginBottom="75dp">
 
-    <ListView
-        android:id="@+id/list_view_library"
+    <TextView
+        android:id="@+id/text_view_back_to"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:text="@string/back_to"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/flirt"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_shelf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="25dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_shelf"
+        android:focusable="true"
+        android:theme="@style/Button.Pink"
+        app:maxImageSize="40dp"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_add_shelf"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/library_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="58dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager" />
 
     <TextView
         android:id="@+id/list_view_library_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="58dp"
+        android:paddingStart="10dp"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
