@@ -1,101 +1,89 @@
 package de.bibbuddy;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryModel {
 
+   private final Context context;
+   private final ShelfDAO shelfDAO;
+
    private List<LibraryItem> libraryList;
+   private Long currentShelfId;
 
-   private Integer previousShelfId;
+   public LibraryModel(Context context) {
+      this.context = context;
+      DatabaseHelper databaseHelper = new DatabaseHelper(context);
+      this.shelfDAO = new ShelfDAO(databaseHelper);
+   }
 
-   private List<LibraryItem> getTopLevelLibraryList() {
+   public void addShelf(String name, Long parentId) {
+      Shelf shelf = new Shelf(name, parentId);
+      shelfDAO.create(shelf);
+
+      Long id = shelfDAO.findLatestId();
+      libraryList.add(new ShelfItem(name, id, parentId));
+   }
+
+   public Long getCurrentShelfId() {
+      return currentShelfId;
+   }
+
+   public List<LibraryItem> getCurrentLibraryList() {
+      return libraryList;
+   }
+
+   public List<LibraryItem> getLibraryList(Long parentId) {
+      currentShelfId = parentId;
+
+      List<Shelf> list = shelfDAO.findAllByParentId(parentId);
+
       libraryList = new ArrayList<>();
-
-      previousShelfId = null;
-
-      // TODO get from db first level where parent_id is null
-      libraryList.add(new ShelfItem("Regal 1", 1));
-      libraryList.add(new ShelfItem("noch ein Regal", 2));
-      libraryList.add(new ShelfItem("... Regal", 3));
+      for (Shelf item : list) {
+         libraryList.add(new ShelfItem(item.getName(), item.getId(), item.getShelfId()));
+      }
 
       return libraryList;
    }
 
-   public String getShelfName(Integer id) {
-      // TODO DB get DB shelf name
+   public List<LibraryItem> getPreviousLibraryList(Long id) {
       if (id == null) {
-         return "Bibliothek";
-      }
-
-      switch (id) {
-         case 4:
-            return "... Regal";
-         default:
-            return "Bibliothek";
-      }
-   }
-
-   public List<LibraryItem> getLibraryList(Integer parentId) {
-      if (parentId == null) {
-         libraryList = getTopLevelLibraryList();
          return libraryList;
       }
 
-      libraryList = new ArrayList<>();
-
-      // TODO get from db parent_id level
-      switch (parentId) {
-         case 1:
-            libraryList.add(new BookItem("Buch 2", 2, 1));
-            libraryList.add(new BookItem("Buch 3", 3, 1));
-            break;
-
-         case 2:
-            libraryList.add(new BookItem("Buch 4", 3, 2));
-            break;
-
-         case 3:
-            libraryList.add(new ShelfItem("Regal", 4, 3));
-            break;
-
-      }
-
-      return libraryList;
-   }
-
-   public void setPreviousShelfId(Integer id) {
-      previousShelfId = id;
+      Long parentId = shelfDAO.findById(id).getShelfId();
+      return getLibraryList(parentId);
    }
 
    public LibraryItem getSelectedLibraryItem(int position) {
       return libraryList.get(position);
    }
 
-   public Integer getParentShelfId() {
-      return previousShelfId;
+   public Long getShelfId() {
+      return currentShelfId;
    }
 
-   public List<LibraryItem> getPreviousLibraryList(Integer id) {
-      // TODO DB
-      libraryList = new ArrayList<>();
+   public String getShelfName() {
+      return getShelfName(currentShelfId);
+   }
 
-      switch (id) {
-         case 1:
-         case 2:
-         case 3:
-            previousShelfId = null;
-            libraryList.add(new ShelfItem("Regal 1", 1));
-            libraryList.add(new ShelfItem("noch ein Regal", 2));
-            libraryList.add(new ShelfItem("... Regal", 3));
-            break;
-         case 4:
-            previousShelfId = 3;
-            libraryList.add(new ShelfItem("Regal", 4, 3));
-            break;
+   private String getShelfName(Long id) {
+      if (id == null) {
+         return context.getString(R.string.navigation_library);
       }
 
-      return libraryList;
+      return shelfDAO.findById(id).getName();
    }
 
+   public String getPreviousShelfName() {
+      Long parentId = shelfDAO.findById(currentShelfId).getShelfId();
+
+      if (parentId == null) {
+         return context.getString(R.string.navigation_library);
+      }
+
+      return shelfDAO.findById(parentId).getName();
+   }
 }
