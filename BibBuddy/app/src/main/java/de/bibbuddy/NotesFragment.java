@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import androidx.annotation.VisibleForTesting;
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NotesFragment extends Fragment {
 
+    @VisibleForTesting
     static List<Note> notes;
+    public NoteDAO noteDao;
     private View view;
     private RecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
@@ -27,8 +30,8 @@ public class NotesFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_notes, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-        NoteDAO noteDAO = new NoteDAO(databaseHelper);
-        notes = noteDAO.findAll();
+        noteDao = new NoteDAO(databaseHelper);
+        notes = noteDao.findAll();
 
         setupRecyclerView();
         enableSwipeToDelete();
@@ -41,7 +44,7 @@ public class NotesFragment extends Fragment {
         Set up default RecyclerViewAdapter to manage recyclerview containing the notes arraylist
      */
     private void setupRecyclerView() {
-        adapter = new RecyclerViewAdapter(notes, (MainActivity) getActivity());
+        adapter = new RecyclerViewAdapter(notes, getActivity());
         recyclerView.setAdapter(adapter);
         /*
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {

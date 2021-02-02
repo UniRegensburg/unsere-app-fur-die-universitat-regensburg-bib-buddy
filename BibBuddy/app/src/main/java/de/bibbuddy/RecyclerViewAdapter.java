@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.fragment.app.FragmentActivity;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     private final List<Note> data;
-    private final MainActivity activity;
+    private final FragmentActivity activity;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    public RecyclerViewAdapter(List<Note> data, MainActivity activity) {
+    public RecyclerViewAdapter(List<Note> data, FragmentActivity activity) {
         this.data = data;
         Collections.sort(data, new Comparator<Note>() {
             @Override
