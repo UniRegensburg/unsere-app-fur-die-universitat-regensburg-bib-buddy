@@ -47,18 +47,21 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.1.0'
 
     // Assertions
-    androidTestImplementation 'androidx.test.ext:junit:1.0.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.ext:truth:1.0.0'
     androidTestImplementation 'com.google.truth:truth:0.42'
 
     // Espresso dependencies
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.0'
-    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation('androidx.test.espresso:espresso-contrib:3.3.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.3.0'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
 
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'org.jetbrains:annotations:15.0'
