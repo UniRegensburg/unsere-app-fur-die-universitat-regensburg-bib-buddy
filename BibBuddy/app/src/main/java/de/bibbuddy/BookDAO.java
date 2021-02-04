@@ -55,7 +55,7 @@ public class BookDAO implements IBookDAO {
         Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_BOOK, new String[]{DatabaseHelper._ID, DatabaseHelper.ISBN,
                         DatabaseHelper.TITLE, DatabaseHelper.SUBTITLE, DatabaseHelper.PUB_YEAR, DatabaseHelper.PUBLISHER,
                         DatabaseHelper.VOLUME, DatabaseHelper.EDITION, DatabaseHelper.ADD_INFOS, DatabaseHelper.CREATE_DATE,
-                        DatabaseHelper.MOD_DATE, DatabaseHelper.AUTHOR_ID, DatabaseHelper.NOTE_ID}, DatabaseHelper._ID + "=?",
+                        DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         Book book = null;

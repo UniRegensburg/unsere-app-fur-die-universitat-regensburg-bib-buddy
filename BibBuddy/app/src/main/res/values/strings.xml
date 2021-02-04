@@ -30,6 +30,8 @@
     <string name="shelf_added">Regal wurde hinzugefügt</string>
     <string name="name_exists">Name existiert bereits in diesem Regal</string>
 
+    <string name="add_note">Notiz hinzufügen</string>
+
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>
     <string name="create_voice_note">Sprachnotiz</string>
