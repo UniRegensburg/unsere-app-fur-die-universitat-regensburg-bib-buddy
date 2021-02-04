@@ -1,8 +1,8 @@
 package de.bibbuddy;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,21 +32,14 @@ public class TextNoteEditorFragment extends Fragment {
         richTextEditor = view.findViewById(R.id.editor);
         databaseHelper = new DatabaseHelper(getContext());
         NoteDAO noteDAO = new NoteDAO(databaseHelper);
-        // Fetch data that is passed from NotesFragment and accessing it using key and value
         if (getArguments() != null) {
             noteId = getArguments().getLong("noteId");
             note = noteDAO.findById(noteId);
-            richTextEditor.setText(noteDAO.findById(noteId).getText());
+            richTextEditor.setText(Html.fromHtml(noteDAO.findById(noteId).getText(), 33));
             modDate = note.getModDate();
         } else {
-            Cursor c = databaseHelper.getReadableDatabase().query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null, null, null, null);
-            c.moveToLast();
             Long currentDate = new Date().getTime();
-
-            //TODO: A note file has to be created and saved onto database first to get an autoincrement note file id
-            // meanwhile using rownumber (c.getCount()) as note file id
-            note = new Note("", 0, "", currentDate, currentDate, (long) c.getCount());
-            c.close();
+            note = new Note("", 0, "", currentDate, currentDate);
             noteDAO.create(note);
             noteId = note.getId();
         }
@@ -332,10 +325,10 @@ public class TextNoteEditorFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Editable text = richTextEditor.getText();
+        String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
         NoteDAO noteDAO = new NoteDAO(databaseHelper);
         if (text.length() != 0) {
-            noteDAO.updateNote(noteId, String.valueOf(text), note.getType(), String.valueOf(text), note.getCreateDate(),
+            noteDAO.updateNote(noteId, text, note.getType(), String.valueOf(text), note.getCreateDate(),
                     modDate, note.getNoteFileId());
         } else {
             noteDAO.delete(noteId);

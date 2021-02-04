@@ -20,13 +20,12 @@ public class Note {
     }
 
     //id is autoincrementing on database
-    public Note(String name, Integer type, String text, Long createDate, Long modDate, Long noteFileId) {
+    public Note(String name, Integer type, String text, Long createDate, Long modDate) {
         this.name = name;
         this.type = type;
         this.text = text;
         this.createDate = createDate;
         this.modDate = modDate;
-        this.noteFileId = noteFileId;
     }
 
     public Note() {

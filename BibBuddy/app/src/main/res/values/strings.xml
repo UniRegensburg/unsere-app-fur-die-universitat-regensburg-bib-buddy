@@ -18,17 +18,6 @@
     <!-- Common -->
     <string name="empty_list">Keine Einträge vorhanden</string>
     <string name="navigation_settings">Einstellugnen</string>
-    <string name="back">zurück</string>
-    <string name="add">+</string>
-    <string name="items">Items</string>
-    <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
-
-    <!-- Library -->
-    <string name="back_to">&lt; zurück zu</string>
-    <string name="add_shelf">hinzufügen</string>
-    <string name="input_shelf_name">Neuen Regalnamen eingeben</string>
-    <string name="shelf_added">Regal wurde hinzugefügt</string>
-    <string name="name_exists">Name existiert bereits in diesem Regal</string>
 
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>
@@ -40,7 +29,7 @@
     <string name="undo">RÜCKGÄNGIG</string>
     <string name="redo">Wiederholen</string>
 
-    <!-- Text Note Editor Toast -->
+    <!-- Text Note Editor Toasts -->
     <string name="toast_bold">Fett</string>
     <string name="toast_italic">Kursiv</string>
     <string name="toast_underline">Unterstreichen</string>
@@ -52,6 +41,11 @@
     <string name="toast_alignCenter">Zentriert</string>
     <string name="delete_notification">Die Notiz wurde entfernt.</string>
 
+    <!-- Text Note Editor Content Descriptions -->
+    <string name="slidebar_left">Slidebar_Left</string>
+    <string name="slidebar_right">Slidebar_Right</string>
+    <string name="round_border">Round_Border</string>
+    <string name="library_icon">Library_Icon</string>
 
 </resources>
 
