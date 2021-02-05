@@ -28,7 +28,7 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
-        recyclerView = view.findViewById(R.id.noteOverviewRecyclerView);
+        recyclerView = view.findViewById(R.id.bookNotesViewRecyclerView);
 
         model = new BookNotesViewModel(getContext());
         Bundle bundle = this.getArguments();
@@ -69,10 +69,9 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
                             .commit();
 
 
-                    // TODO: If back button is pressed in TextEditor, save/update note (first line = NoteName),
+                    // TODO: If back-button is pressed in TextEditor, save note (first line = NoteName),
                     // model.createNote("name", 1, "text", bookId);
-                    // TODO: updateNoteList
-
+                    // and updateNoteListView(model.getNoteList(bookId);
 
                 } /* else if (item.getItemId() == R.id.add_picture_note) {
                     TODO: add features to add pictures
@@ -128,6 +127,17 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
         return bundle;
     }
 
+    private void updateNoteListView(List noteList) {
+        recyclerView.setAdapter(new BookNotesRecyclerViewAdapter(noteList, this));
+        TextView emptyView = getActivity().findViewById(R.id.empty_notelist_view);
+
+        if (noteList.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onItemClicked(int position) {
         NoteItem noteItem = model.getSelectedNoteItem(position);
@@ -143,6 +153,5 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
         createNoteBundle(noteItem);
         // TODO: Retrieve data at the appropriate place (onCreate) in the TextNoteEditor and set text
     }
-
 
 }

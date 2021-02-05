@@ -88,7 +88,7 @@
             android:adjustViewBounds="true">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/noteOverviewRecyclerView"
+                android:id="@+id/bookNotesViewRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
@@ -97,29 +97,17 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <TextView
-                android:id="@+id/empty_view"
+                android:id="@+id/empty_notelist_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text=""
+                android:text="@string/empty_list"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
                 android:visibility="gone" />
 
         </RelativeLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!--<ImageButton
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@null"
-        android:contentDescription="@string/description_add_note"
-        android:scaleX="0.15"
-        android:scaleY="0.15"
-        android:translationX="120dp"
-        android:translationY="210dp"
-        app:srcCompat="@drawable/plus" /> -->
-
 </RelativeLayout>
-
