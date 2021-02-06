@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import java.util.Date;
 import java.util.List;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class NotesFragmentTest {
 	private Context context;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		ActivityScenario.launch(MainActivity.class).onActivity(
 			activity -> mainActivity = activity);
 		FragmentScenario<NotesFragment> frScenario = FragmentScenario.launch(NotesFragment.class);
@@ -53,15 +54,21 @@ public class NotesFragmentTest {
 		});
 	}
 
+	@After
+	public void tearDown()  throws Exception {
+		mainActivity = null;
+		notesFragment = null;
+	}
+
 	@Test
-	public void Database_IsConnected() {
+	public void DatabaseConnection_Test () {
 		Assert.assertNotNull(noteDao);
 		assertEquals(1, noteDao.findAll().size());
 		assertSame(noteDao.findAll().get(0).getId(), notes.get(0).getId());
 	}
 
 	@Test
-	public void RecyclerViewAdapter_Works() {
+	public void RecyclerViewAdapter_Test () {
 		adapter = new RecyclerViewAdapter(notes, mainActivity);
 		recyclerView.setAdapter(adapter);
 		Assert.assertSame(recyclerView.getAdapter(), adapter);
@@ -69,7 +76,7 @@ public class NotesFragmentTest {
 	}
 
 	@Test
-	public void SwipeToDeleteCallback_IsSetup() {
+	public void SwipeToDeleteCallback_Test() {
 		SwipeToDeleteCallback swipeToDeleteCallback =
 			new SwipeToDeleteCallback(context, adapter, recyclerView);
 		assertNotNull(swipeToDeleteCallback);
@@ -79,7 +86,7 @@ public class NotesFragmentTest {
 	}
 
 	@Test
-	public void AddButton_Works() {
+	public void AddButton_Test() {
 		View addButtonView = recyclerView.getRootView().findViewById(R.id.addButton);
 		Assert.assertNotNull(addButtonView);
 		addButtonView.performClick();
