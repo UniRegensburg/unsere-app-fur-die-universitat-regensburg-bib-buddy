@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class AuthorDAO implements IAuthorDAO {
 
@@ -48,10 +49,10 @@ public class AuthorDAO implements IAuthorDAO {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR, new String[]{DatabaseHelper._ID,
-                        DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
-                        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
-                DatabaseHelper._ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
+                                       DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
+                                       DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
+                                 DatabaseHelper._ID + "=?",
+                                 new String[]{String.valueOf(id)}, null, null, null, null);
 
 
         Author author = null;
@@ -59,12 +60,12 @@ public class AuthorDAO implements IAuthorDAO {
             cursor.moveToFirst();
 
             author = new Author(
-                    Long.parseLong(cursor.getString(0)), // Id
-                    cursor.getString(1), // First name
-                    cursor.getString(2), // Last name
-                    cursor.getString(3), // Title
-                    Integer.parseInt(cursor.getString(4)), // Create date
-                    Integer.parseInt(cursor.getString(5)) // Mod date
+                  Long.parseLong(cursor.getString(0)), // Id
+                  cursor.getString(1), // First name
+                  cursor.getString(2), // Last name
+                  cursor.getString(3), // Title
+                  Integer.parseInt(cursor.getString(4)), // Create date
+                  Integer.parseInt(cursor.getString(5)) // Mod date
             );
             cursor.close();
         }
@@ -103,14 +104,33 @@ public class AuthorDAO implements IAuthorDAO {
         return authorList;
     }
 
-
     // delete single author entry
     @Override
     public void delete(Long id) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-                new String[]{String.valueOf(id)});
+                  new String[]{String.valueOf(id)});
 
         db.close();
+    }
+
+    public boolean existAuthor(Author author) {
+        List<Author> dbAuthorList = findAll();
+        for (Author dbAuthor : dbAuthorList) {
+            //  compare authors with title, firstname and lastname only
+            if (Objects.equals(author.getTitle(), dbAuthor.getTitle()) && Objects.equals(author.getFirstName(), dbAuthor.getFirstName()) && Objects.equals(author.getLastName(), dbAuthor.getLastName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void createAuthors(List<Author> authorList) {
+        for (Author author : authorList) {
+            if (!existAuthor(author)) {
+                create(author);
+            }
+        }
     }
 }

@@ -2,34 +2,45 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_library"
+    android:id="@+id/fragment_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="58dp"
     android:layout_marginBottom="75dp">
 
+    <TextView
+        android:id="@+id/text_view_back_to"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/back_to_library"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/flirt"
+        android:textStyle="bold"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_shelf"
+        android:id="@+id/btn_add_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="25dp"
         android:clickable="true"
-        android:contentDescription="@string/add_shelf"
+        android:contentDescription="@string/add_book"
         android:focusable="true"
         android:theme="@style/Button.Pink"
         app:maxImageSize="40dp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_add_shelf"
+        android:id="@+id/fragment_container_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/library_recycler_view"
+        android:id="@+id/book_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="58dp"
@@ -42,8 +53,8 @@
         android:id="@+id/list_view_library_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="58dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="58dp"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
