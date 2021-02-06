@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.text.Editable;
 import android.text.Layout.Alignment;
 import android.text.Spannable;
@@ -17,6 +18,7 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -445,9 +447,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
                     quoteEnd = lineEnd;
                 }
                 if (quoteStart < quoteEnd) {
-                    int quoteColor = 0;
-                    int quoteStripeWidth = 0;
-                    int quoteGapWidth = 0;
+                    int quoteColor = R.color.gray_background;
+                    int quoteStripeWidth = 10;
+                    int quoteGapWidth = 10;
                     this.getEditableText().setSpan(new RichTextEditorQuoteSpan(quoteColor, quoteStripeWidth, quoteGapWidth), quoteStart, quoteEnd, 33);
                     styleValid(FORMAT_ITALIC, quoteStart, quoteEnd);
                     this.getEditableText().setSpan(new BackgroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray_quote)), quoteStart, quoteEnd, 33);
@@ -755,5 +757,15 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
             }
         }
     }
+
+    @Override
+    @Nullable
+    public Editable getText() {
+        if (Build.VERSION.SDK_INT >= 28) {
+            return super.getText();
+        }
+        return super.getEditableText();
+    }
+
 
 }

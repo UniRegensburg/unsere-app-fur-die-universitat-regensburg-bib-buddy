@@ -2,8 +2,14 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/add_text_note" android:title="@string/create_text_note"></item>
-    <item android:id="@+id/add_voice_note" android:title="@string/create_voice_note"></item>
-    <item android:id="@+id/add_picture_note" android:title="@string/take_picture_note"></item>
+    <item
+        android:id="@+id/add_text_note"
+        android:title="@string/create_text_note"></item>
+    <item
+        android:id="@+id/add_voice_note"
+        android:title="@string/create_voice_note"></item>
+    <item
+        android:id="@+id/add_picture_note"
+        android:title="@string/take_picture_note"></item>
 
 </menu>
