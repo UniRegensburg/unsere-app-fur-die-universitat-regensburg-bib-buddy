@@ -12,7 +12,7 @@ public class DataValidation {
 
     //checks for special characters that are not latin letters or numbers
     public static boolean hasSpecialChars(String inputStr) {
-        Pattern pattern = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("[^a-z0-9äöüß ]", Pattern.CASE_INSENSITIVE);
         Matcher match = pattern.matcher(inputStr);
         return match.find();
     }
@@ -60,7 +60,7 @@ public class DataValidation {
         //ISBN must have length of 10
         if (isbnStr.length() != 10)
             return false;
-        
+
         try {
             int totalSum = 0;
             for (int i = 0; i < 9; i++) {
