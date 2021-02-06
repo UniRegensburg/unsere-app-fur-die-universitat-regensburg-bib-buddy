@@ -40,7 +40,7 @@
     <string name="undo">RÜCKGÄNGIG</string>
     <string name="redo">Wiederholen</string>
 
-    <!-- Text Note Editor Toast -->
+    <!-- Text Note Editor Toasts -->
     <string name="toast_bold">Fett</string>
     <string name="toast_italic">Kursiv</string>
     <string name="toast_underline">Unterstreichen</string>
@@ -52,6 +52,11 @@
     <string name="toast_alignCenter">Zentriert</string>
     <string name="delete_notification">Die Notiz wurde entfernt.</string>
 
+    <!-- Text Note Editor Content Descriptions -->
+    <string name="slidebar_left">Slidebar_Left</string>
+    <string name="slidebar_right">Slidebar_Right</string>
+    <string name="round_border">Round_Border</string>
+    <string name="library_icon">Library_Icon</string>
 
 </resources>
 

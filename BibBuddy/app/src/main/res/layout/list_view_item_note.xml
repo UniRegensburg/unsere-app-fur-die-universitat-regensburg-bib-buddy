@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
@@ -18,21 +17,6 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp">
 
-        <TextView
-            android:id="@+id/noteModDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:layout_alignParentTop="true"/>
-
-        <TextView
-            android:id="@+id/noteTitle"
-            android:layout_width="310dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"/>
-
         <ImageView
             android:id="@+id/noteType"
             android:layout_width="30dp"
@@ -40,7 +24,22 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/description_text_note"
-            android:src="@drawable/document"/>
+            android:src="@drawable/document" />
+
+        <TextView
+            android:id="@+id/noteTitle"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
+
+        <TextView
+            android:id="@+id/noteModDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
