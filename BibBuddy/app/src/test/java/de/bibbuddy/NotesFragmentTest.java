@@ -55,20 +55,20 @@ public class NotesFragmentTest {
 	}
 
 	@After
-	public void tearDown()  throws Exception {
+	public void tearDown() throws Exception {
 		mainActivity = null;
 		notesFragment = null;
 	}
 
 	@Test
-	public void DatabaseConnection_Test () {
+	public void DatabaseConnection_Test() {
 		Assert.assertNotNull(noteDao);
 		assertEquals(1, noteDao.findAll().size());
 		assertSame(noteDao.findAll().get(0).getId(), notes.get(0).getId());
 	}
 
 	@Test
-	public void RecyclerViewAdapter_Test () {
+	public void RecyclerViewAdapter_Test() {
 		adapter = new RecyclerViewAdapter(notes, mainActivity);
 		recyclerView.setAdapter(adapter);
 		Assert.assertSame(recyclerView.getAdapter(), adapter);
