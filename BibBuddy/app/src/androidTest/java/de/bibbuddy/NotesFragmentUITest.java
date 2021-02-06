@@ -47,7 +47,7 @@ public class NotesFragmentUITest {
 
                         // TODO:  Needs to be adjusted as soon as more note types are added
                         Note note =
-                                new Note(exampleText, 0, exampleText, exampleLong, exampleLong, exampleLong);
+                                new Note(exampleText, 0, exampleText, exampleLong, exampleLong);
                         nF.noteDao.create(note);
                         NotesFragment.notes.add(note);
                         nF.adapter.notifyDataSetChanged();
