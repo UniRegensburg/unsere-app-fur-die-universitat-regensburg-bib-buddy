@@ -12,6 +12,6 @@ public interface INoteDAO {
 
     void delete(Long id);
     
-    void updateNote(Long id, String name, int type, String text, Long createDate, Long modDate, Long noteFileId);
+    void updateNote(Long id, String name, int type, String text, Long createDate, Long noteFileId);
 
 }

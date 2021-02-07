@@ -56,6 +56,12 @@ public class Note {
 	public Note() {
 	}
 
+	public Note(String name, Integer type, String text) {
+		this.name = name;
+		this.type = type;
+		this.text = text;
+	}
+
 	public Long getId() {
 		return id;
 	}
