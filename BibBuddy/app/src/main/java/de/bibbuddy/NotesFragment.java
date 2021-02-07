@@ -16,9 +16,8 @@ import java.util.List;
 public class NotesFragment extends Fragment {
 
 	static List<Note> notes;
-	NoteDAO noteDao;
 	private View view;
-	RecyclerViewAdapter adapter;
+	private RecyclerViewAdapter adapter;
 	private RecyclerView recyclerView;
 
 	@Nullable
@@ -27,14 +26,11 @@ public class NotesFragment extends Fragment {
 													 @Nullable Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_notes, container, false);
 		recyclerView = view.findViewById(R.id.recyclerView);
-		DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-		noteDao = new NoteDAO(databaseHelper);
-		notes = noteDao.findAll();
-
+		NoteModel noteModel = new NoteModel(getContext());
+		notes = noteModel.getAllNotes();
 		setupRecyclerView();
 		enableSwipeToDelete();
 		setupAddButton();
-
 		return view;
 	}
 

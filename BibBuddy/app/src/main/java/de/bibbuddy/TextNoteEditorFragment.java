@@ -1,9 +1,7 @@
 package de.bibbuddy;
 
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import java.util.Date;
 
 public class TextNoteEditorFragment extends Fragment {
 
@@ -22,8 +19,7 @@ public class TextNoteEditorFragment extends Fragment {
 	private RichTextEditor richTextEditor;
 	private boolean highlighted = false;
 	private Note note;
-	private Long modDate;
-	private DatabaseHelper databaseHelper;
+	private NoteModel noteModel;
 
 	@Nullable
 	@Override
@@ -31,21 +27,15 @@ public class TextNoteEditorFragment extends Fragment {
 													 @Nullable Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
 		richTextEditor = view.findViewById(R.id.editor);
-		databaseHelper = new DatabaseHelper(getContext());
-		NoteDAO noteDAO = new NoteDAO(databaseHelper);
+		noteModel = new NoteModel(getContext());
 		if (getArguments() != null) {
 			noteId = getArguments().getLong("noteId");
-			note = noteDAO.findById(noteId);
-			richTextEditor.setText(Html.fromHtml(noteDAO.findById(noteId).getText(), 33));
-			modDate = note.getModDate();
+			note = noteModel.getNoteById(noteId);
+			richTextEditor.setText(Html.fromHtml(note.getText(), 33));
 		} else {
-			note = new Note("", 0, "");
-			noteDAO.create(note);
-			note = noteDAO.findAll().get(noteDAO.findAll().size() - 1);
-			noteId = note.getId();
+			note = noteModel.newNote();
 		}
 		richTextEditor.setSelection(richTextEditor.getEditableText().length());
-		setupTextWatcher();
 		setupUndo();
 		setupRedo();
 		setupBold();
@@ -57,23 +47,6 @@ public class TextNoteEditorFragment extends Fragment {
 		setupAlignment();
 		initSlidingButtons();
 		return view;
-	}
-
-	private void setupTextWatcher() {
-		TextWatcher textWatcher = new TextWatcher() {
-
-			public void afterTextChanged(Editable s) {
-			}
-
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			public void onTextChanged(CharSequence s, int start, int before,
-																int count) {
-				modDate = new Date().getTime();
-			}
-		};
-		richTextEditor.addTextChangedListener(textWatcher);
 	}
 
 	private void highlightSelectedItem(View view) {
@@ -327,12 +300,10 @@ public class TextNoteEditorFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
-		NoteDAO noteDAO = new NoteDAO(databaseHelper);
 		if (text.length() != 0) {
-			noteDAO
-				.updateNote(noteId, text, note.getType(), text, note.getCreateDate(), note.getNoteFileId());
+			noteModel.updateNote(note, text);
 		} else {
-			noteDAO.delete(noteId);
+			noteModel.deleteNote(noteId);
 		}
 	}
 
