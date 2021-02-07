@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NoteDAO implements INoteDAO {
@@ -17,7 +18,7 @@ public class NoteDAO implements INoteDAO {
 
   @Override
   public boolean create(Note note) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
+		Long currentTime = new Date().getTime();
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       try {
         ContentValues noteFile = new ContentValues();
@@ -139,7 +140,7 @@ public class NoteDAO implements INoteDAO {
 	 * @param noteFileId note file id
 	 */
 	public void updateNote(Long id, String name, int type, String text, Long createDate, Long noteFileId) {
-		long currentTime = System.currentTimeMillis() / 1_000L;
+		Long currentTime = new Date().getTime();
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
     values.put("id", id);
