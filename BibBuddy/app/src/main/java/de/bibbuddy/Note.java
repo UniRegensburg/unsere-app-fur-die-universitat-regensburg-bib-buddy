@@ -53,6 +53,21 @@ public class Note {
 		this.noteFileId = noteFileId;
 	}
 
+    // id, creation_date and mod_date are set in the database
+    public Note(String name, Integer type, String text, Long noteFileId) {
+        this.name = name;
+        this.type = type;
+        this.text = text;
+        this.noteFileId = noteFileId;
+    }
+
+    public Note(String name, Integer type, String text) {
+        this.name = name;
+        this.type = type;
+        this.text = text;
+        this.noteFileId = noteFileId;
+    }
+
 	public Note() {
 	}
 

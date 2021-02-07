@@ -46,6 +46,9 @@ public class NoteDAO implements INoteDAO {
 				long id = cursor.getLong(0);
 				cursor.close();
 				note.setId(id);
+            note.setCreateDate(currentTime);
+            note.setModDate(currentTime);
+
 			} catch (SQLiteException ex) {
 				return false;
 			} finally {
@@ -153,6 +156,79 @@ public class NoteDAO implements INoteDAO {
 		dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
                   DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)});
 		db.close();
+    }
+
+    // Link note with book
+    public boolean linkNoteWithBook(Long bookId, Long noteId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DatabaseHelper.BOOK_ID, bookId);
+            contentValues.put(DatabaseHelper.NOTE_ID, noteId);
+
+            long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, null, contentValues);
+
+        } catch (SQLiteException ex) {
+            return false;
+        } finally {
+            db.close();
+        }
+
+        return true;
+    }
+
+
+    // get all Notes for a book by the bookId
+    private List<Long> getAllNoteIdsForBook(Long bookId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        List<Long> noteIds = new ArrayList<Long>();
+        String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE " +
+                DatabaseHelper.BOOK_ID + "=" + bookId;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                // Id, BookId, NoteId
+                noteIds.add(Long.parseLong(cursor.getString(2)));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return noteIds;
+    }
+
+
+    // get all Notes for a book with a list of noteIds
+    public List<Note> getAllNotesForBook(Long bookId) {
+        List<Long> noteIds = getAllNoteIdsForBook(bookId);
+        List<Note> noteList = new ArrayList<Note>();
+
+        for(Long id:noteIds) {
+            noteList.add(findById(id));
+        }
+
+        return noteList;
+    }
+
+    public String findTextById(Long id) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE, new String[]{DatabaseHelper._ID,
+                        DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT, DatabaseHelper.CREATE_DATE,
+                        DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID}, DatabaseHelper._ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+
+        String noteText = null;
+        if (cursor != null) {
+            cursor.moveToFirst();
+            noteText = cursor.getString(3);
+
+            cursor.close();
+        }
+
+        return noteText;
   }
 
 }

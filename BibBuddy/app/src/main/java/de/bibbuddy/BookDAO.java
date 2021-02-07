@@ -19,16 +19,11 @@ public class BookDAO implements IBookDAO {
     }
 
     @Override
-    public boolean create(Book book, Author author) {
+    public boolean create(Book book) {
         long currentTime = System.currentTimeMillis() / 1_000L;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.beginTransaction();
 
         try {
-            if (author.getId() == 0) {
-                authorDAO.create(author);
-            }
-
             ContentValues contentValues = new ContentValues();
             contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
             contentValues.put(DatabaseHelper.TITLE, book.getTitle());
@@ -40,16 +35,13 @@ public class BookDAO implements IBookDAO {
             contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfos());
             contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
             contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-            contentValues.put(DatabaseHelper.AUTHOR_ID, author.getId());
 
             long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
             book.setId(id);
 
-            db.setTransactionSuccessful();
         } catch (SQLiteException ex) {
             return false;
         } finally {
-            db.endTransaction();
             db.close();
         }
 
@@ -63,7 +55,7 @@ public class BookDAO implements IBookDAO {
         Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_BOOK, new String[]{DatabaseHelper._ID, DatabaseHelper.ISBN,
                         DatabaseHelper.TITLE, DatabaseHelper.SUBTITLE, DatabaseHelper.PUB_YEAR, DatabaseHelper.PUBLISHER,
                         DatabaseHelper.VOLUME, DatabaseHelper.EDITION, DatabaseHelper.ADD_INFOS, DatabaseHelper.CREATE_DATE,
-                        DatabaseHelper.MOD_DATE, DatabaseHelper.AUTHOR_ID, DatabaseHelper.NOTE_ID}, DatabaseHelper._ID + "=?",
+                        DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         Book book = null;

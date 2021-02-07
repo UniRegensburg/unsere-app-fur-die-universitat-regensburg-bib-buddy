@@ -57,6 +57,7 @@ public class LibraryRecyclerViewAdapter extends RecyclerView.Adapter<LibraryRecy
       void onItemClicked(int position); // create callback function
    }
 
+
    public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
       private final TextView textView;

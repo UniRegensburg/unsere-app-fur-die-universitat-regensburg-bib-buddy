@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IBookDAO {
 
-    boolean create(Book book, Author author);
+    boolean create(Book book);
 
     Book findById(Long id);
 
