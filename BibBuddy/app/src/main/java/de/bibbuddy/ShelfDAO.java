@@ -172,31 +172,10 @@ public class ShelfDAO implements IShelfDAO {
         return id;
     }
 
-    // get all books for a shelf with a list of bookIds
-    private List<Long> getAllBookIdsForShelf(Long shelfId) { // TODO is the same as in BookDAO
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        List<Long> bookIds = new ArrayList<Long>();
-        String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE " +
-              DatabaseHelper.SHELF_ID + "=" + shelfId;
-
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                // Id, ShelfId, BookId
-                bookIds.add(Long.parseLong(cursor.getString(2)));
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-
-        return bookIds;
-    }
-
-    public int countAllNotesForShelf(Long shelfId) {
+    public int countAllNotesForShelf(List<Long> shelfBookIds) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         int noteCount = 0;
 
-        List<Long> shelfBookIds = getAllBookIdsForShelf(shelfId);
         for (Long bookId : shelfBookIds) {
             String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE " +
                   DatabaseHelper.BOOK_ID + "=" + bookId;

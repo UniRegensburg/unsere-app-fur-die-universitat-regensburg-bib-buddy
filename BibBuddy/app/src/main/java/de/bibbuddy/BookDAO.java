@@ -251,7 +251,7 @@ public class BookDAO implements IBookDAO {
     }
 
     // get all Books for a shelf by the shelfId
-    private List<Long> getAllBookIdsForShelf(Long shelfId) {
+    public List<Long> getAllBookIdsForShelf(Long shelfId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<Long> bookIds = new ArrayList<Long>();
         String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE " +

@@ -8,6 +8,7 @@ import java.util.List;
 public class LibraryModel {
 
     private final ShelfDAO shelfDAO;
+    private final BookDAO bookDAO;
 
     private List<ShelfItem> libraryList;
     private Long currentShelfId;
@@ -15,6 +16,7 @@ public class LibraryModel {
     public LibraryModel(Context context) {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         this.shelfDAO = new ShelfDAO(databaseHelper);
+        this.bookDAO = new BookDAO(databaseHelper);
     }
 
     public void addShelf(String name, Long parentId) {
@@ -37,9 +39,10 @@ public class LibraryModel {
         libraryList = new ArrayList<>();
         for (Shelf shelf : list) {
             Long shelfId = shelf.getId();
-            int bookNum = shelfDAO.countAllBooksForShelf(shelfId);
-            int noteNum = shelfDAO.countAllNotesForShelf(shelfId);
+            List<Long> bookIds = bookDAO.getAllBookIdsForShelf(shelfId);
 
+            int bookNum = shelfDAO.countAllBooksForShelf(shelfId);
+            int noteNum = shelfDAO.countAllNotesForShelf(bookIds);
             libraryList.add(new ShelfItem(shelf.getName(), shelf.getId(), shelf.getShelfId(), bookNum, noteNum));
         }
 

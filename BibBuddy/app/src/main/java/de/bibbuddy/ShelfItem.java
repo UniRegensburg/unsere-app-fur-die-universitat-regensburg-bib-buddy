@@ -18,15 +18,7 @@ public class ShelfItem extends LibraryItem {
         return bookCount;
     }
 
-    public void setBookCount(int bookCount) {
-        this.bookCount = bookCount;
-    }
-
     public int getNoteCount() {
         return noteCount;
-    }
-
-    public void setNoteCount(int noteCount) {
-        this.noteCount = noteCount;
     }
 }
