@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_library"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -19,6 +20,7 @@
             android:id="@+id/library_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:contentDescription="TODO"
             android:padding="5dp"
             android:visibility="gone" />
 
@@ -42,7 +44,7 @@
             android:layout_height="20dp"
             android:layout_below="@+id/item_name"
             android:layout_marginStart="10dp"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/note_icon"
             android:src="@drawable/pen">
 
         </ImageView>
@@ -65,10 +67,8 @@
             android:layout_below="@+id/item_name"
             android:layout_marginStart="30dp"
             android:layout_toEndOf="@+id/note_count"
-            android:contentDescription="TODO"
-            android:src="@drawable/books">
-
-        </ImageView>
+            android:src="@drawable/books"
+            android:contentDescription="@string/book_icon" />
 
         <TextView
             android:id="@+id/text_book"

@@ -51,7 +51,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
 
     private void updateEmptyView(List<BookItem> bookList) {
-        TextView emptyView = view.findViewById(R.id.list_view_library_empty);
+        TextView emptyView = view.findViewById(R.id.list_view_book_empty);
         if (bookList.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
         } else {

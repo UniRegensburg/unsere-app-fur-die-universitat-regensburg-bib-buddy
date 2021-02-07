@@ -36,9 +36,11 @@
     <string name="books">Bücher</string>
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
+    <string name="book_icon">Buch Icon</string>
 
     <!-- Note -->
     <string name="note">Notiz</string>
+    <string name="note_icon">Notizen Icon</string>
 
     <string name="add_note">Notiz hinzufügen</string>
 
