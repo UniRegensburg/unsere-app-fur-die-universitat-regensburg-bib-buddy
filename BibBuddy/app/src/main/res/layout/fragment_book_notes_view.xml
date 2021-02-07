@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_notes"
+    android:id="@+id/fragment_book_notes"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:translationY="100dp">
@@ -76,7 +76,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:tools="https://schemas.android.com/tools"
-        android:id="@+id/coordinatorLayout"
+        android:id="@+id/coordinatorLayoutBookNotes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:context=".NotesFragment"

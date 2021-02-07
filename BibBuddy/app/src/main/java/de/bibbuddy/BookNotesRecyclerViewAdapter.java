@@ -62,7 +62,7 @@ public class BookNotesRecyclerViewAdapter extends
         public BookNotesViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            textView = itemView.findViewById(R.id.item_name);
+            textView = itemView.findViewById(R.id.item_name_book_notes);
             imageView = itemView.findViewById(R.id.note_icon);
             // TODO: Differentiation Text, audio, image
         }
