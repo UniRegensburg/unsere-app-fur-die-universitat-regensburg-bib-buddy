@@ -6,18 +6,18 @@ import java.util.regex.Pattern;
 public class DataValidation {
 
     //checks if the input string is not null
-    public boolean isStringEmpty(String inputStr) {
+    public static boolean isStringEmpty(String inputStr) {
         return inputStr == null || inputStr.isEmpty();
     }
 
     //checks for special characters that are not latin letters or numbers
-    public boolean hasSpecialChars(String inputStr) {
-        Pattern pattern = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    public static boolean hasSpecialChars(String inputStr) {
+        Pattern pattern = Pattern.compile("[^a-z0-9äöüß ]", Pattern.CASE_INSENSITIVE);
         Matcher match = pattern.matcher(inputStr);
         return match.find();
     }
 
-    public boolean validateISBN13(String isbnStr) {
+    public static boolean validateISBN13(String isbnStr) {
         if (isStringEmpty(isbnStr))
             return false;
 
@@ -50,7 +50,7 @@ public class DataValidation {
         }
     }
 
-    public boolean validateISBN10(String isbnStr) {
+    public static boolean validateISBN10(String isbnStr) {
         if (isStringEmpty(isbnStr))
             return false;
 
@@ -60,7 +60,7 @@ public class DataValidation {
         //ISBN must have length of 10
         if (isbnStr.length() != 10)
             return false;
-        
+
         try {
             int totalSum = 0;
             for (int i = 0; i < 9; i++) {
@@ -82,7 +82,7 @@ public class DataValidation {
         }
     }
 
-    public boolean isValidISBN10or13(String isbnStr) {
+    public static boolean isValidISBN10or13(String isbnStr) {
         return validateISBN10(isbnStr) || validateISBN13(isbnStr);
     }
 
