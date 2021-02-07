@@ -78,7 +78,7 @@
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/image_book"
             android:padding="2dp"
-            android:text="@string/items"
+            android:text="@string/book"
             android:textColor="@color/black" />
 
     </RelativeLayout>

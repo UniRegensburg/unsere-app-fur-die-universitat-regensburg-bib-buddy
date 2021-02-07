@@ -35,7 +35,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         List<BookItem> bookList = bookModel.getBookList(shelfId);
 
         RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
-        adapter = new BookRecyclerViewAdapter(bookList, this);
+        adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
         recyclerView.setAdapter(adapter);
 
         createBackBtnListener();

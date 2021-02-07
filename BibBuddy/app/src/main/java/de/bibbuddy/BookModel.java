@@ -38,7 +38,7 @@ public class BookModel {
     public void addBook(Book book, List<Author> authorList) {
         bookDAO.create(book, authorList, shelfId);
         String authors = createAuthorsString(authorList);
-        bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors));
+        bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
     }
 
     public List<BookItem> getBookList(Long shelfId) {
@@ -47,7 +47,8 @@ public class BookModel {
 
         for (Book book : bookDbList) {
             List<Author> authorList = bookDAO.getAllAuthorsForBook(book.getId());
-            bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), createAuthorsString(authorList)));
+            int noteCount = bookDAO.countAllNotesForBook(book.getId());
+            bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), createAuthorsString(authorList), noteCount));
         }
 
         return bookList;

@@ -20,7 +20,6 @@
     <string name="navigation_settings">Einstellugnen</string>
     <string name="back">zurück</string>
     <string name="add">+</string>
-    <string name="items">Items</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
 
     <!-- Library -->
@@ -33,8 +32,13 @@
     <string name="name_exists">Name existiert bereits in der Bibliothek</string>
 
     <!-- Book -->
+    <string name="book">Buch</string>
+    <string name="books">Bücher</string>
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
+
+    <!-- Note -->
+    <string name="note">Notiz</string>
 
     <string name="add_note">Notiz hinzufügen</string>
 

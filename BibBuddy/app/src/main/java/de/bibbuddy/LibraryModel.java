@@ -9,7 +9,7 @@ public class LibraryModel {
 
     private final ShelfDAO shelfDAO;
 
-    private List<LibraryItem> libraryList;
+    private List<ShelfItem> libraryList;
     private Long currentShelfId;
 
     public LibraryModel(Context context) {
@@ -22,27 +22,31 @@ public class LibraryModel {
         shelfDAO.create(shelf);
 
         Long id = shelfDAO.findLatestId();
-        libraryList.add(new ShelfItem(name, id, parentId));
+        libraryList.add(new ShelfItem(name, id, parentId, 0, 0));
     }
 
-    public List<LibraryItem> getCurrentLibraryList() {
+    public List<ShelfItem> getCurrentLibraryList() {
         return libraryList;
     }
 
-    public List<LibraryItem> getLibraryList(Long parentId) {
+    public List<ShelfItem> getLibraryList(Long parentId) {
         currentShelfId = parentId;
 
         List<Shelf> list = shelfDAO.findAllByParentId(parentId);
 
         libraryList = new ArrayList<>();
-        for (Shelf item : list) {
-            libraryList.add(new ShelfItem(item.getName(), item.getId(), item.getShelfId()));
+        for (Shelf shelf : list) {
+            Long shelfId = shelf.getId();
+            int bookNum = shelfDAO.countAllBooksForShelf(shelfId);
+            int noteNum = shelfDAO.countAllNotesForShelf(shelfId);
+
+            libraryList.add(new ShelfItem(shelf.getName(), shelf.getId(), shelf.getShelfId(), bookNum, noteNum));
         }
 
         return libraryList;
     }
 
-    public LibraryItem getSelectedLibraryItem(int position) {
+    public ShelfItem getSelectedLibraryItem(int position) {
         return libraryList.get(position);
     }
 

@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,12 @@ import java.util.List;
 public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder> {
     private final List<BookItem> bookList;
     private final BookRecyclerViewAdapter.BookListener listener;
+    private final Context context;
 
-    public BookRecyclerViewAdapter(List<BookItem> bookList, BookListener listener) {
+    public BookRecyclerViewAdapter(List<BookItem> bookList, BookListener listener, Context context) {
         this.bookList = bookList;
         this.listener = listener;
+        this.context = context;
     }
 
     @NonNull
@@ -25,6 +28,14 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
     public BookRecyclerViewAdapter.BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new BookRecyclerViewAdapter.BookViewHolder(LayoutInflater.from(parent.getContext())
                                                                 .inflate(R.layout.list_view_item_book, parent, false));
+    }
+
+    private String getNoteString(int noteCount) {
+        if (noteCount == 1) {
+            return noteCount + " " + context.getString(R.string.note);
+        } else {
+            return noteCount + " " + context.getString(R.string.navigation_notes);
+        }
     }
 
     @Override
@@ -35,7 +46,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
         holder.getImageBookView().setImageResource(bookItem.getImage());
         holder.getTextBookAuthors().setText(bookItem.getAuthors());
         holder.getTextBookYear().setText(String.valueOf(bookItem.getYear()));
-        // TODO getTextNoteCount
+        holder.getTextNoteCount().setText(getNoteString(bookItem.getNoteCount()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

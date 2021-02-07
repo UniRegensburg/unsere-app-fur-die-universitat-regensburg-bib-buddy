@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,10 +41,10 @@ public class LibraryFragment extends Fragment
 
     private void setupRecyclerView() {
         libraryModel = new LibraryModel(getContext());
-        List<LibraryItem> libraryList = libraryModel.getLibraryList(null);
+        List<ShelfItem> libraryList = libraryModel.getLibraryList(null);
 
         RecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
-        adapter = new LibraryRecyclerViewAdapter(libraryList, this);
+        adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
         libraryRecyclerView.setAdapter(adapter);
 
         updateEmptyView(libraryList);
@@ -75,7 +74,7 @@ public class LibraryFragment extends Fragment
             bundle.putLong(LibraryKeys.SHELF_ID, currentShelfId);
         }
 
-        List<LibraryItem> currentLibraryList = libraryModel.getCurrentLibraryList();
+        List<ShelfItem> currentLibraryList = libraryModel.getCurrentLibraryList();
         String[] shelfNames = new String[currentLibraryList.size()];
         for (int i = 0; i < currentLibraryList.size(); i++) {
             shelfNames[i] = currentLibraryList.get(i).getName();
@@ -110,7 +109,7 @@ public class LibraryFragment extends Fragment
         headerView.setText(name);
     }
 
-    private void updateEmptyView(List<LibraryItem> libraryList) {
+    private void updateEmptyView(List<ShelfItem> libraryList) {
         TextView emptyView = view.findViewById(R.id.list_view_library_empty);
 
         if (libraryList.isEmpty()) {
@@ -120,7 +119,7 @@ public class LibraryFragment extends Fragment
         }
     }
 
-    private void updateLibraryListView(List<LibraryItem> libraryList) {
+    private void updateLibraryListView(List<ShelfItem> libraryList) {
         adapter.notifyDataSetChanged();
         updateEmptyView(libraryList);
     }
@@ -153,13 +152,8 @@ public class LibraryFragment extends Fragment
         closeAddShelfFragment();
         LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
 
-        if (libraryItem instanceof ShelfItem) {
-            updateHeader(libraryItem.getName());
-            updateBookListView(libraryItem);
-
-        } else if (libraryItem instanceof BookItem) {
-            Toast.makeText(context, "TODO öffne Buch ", Toast.LENGTH_SHORT).show();
-        }
+        updateHeader(libraryItem.getName());
+        updateBookListView(libraryItem);
     }
 
 }

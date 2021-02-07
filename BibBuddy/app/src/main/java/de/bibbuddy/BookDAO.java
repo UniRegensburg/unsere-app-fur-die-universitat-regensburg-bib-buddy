@@ -163,7 +163,6 @@ public class BookDAO implements IBookDAO {
     private List<Long> getAuthorIds(List<Author> authorList) {
         List<Long> authorIds = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        // TODO GET AUTHOR IDS of book
         String selectQuery = "SELECT  " + DatabaseHelper._ID + " FROM " + DatabaseHelper.TABLE_NAME_AUTHOR
               + " WHERE ";
 
@@ -312,6 +311,27 @@ public class BookDAO implements IBookDAO {
         }
 
         return authorList;
+    }
+
+
+    // count all Notes for a book by the bookId
+    public int countAllNotesForBook(Long bookId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        int noteCount = 0;
+
+        String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE " +
+              DatabaseHelper.BOOK_ID + "=" + bookId;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                noteCount = Integer.parseInt(cursor.getString(0));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return noteCount;
     }
 
 }
