@@ -61,9 +61,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     @Override
     public void onItemClicked(int position) {
-        Toast.makeText(getContext(), "TODO öffne Notizenansicht vom Buch" + position, Toast.LENGTH_SHORT).show();
-        // position;
-        // TODO Sarahs Code
         BookItem bookItem = bookModel.getSelectedBookItem(position);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
