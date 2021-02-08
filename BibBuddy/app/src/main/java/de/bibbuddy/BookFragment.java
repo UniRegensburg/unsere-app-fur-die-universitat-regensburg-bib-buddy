@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -45,9 +47,34 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         return view;
     }
 
+    private Bundle createBookBundle(LibraryItem item) {
+        Bundle bundle = new Bundle();
+
+        Long currentBookId = item.getId();
+        String currentBookTitle = item.getName();
+
+        bundle.putLong(LibraryKeys.BOOK_ID, currentBookId);
+        bundle.putString(LibraryKeys.BOOK_TITLE, currentBookTitle);
+
+        return bundle;
+    }
+
     @Override
     public void onItemClicked(int position) {
-        Toast.makeText(getContext(), "TODO öffne Notizenansicht vom Buch", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "TODO öffne Notizenansicht vom Buch" + position, Toast.LENGTH_SHORT).show();
+        // position;
+        // TODO Sarahs Code
+        BookItem bookItem = bookModel.getSelectedBookItem(position);
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        BookNotesView fragment = new BookNotesView();
+        fragmentTransaction.replace(R.id.fragment_container_view, fragment);
+        fragmentTransaction.setReorderingAllowed(true);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        fragment.setArguments(createBookBundle(bookItem));
     }
 
     private void updateEmptyView(List<BookItem> bookList) {

@@ -57,4 +57,8 @@ public class BookModel {
     public List<BookItem> getCurrentBookList() {
         return bookList;
     }
+
+    public BookItem getSelectedBookItem(int position) {
+        return bookList.get(position);
+    }
 }
