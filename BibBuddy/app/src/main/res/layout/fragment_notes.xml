@@ -3,8 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:translationY="100dp">
+
+    <ImageButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@null"
+        android:contentDescription="@string/description_add_note"
+        android:scaleX="0.15"
+        android:scaleY="0.15"
+        android:translationX="120dp"
+        android:translationY="210dp"
+        app:srcCompat="@drawable/plus" />
+
+    <RelativeLayout
+        android:id="@+id/hidden_delete_panel"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/alert_red"
+        android:forceHasOverlappingRendering="true"
+        android:translationY="475dp"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/panel_delete"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/delete"
+            android:tint="@color/true_white" />
+
+    </RelativeLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="https://schemas.android.com/tools"
         android:id="@+id/coordinatorLayout"
@@ -30,19 +64,6 @@
         </androidx.core.widget.NestedScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <ImageButton
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@null"
-        android:contentDescription="@string/description_add_note"
-        android:scaleX="0.15"
-        android:scaleY="0.15"
-        android:translationX="120dp"
-        android:translationY="210dp"
-        app:srcCompat="@drawable/plus" />
 
 </RelativeLayout>
 
