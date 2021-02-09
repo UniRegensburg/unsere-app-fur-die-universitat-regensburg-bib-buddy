@@ -20,15 +20,29 @@
     <string name="navigation_settings">Einstellugnen</string>
     <string name="back">zurück</string>
     <string name="add">+</string>
-    <string name="items">Items</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
+    <string name="back_to_library">&lt; zurück zu Bibliothek</string>
     <string name="add_shelf">hinzufügen</string>
+    <string name="add_new_shelf">Regal hinzufügen</string>
     <string name="input_shelf_name">Neuen Regalnamen eingeben</string>
     <string name="shelf_added">Regal wurde hinzugefügt</string>
-    <string name="name_exists">Name existiert bereits in diesem Regal</string>
+    <string name="name_exists">Name existiert bereits in der Bibliothek</string>
+
+    <!-- Book -->
+    <string name="book">Buch</string>
+    <string name="books">Bücher</string>
+    <string name="add_book">Buch hinzufügen</string>
+    <string name="added_book">Buch wurde hinzufügt</string>
+    <string name="book_icon">Buch Icon</string>
+
+    <!-- Note -->
+    <string name="note">Notiz</string>
+    <string name="note_icon">Notizen Icon</string>
+
+    <string name="add_note">Notiz hinzufügen</string>
 
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>

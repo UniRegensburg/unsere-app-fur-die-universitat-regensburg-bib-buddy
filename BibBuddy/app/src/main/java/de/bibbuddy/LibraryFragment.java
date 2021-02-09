@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,142 +17,137 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class LibraryFragment extends Fragment
-      implements LibraryRecyclerViewAdapter.LibraryListener {
+      implements LibraryRecyclerViewAdapter.LibraryListener, BookRecyclerViewAdapter.BookListener {
 
-   private Context context;
+    private View view;
+    private Context context;
 
-   private LibraryModel libraryModel;
-   private RecyclerView libraryRecyclerView;
-   private List<LibraryItem> libraryList;
+    private LibraryModel libraryModel;
+    private LibraryRecyclerViewAdapter adapter;
 
-   @Nullable
-   @Override
-   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-      // Called to have the fragment instantiate its user interface view.
-      View view = inflater.inflate(R.layout.fragment_library, container, false);
-      context = view.getContext();
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // Called to have the fragment instantiate its user interface view.
+        view = inflater.inflate(R.layout.fragment_library, container, false);
+        context = view.getContext();
 
-      libraryModel = new LibraryModel(getContext());
-      libraryList = libraryModel.getLibraryList(null);
+        setupRecyclerView();
+        setupAddShelfBtn();
+        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
 
-      libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
-      LibraryRecyclerViewAdapter adapter = new LibraryRecyclerViewAdapter(libraryList, this);
-      libraryRecyclerView.setAdapter(adapter);
+        return view;
+    }
 
-      FloatingActionButton addShelfBtn = view.findViewById(R.id.btn_add_shelf);
-      createAddShelfListener(addShelfBtn);
+    private void setupRecyclerView() {
+        libraryModel = new LibraryModel(getContext());
+        List<ShelfItem> libraryList = libraryModel.getLibraryList(null);
 
-      createBackBtnListener(view);
+        RecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
+        adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
+        libraryRecyclerView.setAdapter(adapter);
 
-      return view;
-   }
+        updateEmptyView(libraryList);
+    }
 
-   private Bundle createAddShelfBundle() {
-      Bundle bundle = new Bundle();
+    private void setupAddShelfBtn() {
+        FloatingActionButton addShelfBtn = view.findViewById(R.id.btn_add_shelf);
+        createAddShelfListener(addShelfBtn);
+    }
 
-      Long currentShelfId = libraryModel.getShelfId();
-      if (currentShelfId == null) {
-         bundle.putLong(LibraryKeys.SHELF_ID, 0L);
-      } else {
-         bundle.putLong(LibraryKeys.SHELF_ID, currentShelfId);
-      }
+    private void createAddShelfListener(FloatingActionButton addShelfBtn) {
+        addShelfBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleAddShelf();
+            }
+        });
+    }
 
-      List<LibraryItem> currentLibraryList = libraryModel.getCurrentLibraryList();
-      String[] shelfNames = new String[currentLibraryList.size()];
-      for (int i = 0; i < currentLibraryList.size(); i++) {
-         shelfNames[i] = currentLibraryList.get(i).getName();
-      }
-      bundle.putStringArray(LibraryKeys.SHELF_NAMES, shelfNames);
+    private Bundle createAddShelfBundle() {
+        Bundle bundle = new Bundle();
 
-      return bundle;
-   }
+        Long currentShelfId = libraryModel.getShelfId();
+        if (currentShelfId == null) {
+            bundle.putLong(LibraryKeys.SHELF_ID, 0L);
+        } else {
+            bundle.putLong(LibraryKeys.SHELF_ID, currentShelfId);
+        }
 
+        List<ShelfItem> currentLibraryList = libraryModel.getCurrentLibraryList();
+        String[] shelfNames = new String[currentLibraryList.size()];
+        for (int i = 0; i < currentLibraryList.size(); i++) {
+            shelfNames[i] = currentLibraryList.get(i).getName();
+        }
+        bundle.putStringArray(LibraryKeys.SHELF_NAMES, shelfNames);
 
-   private void createAddShelfListener(FloatingActionButton addShelfBtn) {
+        return bundle;
+    }
 
-      addShelfBtn.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
+    private void handleAddShelf() {
+        LibraryAddShelfFragment fragment = new LibraryAddShelfFragment(new LibraryAddShelfFragment.AddShelfLibraryListener() {
+            @Override
+            public void onShelfAdded(String name, Long shelfId) {
+                libraryModel.addShelf(name, libraryModel.getShelfId());
+                updateLibraryListView(libraryModel.getCurrentLibraryList());
+            }
+        });
 
-            LibraryAddShelfFragment fragment = new LibraryAddShelfFragment(new LibraryAddShelfFragment.AddShelfLibraryListener() {
-               @Override
-               public void onShelfAdded(String name, Long shelfId) {
-                  libraryModel.addShelf(name, libraryModel.getShelfId());
-                  updateLibraryListView(libraryModel.getCurrentLibraryList());
-               }
-            });
+        fragment.setArguments(createAddShelfBundle());
+        fragment.show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_ADD_NAME);
+    }
 
-            fragment.setArguments(createAddShelfBundle());
-            fragment.show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_ADD_NAME);
-         }
-      });
-   }
+    private void closeAddShelfFragment() {
+        LibraryAddShelfFragment fragment = (LibraryAddShelfFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container_add_shelf);
+        if (fragment != null) {
+            fragment.closeFragment();
+        }
+    }
 
-   private void createBackBtnListener(View view) {
-      TextView backView = view.findViewById(R.id.text_view_back_to);
+    private void updateEmptyView(List<ShelfItem> libraryList) {
+        TextView emptyView = view.findViewById(R.id.list_view_library_empty);
 
-      backView.setOnClickListener(v -> {
-         Long shelfId = libraryModel.getShelfId(); // get parentId of the current shelf
-         updateLibraryListView(libraryModel.getPreviousLibraryList(shelfId));
-         updateHeader(libraryModel.getShelfName());
-         updateBackBtn(backView);
-         closeAddShelfFragment();
-      });
-   }
+        if (libraryList.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
+    }
 
-   private void updateBackBtn(TextView backView) {
-      Long shelfId = libraryModel.getCurrentShelfId();
+    private void updateLibraryListView(List<ShelfItem> libraryList) {
+        adapter.notifyDataSetChanged();
+        updateEmptyView(libraryList);
+    }
 
-      if (shelfId == null) {
-         backView.setVisibility(View.GONE);
-      } else {
-         backView.setVisibility(View.VISIBLE);
-         String backText = getString(R.string.back_to) + " \"" + libraryModel.getPreviousShelfName() + "\"";
-         backView.setText(backText);
-      }
-   }
+    private void updateBookListView(LibraryItem libraryItem) {
+        BookFragment fragment = new BookFragment();
+        fragment.setArguments(createShelfBundle(libraryItem));
 
-   private void closeAddShelfFragment() {
-      LibraryAddShelfFragment fragment = (LibraryAddShelfFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container_add_shelf);
-      if (fragment != null) {
-         fragment.closeFragment();
-      }
-   }
+        getActivity().getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container_view, fragment)
+              .setReorderingAllowed(true)
+              .addToBackStack(null)
+              .commit();
+    }
 
-   private void updateLibraryListView(List libraryList) {
-      libraryRecyclerView.setAdapter(new LibraryRecyclerViewAdapter(libraryList, this));
-      TextView emptyView = getActivity().findViewById(R.id.list_view_library_empty);
+    private Bundle createShelfBundle(LibraryItem libraryItem) {
+        Bundle bundle = new Bundle();
 
-      if (libraryList.isEmpty()) {
-         emptyView.setVisibility(View.VISIBLE);
-      } else {
-         emptyView.setVisibility(View.GONE);
-      }
-   }
+        Long shelfId = libraryItem.getId();
+        String shelfName = libraryItem.getName();
 
-   private void updateHeader(String name) {
-      TextView headerView = getActivity().findViewById(R.id.headerText);
-      headerView.setText(name);
-   }
+        bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+        bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
 
-   @Override
-   public void onItemClicked(int position) {
-      closeAddShelfFragment();
-      LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
+        return bundle;
+    }
 
-      if (libraryItem instanceof ShelfItem) {
-         updateHeader(libraryItem.getName());
-         Long shelfId = libraryItem.getId();
-         libraryList = libraryModel.getLibraryList(shelfId);
-         updateLibraryListView(libraryList);
-         updateBackBtn(getView().findViewById(R.id.text_view_back_to));
-
-      } else if (libraryItem instanceof BookItem) {
-         Toast.makeText(context, "TODO öffne Buch ", Toast.LENGTH_SHORT).show();
-      }
-
-      // same for note item
-
-   }
+    @Override
+    public void onItemClicked(int position) {
+        closeAddShelfFragment();
+        LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
+        ((MainActivity) getActivity()).updateHeaderFragment(libraryItem.getName());
+        updateBookListView(libraryItem);
+    }
 
 }

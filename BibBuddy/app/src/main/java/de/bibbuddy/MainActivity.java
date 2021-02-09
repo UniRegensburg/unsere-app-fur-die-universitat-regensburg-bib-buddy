@@ -94,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
       updateHeader(tag);
    }
 
+   public void updateHeaderFragment(String name) {
+      TextView headerView = findViewById(R.id.headerText);
+      headerView.setText(name);
+   }
+
    private void updateHeader(String tag) {
       // change header text according to fragment
       View headerTextView = findViewById(R.id.headerText);
