@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,6 @@ public class TextNoteEditorFragment extends Fragment {
 
   private View view;
   private RichTextEditor richTextEditor;
-  private boolean highlighted = false;
   private Note note;
   private NoteModel noteModel;
 
@@ -51,12 +51,12 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void highlightSelectedItem(View view) {
-    if (!highlighted) {
+    if (!view.isSelected()) {
       view.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
-      highlighted = true;
+      view.setSelected(true);
     } else {
       view.setBackgroundColor(0);
-      highlighted = false;
+      view.setSelected(false);
     }
   }
 
@@ -66,7 +66,14 @@ public class TextNoteEditorFragment extends Fragment {
       @Override
       public void onClick(View v) {
         richTextEditor.undo();
-        highlightSelectedItem(undo);
+        undo.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            undo.setBackgroundColor(0);
+          }
+        }, 1000);
       }
     });
   }
@@ -77,7 +84,14 @@ public class TextNoteEditorFragment extends Fragment {
       @Override
       public void onClick(View v) {
         richTextEditor.redo();
-        highlightSelectedItem(redo);
+        redo.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            redo.setBackgroundColor(0);
+          }
+        }, 1000);
       }
     });
   }
@@ -88,8 +102,8 @@ public class TextNoteEditorFragment extends Fragment {
     bold.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        richTextEditor.bold(richTextEditor.contains(RichTextEditor.FORMAT_BOLD));
         highlightSelectedItem(bold);
+        richTextEditor.bold(bold.isSelected());
       }
     });
 
@@ -108,8 +122,8 @@ public class TextNoteEditorFragment extends Fragment {
     italic.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        richTextEditor.italic(richTextEditor.contains(RichTextEditor.FORMAT_ITALIC));
         highlightSelectedItem(italic);
+        richTextEditor.italic(italic.isSelected());
       }
     });
 
@@ -128,8 +142,8 @@ public class TextNoteEditorFragment extends Fragment {
     underline.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        richTextEditor.underline(richTextEditor.contains(RichTextEditor.FORMAT_UNDERLINE));
         highlightSelectedItem(underline);
+        richTextEditor.underline(underline.isSelected());
       }
     });
 
@@ -148,8 +162,8 @@ public class TextNoteEditorFragment extends Fragment {
     strikethrough.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        richTextEditor.strikethrough(richTextEditor.contains(RichTextEditor.FORMAT_STRIKETHROUGH));
         highlightSelectedItem(strikethrough);
+        richTextEditor.strikeThrough(strikethrough.isSelected());
       }
     });
 
@@ -168,8 +182,9 @@ public class TextNoteEditorFragment extends Fragment {
     bullet.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        richTextEditor.bullet(richTextEditor.contains(RichTextEditor.FORMAT_BULLET));
+
         highlightSelectedItem(bullet);
+        richTextEditor.bullet(bullet.isSelected());
       }
     });
 
@@ -189,8 +204,8 @@ public class TextNoteEditorFragment extends Fragment {
     quote.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        richTextEditor.quote(richTextEditor.contains(RichTextEditor.FORMAT_QUOTE));
         highlightSelectedItem(quote);
+        richTextEditor.quote(quote.isSelected());
       }
     });
 
