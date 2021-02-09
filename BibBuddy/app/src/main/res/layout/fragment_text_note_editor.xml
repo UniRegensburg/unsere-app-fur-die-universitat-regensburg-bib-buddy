@@ -165,16 +165,14 @@
             android:layout_alignTop="@+id/roundBorder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constrainedHeight="true"
             android:gravity="top"
             android:layout_marginEnd="50dp"
             android:layout_marginStart="50dp"
             android:layout_marginTop="10dp"
             app:bulletColor="@color/true_black"
             app:bulletGapWidth="3dp"
-            app:bulletRadius="3dp"
-            app:quoteCapWidth="5dp"
-            app:quoteColor="@color/true_black"
-            app:quoteStripeWidth="1dp" />
+            app:bulletRadius="3dp"/>
 
     </RelativeLayout>
 

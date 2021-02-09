@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.text.style.AlignmentSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.BulletSpan;
+import android.text.style.CharacterStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
@@ -24,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RichTextEditor extends AppCompatEditText implements TextWatcher {
-  public static final int FORMAT_NORMAL = 0;
   public static final int FORMAT_BOLD = 1;
   public static final int FORMAT_ITALIC = 2;
 
@@ -35,7 +35,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   private int historyCursor = 0;
   private SpannableStringBuilder inputBefore;
   private Editable inputLast;
-  private int lastCursorPosition;
 
   private boolean bold = false;
   private boolean italic = false;
@@ -97,7 +96,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     } else {
       this.styleInvalid(1, this.getSelectionStart(), this.getSelectionEnd());
     }
-    lastCursorPosition = this.getSelectionStart();
   }
 
   /**
@@ -113,11 +111,10 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     } else {
       this.styleInvalid(2, this.getSelectionStart(), this.getSelectionEnd());
     }
-    lastCursorPosition = this.getSelectionStart();
   }
 
   protected void styleValid(int style, int start, int end) {
-    if (style == 0 || style == 1 || style == 2 || style == 3) {
+    if (style == 1 || style == 2) {
       this.getEditableText().setSpan(new StyleSpan(style), start, end, 33);
     }
   }
@@ -158,7 +155,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     } else {
       this.underlineInvalid(this.getSelectionStart(), this.getSelectionEnd());
     }
-    lastCursorPosition = getSelectionStart();
   }
 
   protected void underlineValid(int start, int end) {
@@ -193,7 +189,8 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * This method sets or removes text format strikeThrough depending on the toolbar icon is selected.
+   * This method sets or removes text format strikeThrough
+   * depending on the toolbar icon is selected.
    *
    * @param valid boolean if the tool icon for format type strikeThrough is selected and format
    *              needs to be applied
@@ -205,7 +202,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     } else {
       this.strikeThroughInvalid(this.getSelectionStart(), this.getSelectionEnd());
     }
-    lastCursorPosition = getSelectionStart();
   }
 
   protected void strikeThroughValid(int start, int end) {
@@ -253,7 +249,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     } else {
       this.bulletInvalid();
     }
-    lastCursorPosition = getSelectionStart();
   }
 
   protected void bulletValid() {
@@ -390,7 +385,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     } else {
       this.quoteInvalid();
     }
-    lastCursorPosition = getSelectionStart();
   }
 
   protected void quoteValid() {
@@ -528,7 +522,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   protected void alignLeft() {
     this.alignmentValid(1, this.getSelectionStart(), this.getSelectionEnd());
     alignmentLeft = !alignmentLeft;
-    lastCursorPosition = this.getSelectionStart();
   }
 
   protected void alignRight() {
@@ -539,7 +532,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
       alignmentRight = false;
       this.alignmentValid(1, this.getSelectionStart(), this.getSelectionEnd());
     }
-    lastCursorPosition = this.getSelectionStart();
   }
 
   protected void alignCenter() {
@@ -550,7 +542,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
       alignmentCenter = false;
       this.alignmentValid(1, this.getSelectionStart(), this.getSelectionEnd());
     }
-    lastCursorPosition = this.getSelectionStart();
   }
 
   protected void alignmentValid(int style, int start, int end) {
@@ -703,13 +694,25 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
    */
   @Override
   public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-    Spannable str = this.getText();
-    int endOfString = this.getSelectionStart();
-    //Avoid crash when user is backspacing the entire text after text format has been changed
-    //by adjusting lastCursorPosition to avoid span start < span end
-    if (endOfString < lastCursorPosition) {
-      lastCursorPosition = 0;
+    Spannable str = this.getEditableText();
+    if (this.inputBefore != null && this.inputBefore.toString().length() > str.length()) {
+      return;
     }
+    int endOfString = this.getSelectionStart();
+    int lastCursorPosition = endOfString;
+    if (endOfString != 0) {
+      lastCursorPosition = endOfString - 1;
+    }
+    Object[] spansToRemove = str.getSpans(endOfString - 1, endOfString, Object.class);
+    for (Object span : spansToRemove) {
+      if (span instanceof CharacterStyle) {
+        str.removeSpan(span);
+      }
+    }
+    applyChosenTextFormats(str, lastCursorPosition, endOfString);
+  }
+
+  private void applyChosenTextFormats(Spannable str, int lastCursorPosition, int endOfString) {
     if (bold) {
       styleValid(FORMAT_BOLD, lastCursorPosition, endOfString);
     }
@@ -740,7 +743,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     if (alignmentCenter) {
       alignmentValid(3, lastCursorPosition, endOfString);
     }
-    str.setSpan(FORMAT_NORMAL, lastCursorPosition, endOfString, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
   }
 
   /**
