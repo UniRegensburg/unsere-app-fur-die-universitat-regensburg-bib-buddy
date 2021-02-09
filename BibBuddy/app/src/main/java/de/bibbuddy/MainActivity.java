@@ -12,8 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
    private final String HOME_FRAGMENT_TAG = "home";
@@ -94,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
       fragmentTransaction.addToBackStack(null);
       fragmentTransaction.commit();
       updateHeader(tag);
+   }
+
+   public void updateHeaderFragment(String name) {
+      TextView headerView = findViewById(R.id.headerText);
+      headerView.setText(name);
    }
 
    private void updateHeader(String tag) {

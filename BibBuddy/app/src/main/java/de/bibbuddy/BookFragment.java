@@ -21,7 +21,9 @@ import java.util.List;
 
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
     private Long shelfId;
+    private String shelfName;
     private View view;
+
     private BookModel bookModel;
     private BookRecyclerViewAdapter adapter;
 
@@ -32,6 +34,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
 
         Bundle bundle = this.getArguments();
+        shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
         shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
         bookModel = new BookModel(getContext(), shelfId);
         List<BookItem> bookList = bookModel.getBookList(shelfId);
@@ -43,6 +46,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         createBackBtnListener();
         createAddBookListener();
         updateEmptyView(bookList);
+        ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
 
         return view;
     }
@@ -53,6 +57,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         Long currentBookId = item.getId();
         String currentBookTitle = item.getName();
 
+        bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+        bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
+
         bundle.putLong(LibraryKeys.BOOK_ID, currentBookId);
         bundle.putString(LibraryKeys.BOOK_TITLE, currentBookTitle);
 
@@ -62,6 +69,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     @Override
     public void onItemClicked(int position) {
         BookItem bookItem = bookModel.getSelectedBookItem(position);
+        ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -106,12 +114,15 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     private void createBackBtnListener() {
         TextView backView = view.findViewById(R.id.text_view_back_to);
 
-        backView.setOnClickListener(v -> {
-            LibraryFragment fragment = new LibraryFragment();
-            getActivity().getSupportFragmentManager().beginTransaction()
-                  .replace(R.id.fragment_container_view, fragment, "fragment_library")
-                  .addToBackStack(null)
-                  .commit();
+        backView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LibraryFragment fragment = new LibraryFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                      .replace(R.id.fragment_container_view, fragment, LibraryKeys.FRAGMENT_LIBRARY)
+                      .addToBackStack(null)
+                      .commit();
+            }
         });
     }
 }

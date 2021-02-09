@@ -34,7 +34,7 @@ public class LibraryFragment extends Fragment
 
         setupRecyclerView();
         setupAddShelfBtn();
-        updateHeader(getString(R.string.navigation_library));
+        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
 
         return view;
     }
@@ -104,11 +104,6 @@ public class LibraryFragment extends Fragment
         }
     }
 
-    private void updateHeader(String name) {
-        TextView headerView = getActivity().findViewById(R.id.headerText);
-        headerView.setText(name);
-    }
-
     private void updateEmptyView(List<ShelfItem> libraryList) {
         TextView emptyView = view.findViewById(R.id.list_view_library_empty);
 
@@ -142,7 +137,7 @@ public class LibraryFragment extends Fragment
         String shelfName = libraryItem.getName();
 
         bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-        bundle.putString(LibraryKeys.SHELF_NAME, shelfName); // TODO maybe for notes overview
+        bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
 
         return bundle;
     }
@@ -151,8 +146,7 @@ public class LibraryFragment extends Fragment
     public void onItemClicked(int position) {
         closeAddShelfFragment();
         LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
-
-        updateHeader(libraryItem.getName());
+        ((MainActivity) getActivity()).updateHeaderFragment(libraryItem.getName());
         updateBookListView(libraryItem);
     }
 

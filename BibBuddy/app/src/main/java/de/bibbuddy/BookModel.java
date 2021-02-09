@@ -17,7 +17,7 @@ public class BookModel {
         this.bookDAO = new BookDAO(databaseHelper);
     }
 
-    private String createAuthorsString(List<Author> authorList) {
+    private String convertAuthorListToString(List<Author> authorList) {
         StringBuilder authors = new StringBuilder();
 
         boolean savedAuthor = false;
@@ -37,7 +37,7 @@ public class BookModel {
 
     public void addBook(Book book, List<Author> authorList) {
         bookDAO.create(book, authorList, shelfId);
-        String authors = createAuthorsString(authorList);
+        String authors = convertAuthorListToString(authorList);
         bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
     }
 
@@ -48,7 +48,7 @@ public class BookModel {
         for (Book book : bookDbList) {
             List<Author> authorList = bookDAO.getAllAuthorsForBook(book.getId());
             int noteCount = bookDAO.countAllNotesForBook(book.getId());
-            bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), createAuthorsString(authorList), noteCount));
+            bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), convertAuthorListToString(authorList), noteCount));
         }
 
         return bookList;

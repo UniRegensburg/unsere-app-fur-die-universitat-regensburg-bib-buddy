@@ -33,9 +33,9 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
     private String getNoteString(int noteCount) {
         if (noteCount == 1) {
             return noteCount + " " + context.getString(R.string.note);
-        } else {
-            return noteCount + " " + context.getString(R.string.navigation_notes);
         }
+
+        return noteCount + " " + context.getString(R.string.navigation_notes);
     }
 
     @Override

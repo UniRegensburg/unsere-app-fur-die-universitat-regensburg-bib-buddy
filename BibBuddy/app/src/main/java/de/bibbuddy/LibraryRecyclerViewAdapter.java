@@ -60,17 +60,17 @@ public class LibraryRecyclerViewAdapter extends RecyclerView.Adapter<LibraryRecy
     private String getBookString(int bookCount) {
         if (bookCount == 1) {
             return bookCount + " " + context.getString(R.string.book);
-        } else {
-            return bookCount + " " + context.getString(R.string.books);
         }
+
+        return bookCount + " " + context.getString(R.string.books);
     }
 
     private String getNoteString(int noteCount) {
         if (noteCount == 1) {
             return noteCount + " " + context.getString(R.string.note);
-        } else {
-            return noteCount + " " + context.getString(R.string.navigation_notes);
         }
+
+        return noteCount + " " + context.getString(R.string.navigation_notes);
     }
 
     @Override

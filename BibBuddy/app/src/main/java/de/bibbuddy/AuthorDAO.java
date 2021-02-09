@@ -133,4 +133,60 @@ public class AuthorDAO implements IAuthorDAO {
             }
         }
     }
+
+    public List<Long> getAuthorIds(List<Author> authorList) {
+        List<Long> authorIds = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selectQuery = "SELECT  " + DatabaseHelper._ID + " FROM " + DatabaseHelper.TABLE_NAME_AUTHOR
+              + " WHERE ";
+
+        StringBuilder partSqlQuery = new StringBuilder();
+
+        for (Author author : authorList) {
+            boolean and_part = false;
+
+            if (partSqlQuery.length() > 0) {
+                partSqlQuery.append(" OR ( ");
+            } else {
+                partSqlQuery.append(" ( ");
+            }
+
+            if (author.getFirstName() != null) {
+                partSqlQuery.append(DatabaseHelper.FIRST_NAME + "=\"").append(author.getFirstName()).append("\"");
+                and_part = true;
+            }
+
+            if (author.getLastName() != null) {
+                if (and_part) {
+                    partSqlQuery.append(" AND ");
+                }
+                partSqlQuery.append(DatabaseHelper.LAST_NAME + "=\"").append(author.getLastName()).append("\"");
+                and_part = true;
+            }
+
+            if (author.getTitle() != null) {
+                if (and_part) {
+                    partSqlQuery.append(" AND ");
+                }
+                partSqlQuery.append(DatabaseHelper.TITLE + "=\"").append(author.getTitle()).append("\"");
+            }
+
+            partSqlQuery.append(" ) ");
+        }
+
+        // execute sql query
+        selectQuery += partSqlQuery;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Long id = Long.parseLong(cursor.getString(0));
+                authorIds.add(id);
+
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+
+        return authorIds;
+    }
 }
