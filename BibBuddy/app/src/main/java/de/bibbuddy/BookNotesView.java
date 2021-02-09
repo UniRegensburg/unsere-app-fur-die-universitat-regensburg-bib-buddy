@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
 
@@ -22,6 +22,8 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
     private RecyclerView recyclerView;
     private BookNotesViewModel model;
     private Long bookId;
+    private Long shelfId;
+    private String shelfName;
 
 
     @Nullable
@@ -36,6 +38,9 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
         bookId = bundle.getLong(LibraryKeys.BOOK_ID);
         String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
 
+        shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+        shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
+
         noteList = model.getNoteList(bookId);
 
         TextView bookTitleView = view.findViewById(R.id.text_view_book);
@@ -44,6 +49,7 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
         setupRecyclerView();
         setupAddButton();
         setupBackButton();
+        updateNoteListView(noteList);
 
         return view;
     }
@@ -64,7 +70,7 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
                 if (item.getItemId() == R.id.add_text_note) {
                     TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")
+                            .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
                             .addToBackStack(null)
                             .commit();
 
@@ -98,15 +104,26 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
 
     }
 
+    private Bundle createBookBundle() {
+        Bundle bundle = new Bundle();
+
+        bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+        bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
+
+        return bundle;
+    }
+
     private void setupBackButton() {
         View backButton = view.findViewById(R.id.btn_back);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LibraryFragment nextFrag = new LibraryFragment();
+                BookFragment nextFrag = new BookFragment();
+                nextFrag.setArguments(createBookBundle());
+
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container_view, nextFrag, "fragment_library")
+                        .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_BOOK)
                         .addToBackStack(null)
                         .commit();
             }
@@ -129,7 +146,7 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
 
     private void updateNoteListView(List noteList) {
         recyclerView.setAdapter(new BookNotesRecyclerViewAdapter(noteList, this));
-        TextView emptyView = getActivity().findViewById(R.id.empty_notelist_view);
+        TextView emptyView = view.findViewById(R.id.empty_notelist_view);
 
         if (noteList.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
@@ -146,7 +163,7 @@ public class BookNotesView extends Fragment implements BookNotesRecyclerViewAdap
         TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
         createNoteBundle(noteItem);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")
+                .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
                 .addToBackStack(null)
                 .commit();
 
