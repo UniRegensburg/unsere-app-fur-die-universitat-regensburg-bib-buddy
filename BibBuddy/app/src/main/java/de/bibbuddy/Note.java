@@ -61,13 +61,6 @@ public class Note {
         this.noteFileId = noteFileId;
     }
 
-    public Note(String name, Integer type, String text) {
-        this.name = name;
-        this.type = type;
-        this.text = text;
-        this.noteFileId = noteFileId;
-    }
-
 	public Note() {
 	}
 
