@@ -9,10 +9,16 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import org.jsoup.Jsoup;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import org.jsoup.Jsoup;
 
 public class TextNoteEditorFragment extends Fragment {
 
@@ -33,8 +39,6 @@ public class TextNoteEditorFragment extends Fragment {
       Long noteId = getArguments().getLong("noteId");
       note = noteModel.getNoteById(noteId);
       richTextEditor.setText(Html.fromHtml(note.getText(), 33));
-    } else {
-      note = noteModel.newNote();
     }
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
     setupUndo();
@@ -317,10 +321,19 @@ public class TextNoteEditorFragment extends Fragment {
     super.onPause();
     String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
     String rawText = Jsoup.parse(text).text();
+    String name = "";
+    BufferedReader bufferedReader = new BufferedReader(new StringReader(text));
+    try {
+      name = bufferedReader.readLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     if (rawText.length() != 0) {
-      noteModel.updateNote(note, text);
-    } else {
-      noteModel.deleteNote(note.getId());
+      if(getArguments() != null) {
+        noteModel.updateNote(note, name, text);
+      } else {
+        noteModel.addNote(name, 0 , text);
+      }
     }
   }
 

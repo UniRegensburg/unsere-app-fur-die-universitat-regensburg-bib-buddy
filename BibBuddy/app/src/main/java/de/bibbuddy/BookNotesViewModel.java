@@ -27,11 +27,11 @@ public class BookNotesViewModel {
         noteList = new ArrayList<>();
         for (Note item : list) {
             if (item.getType() == 1) { //text
-                noteList.add(new NoteItem(item.getName(), item.getId()));
+               // noteList.add(new NoteItem(item.getName(), item.getId()));
             } else if (item.getType() == 2) { //image
-                noteList.add(new NoteImageItem(item.getName(), item.getId()));
+              //  noteList.add(new NoteImageItem(item.getName(), item.getId()));
             } else if (item.getType() == 3) { //audio
-                noteList.add(new NoteAudioItem(item.getName(), item.getId()));
+              //  noteList.add(new NoteAudioItem(item.getName(), item.getId()));
             }
         }
 
