@@ -26,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String NAME = "name";
     public static final String TITLE = "title";
     public static final String CREATE_DATE = "creation_date";
-    public static final String MOD_DATE = "modifikation_date";
+    public static final String MOD_DATE = "modification_date";
     public static final String ISBN = "isbn";
     public static final String SUBTITLE = "subtitle";
     public static final String PUB_YEAR = "publication_year";

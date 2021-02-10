@@ -146,13 +146,13 @@ public class NoteDAO implements INoteDAO {
 		Long currentTime = new Date().getTime();
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
-    values.put("id", id);
+		//values.put("id", id);
 		values.put("name", name);
-		values.put("type", type);
+		//values.put("type", type);
 		values.put("text", text);
-		values.put("creation_date", createDate);
-		values.put("modifikation_date", currentTime);
-		values.put("note_file_id", noteFileId);
+		//values.put("creation_date", createDate);
+		values.put("modification_date", currentTime);
+		//values.put("note_file_id", noteFileId);
 		dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
                   DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)});
 		db.close();
