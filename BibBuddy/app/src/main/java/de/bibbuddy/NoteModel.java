@@ -34,7 +34,7 @@ public class NoteModel {
   }
 
   public Note getLastNote() {
-    return noteDao.findAll().get(noteDao.findAll().size()-1);
+    return noteDao.findAll().get(noteDao.findAll().size() - 1);
   }
 
   /**
@@ -101,7 +101,7 @@ public class NoteModel {
     return noteDao.findTextById(noteId);
   }
 
-  public void linkNoteWithBook(Long bookId, Long noteId){
+  public void linkNoteWithBook(Long bookId, Long noteId) {
     noteDao.linkNoteWithBook(bookId, noteId);
   }
 
