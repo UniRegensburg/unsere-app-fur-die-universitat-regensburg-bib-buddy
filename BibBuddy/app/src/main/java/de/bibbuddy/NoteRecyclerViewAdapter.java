@@ -84,7 +84,7 @@ public class NoteRecyclerViewAdapter
       public void onClick(View v) {
         TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
         Bundle args = new Bundle();
-        args.putLong("noteId", id);
+        args.putLong(LibraryKeys.NOTE_ID, id);
         nextFrag.setArguments(args);
         activity.getSupportFragmentManager().beginTransaction()
             .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")

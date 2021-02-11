@@ -42,7 +42,7 @@ public class BookModel {
   }
 
   public List<BookItem> getBookList(Long shelfId) {
-    bookList = new ArrayList<BookItem>();
+    bookList = new ArrayList<>();
     List<Book> bookDbList = bookDao.getAllBooksForShelf(shelfId);
 
     for (Book book : bookDbList) {

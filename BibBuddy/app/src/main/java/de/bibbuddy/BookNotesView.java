@@ -69,7 +69,10 @@ public class BookNotesView extends Fragment
       @Override
       public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.add_text_note) {
+          Bundle bundle = new Bundle();
+          bundle.putLong(LibraryKeys.BOOK_ID, bookId);
           TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
+          nextFrag.setArguments(bundle);
           getActivity().getSupportFragmentManager().beginTransaction()
               .replace(R.id.fragment_container_view, nextFrag,
                   LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
@@ -134,14 +137,9 @@ public class BookNotesView extends Fragment
 
   private Bundle createNoteBundle(NoteItem item) {
     Bundle bundle = new Bundle();
-
     Long currentNoteId = item.getId();
-    String currentNoteName = item.getName();
-    String currentNoteText = model.getNoteModel().getNoteText(item.getId());
-
+    bundle.putLong(LibraryKeys.BOOK_ID, bookId);
     bundle.putLong(LibraryKeys.NOTE_ID, currentNoteId);
-    bundle.putString(LibraryKeys.NOTE_NAME, currentNoteName);
-    bundle.putString(LibraryKeys.NOTE_TEXT, currentNoteText);
 
     return bundle;
   }
@@ -161,15 +159,13 @@ public class BookNotesView extends Fragment
   public void onItemClicked(int position) {
     NoteItem noteItem = model.getSelectedNoteItem(position);
 
-
     TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-    createNoteBundle(noteItem);
+    nextFrag.setArguments(createNoteBundle(noteItem));
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
         .addToBackStack(null)
         .commit();
 
-    createNoteBundle(noteItem);
     // TODO: Retrieve data at the appropriate place (onCreate) in the TextNoteEditor and set text
   }
 

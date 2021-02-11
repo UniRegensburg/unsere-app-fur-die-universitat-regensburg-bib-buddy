@@ -33,6 +33,10 @@ public class NoteModel {
     return noteDao.findById(id);
   }
 
+  public Note getLastNote() {
+    return noteDao.findAll().get(noteDao.findAll().size()-1);
+  }
+
   /**
    * This method is used to fetch the entire noteList from the database.
    *
@@ -95,6 +99,10 @@ public class NoteModel {
 
   public String getNoteText(Long noteId) {
     return noteDao.findTextById(noteId);
+  }
+
+  public void linkNoteWithBook(Long bookId, Long noteId){
+    noteDao.linkNoteWithBook(bookId, noteId);
   }
 
 }

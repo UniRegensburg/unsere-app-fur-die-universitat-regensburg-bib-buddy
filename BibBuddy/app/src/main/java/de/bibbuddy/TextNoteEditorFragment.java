@@ -25,6 +25,7 @@ public class TextNoteEditorFragment extends Fragment {
   private RichTextEditor richTextEditor;
   private Note note;
   private NoteModel noteModel;
+  private Long bookId;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +55,11 @@ public class TextNoteEditorFragment extends Fragment {
       e.printStackTrace();
     }
     if (rawText.length() != 0) {
-      if (getArguments() != null) {
+      if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
         noteModel.addNote(name, 0, text);
+        noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
     }
   }
@@ -69,8 +71,9 @@ public class TextNoteEditorFragment extends Fragment {
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     richTextEditor = view.findViewById(R.id.editor);
     noteModel = new NoteModel(getContext());
-    if (getArguments() != null) {
-      Long noteId = getArguments().getLong("noteId");
+    bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
+    if (getArguments().size() == 2) {
+      Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);
       note = noteModel.getNoteById(noteId);
       richTextEditor.setText(Html.fromHtml(note.getText(), 33));
     }
