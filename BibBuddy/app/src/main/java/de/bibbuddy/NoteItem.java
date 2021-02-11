@@ -23,6 +23,7 @@ public class NoteItem {
     public String getModDate(){
         return modDate;
     }
+    
     public String getName() {
         return name;
     }

@@ -35,11 +35,7 @@ public class NoteModel {
 		return noteDao.findById(id);
 	}
 
-	public List<Note> getAllNotes(){
-		return noteDao.findAll();
-	}
-
-	public List<NoteItem> getNoteList() {
+	public List<NoteItem> getCompleteNoteList() {
 		List<Note> noteList = noteDao.findAll();
 
 		List<NoteItem> noteItemList = new ArrayList<>();
@@ -51,6 +47,7 @@ public class NoteModel {
 			if (name.length() > 40) {
 				name = name.substring(0, 35) + " ...";
 			}
+			String modDate = getDate(note.getModDate());
 			if(note.getType() == 0){
 				image = R.drawable.document;
 			} else if (note.getType() == 1){
@@ -58,7 +55,6 @@ public class NoteModel {
 			} else {
 				image = R.drawable.microphone;
 			}
-			String modDate = getDate(note.getModDate());
 			noteItemList.add(new NoteItem(modDate, name, image, noteId));
 		}
 		return noteItemList;
@@ -77,6 +73,31 @@ public class NoteModel {
 		string = day + "." + month + "." + year + " " + time + " Uhr";
 
 		return string;
+	}
+
+	public List<NoteItem> getNoteListForABook(Long bookId) {
+		List<Note> noteList = noteDao.findAllNotesForABook();
+
+		List<NoteItem> noteItemList = new ArrayList<>();
+		for (Note note : noteList) {
+			Long noteId = note.getId();
+			String name = note.getName();
+			name = Jsoup.parse(name).text();
+			int image;
+			if (name.length() > 40) {
+				name = name.substring(0, 35) + " ...";
+			}
+			String modDate = getDate(note.getModDate());
+			if(note.getType() == 0){
+				image = R.drawable.document;
+			} else if (note.getType() == 1){
+				image = R.drawable.picture;
+			} else {
+				image = R.drawable.microphone;
+			}
+			noteItemList.add(new NoteItem(modDate, name, image, noteId));
+		}
+		return noteItemList;
 	}
 
 }

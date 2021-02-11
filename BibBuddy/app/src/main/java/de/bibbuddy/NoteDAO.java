@@ -120,6 +120,46 @@ public class NoteDAO implements INoteDAO {
         return noteList;
     }
 
+    public List<Note> findAllNotesForABook(Long bookId) {
+        List<Note> noteList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String idQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK;
+        Cursor c = db.rawQuery(idQuery, new String[]{String.valueOf(bookId)});
+        List<Long> ids = new ArrayList<>();
+        if (c.moveToFirst()) {
+            do {
+               Long id = c.getLong(1);
+               ids.add(id);
+            } while (c.moveToNext());
+            c.close();
+        }
+
+        String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_NOTE;
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(ids)});
+        cursor.moveToFirst();
+        for(int i = 0; i < ids.size(); i++) {
+            if (cursor.getLong(0) == ids.get(i)) {
+                Note note = new Note();
+                note.setId(Long.parseLong(cursor.getString(0)));
+                note.setName(cursor.getString(1));
+                note.setType(Integer.parseInt(cursor.getString(2)));
+                note.setText(cursor.getString(3));
+                note.setCreateDate(Long.parseLong(cursor.getString(4)));
+                note.setModDate(Long.parseLong(cursor.getString(5)));
+                note.setNoteFileId(cursor.getLong(6));
+
+                // Adding note to list
+                noteList.add(note);
+            }
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+        return noteList;
+    }
+
+
 
     // delete single note entry
     @Override
