@@ -17,6 +17,10 @@ public class BookNotesViewModel {
         this.noteModel = new NoteModel(context);
     }
 
+    public NoteModel getNoteModel(){
+        return noteModel;
+    }
+
 
     public List<NoteItem> getNoteList(Long bookId) {
         noteList = noteModel.getNoteListForABook(bookId);
