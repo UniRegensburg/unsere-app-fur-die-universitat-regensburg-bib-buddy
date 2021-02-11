@@ -16,6 +16,13 @@ public class BookRecyclerViewAdapter
   private final BookRecyclerViewAdapter.BookListener listener;
   private final Context context;
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param bookList test
+   * @param listener test
+   * @param context  test
+   */
   public BookRecyclerViewAdapter(List<BookItem> bookList, BookListener listener, Context context) {
     this.bookList = bookList;
     this.listener = listener;
@@ -75,6 +82,11 @@ public class BookRecyclerViewAdapter
     private final TextView textBookYear;
     private final TextView textNoteCount;
 
+    /**
+     * DUMMY COMMENT - PLEASE ADJUST.
+     *
+     * @param itemView test
+     */
     public BookViewHolder(@NonNull View itemView) {
       super(itemView);
       textTitleView = itemView.findViewById(R.id.book_title);

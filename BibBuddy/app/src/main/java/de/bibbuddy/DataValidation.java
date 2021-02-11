@@ -10,13 +10,25 @@ public class DataValidation {
     return inputStr == null || inputStr.isEmpty();
   }
 
-  //checks for special characters that are not latin letters or numbers
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * //checks for special characters that are not latin letters or numbers
+   *
+   * @param inputStr test
+   * @return test
+   */
   public static boolean hasSpecialChars(String inputStr) {
     Pattern pattern = Pattern.compile("[^a-z0-9äöüß ]", Pattern.CASE_INSENSITIVE);
     Matcher match = pattern.matcher(inputStr);
     return match.find();
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param isbnStr test
+   * @return test
+   */
   public static boolean validateIsbn13(String isbnStr) {
     if (isStringEmpty(isbnStr)) {
       return false;
@@ -51,6 +63,12 @@ public class DataValidation {
     }
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param isbnStr test
+   * @return test
+   */
   public static boolean validateIsbn10(String isbnStr) {
     if (isStringEmpty(isbnStr)) {
       return false;
@@ -85,6 +103,12 @@ public class DataValidation {
     }
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param isbnStr test
+   * @return test
+   */
   public static boolean isValidIsbn10or13(String isbnStr) {
     return validateIsbn10(isbnStr) || validateIsbn13(isbnStr);
   }

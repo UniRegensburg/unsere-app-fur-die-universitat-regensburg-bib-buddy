@@ -8,6 +8,15 @@ public class ShelfItem extends LibraryItem {
     super(name, R.drawable.ic_shelf, id);
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param name      test
+   * @param id        test
+   * @param parentId  test
+   * @param bookCount test
+   * @param noteCount test
+   */
   public ShelfItem(String name, Long id, Long parentId, int bookCount, int noteCount) {
     super(name, R.drawable.ic_shelf, id, parentId);
     this.bookCount = bookCount;

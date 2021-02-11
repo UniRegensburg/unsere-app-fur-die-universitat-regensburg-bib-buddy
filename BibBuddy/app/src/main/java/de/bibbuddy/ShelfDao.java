@@ -122,6 +122,12 @@ public class ShelfDao implements IShelfDAO {
     }
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param id test
+   * @return test
+   */
   public List<Shelf> findAllByParentId(Long id) {
     // Find all shelves with the given parent id
     List<Shelf> shelfList = new ArrayList<Shelf>();
@@ -155,6 +161,11 @@ public class ShelfDao implements IShelfDAO {
     return shelfList;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @return test
+   */
   public Long findLatestId() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
@@ -172,6 +183,12 @@ public class ShelfDao implements IShelfDAO {
     return id;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param shelfBookIds test
+   * @return test
+   */
   public int countAllNotesForShelf(List<Long> shelfBookIds) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     int noteCount = 0;
@@ -194,6 +211,12 @@ public class ShelfDao implements IShelfDAO {
     return noteCount;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param shelfId test
+   * @return test
+   */
   public int countAllBooksForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     int bookCount = 0;

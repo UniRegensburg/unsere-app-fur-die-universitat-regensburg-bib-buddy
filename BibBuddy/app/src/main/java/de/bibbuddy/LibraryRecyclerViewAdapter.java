@@ -17,6 +17,13 @@ public class LibraryRecyclerViewAdapter
   private final LibraryListener listener;
   private final Context context;
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param libraryList test
+   * @param listener    test
+   * @param context     test
+   */
   public LibraryRecyclerViewAdapter(List<ShelfItem> libraryList, LibraryListener listener,
                                     Context context) {
     this.libraryList = libraryList;
@@ -95,6 +102,11 @@ public class LibraryRecyclerViewAdapter
     private final TextView textBookCount;
     private final TextView textNoteCount;
 
+    /**
+     * DUMMY COMMENT - PLEASE ADJUST.
+     *
+     * @param itemView test
+     */
     public LibraryViewHolder(@NonNull View itemView) {
       super(itemView);
 

@@ -12,12 +12,23 @@ public class LibraryModel {
   private List<ShelfItem> libraryList;
   private Long currentShelfId;
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param context test
+   */
   public LibraryModel(Context context) {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.shelfDao = new ShelfDao(databaseHelper);
     this.bookDao = new BookDao(databaseHelper);
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param name     test
+   * @param parentId test
+   */
   public void addShelf(String name, Long parentId) {
     Shelf shelf = new Shelf(name, parentId);
     shelfDao.create(shelf);
@@ -26,10 +37,21 @@ public class LibraryModel {
     libraryList.add(new ShelfItem(name, id, parentId, 0, 0));
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @return test
+   */
   public List<ShelfItem> getCurrentLibraryList() {
     return libraryList;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param parentId test
+   * @return test
+   */
   public List<ShelfItem> getLibraryList(Long parentId) {
     currentShelfId = parentId;
 
@@ -49,10 +71,21 @@ public class LibraryModel {
     return libraryList;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param position test
+   * @return test
+   */
   public ShelfItem getSelectedLibraryItem(int position) {
     return libraryList.get(position);
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @return test
+   */
   public Long getShelfId() {
     return currentShelfId;
   }

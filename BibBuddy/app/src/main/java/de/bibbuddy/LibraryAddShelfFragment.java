@@ -43,6 +43,9 @@ public class LibraryAddShelfFragment extends DialogFragment {
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   */
   public void closeFragment() {
     onDestroyView();
 

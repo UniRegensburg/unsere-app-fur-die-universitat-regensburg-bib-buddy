@@ -11,6 +11,14 @@ public class LibraryItem {
     this(name, image, id, null);
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param name test
+   * @param image test
+   * @param id test
+   * @param parentId test
+   */
   public LibraryItem(String name, int image, Long id, Long parentId) {
     this.name = name;
     this.image = image;

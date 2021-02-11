@@ -7,6 +7,15 @@ public class Shelf {
   private Integer modDate;
   private Long shelfId;
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param id test
+   * @param name test
+   * @param createDate test
+   * @param modDate test
+   * @param shelfId test
+   */
   public Shelf(Long id, String name, Integer createDate, Integer modDate, Long shelfId) {
     this.id = id;
     this.name = name;
