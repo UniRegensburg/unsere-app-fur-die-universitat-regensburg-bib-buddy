@@ -25,12 +25,12 @@ public class BookDao implements IBookDAO {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
       contentValues.put(DatabaseHelper.TITLE, book.getTitle());
-      contentValues.put(DatabaseHelper.SUBTITLE, book.getSubttle());
+      contentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
       contentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
       contentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
       contentValues.put(DatabaseHelper.VOLUME, book.getVolume());
       contentValues.put(DatabaseHelper.EDITION, book.getEdition());
-      contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfos());
+      contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
       long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
@@ -110,12 +110,12 @@ public class BookDao implements IBookDAO {
         book.setId(Long.parseLong(cursor.getString(0)));
         book.setIsbn(cursor.getString(1));
         book.setTitle(cursor.getString(2));
-        book.setSubttle(cursor.getString(3));
+        book.setSubtitle(cursor.getString(3));
         book.setPubYear(Integer.parseInt(cursor.getString(4)));
         book.setPublisher(cursor.getString(5));
         book.setVolume(cursor.getString(6));
         book.setEdition(cursor.getString(7));
-        book.setAddInfos(cursor.getString(8));
+        book.setAddInfo(cursor.getString(8));
         book.setCreateDate(Integer.parseInt(cursor.getString(9)));
         book.setModDate(Integer.parseInt(cursor.getString(10)));
 

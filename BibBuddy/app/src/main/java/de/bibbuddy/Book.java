@@ -5,43 +5,70 @@ public class Book {
   private Long id;
   private String isbn;
   private String title;
-  private String subttle;
+  private String subtitle;
   private Integer pubYear;
   private String publisher;
   private String volume;
   private String edition;
-  private String addInfos;
+  private String addInfo;
   private Integer createDate;
   private Integer modDate;
 
-
-  public Book(Long id, String isbn, String title, String subttle, Integer pubYear,
-              String publisher, String volume, String edition, String addInfos,
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param id         test
+   * @param isbn       test
+   * @param title      test
+   * @param subtitle   test
+   * @param pubYear    test
+   * @param publisher  test
+   * @param volume     test
+   * @param edition    test
+   * @param addInfo    test
+   * @param createDate test
+   * @param modDate    test
+   */
+  public Book(Long id, String isbn, String title, String subtitle, Integer pubYear,
+              String publisher, String volume, String edition, String addInfo,
               Integer createDate, Integer modDate) {
     this.id = id;
     this.isbn = isbn;
     this.title = title;
-    this.subttle = subttle;
+    this.subtitle = subtitle;
     this.pubYear = pubYear;
     this.publisher = publisher;
     this.volume = volume;
     this.edition = edition;
-    this.addInfos = addInfos;
+    this.addInfo = addInfo;
     this.createDate = createDate;
     this.modDate = modDate;
   }
 
-  // id, creation_date and mod_date are set in the database
-  public Book(String isbn, String title, String subttle, Integer pubYear,
-              String publisher, String volume, String edition, String addInfos) {
+
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * // id, creation_date and mod_date are set in the database
+   *
+   * @param isbn      test
+   * @param title     test
+   * @param subtitle  test
+   * @param pubYear   test
+   * @param publisher test
+   * @param volume    test
+   * @param edition   test
+   * @param addInfo   test
+   */
+  public Book(String isbn, String title, String subtitle, Integer pubYear,
+              String publisher, String volume, String edition, String addInfo) {
     this.isbn = isbn;
     this.title = title;
-    this.subttle = subttle;
+    this.subtitle = subtitle;
     this.pubYear = pubYear;
     this.publisher = publisher;
     this.volume = volume;
     this.edition = edition;
-    this.addInfos = addInfos;
+    this.addInfo = addInfo;
   }
 
   public Book() {
@@ -71,12 +98,12 @@ public class Book {
     this.title = title;
   }
 
-  public String getSubttle() {
-    return subttle;
+  public String getSubtitle() {
+    return subtitle;
   }
 
-  public void setSubttle(String subttle) {
-    this.subttle = subttle;
+  public void setSubtitle(String subtitle) {
+    this.subtitle = subtitle;
   }
 
   public Integer getPubYear() {
@@ -111,12 +138,12 @@ public class Book {
     this.edition = edition;
   }
 
-  public String getAddInfos() {
-    return addInfos;
+  public String getAddInfo() {
+    return addInfo;
   }
 
-  public void setAddInfos(String addInfos) {
-    this.addInfos = addInfos;
+  public void setAddInfo(String addInfo) {
+    this.addInfo = addInfo;
   }
 
   public Integer getCreateDate() {

@@ -113,6 +113,12 @@ public class AuthorDao implements IAuthorDAO {
     db.close();
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param author test
+   * @return test
+   */
   public boolean existAuthor(Author author) {
     List<Author> dbAuthorList = findAll();
     for (Author dbAuthor : dbAuthorList) {
@@ -127,6 +133,11 @@ public class AuthorDao implements IAuthorDAO {
     return false;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param authorList test
+   */
   public void createAuthors(List<Author> authorList) {
     for (Author author : authorList) {
       if (!existAuthor(author)) {
@@ -135,6 +146,12 @@ public class AuthorDao implements IAuthorDAO {
     }
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param authorList test
+   * @return test
+   */
   public List<Long> getAuthorIds(List<Author> authorList) {
     List<Long> authorIds = new ArrayList<>();
     SQLiteDatabase db = dbHelper.getWritableDatabase();
