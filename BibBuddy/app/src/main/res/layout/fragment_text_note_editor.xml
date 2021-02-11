@@ -162,17 +162,17 @@
 
         <de.bibbuddy.RichTextEditor
             android:id="@+id/editor"
-            android:layout_alignTop="@+id/roundBorder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constrainedHeight="true"
-            android:gravity="top"
+            android:layout_alignTop="@+id/roundBorder"
             android:layout_marginEnd="50dp"
             android:layout_marginStart="50dp"
             android:layout_marginTop="10dp"
+            android:gravity="top"
             app:bulletColor="@color/true_black"
             app:bulletGapWidth="3dp"
-            app:bulletRadius="3dp"/>
+            app:bulletRadius="3dp"
+            app:layout_constrainedHeight="true" />
 
     </RelativeLayout>
 

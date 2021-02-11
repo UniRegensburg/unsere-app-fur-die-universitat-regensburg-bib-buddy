@@ -43,6 +43,13 @@ public class BookDao implements IBookDAO {
     return true;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param book       test
+   * @param authorList test
+   * @param shelfId    test
+   */
   public void create(Book book, List<Author> authorList, Long shelfId) {
     create(book);
     Long bookId = findLatestId();
@@ -56,7 +63,14 @@ public class BookDao implements IBookDAO {
     linkBookWithAuthors(authorList, bookId, authorDao.getAuthorIds(authorList));
   }
 
-  // get single book entry
+
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * // get single book entry
+   *
+   * @param id test
+   * @return test
+   */
   public Book findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -139,7 +153,11 @@ public class BookDao implements IBookDAO {
     db.close();
   }
 
-
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @return test
+   */
   public Long findLatestId() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
@@ -190,7 +208,13 @@ public class BookDao implements IBookDAO {
     }
   }
 
-  // get all Books for a shelf by the shelfId
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * // get all Books for a shelf by the shelfId
+   *
+   * @param shelfId test
+   * @return test
+   */
   public List<Long> getAllBookIdsForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> bookIds = new ArrayList<Long>();
@@ -211,7 +235,13 @@ public class BookDao implements IBookDAO {
   }
 
 
-  // get all books for a shelf with a list of bookIds
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * // get all books for a shelf with a list of bookIds
+   *
+   * @param shelfId test
+   * @return test
+   */
   public List<Book> getAllBooksForShelf(Long shelfId) {
     List<Long> bookIds = getAllBookIdsForShelf(shelfId);
     List<Book> bookList = new ArrayList<Book>();
@@ -242,7 +272,14 @@ public class BookDao implements IBookDAO {
     return authorIds;
   }
 
-  // get all authors for a book with a list of authorIds
+
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * // get all authors for a book with a list of authorIds
+   *
+   * @param bookId test
+   * @return test
+   */
   public List<Author> getAllAuthorsForBook(Long bookId) {
     List<Author> authorList = new ArrayList<Author>();
     List<Long> authorIds = getAllAuthorsIdsForBook(bookId);
@@ -253,8 +290,13 @@ public class BookDao implements IBookDAO {
     return authorList;
   }
 
-
-  // count all Notes for a book by the bookId
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   * // count all Notes for a book by the bookId
+   *
+   * @param bookId test
+   * @return test
+   */
   public int countAllNotesForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     int noteCount = 0;
