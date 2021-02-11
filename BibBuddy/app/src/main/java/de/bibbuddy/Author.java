@@ -9,6 +9,16 @@ public class Author {
   private Integer modDate;
 
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param id         test
+   * @param firstName  test
+   * @param lastName   test
+   * @param title      test
+   * @param createDate test
+   * @param modDate    test
+   */
   public Author(Long id, String firstName, String lastName, String title, Integer createDate,
                 Integer modDate) {
     this.id = id;
@@ -27,6 +37,13 @@ public class Author {
     this.lastName = lastName;
   }
 
+  /**
+   * DUMMY COMMENT - PLEASE ADJUST.
+   *
+   * @param firstName test
+   * @param lastName test
+   * @param title test
+   */
   public Author(String firstName, String lastName, String title) {
     this.firstName = firstName;
     this.lastName = lastName;
