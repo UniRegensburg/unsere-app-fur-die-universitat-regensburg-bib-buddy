@@ -1,3 +1,4 @@
+/*
 package de.bibbuddy;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -60,7 +61,8 @@ public class NotesFragmentUITest {
         itemView = recyclerView.getChildAt(0);
         idText = itemView.getId();
 
-    /*
+    */
+/*
     nF.recyclerView.getAdapter().notifyDataSetChanged();
     itemView = nF.recyclerView.getChildAt(0);
     id = itemView.getId();
@@ -68,7 +70,8 @@ public class NotesFragmentUITest {
     id2 = itemView.getId();
     itemView = nF.recyclerView.getChildAt(2);
     id3 = itemView.getId();
-    */
+    *//*
+
 
     }
 
@@ -106,12 +109,14 @@ public class NotesFragmentUITest {
         onView(withId(idText)).perform(click());
         onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
 
-    /*
+    */
+/*
     onView(withId(id2)).perform(click());
     onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
     onView(withId(id3)).perform(click());
     onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
-    */
+    *//*
+
 
     }
 
@@ -123,12 +128,14 @@ public class NotesFragmentUITest {
         onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
         ViewActions.closeSoftKeyboard();
 
-    /*
+    */
+/*
     onView(withText(nF.getString(R.string.create_voice_note))).perform(click());
     onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
     onView(withText(nF.getString(R.string.create_picture_note))).perform(click());
     onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
-     */
+     *//*
+
 
     }
 
@@ -199,3 +206,4 @@ public class NotesFragmentUITest {
         }
     }
 }
+*/
