@@ -21,6 +21,12 @@ jobs:
         uses: actions/setup-java@v1.4.3
         with:
           java-version: 1.8
+       
+      #command: run unit tests
+      - name: Run Build Test
+        #Working directory is the folder with the project
+        working-directory: ./BibBuddy
+        run: bash ./gradlew test --stacktrace
       
       #command:  Run Java Checkstyle
       - name: Run Java Checkstyle
