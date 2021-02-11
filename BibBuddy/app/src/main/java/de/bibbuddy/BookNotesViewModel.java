@@ -9,20 +9,18 @@ public class BookNotesViewModel {
 
     private final Context context;
     private final NoteModel noteModel;
-
     private List<NoteItem> noteList;
 
 
     public BookNotesViewModel(Context context) {
         this.context = context;
-        DatabaseHelper databaseHelper = new DatabaseHelper(context);
         this.noteModel = new NoteModel(context);
     }
 
 
     public List<NoteItem> getNoteList(Long bookId) {
-        List<NoteItem> list = noteModel.getNoteListForABook(bookId);
-        return list;
+        noteList = noteModel.getNoteListForABook(bookId);
+        return noteList;
     }
 
     public NoteItem getSelectedNoteItem(int position) {
