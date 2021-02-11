@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NoteDAO implements INoteDAO {
+public class NoteDao implements INoteDAO {
 
   private final DatabaseHelper dbHelper;
 
-  public NoteDAO(DatabaseHelper dbHelper) {
+  public NoteDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 

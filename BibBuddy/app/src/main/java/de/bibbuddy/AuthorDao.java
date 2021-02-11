@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AuthorDAO implements IAuthorDAO {
+public class AuthorDao implements IAuthorDAO {
 
   private final DatabaseHelper dbHelper;
 
-  public AuthorDAO(DatabaseHelper dbHelper) {
+  public AuthorDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 

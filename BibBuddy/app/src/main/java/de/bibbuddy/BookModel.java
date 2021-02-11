@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookModel {
-  private final BookDAO bookDao;
+  private final BookDao bookDao;
   private final Long shelfId;
 
   private List<BookItem> bookList;
@@ -13,7 +13,7 @@ public class BookModel {
   public BookModel(Context context, Long shelfId) {
     this.shelfId = shelfId;
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
-    this.bookDao = new BookDAO(databaseHelper);
+    this.bookDao = new BookDao(databaseHelper);
   }
 
   private String convertAuthorListToString(List<Author> authorList) {

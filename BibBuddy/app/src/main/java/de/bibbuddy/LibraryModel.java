@@ -7,7 +7,7 @@ import java.util.List;
 public class LibraryModel {
 
   private final ShelfDao shelfDao;
-  private final BookDAO bookDao;
+  private final BookDao bookDao;
 
   private List<ShelfItem> libraryList;
   private Long currentShelfId;
@@ -15,7 +15,7 @@ public class LibraryModel {
   public LibraryModel(Context context) {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.shelfDao = new ShelfDao(databaseHelper);
-    this.bookDao = new BookDAO(databaseHelper);
+    this.bookDao = new BookDao(databaseHelper);
   }
 
   public void addShelf(String name, Long parentId) {

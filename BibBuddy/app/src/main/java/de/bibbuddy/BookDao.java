@@ -7,14 +7,14 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookDAO implements IBookDAO {
+public class BookDao implements IBookDAO {
   private final DatabaseHelper dbHelper;
-  private final AuthorDAO authorDao;
+  private final AuthorDao authorDao;
 
 
-  public BookDAO(DatabaseHelper dbHelper) {
+  public BookDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
-    this.authorDao = new AuthorDAO(dbHelper);
+    this.authorDao = new AuthorDao(dbHelper);
   }
 
   @Override

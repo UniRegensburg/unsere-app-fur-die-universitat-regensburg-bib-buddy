@@ -26,7 +26,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
   private final int backgroundColor;
   private final NoteRecyclerViewAdapter adapter;
   private final Context context;
-  private final NoteDAO noteDao;
+  private final NoteDao noteDao;
   private final Drawable icon;
   private final MainActivity activity;
   public boolean removed = false;
@@ -38,7 +38,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     this.adapter = adapter;
     this.activity = activity;
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
-    this.noteDao = new NoteDAO(databaseHelper);
+    this.noteDao = new NoteDao(databaseHelper);
     background = new ColorDrawable();
     backgroundColor = context.getColor(R.color.alert_red);
     clearPaint = new Paint();
