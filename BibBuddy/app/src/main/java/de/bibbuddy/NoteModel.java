@@ -76,7 +76,7 @@ public class NoteModel {
 	}
 
 	public List<NoteItem> getNoteListForABook(Long bookId) {
-		List<Note> noteList = noteDao.findAllNotesForABook();
+		List<Note> noteList = noteDao.findAllNotesForABook(bookId);
 
 		List<NoteItem> noteItemList = new ArrayList<>();
 		for (Note note : noteList) {

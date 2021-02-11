@@ -16,9 +16,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class TextNoteEditorFragment extends Fragment {
 
@@ -27,6 +29,43 @@ public class TextNoteEditorFragment extends Fragment {
   private RichTextEditor richTextEditor;
   private Note note;
   private NoteModel noteModel;
+
+  @Override
+  public void onCreate(Bundle savedInstanceState)
+  {
+    super.onCreate (savedInstanceState);
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        saveNote();
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+          fm.popBackStack();
+        } else {
+          requireActivity().onBackPressed();
+        }
+      }
+    });
+  }
+
+  private void saveNote() {
+    String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+    String rawText = Jsoup.parse(text).text();
+    String name = "";
+    BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
+    try {
+      name = bufferedReader.readLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    if (rawText.length() != 0) {
+      if(getArguments() != null) {
+        noteModel.updateNote(note, name, text);
+      } else {
+        noteModel.addNote(name, 0 , text);
+      }
+    }
+  }
 
   @Nullable
   @Override
@@ -314,27 +353,6 @@ public class TextNoteEditorFragment extends Fragment {
       }
     });
 
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
-    String rawText = Jsoup.parse(text).text();
-    String name = "";
-    BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
-    try {
-      name = bufferedReader.readLine();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    if (rawText.length() != 0) {
-      if(getArguments() != null) {
-        noteModel.updateNote(note, name, text);
-      } else {
-        noteModel.addNote(name, 0 , text);
-      }
-    }
   }
 
 }
