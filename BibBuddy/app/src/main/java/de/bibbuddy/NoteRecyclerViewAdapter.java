@@ -149,7 +149,8 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupCardView(MyViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view with that element
+    // Get element from your dataset at this position and replace the contents of the view
+    // with that element
     NoteItem noteItem = data.get(position);
     holder.getModDateView().setText(noteItem.getModDate());
     holder.getNameView().setText(noteItem.getName());

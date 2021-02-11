@@ -3,14 +3,14 @@ package de.bibbuddy;
 public class Model {
 
   private String name;
-  private int image_drawable;
+  private int imageDrawable;
 
-  public int getImage_drawable() {
-    return image_drawable;
+  public int getImageDrawable() {
+    return imageDrawable;
   }
 
-  public void setImage_drawable(int image_drawable) {
-    this.image_drawable = image_drawable;
+  public void setImage_drawable(int imageDrawable) {
+    this.imageDrawable = imageDrawable;
   }
 
   public String getName() {

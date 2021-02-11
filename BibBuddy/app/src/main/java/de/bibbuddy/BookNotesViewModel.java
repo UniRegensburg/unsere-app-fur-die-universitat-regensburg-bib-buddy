@@ -22,7 +22,7 @@ public class BookNotesViewModel {
 
 
   public List<NoteItem> getNoteList(Long bookId) {
-    noteList = noteModel.getNoteListForABook(bookId);
+    noteList = noteModel.getNoteListForBook(bookId);
     return noteList;
   }
 

@@ -8,6 +8,15 @@ public class NoteItem {
   private final Long id;
   private final Long bookId;
 
+  /**
+   * Constructor to set up a NoteItem for view/UI usages.
+   *
+   * @param modDate string-value of the modification date of the note
+   * @param name    name of the note
+   * @param image   id for the drawable resource of the note type icon
+   * @param id      id of the note
+   * @param bookId  id of the book that the note is connected to
+   */
   public NoteItem(String modDate, String name, int image, Long id, Long bookId) {
     this.modDate = modDate;
     this.name = name;

@@ -65,9 +65,10 @@ public class NoteDao implements INoteDAO {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE, new String[] {DatabaseHelper._ID,
-            DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT, DatabaseHelper.CREATE_DATE,
-            DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID}, DatabaseHelper._ID + "=?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+        DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, null);
 
     Note note = null;
     if (cursor != null) {
@@ -140,21 +141,23 @@ public class NoteDao implements INoteDAO {
    */
   public void updateNote(Long id, String name, String text) {
     Long currentTime = new Date().getTime();
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
     ContentValues values = new ContentValues();
-    //values.put("id", id);
     values.put("name", name);
-    //values.put("type", type);
     values.put("text", text);
-    //values.put("creation_date", createDate);
     values.put("modifikation_date", currentTime);
-    //values.put("note_file_id", noteFileId);
     dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
         DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)});
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.close();
   }
 
-  // Link note with book
+  /**
+   * This method links a note with a book.
+   *
+   * @param bookId id of the book to link
+   * @param noteId id of the note to link
+   * @return if linking was successfull
+   */
   public boolean linkNoteWithBook(Long bookId, Long noteId) {
 
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
@@ -176,14 +179,11 @@ public class NoteDao implements INoteDAO {
   private List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> noteIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE " +
-        DatabaseHelper.BOOK_ID + "=" + bookId;
-
+    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
+        + DatabaseHelper.BOOK_ID + "=" + bookId;
     Cursor cursor = db.rawQuery(selectQuery, null);
-
     if (cursor.moveToFirst()) {
       do {
-        // Id, BookId, NoteId
         noteIds.add(Long.parseLong(cursor.getString(2)));
       } while (cursor.moveToNext());
       cursor.close();
@@ -194,24 +194,36 @@ public class NoteDao implements INoteDAO {
 
 
   // get all Notes for a book with a list of noteIds
+
+  /**
+   * This method gets a list of all notes that are connected to a specific book.
+   *
+   * @param bookId id of the book that the result notes must be connected to
+   * @return returns a list of connected note-objects.
+   */
   public List<Note> getAllNotesForBook(Long bookId) {
     List<Long> noteIds = getAllNoteIdsForBook(bookId);
-    List<Note> noteList = new ArrayList<Note>();
-
+    List<Note> noteList = new ArrayList<>();
     for (Long id : noteIds) {
       noteList.add(findById(id));
     }
-
     return noteList;
   }
 
+  /**
+   * This method gets text string of a specific note.
+   *
+   * @param id id of the note to look for
+   * @return returns the notes text value
+   */
   public String findTextById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE, new String[] {DatabaseHelper._ID,
-            DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT, DatabaseHelper.CREATE_DATE,
-            DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID}, DatabaseHelper._ID + "=?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+        DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, null);
 
     String noteText = null;
     if (cursor != null) {

@@ -26,11 +26,11 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
   private final int backgroundColor;
   private final NoteRecyclerViewAdapter adapter;
   private final Context context;
-  private final NoteDao noteDAO;
+  private final NoteDao noteDao;
   private final Drawable icon;
   private final MainActivity activity;
   public boolean removed = false;
-  private Canvas c;
+  private Canvas canvas;
 
   SwipeToDeleteCallback(Context context, NoteRecyclerViewAdapter adapter,
                         MainActivity activity) {
@@ -38,7 +38,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     this.adapter = adapter;
     this.activity = activity;
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
-    this.noteDAO = new NoteDao(databaseHelper);
+    this.noteDao = new NoteDao(databaseHelper);
     background = new ColorDrawable();
     backgroundColor = context.getColor(R.color.alert_red);
     clearPaint = new Paint();
@@ -63,27 +63,27 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
   @Override
   public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
-                          @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                          @NonNull RecyclerView.ViewHolder viewHolder, float dx, float dy,
                           int actionState, boolean isCurrentlyActive) {
-    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-    this.c = c;
+    super.onChildDraw(c, recyclerView, viewHolder, dx, dy, actionState, isCurrentlyActive);
+    this.canvas = c;
     View itemView = viewHolder.itemView;
-    boolean isCancelled = dX == 0 && !isCurrentlyActive;
+    boolean isCancelled = dx == 0 && !isCurrentlyActive;
     if (isCancelled) {
-      clearCanvas(c, itemView.getRight() + dX, (float) itemView.getTop(),
+      clearCanvas(c, itemView.getRight() + dx, (float) itemView.getTop(),
           (float) itemView.getRight(), (float) itemView.getBottom());
-      super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+      super.onChildDraw(c, recyclerView, viewHolder, dx, dy, actionState, isCurrentlyActive);
       return;
     }
 
     background.setColor(backgroundColor);
-    background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
+    background.setBounds(itemView.getRight() + (int) dx, itemView.getTop(), itemView.getRight(),
         itemView.getBottom());
     background.draw(c);
 
     drawSwipeIcon(viewHolder);
 
-    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+    super.onChildDraw(c, recyclerView, viewHolder, dx, dy, actionState, isCurrentlyActive);
   }
 
   private void drawSwipeIcon(RecyclerView.ViewHolder viewHolder) {
@@ -95,7 +95,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     int iconBottom = iconTop + icon.getIntrinsicHeight();
     icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
     icon.setTint(Color.WHITE);
-    icon.draw(c);
+    icon.draw(canvas);
   }
 
   private void clearCanvas(Canvas c, Float left, Float top, Float right, Float bottom) {
@@ -145,7 +145,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
         if (removed) {
           adapter.removeItem(position);
           adapter.notifyDataSetChanged();
-          noteDAO.delete(note.getId());
+          noteDao.delete(note.getId());
         }
       }
 
