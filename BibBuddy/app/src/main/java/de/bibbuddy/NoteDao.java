@@ -165,7 +165,7 @@ public class NoteDao implements INoteDAO {
       contentValues.put(DatabaseHelper.BOOK_ID, bookId);
       contentValues.put(DatabaseHelper.NOTE_ID, noteId);
 
-      long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, null, contentValues);
+      db.insert(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, null, contentValues);
 
     } catch (SQLiteException ex) {
       return false;
