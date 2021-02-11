@@ -23,8 +23,7 @@ public class BookNotesRecyclerViewAdapter extends
   @NonNull
   @Override
   public BookNotesViewHolder
-  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+      onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     return new BookNotesViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.list_view_item_book_notes_view, parent, false));
   }
