@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface IBookDAO {
 
-    boolean create(Book book);
+  boolean create(Book book);
 
-    Book findById(Long id);
+  Book findById(Long id);
 
-    List<Book> findAll();
+  List<Book> findAll();
 
-    void delete(Long id);
+  void delete(Long id);
 
 }
