@@ -12,17 +12,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
-public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.MyViewHolder> {
+public class NoteRecyclerViewAdapter
+    extends RecyclerView.Adapter<NoteRecyclerViewAdapter.MyViewHolder> {
 
   private final MainActivity activity;
   private final List<NoteItem> data;
@@ -155,7 +154,7 @@ public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerVi
     holder.getModDateView().setText(noteItem.getModDate());
     holder.getNameView().setText(noteItem.getName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
-            noteItem.getImage()));
+        noteItem.getImage()));
   }
 
   @Override

@@ -9,21 +9,17 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
-import org.jsoup.Jsoup;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import org.jsoup.Jsoup;
 
 public class TextNoteEditorFragment extends Fragment {
-
 
   private View view;
   private RichTextEditor richTextEditor;
@@ -31,9 +27,8 @@ public class TextNoteEditorFragment extends Fragment {
   private NoteModel noteModel;
 
   @Override
-  public void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate (savedInstanceState);
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
@@ -59,10 +54,10 @@ public class TextNoteEditorFragment extends Fragment {
       e.printStackTrace();
     }
     if (rawText.length() != 0) {
-      if(getArguments() != null) {
+      if (getArguments() != null) {
         noteModel.updateNote(note, name, text);
       } else {
-        noteModel.addNote(name, 0 , text);
+        noteModel.addNote(name, 0, text);
       }
     }
   }

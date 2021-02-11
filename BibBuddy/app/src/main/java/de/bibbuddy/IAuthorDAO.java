@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface IAuthorDAO {
 
-    boolean create(Author author);
+  boolean create(Author author);
 
-    Author findById(Long id);
+  Author findById(Long id);
 
-    List<Author> findAll();
+  List<Author> findAll();
 
-    void delete(Long id);
+  void delete(Long id);
 
 }

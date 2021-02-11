@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface ITagDAO {
 
-    boolean create(Tag tag);
+  boolean create(Tag tag);
 
-    Tag findById(Long id);
+  Tag findById(Long id);
 
-    List<Tag> findAll();
+  List<Tag> findAll();
 
-    void delete(Long id);
+  void delete(Long id);
 
 }
