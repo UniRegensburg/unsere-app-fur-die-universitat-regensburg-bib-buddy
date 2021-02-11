@@ -322,7 +322,7 @@ public class TextNoteEditorFragment extends Fragment {
     String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
     String rawText = Jsoup.parse(text).text();
     String name = "";
-    BufferedReader bufferedReader = new BufferedReader(new StringReader(text));
+    BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
     try {
       name = bufferedReader.readLine();
     } catch (IOException e) {

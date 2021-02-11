@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class NotesFragment extends Fragment {
 
-  static List<Note> notes;
+  static List<NoteItem> notes;
   private View view;
-  private RecyclerViewAdapter adapter;
+  private NoteRecyclerViewAdapter adapter;
   private RecyclerView recyclerView;
 
   @Nullable
@@ -29,7 +29,7 @@ public class NotesFragment extends Fragment {
     view = inflater.inflate(R.layout.fragment_notes, container, false);
     recyclerView = view.findViewById(R.id.recyclerView);
     NoteModel noteModel = new NoteModel(getContext());
-    notes = noteModel.getAllNotes();
+    notes = noteModel.getNoteList();
     setupRecyclerView();
     enableSwipeToDelete();
     setupAddButton();
@@ -37,7 +37,7 @@ public class NotesFragment extends Fragment {
   }
 
   private void setupRecyclerView() {
-    adapter = new RecyclerViewAdapter(notes, (MainActivity) getActivity());
+    adapter = new NoteRecyclerViewAdapter(notes, (MainActivity) getActivity());
     recyclerView.setAdapter(adapter);
   }
 

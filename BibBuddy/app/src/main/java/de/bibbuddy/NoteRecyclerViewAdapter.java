@@ -12,21 +12,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import org.jsoup.Jsoup;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class NoteRecyclerViewAdapter extends RecyclerView.Adapter<NoteRecyclerViewAdapter.MyViewHolder> {
 
   private final MainActivity activity;
-  private final List<Note> data;
+  private final List<NoteItem> data;
   private final NoteModel noteModel;
   private Drawable background;
   private ImageButton panelDelete;
@@ -39,13 +38,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
    * @param data     List of notes as data content for the adapter
    * @param activity Base activity
    */
-  public RecyclerViewAdapter(List<Note> data, MainActivity activity) {
+  public NoteRecyclerViewAdapter(List<NoteItem> data, MainActivity activity) {
     this.data = data;
     this.activity = activity;
     noteModel = new NoteModel(activity.getBaseContext());
-    data.sort(new Comparator<Note>() {
+    data.sort(new Comparator<NoteItem>() {
       @Override
-      public int compare(Note o1, Note o2) {
+      public int compare(NoteItem o1, NoteItem o2) {
         if (o1.getModDate() == null || o2.getModDate() == null) {
           return 0;
         }
@@ -151,34 +150,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   }
 
   private void setupCardView(MyViewHolder holder, int position) {
-    String text = data.get(position).getText();
-    text = Jsoup.parse(text).text();
-    if (text.contains("\n")) {
-      text = text.substring(0, text.indexOf("\n")) + "...";
-    }
-    if (text.length() > 40) {
-      text = text.substring(0, 35) + " ...";
-    }
-    holder.title.setText(text);
-    String dateString = getDate(data.get(position).getModDate());
-    holder.modDate.setText(dateString);
-    holder.type.setImageDrawable(
-        ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.document));
-  }
-
-  private String getDate(Long date) {
-    Date d = new Date(date);
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
-    String string = simpleDateFormat.format(d);
-    String day = string.substring(8, 10);
-    String month = string.substring(5, 7);
-    String year = string.substring(0, 4);
-    String time = string.substring(11, 16);
-
-    string = day + "." + month + "." + year + " " + time + " Uhr";
-
-    return string;
+    // Get element from your dataset at this position and replace the contents of the view with that element
+    NoteItem noteItem = data.get(position);
+    holder.getModDateView().setText(noteItem.getModDate());
+    holder.getNameView().setText(noteItem.getName());
+    holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
+            noteItem.getImage()));
   }
 
   @Override
@@ -186,7 +163,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     return data.size();
   }
 
-  public List<Note> getData() {
+  public List<NoteItem> getData() {
     return data;
   }
 
@@ -209,14 +186,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     } else if (!anyItemSelected() && isPanelShown()) {
       hidePanel();
     }
-    System.out.println(anyItemSelected());
   }
 
   private void hidePanel() {
     // Hide the Panel
     Animation bottomDown = AnimationUtils.loadAnimation(activity.getBaseContext(),
         R.anim.bottom_down);
-
     hiddenDeletePanel.startAnimation(bottomDown);
     hiddenDeletePanel.setVisibility(View.GONE);
   }
@@ -241,7 +216,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
   public static class MyViewHolder extends RecyclerView.ViewHolder {
 
     public final TextView modDate;
-    private final TextView title;
+    private final TextView name;
     private final ImageView type;
 
     /**
@@ -251,9 +226,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
      */
     public MyViewHolder(View itemView) {
       super(itemView);
-      title = itemView.findViewById(R.id.noteTitle);
       modDate = itemView.findViewById(R.id.noteModDate);
+      name = itemView.findViewById(R.id.noteName);
       type = itemView.findViewById(R.id.noteType);
+    }
+
+    public TextView getModDateView() {
+      return modDate;
+    }
+
+    public TextView getNameView() {
+      return name;
+    }
+
+    public ImageView getTypeView() {
+      return type;
     }
 
   }

@@ -13,10 +13,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.snackbar.Snackbar;
 
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
@@ -24,7 +26,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 	private final Paint clearPaint;
 	private final ColorDrawable background;
 	private final int backgroundColor;
-	private final RecyclerViewAdapter adapter;
+	private final NoteRecyclerViewAdapter adapter;
 	private final Context context;
 	private final NoteDAO noteDAO;
 	private final Drawable icon;
@@ -32,7 +34,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 	private Canvas c;
 	private final MainActivity activity;
 
-	SwipeToDeleteCallback(Context context, RecyclerViewAdapter adapter,
+	SwipeToDeleteCallback(Context context, NoteRecyclerViewAdapter adapter,
 												MainActivity activity) {
 		this.context = context;
 		this.adapter = adapter;
@@ -106,16 +108,16 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
 	@Override
 	public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-		RecyclerViewAdapter.MyViewHolder myViewHolder =
-			new RecyclerViewAdapter.MyViewHolder(viewHolder.itemView);
+		NoteRecyclerViewAdapter.MyViewHolder myViewHolder =
+			new NoteRecyclerViewAdapter.MyViewHolder(viewHolder.itemView);
 		final int position = viewHolder.getAdapterPosition();
-		final Note note = adapter.getData().get(position);
+		final NoteItem note = adapter.getData().get(position);
 		View itemView = viewHolder.itemView;
 		removed = true;
 		setupSnackbar(note, itemView, position);
 	}
 
-	private void setupSnackbar(Note note, View itemView, int position) {
+	private void setupSnackbar(NoteItem note, View itemView, int position) {
 		Snackbar snackbar = Snackbar
 			.make(activity.findViewById(R.id.fragment_notes), R.string.delete_notification,
 				Snackbar.LENGTH_LONG)
