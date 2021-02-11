@@ -79,7 +79,7 @@ public class NoteModel {
 				noteItemList.add(new NoteImageItem(modDate, name, noteId));
 			}
 		}
-		
+
 		return noteItemList;
 	}
 
