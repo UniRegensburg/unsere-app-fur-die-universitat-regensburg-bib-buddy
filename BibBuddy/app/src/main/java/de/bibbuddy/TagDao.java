@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagDAO implements ITagDAO {
+public class TagDao implements ITagDAO {
 
   private final DatabaseHelper dbHelper;
 
-  public TagDAO(DatabaseHelper dbHelper) {
+  public TagDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 
@@ -27,7 +27,7 @@ public class TagDAO implements ITagDAO {
 
       tag.setId(id);
     } catch (
-        SQLiteException ex) {
+    SQLiteException ex) {
       return false;
     } finally {
       db.close();
@@ -43,7 +43,7 @@ public class TagDAO implements ITagDAO {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_TAG, new String[] {DatabaseHelper._ID,
-            DatabaseHelper.NAME}, DatabaseHelper._ID + "=?",
+        DatabaseHelper.NAME}, DatabaseHelper._ID + "=?",
         new String[] {String.valueOf(id)}, null, null, null, null);
 
     Tag tag = null;

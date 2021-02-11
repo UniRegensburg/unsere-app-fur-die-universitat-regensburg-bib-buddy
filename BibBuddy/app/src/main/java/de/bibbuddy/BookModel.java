@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookModel {
-  private final BookDAO bookDAO;
+  private final BookDAO bookDao;
   private final Long shelfId;
 
   private List<BookItem> bookList;
@@ -13,7 +13,7 @@ public class BookModel {
   public BookModel(Context context, Long shelfId) {
     this.shelfId = shelfId;
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
-    this.bookDAO = new BookDAO(databaseHelper);
+    this.bookDao = new BookDAO(databaseHelper);
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
@@ -35,7 +35,7 @@ public class BookModel {
   }
 
   public void addBook(Book book, List<Author> authorList) {
-    bookDAO.create(book, authorList, shelfId);
+    bookDao.create(book, authorList, shelfId);
     String authors = convertAuthorListToString(authorList);
     bookList
         .add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
@@ -43,11 +43,11 @@ public class BookModel {
 
   public List<BookItem> getBookList(Long shelfId) {
     bookList = new ArrayList<BookItem>();
-    List<Book> bookDbList = bookDAO.getAllBooksForShelf(shelfId);
+    List<Book> bookDbList = bookDao.getAllBooksForShelf(shelfId);
 
     for (Book book : bookDbList) {
-      List<Author> authorList = bookDAO.getAllAuthorsForBook(book.getId());
-      int noteCount = bookDAO.countAllNotesForBook(book.getId());
+      List<Author> authorList = bookDao.getAllAuthorsForBook(book.getId());
+      int noteCount = bookDao.countAllNotesForBook(book.getId());
       bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(),
           convertAuthorListToString(authorList), noteCount));
     }

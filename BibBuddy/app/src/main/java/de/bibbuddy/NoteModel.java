@@ -9,11 +9,11 @@ import org.jsoup.Jsoup;
 
 public class NoteModel {
 
-  private final NoteDao noteDao;
+  private final NoteDAO noteDao;
 
   public NoteModel(Context context) {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
-    this.noteDao = new NoteDao(databaseHelper);
+    this.noteDao = new NoteDAO(databaseHelper);
   }
 
   public void addNote(String name, int type, String text) {

@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 public class SearchFragment extends Fragment {
 
   // public SearchFragment() {
-//      super(R.layout.fragment_search);
-//   }
+  //      super(R.layout.fragment_search);
+  //   }
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

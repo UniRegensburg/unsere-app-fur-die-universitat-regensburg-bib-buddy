@@ -17,18 +17,17 @@ public class DataValidation {
     return match.find();
   }
 
-  public static boolean validateISBN13(String isbnStr) {
-      if (isStringEmpty(isbnStr)) {
-          return false;
-      }
-
+  public static boolean validateIsbn13(String isbnStr) {
+    if (isStringEmpty(isbnStr)) {
+      return false;
+    }
     //remove hyphens
     isbnStr = isbnStr.replaceAll("-", "");
 
     //ISBN must have length of 13
-      if (isbnStr.length() != 13) {
-          return false;
-      }
+    if (isbnStr.length() != 13) {
+      return false;
+    }
 
     try {
       //sum of digit position * digit value of this position
@@ -52,18 +51,18 @@ public class DataValidation {
     }
   }
 
-  public static boolean validateISBN10(String isbnStr) {
-      if (isStringEmpty(isbnStr)) {
-          return false;
-      }
+  public static boolean validateIsbn10(String isbnStr) {
+    if (isStringEmpty(isbnStr)) {
+      return false;
+    }
 
     //remove hyphens
     isbnStr = isbnStr.replaceAll("-", "");
 
     //ISBN must have length of 10
-      if (isbnStr.length() != 10) {
-          return false;
-      }
+    if (isbnStr.length() != 10) {
+      return false;
+    }
 
     try {
       int totalSum = 0;
@@ -86,8 +85,8 @@ public class DataValidation {
     }
   }
 
-  public static boolean isValidISBN10or13(String isbnStr) {
-    return validateISBN10(isbnStr) || validateISBN13(isbnStr);
+  public static boolean isValidIsbn10or13(String isbnStr) {
+    return validateIsbn10(isbnStr) || validateIsbn13(isbnStr);
   }
 
 }

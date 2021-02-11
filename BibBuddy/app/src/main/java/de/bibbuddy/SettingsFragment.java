@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 public class SettingsFragment extends Fragment {
 
   // public SearchFragment() {
-//      super(R.layout.fragment_settings);
-//   }
+  //      super(R.layout.fragment_settings);
+  //   }
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

@@ -48,8 +48,8 @@ public class AuthorDAO implements IAuthorDAO {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR, new String[] {DatabaseHelper._ID,
-            DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
-            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
+        DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
+        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
         DatabaseHelper._ID + "=?",
         new String[] {String.valueOf(id)}, null, null, null, null);
 
@@ -117,9 +117,9 @@ public class AuthorDAO implements IAuthorDAO {
     List<Author> dbAuthorList = findAll();
     for (Author dbAuthor : dbAuthorList) {
       //  compare authors with title, firstname and lastname only
-      if (Objects.equals(author.getTitle(), dbAuthor.getTitle()) &&
-          Objects.equals(author.getFirstName(), dbAuthor.getFirstName()) &&
-          Objects.equals(author.getLastName(), dbAuthor.getLastName())) {
+      if (Objects.equals(author.getTitle(), dbAuthor.getTitle())
+          && Objects.equals(author.getFirstName(), dbAuthor.getFirstName())
+          && Objects.equals(author.getLastName(), dbAuthor.getLastName())) {
         return true;
       }
     }
@@ -145,7 +145,7 @@ public class AuthorDAO implements IAuthorDAO {
     StringBuilder partSqlQuery = new StringBuilder();
 
     for (Author author : authorList) {
-      boolean and_part = false;
+      boolean andPart = false;
 
       if (partSqlQuery.length() > 0) {
         partSqlQuery.append(" OR ( ");
@@ -156,20 +156,20 @@ public class AuthorDAO implements IAuthorDAO {
       if (author.getFirstName() != null) {
         partSqlQuery.append(DatabaseHelper.FIRST_NAME + "=\"").append(author.getFirstName())
             .append("\"");
-        and_part = true;
+        andPart = true;
       }
 
       if (author.getLastName() != null) {
-        if (and_part) {
+        if (andPart) {
           partSqlQuery.append(" AND ");
         }
         partSqlQuery.append(DatabaseHelper.LAST_NAME + "=\"").append(author.getLastName())
             .append("\"");
-        and_part = true;
+        andPart = true;
       }
 
       if (author.getTitle() != null) {
-        if (and_part) {
+        if (andPart) {
           partSqlQuery.append(" AND ");
         }
         partSqlQuery.append(DatabaseHelper.TITLE + "=\"").append(author.getTitle()).append("\"");

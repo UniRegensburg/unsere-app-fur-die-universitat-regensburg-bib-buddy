@@ -23,7 +23,7 @@ public class BookNotesRecyclerViewAdapter extends
   @NonNull
   @Override
   public BookNotesViewHolder
-  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+      onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
     return new BookNotesViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.list_view_item_book_notes_view, parent, false));
@@ -31,7 +31,8 @@ public class BookNotesRecyclerViewAdapter extends
 
   @Override
   public void onBindViewHolder(@NonNull BookNotesViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view with that element
+    // Get element from your dataset at this position and replace the contents of the view
+    // with that element
     holder.getTextView().setText(noteList.get(position).getName());
     holder.getImageView().setImageResource(noteList.get(position).getImage());
 

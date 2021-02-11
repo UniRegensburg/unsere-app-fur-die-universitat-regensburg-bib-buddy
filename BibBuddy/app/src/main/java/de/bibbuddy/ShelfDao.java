@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShelfDAO implements IShelfDAO {
+public class ShelfDao implements IShelfDAO {
 
   private final DatabaseHelper dbHelper;
 
-  public ShelfDAO(DatabaseHelper dbHelper) {
+  public ShelfDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 
@@ -45,10 +45,10 @@ public class ShelfDAO implements IShelfDAO {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_SHELF, new String[] {DatabaseHelper._ID,
-            DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-            DatabaseHelper.SHELF_ID},
-        DatabaseHelper._ID + "=?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+        DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+        DatabaseHelper.SHELF_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, null);
 
     Shelf shelf = null;
     if (cursor != null) {
@@ -177,9 +177,9 @@ public class ShelfDAO implements IShelfDAO {
     int noteCount = 0;
 
     for (Long bookId : shelfBookIds) {
-      String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " +
-          DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE " +
-          DatabaseHelper.BOOK_ID + "=" + bookId;
+      String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
+          + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
+          + DatabaseHelper.BOOK_ID + "=" + bookId;
 
       Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -198,9 +198,9 @@ public class ShelfDAO implements IShelfDAO {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     int bookCount = 0;
 
-    String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " +
-        DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE " +
-        DatabaseHelper.SHELF_ID + "=" + shelfId;
+    String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
+        + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
+        + DatabaseHelper.SHELF_ID + "=" + shelfId;
 
     Cursor cursor = db.rawQuery(selectQuery, null);
 

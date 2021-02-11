@@ -30,7 +30,8 @@ public class LibraryRecyclerViewAdapter
                                                                          int viewType) {
     // RecyclerView calls this method whenever it needs to create a new ViewHolder.
     // The method creates and initializes the ViewHolder and its associated View,
-    // but does not fill in the view's contents—the ViewHolder has not yet been bound to specific data.
+    // but does not fill in the view's contents—the ViewHolder
+    // has not yet been bound to specific data.
 
     return new LibraryViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.list_view_item_library, parent, false));
@@ -38,7 +39,8 @@ public class LibraryRecyclerViewAdapter
 
   @Override
   public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view with that element
+    // Get element from your dataset at this position and replace the contents of the view
+    // with that element
     ShelfItem shelfItem = libraryList.get(position);
 
     holder.getTextView().setText(shelfItem.getName());

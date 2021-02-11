@@ -9,19 +9,18 @@ import java.util.List;
 
 public class BookDAO implements IBookDAO {
   private final DatabaseHelper dbHelper;
-  private final AuthorDAO authorDAO;
+  private final AuthorDAO authorDao;
 
 
   public BookDAO(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
-    this.authorDAO = new AuthorDAO(dbHelper);
+    this.authorDao = new AuthorDAO(dbHelper);
   }
 
   @Override
   public boolean create(Book book) {
     long currentTime = System.currentTimeMillis() / 1_000L;
     SQLiteDatabase db = dbHelper.getWritableDatabase();
-
     try {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
@@ -34,17 +33,27 @@ public class BookDAO implements IBookDAO {
       contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfos());
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-
       long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
       book.setId(id);
-
     } catch (SQLiteException ex) {
       return false;
     } finally {
       db.close();
     }
-
     return true;
+  }
+
+  public void create(Book book, List<Author> authorList, Long shelfId) {
+    create(book);
+    Long bookId = findLatestId();
+    linkBookWithShelf(shelfId, bookId);
+
+    if (authorList == null || authorList.isEmpty()) {
+      return;
+    }
+
+    authorDao.createAuthors(authorList);
+    linkBookWithAuthors(authorList, bookId, authorDao.getAuthorIds(authorList));
   }
 
   // get single book entry
@@ -181,25 +190,12 @@ public class BookDAO implements IBookDAO {
     }
   }
 
-  public void create(Book book, List<Author> authorList, Long shelfId) {
-    create(book);
-    Long bookId = findLatestId();
-    linkBookWithShelf(shelfId, bookId);
-
-    if (authorList == null || authorList.isEmpty()) {
-      return;
-    }
-
-    authorDAO.createAuthors(authorList);
-    linkBookWithAuthors(authorList, bookId, authorDAO.getAuthorIds(authorList));
-  }
-
   // get all Books for a shelf by the shelfId
   public List<Long> getAllBookIdsForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> bookIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE " +
-        DatabaseHelper.SHELF_ID + "=" + shelfId;
+    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
+        + DatabaseHelper.SHELF_ID + "=" + shelfId;
 
     Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -230,8 +226,8 @@ public class BookDAO implements IBookDAO {
   private List<Long> getAllAuthorsIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE " +
-        DatabaseHelper.BOOK_ID + "=" + bookId;
+    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
+        + DatabaseHelper.BOOK_ID + "=" + bookId;
 
     Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -251,7 +247,7 @@ public class BookDAO implements IBookDAO {
     List<Author> authorList = new ArrayList<Author>();
     List<Long> authorIds = getAllAuthorsIdsForBook(bookId);
     for (Long id : authorIds) {
-      authorList.add(authorDAO.findById(id));
+      authorList.add(authorDao.findById(id));
     }
 
     return authorList;
@@ -264,9 +260,8 @@ public class BookDAO implements IBookDAO {
     int noteCount = 0;
 
     String selectQuery =
-        "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK +
-            " WHERE " +
-            DatabaseHelper.BOOK_ID + "=" + bookId;
+        "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
+            + " WHERE " + DatabaseHelper.BOOK_ID + "=" + bookId;
 
     Cursor cursor = db.rawQuery(selectQuery, null);
 
