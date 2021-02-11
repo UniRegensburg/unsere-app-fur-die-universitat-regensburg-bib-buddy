@@ -44,18 +44,20 @@ public class NoteModel {
 	private String getDate(Long date) {
 		Date d = new Date(date);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
 		String string = simpleDateFormat.format(d);
 		String day = string.substring(8, 10);
 		String month = string.substring(5, 7);
 		String year = string.substring(0, 4);
 		String time = string.substring(11, 16);
+
 		string = day + "." + month + "." + year + " " + time + " Uhr";
 
 		return string;
 	}
 
 	public List<NoteItem> getNoteListForABook(Long bookId) {
-		List<Note> noteList = noteDao.findAllNotesForABook(bookId);
+		List<Note> noteList = noteDao.getAllNotesForBook(bookId);
 		List<NoteItem> noteItemList = createItemList(noteList);
 		return noteItemList;
 	}
@@ -79,8 +81,11 @@ public class NoteModel {
 				noteItemList.add(new NoteImageItem(modDate, name, noteId));
 			}
 		}
-
 		return noteItemList;
+	}
+
+	public String getNoteText(Long noteId) {
+		return noteDao.findTextById(noteId);
 	}
 
 }
