@@ -4,12 +4,12 @@ import java.util.List;
 
 public interface IShelfDAO {
 
-    boolean create(Shelf shelf);
+  boolean create(Shelf shelf);
 
-    Shelf findById(long id);
+  Shelf findById(long id);
 
-    List<Shelf> findAll();
+  List<Shelf> findAll();
 
-    void delete(Long id);
+  void delete(Long id);
 
 }

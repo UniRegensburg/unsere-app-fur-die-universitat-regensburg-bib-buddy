@@ -7,17 +7,6 @@
     android:background="@color/gray_light"
     android:padding="20dp">
 
-    <EditText
-        android:id="@+id/input_shelf_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:autofillHints="@string/input_shelf_name"
-        android:background="@color/white"
-        android:focusable="true"
-        android:hint="@string/input_shelf_name"
-        android:inputType="text" />
-
     <Button
         android:id="@+id/btn_shelf_cancel"
         android:layout_width="wrap_content"
@@ -35,5 +24,16 @@
         android:layout_toEndOf="@id/btn_shelf_cancel"
         android:text="@string/add_shelf"
         android:theme="@style/Button.Pink" />
+
+    <EditText
+        android:id="@+id/input_shelf_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:autofillHints="@string/input_shelf_name"
+        android:background="@color/white"
+        android:focusable="true"
+        android:hint="@string/input_shelf_name"
+        android:inputType="text" />
 
 </RelativeLayout>

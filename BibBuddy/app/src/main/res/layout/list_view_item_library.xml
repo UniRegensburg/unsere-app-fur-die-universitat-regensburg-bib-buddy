@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_library"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,8 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -24,19 +23,6 @@
             android:padding="5dp"
             android:visibility="gone" />
 
-
-        <TextView
-            android:id="@+id/item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@+id/library_icon"
-            android:text="Medium Text"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/image_note"
@@ -49,6 +35,16 @@
 
         </ImageView>
 
+        <ImageView
+            android:id="@+id/image_book"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/item_name"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/note_count"
+            android:contentDescription="@string/book_icon"
+            android:src="@drawable/books" />
+
         <TextView
             android:id="@+id/note_count"
             android:layout_width="wrap_content"
@@ -60,15 +56,18 @@
             android:text="@string/navigation_notes"
             android:textColor="@color/black" />
 
-        <ImageView
-            android:id="@+id/image_book"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_below="@+id/item_name"
-            android:layout_marginStart="30dp"
-            android:layout_toEndOf="@+id/note_count"
-            android:src="@drawable/books"
-            android:contentDescription="@string/book_icon" />
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/library_icon"
+            android:text="Medium Text"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text_book"
