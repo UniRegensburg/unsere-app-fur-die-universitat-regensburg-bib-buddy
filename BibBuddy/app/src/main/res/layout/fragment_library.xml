@@ -2,6 +2,7 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_library"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +15,9 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginTop="58dp"
-        android:text="@string/empty_list"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/library_help"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
         android:visibility="gone" />
@@ -44,9 +47,12 @@
         android:layout_marginEnd="30dp"
         android:clickable="true"
         android:contentDescription="@string/add_shelf"
+        android:tooltipText="@string/add_shelf_tooltip"
         android:focusable="true"
         android:theme="@style/Button.Pink"
         app:maxImageSize="40dp"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:targetApi="o"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

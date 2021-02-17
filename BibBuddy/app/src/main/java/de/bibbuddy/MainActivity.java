@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
   DatabaseHelper dbHelper;
 
   private HomeFragment homeFragment;
+  private HelpFragment helpFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
   private NotesFragment notesFragment;
@@ -38,8 +39,18 @@ public class MainActivity extends AppCompatActivity {
     fragmentManager = getSupportFragmentManager();
 
     if (savedInstanceState == null) {
-      homeFragment = new HomeFragment();
-      updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+      /*homeFragment = new HomeFragment();
+      updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);*/
+
+      String htmlAsString = getString(R.string.html);
+
+      Bundle bundle = new Bundle();
+
+      bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+      helpFragment = new HelpFragment();
+      helpFragment.setArguments(bundle);
+
+      updateFragment(R.id.fragment_container_view, helpFragment, homeFragmentTag);
     }
 
     setupBottomNavigationView();
@@ -51,11 +62,17 @@ public class MainActivity extends AppCompatActivity {
   private void setupBottomNavigationView() {
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
       switch (item.getItemId()) {
+//        case R.id.navigation_home:
+//          if (homeFragment == null) {
+//            homeFragment = new HomeFragment();
+//          }
+//          updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+//          break;
         case R.id.navigation_home:
-          if (homeFragment == null) {
-            homeFragment = new HomeFragment();
+          if (helpFragment == null) {
+            helpFragment = new HelpFragment();
           }
-          updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+          updateFragment(R.id.fragment_container_view, helpFragment, homeFragmentTag);
           break;
 
         case R.id.navigation_search:

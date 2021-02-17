@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -34,8 +35,21 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    view = inflater.inflate(R.layout.fragment_book, container, false);
 
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+          fm.popBackStack();
+        } else {
+          requireActivity().onBackPressed();
+        }
+      }
+    });
+
+    view = inflater.inflate(R.layout.fragment_book, container, false);
 
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
@@ -47,7 +61,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
 
-    createBackBtnListener();
+    //createBackBtnListener();
     createAddBookListener();
     updateEmptyView(bookList);
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
@@ -160,7 +174,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     updateEmptyView(bookModel.getCurrentBookList());
   }
 
-  private void createBackBtnListener() {
+  /*private void createBackBtnListener() {
     TextView backView = view.findViewById(R.id.text_view_back_to);
 
     backView.setOnClickListener(new View.OnClickListener() {
@@ -173,5 +187,5 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
             .commit();
       }
     });
-  }
+  }*/
 }

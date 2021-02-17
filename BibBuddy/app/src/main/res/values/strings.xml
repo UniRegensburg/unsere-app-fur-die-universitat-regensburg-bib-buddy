@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Bib Buddy</string>
-    <string name="app_description">eine offene Atmosphäre für deine Gedanken und Ideen bei der Recherche. Unser Service macht deine Literatur-Arbeit so intuitiv wie nie!</string>
+    <string name="app_description">Eine offene Atmosphäre für deine Gedanken und Ideen bei der
+        Recherche. Unser Service macht deine Literatur-Arbeit so intuitiv wie nie!</string>
 
     <!-- Image Descriptions -->
     <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
@@ -20,7 +21,8 @@
     <string name="navigation_settings">Einstellugnen</string>
     <string name="back">zurück</string>
     <string name="add">+</string>
-    <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
+    <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht
+        erlaubt.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
@@ -40,8 +42,13 @@
     <string name="delete_shelf">Regal(e) löschen</string>
     <string name="delete_shelf_message">Alle ausgewählten Regale werden gelöscht inklusive der Bücher und Notizen.
         \nACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="library_help">Zum Anlegen eines neuen Regals den \"+\"-Button drücken. Danach
+        einen Namen eingeben. In dem Regal können Sie anschließend Ihre Bücher speichern und zu
+        diesen Notizen schreiben. Zum Löschen eines Regal <!--TODO löschen + Namen ändern--> </string>
+    <string name="add_shelf_tooltip">Neues Regal anlegen</string>
     <string name="deleted_shelf">Regal(e) wurde(n) gelöscht</string>
     <string name="renamed_shelf">Regal wurde umbenannt</string>
+
 
     <!-- Book -->
     <string name="book">Buch</string>
@@ -49,6 +56,12 @@
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
     <string name="book_icon">Buch Icon</string>
+    <string name="add_book_tooltip">Neues Buch hinzufügen</string>
+    <string name="book_help">Zum Hinzufügen eines neuen Buches den \"+\"-Button drücken. Es öffnet
+        sich ein Menü, in welchem sie zwischen \"Buch mitells ISBN suchen\", \"Barcode des Buches
+        einscannen\" und \"Buch manuell eingeben\" wählen können.
+        Wurde das Buch erfolgreich angelegt, wird es mit seinen Metadaten angezeigt. Nun können
+        Notzien zu dem Buch erstellt werden. <!--TODO Buch löschen/ändern?--></string>
 
     <string name="add_book_scan_text">Barcode scannen</string>
     <string name="add_book_online_text">Im Online-Katalog suchen</string>
@@ -77,6 +90,13 @@
     <string name="note_icon">Notizen Icon</string>
 
     <string name="add_note">Notiz hinzufügen</string>
+    <string name="add_note_tooltip">Neues Notiz erstellen</string>
+    <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den  \"+\"-Button
+        und wähle dann die Notizart (Text, Audio oder Bild) aus. Daraufhin öffnet sich ein
+        Texeditor, in welchen Sie Ihre Notiz eintippen können. Die erste Zeile der Notiz wird als
+        Notizname gesetzt, darunter folgt der Text. Bei Klicken auf den internen Zurück-Button wird
+        die Notiz gespeichert. Sie ist dann unter dem jeweiligen Buch und in der gesamten Notizliste
+        zu finden.<!--TODO Notiz bearbeiten und Styling--></string>
 
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>
@@ -107,6 +127,32 @@
     <string name="library_icon">Library_Icon</string>
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
+
+    <!-- Help Fragment -->
+    <string name="headerHelp">Hilfe</string>
+
+    <string name="help">TestProject2</string>
+
+    <string name="html">
+        <![CDATA[
+        <h1>Main Title</h1>
+        <h2>A sub-title</h2>
+        <p>This is some html. Look, here\'s an <u>underline</u>.</p>
+        <p>Look, this is <em>emphasized.</em> And here\'s some <b>bold</b>.</p>
+        <p>This is a UL list:
+        <ul>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+        </ul>
+        <p>This is an OL list:
+        <ol>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+        </ol>
+        ]]>
+    </string>
 
 
 </resources>

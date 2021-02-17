@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -34,6 +36,20 @@ public class BookNotesView extends Fragment
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+          fm.popBackStack();
+        } else {
+          requireActivity().onBackPressed();
+        }
+      }
+    });
+
     view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
     recyclerView = view.findViewById(R.id.bookNotesViewRecyclerView);
 
@@ -54,7 +70,7 @@ public class BookNotesView extends Fragment
 
     setupRecyclerView();
     setupAddButton();
-    setupBackButton();
+    // setupBackButton();
     updateNoteListView(noteList);
 
     return view;
@@ -118,7 +134,7 @@ public class BookNotesView extends Fragment
     return bundle;
   }
 
-  private void setupBackButton() {
+  /*private void setupBackButton() {
     View backButton = view.findViewById(R.id.btn_back);
 
     backButton.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +149,7 @@ public class BookNotesView extends Fragment
             .commit();
       }
     });
-  }
+  }*/
 
   private Bundle createNoteBundle(NoteItem item) {
     Bundle bundle = new Bundle();
