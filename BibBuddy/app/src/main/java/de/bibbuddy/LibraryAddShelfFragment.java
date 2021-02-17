@@ -13,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-
+/**
+ * The LibraryAddShelfFragment is responsible for adding a new shelf to the library.
+ *
+ * @author Claudia Schönherr
+ */
 public class LibraryAddShelfFragment extends DialogFragment {
 
   private final AddShelfLibraryListener listener;
@@ -44,7 +48,9 @@ public class LibraryAddShelfFragment extends DialogFragment {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Closes the LibraryAddShelfFragment.
+   *
+   * @author Claudia Schönherr
    */
   public void closeFragment() {
     onDestroyView();

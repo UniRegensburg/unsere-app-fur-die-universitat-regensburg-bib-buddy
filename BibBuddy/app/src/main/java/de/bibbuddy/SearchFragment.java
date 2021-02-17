@@ -8,11 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * The SearchFragment is responsible for the search of books.
+ *
+ * @author Claudia Schönherr
+ */
 public class SearchFragment extends Fragment {
 
-  // public SearchFragment() {
-  //      super(R.layout.fragment_search);
-  //   }
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -21,5 +23,3 @@ public class SearchFragment extends Fragment {
     return view;
   }
 }
-
-

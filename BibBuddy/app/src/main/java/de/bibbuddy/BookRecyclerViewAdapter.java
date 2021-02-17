@@ -10,6 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+/**
+ * Custom RecyclerViewAdapter provides a binding from the bookList to the view
+ * that is displayed within the RecyclerView of the BookFragment.
+ *
+ * @author Claudia Schönherr
+ */
+
 public class BookRecyclerViewAdapter
     extends RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder> {
   private final List<BookItem> bookList;
@@ -17,11 +24,12 @@ public class BookRecyclerViewAdapter
   private final Context context;
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor of the BookRecyclerViewAdapter.
    *
-   * @param bookList test
-   * @param listener test
-   * @param context  test
+   * @param bookList bookList of the current books
+   * @param listener listener for the interface and callback of the books
+   * @param context  context is required for the BookRecyclerViewAdapter texts (getNoteString)
+   * @author Claudia Schönherr
    */
   public BookRecyclerViewAdapter(List<BookItem> bookList, BookListener listener, Context context) {
     this.bookList = bookList;
@@ -34,7 +42,8 @@ public class BookRecyclerViewAdapter
   public BookRecyclerViewAdapter.BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                    int viewType) {
     return new BookRecyclerViewAdapter.BookViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.list_view_item_book, parent, false));
+                                                          .inflate(R.layout.list_view_item_book,
+                                                                   parent, false));
   }
 
   private String getNoteString(int noteCount) {
@@ -83,9 +92,10 @@ public class BookRecyclerViewAdapter
     private final TextView textNoteCount;
 
     /**
-     * DUMMY COMMENT - PLEASE ADJUST.
+     * Custom ViewHolder constructor to setup its basic view.
      *
-     * @param itemView test
+     * @param itemView View of the BookRecyclerView-item.
+     * @author Claudia Schönherr
      */
     public BookViewHolder(@NonNull View itemView) {
       super(itemView);

@@ -4,6 +4,11 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The LibraryModel contains all the shelf data for the LibraryFragment.
+ *
+ * @author Claudia Schönherr
+ */
 public class LibraryModel {
 
   private final ShelfDao shelfDao;
@@ -13,9 +18,10 @@ public class LibraryModel {
   private Long currentShelfId;
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * The LibraryModel contains all the shelf data for the LibraryFragment.
    *
-   * @param context test
+   * @param context context for the LibraryModel
+   * @author Claudia Schönherr
    */
   public LibraryModel(Context context) {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -24,10 +30,11 @@ public class LibraryModel {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Adds a new book to the bookList and database.
    *
-   * @param name     test
-   * @param parentId test
+   * @param name     name of the new shelf
+   * @param parentId parentId of the new shelf (is deprecated)
+   * @author Claudia Schönherr
    */
   public void addShelf(String name, Long parentId) {
     Shelf shelf = new Shelf(name, parentId);
@@ -38,19 +45,21 @@ public class LibraryModel {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Gets the current libraryList.
    *
-   * @return test
+   * @return Returns the current libraryList
+   * @author Claudia Schönherr
    */
   public List<ShelfItem> getCurrentLibraryList() {
     return libraryList;
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Gets the libraryList of the current parentId of the shelf.
    *
-   * @param parentId test
-   * @return test
+   * @param parentId parentId of the shelf (is deprecated)
+   * @return Returns the libraryList of the given id
+   * @author Claudia Schönherr
    */
   public List<ShelfItem> getLibraryList(Long parentId) {
     currentShelfId = parentId;
@@ -72,19 +81,19 @@ public class LibraryModel {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Gets the selected shelf at the current position.
    *
-   * @param position test
-   * @return test
+   * @param position position of the clicked item
+   * @return Returns the clicked ShelfItem
    */
   public ShelfItem getSelectedLibraryItem(int position) {
     return libraryList.get(position);
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Gets the current id of the shelf.
    *
-   * @return test
+   * @return Returns the currentShelfId
    */
   public Long getShelfId() {
     return currentShelfId;

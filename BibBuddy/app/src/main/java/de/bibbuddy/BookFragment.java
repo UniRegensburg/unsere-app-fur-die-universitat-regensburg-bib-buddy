@@ -16,6 +16,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The BookFragment is responsible for the current books of a shelf in the library.
+ *
+ * @author Claudia Schönherr
+ */
+
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
   private Long shelfId;
   private String shelfName;
@@ -98,7 +104,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         //  until a form for adding a new book is implemented and input is validated
         Book book =
             new Book("978-3-16-148410-0", "Buch mit Regal ID " + shelfId, "testen von Büchern",
-                2020, "Testverlag", "Volume 1", "Edition 1", "zusätzliche Infos");
+                     2020, "Testverlag", "Volume 1", "Edition 1", "zusätzliche Infos");
         List<Author> authorList = new ArrayList<>();
         authorList.add(new Author("Vorname", "Nachname"));
         authorList.add(new Author("Autorvorname", "Autornachname", "Dr"));
