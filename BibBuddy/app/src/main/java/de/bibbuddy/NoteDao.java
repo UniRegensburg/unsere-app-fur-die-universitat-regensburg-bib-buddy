@@ -127,6 +127,9 @@ public class NoteDao implements INoteDAO {
     db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
         new String[] {String.valueOf(id)});
 
+    db.delete(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, DatabaseHelper.NOTE_ID + " = ?",
+              new String[] {String.valueOf(id)});
+
     db.close();
   }
 
@@ -176,7 +179,7 @@ public class NoteDao implements INoteDAO {
 
 
   // get all Notes for a book by the bookId
-  private List<Long> getAllNoteIdsForBook(Long bookId) {
+  public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> noteIds = new ArrayList<Long>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
@@ -235,5 +238,4 @@ public class NoteDao implements INoteDAO {
 
     return noteText;
   }
-
 }

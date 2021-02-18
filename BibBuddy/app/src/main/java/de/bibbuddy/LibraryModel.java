@@ -8,6 +8,8 @@ public class LibraryModel {
 
   private final ShelfDao shelfDao;
   private final BookDao bookDao;
+  private final AuthorDao authorDao;
+  private final NoteDao noteDao;
 
   private List<ShelfItem> libraryList;
   private Long currentShelfId;
@@ -21,6 +23,8 @@ public class LibraryModel {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.shelfDao = new ShelfDao(databaseHelper);
     this.bookDao = new BookDao(databaseHelper);
+    this.authorDao = new AuthorDao(databaseHelper);
+    this.noteDao = new NoteDao(databaseHelper);
   }
 
   /**
@@ -90,4 +94,75 @@ public class LibraryModel {
     return currentShelfId;
   }
 
+  /**
+   * Deletes all selected shelves and their respective books and notes.
+   *
+   * @param selectedShelfItems selected shelf items of the user
+   */
+  public void deleteShelves(List<ShelfItem> selectedShelfItems) {
+    if (selectedShelfItems == null) {
+      return;
+    }
+
+    for (ShelfItem shelf : selectedShelfItems
+    ) {
+      Long shelfId = shelf.getId();
+
+      List<Long> bookIds = bookDao.getAllBookIdsForShelf(shelfId);
+
+      for (Long bookId : bookIds) {
+        deleteNotes(bookId);
+        deleteAuthors(bookId);
+        bookDao.delete(bookId, shelfId);
+      }
+
+      shelfDao.delete(shelfId);
+      deleteShelfFromLibraryList(shelf);
+    }
+  }
+
+  private void deleteShelfFromLibraryList(ShelfItem shelf) {
+    for (int i = 0; i < libraryList.size(); i++) {
+      if (shelf.equals(libraryList.get(i))) {
+        libraryList.remove(i);
+      }
+    }
+  }
+
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorsIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+
+  }
+
+  /**
+   * Renames the selected shelf.
+   *
+   * @param shelfItem selected shelf of the user
+   */
+  public void renameShelf(ShelfItem shelfItem, String shelfName) {
+    if (shelfItem == null) {
+      return;
+    }
+
+    shelfDao.renameShelf(shelfItem.getId(), shelfName);
+
+    for (int i = 0; i < libraryList.size(); i++) {
+      if (libraryList.get(i).equals(shelfItem)) {
+        shelfItem.setName(shelfName);
+        libraryList.set(i, shelfItem);
+      }
+    }
+  }
 }
