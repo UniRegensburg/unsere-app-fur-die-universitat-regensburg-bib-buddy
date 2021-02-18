@@ -109,7 +109,7 @@ public class NoteRecyclerViewAdapter
           v.setSelected(false);
           v.setBackground(background);
         }
-        slideUpDown();
+        slideUpOrDown();
         return true;
       }
     });
@@ -175,12 +175,10 @@ public class NoteRecyclerViewAdapter
   /**
    * Method to perform an upside-down animation for the deletePanel.
    */
-  public void slideUpDown() {
+  public void slideUpOrDown() {
     if (anyItemSelected() && !isPanelShown()) {
-      // Show the panel
       Animation bottomUp = AnimationUtils.loadAnimation(activity.getBaseContext(),
           R.anim.bottom_up);
-
       hiddenDeletePanel.startAnimation(bottomUp);
       hiddenDeletePanel.setVisibility(View.VISIBLE);
     } else if (!anyItemSelected() && isPanelShown()) {
@@ -189,7 +187,6 @@ public class NoteRecyclerViewAdapter
   }
 
   private void hidePanel() {
-    // Hide the Panel
     Animation bottomDown = AnimationUtils.loadAnimation(activity.getBaseContext(),
         R.anim.bottom_down);
     hiddenDeletePanel.startAnimation(bottomDown);
