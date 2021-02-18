@@ -50,10 +50,10 @@ public class ShelfDao implements InterfaceShelfDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_SHELF, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-        DatabaseHelper.SHELF_ID},
-        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-        null, null, null, null);
+                                 DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.SHELF_ID},
+                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+                             null, null, null, null);
 
     Shelf shelf = null;
     if (cursor != null) {
@@ -114,7 +114,7 @@ public class ShelfDao implements InterfaceShelfDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_SHELF, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.close();
   }
@@ -241,4 +241,22 @@ public class ShelfDao implements InterfaceShelfDao {
     return bookCount;
   }
 
+  /**
+   * Renames the shelf in the database and updates the modified date.
+   *
+   * @param id        id of the shelf
+   * @param shelfName new name of the shelf
+   */
+  public void renameShelf(Long id, String shelfName) {
+    ContentValues values = new ContentValues();
+
+    values.put(DatabaseHelper.NAME, shelfName);
+    values.put(DatabaseHelper.MOD_DATE, System.currentTimeMillis() / 1_000L);
+
+    dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_SHELF, values,
+                                          DatabaseHelper._ID + " = ?",
+                                          new String[] {String.valueOf(id)});
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    db.close();
+  }
 }

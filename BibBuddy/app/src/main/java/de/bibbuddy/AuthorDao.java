@@ -118,6 +118,29 @@ public class AuthorDao implements InterfaceAuthorDao {
     db.close();
   }
 
+
+  /**
+   * Deletes the relevant author entries.
+   *
+   * @param authorId test
+   * @param bookId test
+   */
+  public void delete(Long authorId, Long bookId) {
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.AUTHOR_ID
+                  + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
+              new String[] {String.valueOf(authorId), String.valueOf(bookId)});
+
+    // delete author only if author has no link to another book
+    if (!existAuthorBookLink(authorId)) {
+      db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
+                new String[] {String.valueOf(authorId)});
+    }
+
+    db.close();
+  }
+
   /**
    * Method to check if a certain Author already exists in the database.
    *
@@ -215,5 +238,23 @@ public class AuthorDao implements InterfaceAuthorDao {
     }
 
     return authorIds;
+  }
+
+
+  // Checks if there is an entry of the author in the AUTHOR_BOOK_LNK table
+  private boolean existAuthorBookLink(Long authorId) {
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
+        + DatabaseHelper.AUTHOR_ID + " = " + authorId + " LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+      cursor.close();
+      return true;
+    }
+
+    return false;
   }
 }

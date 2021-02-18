@@ -19,9 +19,9 @@ import java.util.List;
 public class LibraryRecyclerViewAdapter
     extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.LibraryViewHolder> {
 
-  private final List<ShelfItem> libraryList;
   private final LibraryListener listener;
   private final Context context;
+  private List<ShelfItem> libraryList;
 
   /**
    * Constructor of the BookRecyclerViewAdapter.
@@ -71,6 +71,18 @@ public class LibraryRecyclerViewAdapter
         listener.onItemClicked(position);
       }
     });
+
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        if (position == RecyclerView.NO_POSITION) {
+          return false;
+        }
+
+        listener.onLongItemClicked(position, shelfItem, v);
+        return true;
+      }
+    });
   }
 
   private String getBookString(int bookCount) {
@@ -89,6 +101,19 @@ public class LibraryRecyclerViewAdapter
     return noteCount + " " + context.getString(R.string.navigation_notes);
   }
 
+  public void deselectAllItems() { // TODO
+    for (ShelfItem shelf : libraryList) {
+      // shelf.setSelected(false);
+//              v.setBackground(background);
+    }
+  }
+
+
+  public void setSelectedItems(List<ShelfItem> selectedShelfItems) { // TODO
+    this.libraryList = selectedShelfItems;
+    notifyDataSetChanged();
+  }
+
   @Override
   public int getItemCount() {
     // RecyclerView calls this method to get the size of the data set.
@@ -98,6 +123,8 @@ public class LibraryRecyclerViewAdapter
 
   public interface LibraryListener { // create an interface
     void onItemClicked(int position); // create callback function
+
+    void onLongItemClicked(int position, ShelfItem shelfItem, View v);
   }
 
 
