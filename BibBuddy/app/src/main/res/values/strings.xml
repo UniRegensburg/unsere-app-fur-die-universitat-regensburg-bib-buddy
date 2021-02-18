@@ -51,7 +51,7 @@
 
     <!-- Text Note Editor Items -->
     <string name="deleted_note">Gelöscht</string>
-    <string name="undo">RÜCKGÄNGIG</string>
+    <string name="undo">Rückgängig</string>
     <string name="redo">Wiederholen</string>
 
     <!-- Text Note Editor Toasts -->
@@ -71,6 +71,8 @@
     <string name="slidebar_right">Slidebar_Right</string>
     <string name="round_border">Round_Border</string>
     <string name="library_icon">Library_Icon</string>
+    <string name="format_options">Format Options</string>
+    <string name="format_arrow">Format Arrow</string>
 
 </resources>
 
