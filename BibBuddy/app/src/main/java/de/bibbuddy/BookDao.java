@@ -51,9 +51,9 @@ public class BookDao implements InterfaceBookDao {
   /**
    * Method to create a new book in the database, link it with a shelf and add a author to it.
    *
-   * @param book       test
-   * @param authorList test
-   * @param shelfId    test
+   * @param book       Instance of book
+   * @param authorList list of authors
+   * @param shelfId    current shelfId
    */
   public void create(Book book, List<Author> authorList, Long shelfId) {
     create(book);
@@ -155,7 +155,7 @@ public class BookDao implements InterfaceBookDao {
   /**
    * Method to find the last added id.
    *
-   * @return test
+   * @return last added bookId
    */
   public Long findLatestId() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -210,8 +210,8 @@ public class BookDao implements InterfaceBookDao {
   /**
    * Method to get all bookIds for a specific Shelf with its shelfId.
    *
-   * @param shelfId test
-   * @return test
+   * @param shelfId current shelfId
+   * @return all bookIds for current shelf
    */
   public List<Long> getAllBookIdsForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -236,8 +236,8 @@ public class BookDao implements InterfaceBookDao {
   /**
    * Method to get all Books for a specific Shelf with a list of all bookIds.
    *
-   * @param shelfId test
-   * @return test
+   * @param shelfId current shelfId
+   * @return list of all books for current shelf
    */
   public List<Book> getAllBooksForShelf(Long shelfId) {
     List<Long> bookIds = getAllBookIdsForShelf(shelfId);
@@ -273,8 +273,8 @@ public class BookDao implements InterfaceBookDao {
   /**
    * Method to get all Authors for a specific Book with its bookId.
    *
-   * @param bookId test
-   * @return test
+   * @param bookId current bookId
+   * @return list of all authors for the current book
    */
   public List<Author> getAllAuthorsForBook(Long bookId) {
     List<Author> authorList = new ArrayList<Author>();
@@ -289,8 +289,8 @@ public class BookDao implements InterfaceBookDao {
   /**
    * Method to count all Notes for a specific Book.
    *
-   * @param bookId test
-   * @return test
+   * @param bookId current bookId
+   * @return count of all notes that belong to the current book
    */
   public int countAllNotesForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();

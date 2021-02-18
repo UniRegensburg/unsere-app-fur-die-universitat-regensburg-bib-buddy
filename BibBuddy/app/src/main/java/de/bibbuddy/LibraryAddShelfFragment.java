@@ -49,8 +49,6 @@ public class LibraryAddShelfFragment extends DialogFragment {
 
   /**
    * Closes the LibraryAddShelfFragment.
-   *
-   * @author Claudia Schönherr
    */
   public void closeFragment() {
     onDestroyView();

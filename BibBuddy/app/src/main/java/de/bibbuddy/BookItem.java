@@ -24,7 +24,6 @@ public class BookItem extends LibraryItem {
    * @param year      published year of the book
    * @param authors   authors of the book
    * @param noteCount total number of notes in the book
-   * @author Claudia Schönherr
    */
   public BookItem(String title, Long id, Long shelfId, int year, String authors, int noteCount) {
     super(title, R.drawable.ic_book, id, shelfId);

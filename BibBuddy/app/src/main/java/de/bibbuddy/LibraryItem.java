@@ -24,7 +24,6 @@ public class LibraryItem {
    * @param image    image of the LibraryItem
    * @param id       id of the LibraryItem
    * @param parentId parentId of the LibraryItem
-   * @author Claudia Schönherr
    */
   public LibraryItem(String name, int image, Long id, Long parentId) {
     this.name = name;

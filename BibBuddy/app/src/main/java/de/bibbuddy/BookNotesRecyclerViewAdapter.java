@@ -66,7 +66,7 @@ public class BookNotesRecyclerViewAdapter extends
     /**
      * Custom ViewHolder constructor to setup basic view.
      *
-     * @param itemView test
+     * @param itemView current item of the view
      */
     public BookNotesViewHolder(@NonNull View itemView) {
       super(itemView);

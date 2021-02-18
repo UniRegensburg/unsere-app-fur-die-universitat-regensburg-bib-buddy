@@ -29,7 +29,6 @@ public class LibraryRecyclerViewAdapter
    * @param libraryList libraryList of the current shelves
    * @param listener    listener for the interface and callback of the shelves
    * @param context     context is required for the LibraryRecyclerViewAdapter texts (getBookString)
-   * @author Claudia Schönherr
    */
   public LibraryRecyclerViewAdapter(List<ShelfItem> libraryList, LibraryListener listener,
                                     Context context) {
@@ -112,8 +111,6 @@ public class LibraryRecyclerViewAdapter
     /**
      * The LibraryViewHolder describes a shelf item view and metadata about its place
      * within the RecyclerView of the LibraryFragment.
-     *
-     * @author Claudia Schönherr
      */
     public LibraryViewHolder(@NonNull View itemView) {
       super(itemView);

@@ -21,7 +21,6 @@ public class LibraryModel {
    * The LibraryModel contains all the shelf data for the LibraryFragment.
    *
    * @param context context for the LibraryModel
-   * @author Claudia Schönherr
    */
   public LibraryModel(Context context) {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
@@ -34,7 +33,6 @@ public class LibraryModel {
    *
    * @param name     name of the new shelf
    * @param parentId parentId of the new shelf (is deprecated)
-   * @author Claudia Schönherr
    */
   public void addShelf(String name, Long parentId) {
     Shelf shelf = new Shelf(name, parentId);
@@ -48,7 +46,6 @@ public class LibraryModel {
    * Gets the current libraryList.
    *
    * @return Returns the current libraryList
-   * @author Claudia Schönherr
    */
   public List<ShelfItem> getCurrentLibraryList() {
     return libraryList;
@@ -59,7 +56,6 @@ public class LibraryModel {
    *
    * @param parentId parentId of the shelf (is deprecated)
    * @return Returns the libraryList of the given id
-   * @author Claudia Schönherr
    */
   public List<ShelfItem> getLibraryList(Long parentId) {
     currentShelfId = parentId;

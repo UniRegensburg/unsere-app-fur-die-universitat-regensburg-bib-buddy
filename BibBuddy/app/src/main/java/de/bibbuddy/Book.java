@@ -22,17 +22,17 @@ public class Book {
   /**
    * Constructor with all its parameters.
    *
-   * @param id         test
-   * @param isbn       test
-   * @param title      test
-   * @param subtitle   test
-   * @param pubYear    test
-   * @param publisher  test
-   * @param volume     test
-   * @param edition    test
-   * @param addInfo    test
-   * @param createDate test
-   * @param modDate    test
+   * @param id         id of the book
+   * @param isbn       isbn of the book
+   * @param title      book title
+   * @param subtitle   book subtitle
+   * @param pubYear    publication year of the book
+   * @param publisher  publisher of the book
+   * @param volume     volume of the book
+   * @param edition    edition of the book
+   * @param addInfo    additional information to the book
+   * @param createDate date on which book was added to the database
+   * @param modDate    date on which book was last modified in the database
    */
   public Book(Long id, String isbn, String title, String subtitle, Integer pubYear,
               String publisher, String volume, String edition, String addInfo,
@@ -55,14 +55,14 @@ public class Book {
    * Constructor without the parameters id, creation_date and mod_date, because they are
    * automatically set in the database.
    *
-   * @param isbn      test
-   * @param title     test
-   * @param subtitle  test
-   * @param pubYear   test
-   * @param publisher test
-   * @param volume    test
-   * @param edition   test
-   * @param addInfo   test
+   * @param isbn       isbn of the book
+   * @param title      book title
+   * @param subtitle   book subtitle
+   * @param pubYear    publication year of the book
+   * @param publisher  publisher of the book
+   * @param volume     volume of the book
+   * @param edition    edition of the book
+   * @param addInfo    additional information to the book
    */
   public Book(String isbn, String title, String subtitle, Integer pubYear,
               String publisher, String volume, String edition, String addInfo) {

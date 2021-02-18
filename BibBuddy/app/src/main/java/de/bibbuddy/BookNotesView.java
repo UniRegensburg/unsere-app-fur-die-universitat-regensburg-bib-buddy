@@ -13,6 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+/**
+ * BookNotesView is responsible for the noteList of a certain book.
+ *
+ * @author Sarah Kurek
+ */
 public class BookNotesView extends Fragment
     implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
 

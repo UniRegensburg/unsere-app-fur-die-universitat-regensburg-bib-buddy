@@ -22,7 +22,6 @@ public class ShelfItem extends LibraryItem {
    * @param parentId  shelfId of the shelf (is deprecated)
    * @param bookCount total number of books in the shelf
    * @param noteCount total number of notes in the shelf
-   * @author Claudia Schönherr
    */
   public ShelfItem(String name, Long id, Long parentId, int bookCount, int noteCount) {
     super(name, R.drawable.ic_shelf, id, parentId);

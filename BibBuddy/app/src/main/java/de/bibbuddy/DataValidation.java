@@ -15,7 +15,6 @@ public class DataValidation {
    *
    * @param inputStr input String of a user
    * @return Returns true if the String is empty
-   * @author Silvia Ivanova
    */
   public static boolean isStringEmpty(String inputStr) {
     return inputStr == null || inputStr.isEmpty();
@@ -26,7 +25,6 @@ public class DataValidation {
    *
    * @param inputStr input String of a user
    * @return Returns true if the String has special characters
-   * @author Silvia Ivanova
    */
   public static boolean hasSpecialChars(String inputStr) {
     Pattern pattern = Pattern.compile("[^a-z0-9äöüß ]", Pattern.CASE_INSENSITIVE);
@@ -39,7 +37,6 @@ public class DataValidation {
    *
    * @param isbnStr ISBN String of the input
    * @return Returns true if the String is a valid ISBN13 String
-   * @author Silvia Ivanova
    */
   public static boolean validateIsbn13(String isbnStr) {
     if (isStringEmpty(isbnStr)) {
@@ -80,7 +77,6 @@ public class DataValidation {
    *
    * @param isbnStr ISBN String of the input
    * @return Returns true if the String is a valid ISBN10 String
-   * @author Silvia Ivanova
    */
   public static boolean validateIsbn10(String isbnStr) {
     if (isStringEmpty(isbnStr)) {
@@ -121,7 +117,6 @@ public class DataValidation {
    *
    * @param isbnStr ISBN String of the input
    * @return Returns true if the String is a valid ISBN10 or ISBN13 String
-   * @author Silvia Ivanova
    */
   public static boolean isValidIsbn10or13(String isbnStr) {
     return validateIsbn10(isbnStr) || validateIsbn13(isbnStr);

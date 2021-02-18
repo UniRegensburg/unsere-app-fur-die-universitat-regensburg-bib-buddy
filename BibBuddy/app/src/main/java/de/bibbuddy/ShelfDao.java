@@ -130,8 +130,8 @@ public class ShelfDao implements InterfaceShelfDao {
   /**
    * Method to find all sub-shelves of a certain shelf with the parentId.
    *
-   * @param id test
-   * @return test
+   * @param id current shelfId
+   * @return list with all sub-shelves for the current shelf
    */
   public List<Shelf> findAllByParentId(Long id) {
     List<Shelf> shelfList = new ArrayList<Shelf>();
@@ -168,7 +168,7 @@ public class ShelfDao implements InterfaceShelfDao {
   /**
    * Method to find the last added shelfId.
    *
-   * @return test
+   * @return last added shelfId
    */
   public Long findLatestId() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -190,8 +190,8 @@ public class ShelfDao implements InterfaceShelfDao {
   /**
    * Method to count all Notes for a certain Shelf.
    *
-   * @param shelfBookIds test
-   * @return test
+   * @param shelfBookIds list with all bookIds for current shelf
+   * @return count of all books for current shelf
    */
   public int countAllNotesForShelf(List<Long> shelfBookIds) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -218,8 +218,8 @@ public class ShelfDao implements InterfaceShelfDao {
   /**
    * Method to count all Books for a certain Shelf.
    *
-   * @param shelfId test
-   * @return test
+   * @param shelfId current shelfId
+   * @return count of all books for the current shelf
    */
   public int countAllBooksForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();

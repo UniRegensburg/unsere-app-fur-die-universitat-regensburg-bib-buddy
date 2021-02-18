@@ -21,7 +21,6 @@ public class BookModel {
    *
    * @param context context for the BookModel
    * @param shelfId shelfId of the selected book
-   * @author Claudia Schönherr
    */
 
   public BookModel(Context context, Long shelfId) {
@@ -53,7 +52,6 @@ public class BookModel {
    *
    * @param book       book data for the database and bookList
    * @param authorList authorList of the new book
-   * @author Claudia Schönherr
    */
   public void addBook(Book book, List<Author> authorList) {
     bookDao.create(book, authorList, shelfId);
@@ -67,7 +65,6 @@ public class BookModel {
    *
    * @param shelfId shelfId of the given shelf
    * @return Returns the bookList of the current shelfId
-   * @author Claudia Schönherr
    */
   public List<BookItem> getBookList(Long shelfId) {
     bookList = new ArrayList<>();

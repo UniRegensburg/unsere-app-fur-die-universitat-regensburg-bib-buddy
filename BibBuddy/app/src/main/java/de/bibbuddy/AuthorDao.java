@@ -121,8 +121,8 @@ public class AuthorDao implements InterfaceAuthorDao {
   /**
    * Method to check if a certain Author already exists in the database.
    *
-   * @param author test
-   * @return test
+   * @param author instance of author
+   * @return boolean
    */
   public boolean existAuthor(Author author) {
     List<Author> dbAuthorList = findAll();
@@ -141,7 +141,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   /**
    * Method to create an Author if it does not exist yet.
    *
-   * @param authorList test
+   * @param authorList lis of all authors
    */
   public void createAuthors(List<Author> authorList) {
     for (Author author : authorList) {
@@ -155,8 +155,8 @@ public class AuthorDao implements InterfaceAuthorDao {
    * Method to get a list of all AuthorIds based on an author list to be able to link them to the
    * corresponding book.
    *
-   * @param authorList test
-   * @return test
+   * @param authorList list of all authors
+   * @return ids of the authors
    */
   public List<Long> getAuthorIds(List<Author> authorList) {
     List<Long> authorIds = new ArrayList<>();
