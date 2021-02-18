@@ -8,7 +8,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NoteDao implements INoteDAO {
+/**
+ * NoteDao contains all sql queries related to Note.
+ *
+ * @author Sarah Kurek
+ */
+public class NoteDao implements InterfaceNoteDao {
 
   private final DatabaseHelper dbHelper;
 

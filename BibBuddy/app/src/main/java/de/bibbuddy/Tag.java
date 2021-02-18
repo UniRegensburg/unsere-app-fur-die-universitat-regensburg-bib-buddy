@@ -1,5 +1,10 @@
 package de.bibbuddy;
 
+/**
+ * The Tag class maps the data of the database from the table Tag.
+ *
+ * @author Sarah Kurek
+ */
 public class Tag {
   private Long id;
   private String name;

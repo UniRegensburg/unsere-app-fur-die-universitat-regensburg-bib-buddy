@@ -11,6 +11,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+/**
+ * The NotesFragment is responsible for the Notes of a Book.
+ *
+ * @author Sabrina Freisleben
+ */
 public class NotesFragment extends Fragment {
 
   static List<NoteItem> notes;

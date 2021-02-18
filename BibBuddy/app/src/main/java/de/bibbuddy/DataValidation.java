@@ -3,19 +3,28 @@ package de.bibbuddy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The DataValidation is responsible for checking if the input is valid or not.
+ *
+ * @author Silvia Ivanova
+ */
 public class DataValidation {
 
-  //checks if the input string is not null
+  /**
+   * Checks if the input string is not null.
+   *
+   * @param inputStr input String of a user
+   * @return Returns true if the String is empty
+   */
   public static boolean isStringEmpty(String inputStr) {
     return inputStr == null || inputStr.isEmpty();
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * //checks for special characters that are not latin letters or numbers
+   * Checks for special characters that are not latin letters or numbers.
    *
-   * @param inputStr test
-   * @return test
+   * @param inputStr input String of a user
+   * @return Returns true if the String has special characters
    */
   public static boolean hasSpecialChars(String inputStr) {
     Pattern pattern = Pattern.compile("[^a-z0-9äöüß ]", Pattern.CASE_INSENSITIVE);
@@ -24,10 +33,10 @@ public class DataValidation {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Checks if the String is a valid ISBN13 String.
    *
-   * @param isbnStr test
-   * @return test
+   * @param isbnStr ISBN String of the input
+   * @return Returns true if the String is a valid ISBN13 String
    */
   public static boolean validateIsbn13(String isbnStr) {
     if (isStringEmpty(isbnStr)) {
@@ -64,10 +73,10 @@ public class DataValidation {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Checks if the String is a valid ISBN10 String.
    *
-   * @param isbnStr test
-   * @return test
+   * @param isbnStr ISBN String of the input
+   * @return Returns true if the String is a valid ISBN10 String
    */
   public static boolean validateIsbn10(String isbnStr) {
     if (isStringEmpty(isbnStr)) {
@@ -104,10 +113,10 @@ public class DataValidation {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Checks if the String is a valid ISBN10 or ISBN13 String.
    *
-   * @param isbnStr test
-   * @return test
+   * @param isbnStr ISBN String of the input
+   * @return Returns true if the String is a valid ISBN10 or ISBN13 String
    */
   public static boolean isValidIsbn10or13(String isbnStr) {
     return validateIsbn10(isbnStr) || validateIsbn13(isbnStr);

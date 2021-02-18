@@ -10,14 +10,16 @@ public class Author {
 
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * The Author class maps the data of the database from the table Author.
    *
-   * @param id         test
-   * @param firstName  test
-   * @param lastName   test
-   * @param title      test
-   * @param createDate test
-   * @param modDate    test
+   * @author Sarah Kurek
+   *
+   * @param id         id of the author
+   * @param firstName  first name of the author of the book
+   * @param lastName   last name of the author of the book
+   * @param title      book title
+   * @param createDate date on which author was added to the database
+   * @param modDate    date on which author was last modified in the database
    */
   public Author(Long id, String firstName, String lastName, String title, Integer createDate,
                 Integer modDate) {
@@ -38,11 +40,11 @@ public class Author {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor for optional title.
    *
-   * @param firstName test
-   * @param lastName test
-   * @param title test
+   * @param firstName first name of the author of the book
+   * @param lastName last name of the author of the book
+   * @param title book title
    */
   public Author(String firstName, String lastName, String title) {
     this.firstName = firstName;

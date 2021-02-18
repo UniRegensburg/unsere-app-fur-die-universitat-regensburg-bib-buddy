@@ -1,5 +1,10 @@
 package de.bibbuddy;
 
+/**
+ * Constants for the whole library.
+ *
+ * @author Claudia Schönherr
+ */
 public class LibraryKeys {
   public static final String SHELF_ID = "shelf_id";
   public static final String SHELF_NAME = "shelf_name";

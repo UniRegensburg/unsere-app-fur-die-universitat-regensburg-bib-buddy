@@ -13,6 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
+/**
+ * The LibraryFragment is responsible for the shelfs in the library.
+ *
+ * @author Claudia Schönherr
+ */
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener, BookRecyclerViewAdapter.BookListener {
 

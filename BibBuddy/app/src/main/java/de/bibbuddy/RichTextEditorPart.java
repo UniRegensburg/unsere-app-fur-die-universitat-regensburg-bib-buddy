@@ -1,5 +1,11 @@
 package de.bibbuddy;
 
+
+/**
+ * RichTextEditorPart is responsible for RichTextEditor.
+ *
+ * @author Sabrina Freisleben
+ */
 public class RichTextEditorPart {
 
   private final int start;

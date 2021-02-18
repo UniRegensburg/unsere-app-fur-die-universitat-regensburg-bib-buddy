@@ -18,7 +18,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
-
+/**
+ * Callback for swipe to delete.
+ *
+ * @author Sabrina Freisleben
+ */
 public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
   private final Paint clearPaint;

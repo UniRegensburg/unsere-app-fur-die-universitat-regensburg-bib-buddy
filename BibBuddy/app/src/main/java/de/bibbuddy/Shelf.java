@@ -1,5 +1,10 @@
 package de.bibbuddy;
 
+/**
+ * The Shelf class maps the data of the database from the table Shelf.
+ *
+ * @author Sarah Kurek
+ */
 public class Shelf {
   private Long id;
   private String name;
@@ -8,13 +13,13 @@ public class Shelf {
   private Long shelfId;
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor with all its variables.
    *
-   * @param id test
-   * @param name test
-   * @param createDate test
-   * @param modDate test
-   * @param shelfId test
+   * @param id id of the shelf
+   * @param name name of the shelf
+   * @param createDate date on which shelf was added to the database
+   * @param modDate date on which shelf was last modified in the database
+   * @param shelfId id of parent shelf
    */
   public Shelf(Long id, String name, Integer createDate, Integer modDate, Long shelfId) {
     this.id = id;
@@ -27,6 +32,13 @@ public class Shelf {
   public Shelf() {
   }
 
+  /**
+   * Constructor without id, create_date and mod_date, because its automatically set in the
+   * database.
+   *
+   * @param name name of the shelf
+   * @param shelfId id of parent shelf
+   */
   public Shelf(String name, Long shelfId) {
     this.name = name;
     this.shelfId = shelfId;

@@ -7,7 +7,12 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagDao implements ITagDAO {
+/**
+ * TagDao contains all sql queries related to Tag.
+ *
+ * @author Sarah Kurek
+ */
+public class TagDao implements InterfaceTagDao {
 
   private final DatabaseHelper dbHelper;
 

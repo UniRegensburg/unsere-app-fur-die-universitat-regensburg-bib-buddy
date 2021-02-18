@@ -1,5 +1,11 @@
 package de.bibbuddy;
 
+/**
+ * The LibraryItem is responsible for holding the information of the book view items.
+ * It is the parent of the other .*Item classes.
+ *
+ * @author Claudia Schönherr
+ */
 public class LibraryItem {
 
   private final String name;
@@ -12,12 +18,12 @@ public class LibraryItem {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor of a LibraryItem.
    *
-   * @param name test
-   * @param image test
-   * @param id test
-   * @param parentId test
+   * @param name     name of the LibraryItem
+   * @param image    image of the LibraryItem
+   * @param id       id of the LibraryItem
+   * @param parentId parentId of the LibraryItem
    */
   public LibraryItem(String name, int image, Long id, Long parentId) {
     this.name = name;

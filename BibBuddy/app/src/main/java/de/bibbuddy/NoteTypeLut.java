@@ -1,5 +1,10 @@
 package de.bibbuddy;
 
+/**
+ * Look up table for the note type.
+ *
+ * @author Sarah Kurek
+ */
 public enum NoteTypeLut {
 
   TEXT(1), IMAGE(2), AUDIO(3), OTHER(4);

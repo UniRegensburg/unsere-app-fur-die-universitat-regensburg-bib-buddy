@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 import java.util.List;
 
-public interface IAuthorDAO {
+public interface InterfaceAuthorDao {
 
   boolean create(Author author);
 

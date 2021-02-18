@@ -9,6 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+/**
+ * BookNotesRecyclerViewAdapter provides a binding from the noteList to the view
+ * that is displayed within the RecyclerView of the BookNotesView.
+ *
+ * @author Sarah Kurek
+ */
 public class BookNotesRecyclerViewAdapter extends
     RecyclerView.Adapter<BookNotesRecyclerViewAdapter.BookNotesViewHolder> {
 
@@ -58,9 +64,9 @@ public class BookNotesRecyclerViewAdapter extends
     private final ImageView imageView;
 
     /**
-     * DUMMY COMMENT - PLEASE ADJUST.
+     * Custom ViewHolder constructor to setup basic view.
      *
-     * @param itemView test
+     * @param itemView current item of the view
      */
     public BookNotesViewHolder(@NonNull View itemView) {
       super(itemView);
