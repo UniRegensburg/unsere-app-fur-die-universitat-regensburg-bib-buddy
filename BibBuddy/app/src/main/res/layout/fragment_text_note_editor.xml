@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/formatDropDown"
+            android:id="@+id/formatIndicator"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@null"
@@ -24,7 +24,7 @@
             android:src="@drawable/text_format"
             android:tint="@color/flirt" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/formatArrow"
             android:layout_width="15dp"
             android:layout_height="15dp"
@@ -33,7 +33,7 @@
             android:contentDescription="@string/format_arrow"
             android:scaleType="fitCenter"
             android:src="@drawable/arrow_down"
-            app:tint="@color/flirt" />
+            android:tint="@color/flirt" />
 
     </LinearLayout>
 
