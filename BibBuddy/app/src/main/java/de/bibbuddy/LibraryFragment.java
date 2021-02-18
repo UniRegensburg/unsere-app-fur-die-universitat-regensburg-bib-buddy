@@ -61,33 +61,56 @@ public class LibraryFragment extends Fragment
     super.onCreateOptionsMenu(menu, inflater);
   }
 
+
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
 
+    switch (item.getItemId()) {
+      case R.id.menu_export_library:
+        // TODO Silvia Export
+        // handleExportLibrary();
+        Toast.makeText(getContext(), "Export wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
 
-    if (id == R.id.menu_export_library) {
-      // TODO Silvia Export
-      // handleExportLibrary();
-      Toast.makeText(context, "Export wurde geklickt", Toast.LENGTH_SHORT).show();
-      return true;
-    }
+      case R.id.menu_rename_shelf:
+        if (selectedShelfItems.size() != 1) {
+          return true;
+        }
+        handleRenameShelf();
+        break;
 
-    if (id == R.id.menu_rename_shelf) {
-      if (selectedShelfItems.size() != 1) {
-        return true;
-      }
+      case R.id.menu_delete_shelf:
+        handleDeleteShelf();
+        break;
 
-      handleRenameShelf();
-      return true;
-    }
+      case R.id.menu_help_library:
+        // TODO Sarah Hilfe
+        // handleHelpLibrary();
+        Toast.makeText(getContext(), "Hilfe wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
 
-    if (id == R.id.menu_delete_shelf) {
-      handleDeleteShelf();
-      return true;
+      default:
+        Toast.makeText(getContext(), "??? wurde geklickt", Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
+    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
+
+    if (selectedShelfItems.isEmpty()) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(false);
+    } else if (selectedShelfItems.size() != 1) {
+      renameShelf.setVisible(false);
+    } else {
+      renameShelf.setVisible(true);
+      deleteShelf.setVisible(true);
+    }
+
   }
 
   private void handleDeleteShelf() {
@@ -110,14 +133,14 @@ public class LibraryFragment extends Fragment
         adapter.notifyDataSetChanged();
         updateEmptyView(libraryModel.getCurrentLibraryList());
         Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
-        selectedShelfItems.clear();
+        unselectLibraryItems();
       }
     });
 
     alertDeleteShelf.show();
   }
 
-  private Bundle createRenameShelfBundle() { // TODO
+  private Bundle createRenameShelfBundle() {
     Bundle bundle = new Bundle();
 
     bundle.putStringArray(LibraryKeys.SHELF_NAMES, getAllShelfNames());
@@ -131,18 +154,21 @@ public class LibraryFragment extends Fragment
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
-            // adapter.deselectAllItems();
             adapter.notifyDataSetChanged();
-            selectedShelfItems.clear();
-
-            // TODO deselect item
-            // view.findViewById(R.id.library_recycler_view);
+            unselectLibraryItems();
           }
         });
 
     fragment.setArguments(createRenameShelfBundle());
     fragment
         .show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_RENAME_SHELF);
+  }
+
+  private void unselectLibraryItems() {
+    selectedShelfItems.clear();
+
+    // TODO deselect items
+    // view.findViewById(R.id.library_recycler_view);
   }
 
   private void setupRecyclerView() {
@@ -278,7 +304,6 @@ public class LibraryFragment extends Fragment
       v.setBackground(background);
       selectedShelfItems.remove(shelfItem);
     }
-
-    // TODO update menu toolbar when only one item is selected and when multiple items are selected
   }
+
 }

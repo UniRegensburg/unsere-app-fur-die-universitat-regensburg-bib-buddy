@@ -103,8 +103,8 @@ public class LibraryRecyclerViewAdapter
 
   public void deselectAllItems() { // TODO
     for (ShelfItem shelf : libraryList) {
-      // shelf.setSelected(false);
-//              v.setBackground(background);
+    //  shelf.setSelected(false);
+    //  v.setBackground(background);
     }
   }
 

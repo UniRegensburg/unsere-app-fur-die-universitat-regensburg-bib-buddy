@@ -48,7 +48,7 @@ public class BookModel {
   }
 
   /**
-   * Add a new book to the bookList and database.
+   * Adds a new book to the bookList and database.
    *
    * @param book       book data for the database and bookList
    * @param authorList authorList of the new book
@@ -61,7 +61,7 @@ public class BookModel {
   }
 
   /**
-   * Get the bookList of the current shelfId.
+   * Gets the bookList of the current shelfId.
    *
    * @param shelfId shelfId of the given shelf
    * @return Returns the bookList of the current shelfId

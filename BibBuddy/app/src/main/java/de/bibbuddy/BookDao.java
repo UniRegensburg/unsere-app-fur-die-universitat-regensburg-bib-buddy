@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * BookDao contains all sql queries related to Book.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Claudia Schönherr
  */
 public class BookDao implements InterfaceBookDao {
   private final DatabaseHelper dbHelper;
@@ -271,6 +271,12 @@ public class BookDao implements InterfaceBookDao {
     return bookList;
   }
 
+  /**
+   * Method to get all Books for a specific Shelf with a list of all bookIds.
+   *
+   * @param bookId id of the book
+   * @return list of all authors of a book
+   */
   public List<Long> getAllAuthorsIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();

@@ -26,6 +26,7 @@
     <string name="rename">umbenennen</string>
     <string name="change">ändern</string>
     <string name="export">Export</string>
+    <string name="help">Hilfe</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
