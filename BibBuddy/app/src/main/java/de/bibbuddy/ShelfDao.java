@@ -7,7 +7,12 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShelfDao implements IShelfDAO {
+/**
+ * ShelfDao contains all sql queries related to Shelf.
+ *
+ * @author Sarah Kurek, Claudia Schönherr
+ */
+public class ShelfDao implements InterfaceShelfDao {
 
   private final DatabaseHelper dbHelper;
 
@@ -123,13 +128,12 @@ public class ShelfDao implements IShelfDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to find all sub-shelves of a certain shelf with the parentId.
    *
    * @param id test
    * @return test
    */
   public List<Shelf> findAllByParentId(Long id) {
-    // Find all shelves with the given parent id
     List<Shelf> shelfList = new ArrayList<Shelf>();
     String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF
         + " WHERE " + DatabaseHelper.SHELF_ID + partSqlQuery(id);
@@ -162,7 +166,7 @@ public class ShelfDao implements IShelfDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to find the last added shelfId.
    *
    * @return test
    */
@@ -184,7 +188,7 @@ public class ShelfDao implements IShelfDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to count all Notes for a certain Shelf.
    *
    * @param shelfBookIds test
    * @return test
@@ -212,7 +216,7 @@ public class ShelfDao implements IShelfDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to count all Books for a certain Shelf.
    *
    * @param shelfId test
    * @return test

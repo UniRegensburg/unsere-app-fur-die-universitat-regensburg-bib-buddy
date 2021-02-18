@@ -10,7 +10,9 @@ public class Author {
 
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * The Author class maps the data of the database from the table Author.
+   *
+   * @author Sarah Kurek
    *
    * @param id         test
    * @param firstName  test
@@ -38,7 +40,7 @@ public class Author {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor for optional title.
    *
    * @param firstName test
    * @param lastName test

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagDao implements ITagDAO {
+public class TagDao implements InterfaceTagDao {
 
   private final DatabaseHelper dbHelper;
 

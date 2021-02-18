@@ -79,11 +79,6 @@ public class BookNotesView extends Fragment
               .addToBackStack(null)
               .commit();
 
-
-          // TODO: If back-button is pressed in TextEditor, save note (first line = NoteName),
-          // model.createNote("name", 1, "text", bookId);
-          // and updateNoteListView(model.getNoteList(bookId);
-
         } /* else if (item.getItemId() == R.id.add_picture_note) {
                     TODO: add features to add pictures
                 }
@@ -165,8 +160,6 @@ public class BookNotesView extends Fragment
         .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
         .addToBackStack(null)
         .commit();
-
-    // TODO: Retrieve data at the appropriate place (onCreate) in the TextNoteEditor and set text
   }
 
 }

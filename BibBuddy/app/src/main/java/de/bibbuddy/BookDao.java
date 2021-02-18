@@ -7,7 +7,12 @@ import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookDao implements IBookDAO {
+/**
+ * BookDao contains all sql queries related to Book.
+ *
+ * @author Sarah Kurek
+ */
+public class BookDao implements InterfaceBookDao {
   private final DatabaseHelper dbHelper;
   private final AuthorDao authorDao;
 
@@ -44,7 +49,7 @@ public class BookDao implements IBookDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to create a new book in the database, link it with a shelf and add a author to it.
    *
    * @param book       test
    * @param authorList test
@@ -63,14 +68,8 @@ public class BookDao implements IBookDAO {
     linkBookWithAuthors(authorList, bookId, authorDao.getAuthorIds(authorList));
   }
 
-
-  /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * // get single book entry
-   *
-   * @param id test
-   * @return test
-   */
+  // get a single book entry by id
+  @Override
   public Book findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -154,7 +153,7 @@ public class BookDao implements IBookDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to find the last added id.
    *
    * @return test
    */
@@ -209,8 +208,7 @@ public class BookDao implements IBookDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * // get all Books for a shelf by the shelfId
+   * Method to get all bookIds for a specific Shelf with its shelfId.
    *
    * @param shelfId test
    * @return test
@@ -236,8 +234,7 @@ public class BookDao implements IBookDAO {
 
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * // get all books for a shelf with a list of bookIds
+   * Method to get all Books for a specific Shelf with a list of all bookIds.
    *
    * @param shelfId test
    * @return test
@@ -274,8 +271,7 @@ public class BookDao implements IBookDAO {
 
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * // get all authors for a book with a list of authorIds
+   * Method to get all Authors for a specific Book with its bookId.
    *
    * @param bookId test
    * @return test
@@ -291,8 +287,7 @@ public class BookDao implements IBookDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * // count all Notes for a book by the bookId
+   * Method to count all Notes for a specific Book.
    *
    * @param bookId test
    * @return test

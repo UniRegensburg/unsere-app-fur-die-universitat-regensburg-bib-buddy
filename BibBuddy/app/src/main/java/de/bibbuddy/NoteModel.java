@@ -7,6 +7,11 @@ import java.util.Date;
 import java.util.List;
 import org.jsoup.Jsoup;
 
+/**
+ * NoteModel manages all data of the NoteView.
+ *
+ * @author Sarah Kurek, Sabrina Freisleben
+ */
 public class NoteModel {
 
   private final NoteDao noteDao;

@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 import java.util.List;
 
-public interface IShelfDAO {
+public interface InterfaceShelfDao {
 
   boolean create(Shelf shelf);
 

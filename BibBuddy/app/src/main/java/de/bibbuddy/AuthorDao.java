@@ -8,7 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AuthorDao implements IAuthorDAO {
+/**
+ * AuthorDao includes all sql queries related to Author.
+ *
+ * @author Sarah Kurek
+ */
+public class AuthorDao implements InterfaceAuthorDao {
 
   private final DatabaseHelper dbHelper;
 
@@ -114,7 +119,7 @@ public class AuthorDao implements IAuthorDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to check if a certain Author already exists in the database.
    *
    * @param author test
    * @return test
@@ -134,7 +139,7 @@ public class AuthorDao implements IAuthorDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to create an Author if it does not exist yet.
    *
    * @param authorList test
    */
@@ -147,7 +152,8 @@ public class AuthorDao implements IAuthorDAO {
   }
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Method to get a list of all AuthorIds based on an author list to be able to link them to the
+   * corresponding book.
    *
    * @param authorList test
    * @return test

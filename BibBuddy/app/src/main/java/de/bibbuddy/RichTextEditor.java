@@ -24,6 +24,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * The RichTextEditor is responsible for the styling of the note text.
+ *
+ * @author Sabrina Freisleben
+ */
 public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   public static final int FORMAT_BOLD = 1;
   public static final int FORMAT_ITALIC = 2;

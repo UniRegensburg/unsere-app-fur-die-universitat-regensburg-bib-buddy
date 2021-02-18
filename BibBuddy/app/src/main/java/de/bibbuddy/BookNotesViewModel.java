@@ -3,6 +3,11 @@ package de.bibbuddy;
 import android.content.Context;
 import java.util.List;
 
+/**
+ * BookNotesViewModel manages all data of the BookNotesView.
+ *
+ * @author Sarah Kurek
+ */
 public class BookNotesViewModel {
 
 

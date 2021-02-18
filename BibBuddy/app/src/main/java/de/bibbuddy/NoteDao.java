@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class NoteDao implements INoteDAO {
+public class NoteDao implements InterfaceNoteDao {
 
   private final DatabaseHelper dbHelper;
 

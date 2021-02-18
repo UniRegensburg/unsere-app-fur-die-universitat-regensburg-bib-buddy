@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 import java.util.List;
 
-public interface INoteDAO {
+public interface InterfaceNoteDao {
 
   boolean create(Note note);
 

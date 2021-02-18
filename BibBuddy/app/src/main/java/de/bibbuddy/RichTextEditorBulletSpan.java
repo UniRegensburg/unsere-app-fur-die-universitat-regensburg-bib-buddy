@@ -9,6 +9,11 @@ import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
 
+/**
+ * The RichTextEditorBulletSpan is responsible for the bullets in the text note.
+ *
+ * @author Sabrina Freisleben
+ */
 public class RichTextEditorBulletSpan extends BulletSpan {
 
   private static Path bulletPath = null;

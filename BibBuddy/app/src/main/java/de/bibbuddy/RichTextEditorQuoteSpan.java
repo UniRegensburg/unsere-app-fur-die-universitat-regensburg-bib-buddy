@@ -6,6 +6,12 @@ import android.os.Parcel;
 import android.text.Layout;
 import android.text.style.QuoteSpan;
 
+
+/**
+ * The RichTextEditorQuoteSpan is responsible for the styling of quotes in text notes.
+ *
+ * @author Sabrina Freisleben
+ */
 public class RichTextEditorQuoteSpan extends QuoteSpan {
 
   private final int quoteColor;

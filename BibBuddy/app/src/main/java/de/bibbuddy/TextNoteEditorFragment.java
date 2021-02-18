@@ -19,6 +19,11 @@ import java.io.IOException;
 import java.io.StringReader;
 import org.jsoup.Jsoup;
 
+/**
+ * The TextNoteEditorFragment is responsible for the note in the text editor.
+ *
+ * @author Sabrina Freisleben
+ */
 public class TextNoteEditorFragment extends Fragment {
 
   private View view;

@@ -1,5 +1,10 @@
 package de.bibbuddy;
 
+/**
+ * The Book class maps the data of the database from the table Book.
+ *
+ * @author Sarah Kurek
+ */
 public class Book {
 
   private Long id;
@@ -15,7 +20,7 @@ public class Book {
   private Integer modDate;
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor with all its parameters.
    *
    * @param id         test
    * @param isbn       test
@@ -47,8 +52,8 @@ public class Book {
 
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
-   * // id, creation_date and mod_date are set in the database
+   * Constructor without the parameters id, creation_date and mod_date, because they are
+   * automatically set in the database.
    *
    * @param isbn      test
    * @param title     test
