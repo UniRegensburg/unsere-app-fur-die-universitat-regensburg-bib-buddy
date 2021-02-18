@@ -174,24 +174,6 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
-   *
-   * @param bookId  id of the book
-   * @param shelfId id of the shelf
-   */
-  public void delete(Long bookId, Long shelfId) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    db.delete(DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK, DatabaseHelper.BOOK_ID + " = ?"
-                  + " AND " + DatabaseHelper.SHELF_ID + " = ?",
-              new String[] {String.valueOf(bookId), String.valueOf(shelfId)});
-
-    db.delete(DatabaseHelper.TABLE_NAME_BOOK, DatabaseHelper._ID + " = ?",
-              new String[] {String.valueOf(bookId)});
-
-    db.close();
-  }
-
-  /**
    * Method to find the last added id.
    *
    * @return last added bookId
@@ -289,12 +271,15 @@ public class BookDao implements InterfaceBookDao {
     return bookList;
   }
 
+<<<<<<< HEAD
   /**
    * Method to get all Books for a specific Shelf with a list of all bookIds.
    *
    * @param bookId id of the book
    * @return list of all authors of a book
    */
+=======
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
   public List<Long> getAllAuthorsIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();

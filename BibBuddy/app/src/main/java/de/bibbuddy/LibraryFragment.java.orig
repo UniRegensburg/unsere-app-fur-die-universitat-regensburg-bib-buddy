@@ -61,6 +61,7 @@ public class LibraryFragment extends Fragment
     super.onCreateOptionsMenu(menu, inflater);
   }
 
+<<<<<<< HEAD
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -111,6 +112,35 @@ public class LibraryFragment extends Fragment
       deleteShelf.setVisible(true);
     }
 
+=======
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+
+
+    if (id == R.id.menu_export_library) {
+      // TODO Silvia Export
+      // handleExportLibrary();
+      Toast.makeText(context, "Export wurde geklickt", Toast.LENGTH_SHORT).show();
+      return true;
+    }
+
+    if (id == R.id.menu_rename_shelf) {
+      if (selectedShelfItems.size() != 1) {
+        return true;
+      }
+
+      handleRenameShelf();
+      return true;
+    }
+
+    if (id == R.id.menu_delete_shelf) {
+      handleDeleteShelf();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
   }
 
   private void handleDeleteShelf() {
@@ -133,14 +163,22 @@ public class LibraryFragment extends Fragment
         adapter.notifyDataSetChanged();
         updateEmptyView(libraryModel.getCurrentLibraryList());
         Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
         unselectLibraryItems();
+=======
+        selectedShelfItems.clear();
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
       }
     });
 
     alertDeleteShelf.show();
   }
 
+<<<<<<< HEAD
   private Bundle createRenameShelfBundle() {
+=======
+  private Bundle createRenameShelfBundle() { // TODO
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
     Bundle bundle = new Bundle();
 
     bundle.putStringArray(LibraryKeys.SHELF_NAMES, getAllShelfNames());
@@ -154,8 +192,17 @@ public class LibraryFragment extends Fragment
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
+<<<<<<< HEAD
             adapter.notifyDataSetChanged();
             unselectLibraryItems();
+=======
+            // adapter.deselectAllItems();
+            adapter.notifyDataSetChanged();
+            selectedShelfItems.clear();
+
+            // TODO deselect item
+            // view.findViewById(R.id.library_recycler_view);
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
           }
         });
 
@@ -164,6 +211,7 @@ public class LibraryFragment extends Fragment
         .show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_RENAME_SHELF);
   }
 
+<<<<<<< HEAD
   private void unselectLibraryItems() {
     selectedShelfItems.clear();
 
@@ -171,6 +219,8 @@ public class LibraryFragment extends Fragment
     // view.findViewById(R.id.library_recycler_view);
   }
 
+=======
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
   private void setupRecyclerView() {
     libraryModel = new LibraryModel(getContext());
     List<ShelfItem> libraryList = libraryModel.getLibraryList(null);
@@ -304,23 +354,12 @@ public class LibraryFragment extends Fragment
       v.setBackground(background);
       selectedShelfItems.remove(shelfItem);
     }
+<<<<<<< HEAD
   }
 
-  @Override
-  public void onLongItemClicked(int position, ShelfItem shelfItem, View v) {
-    closeAddShelfFragment();
-
-    if (!v.isSelected()) {
-      v.setSelected(true);
-      v.setBackgroundColor(context.getColor(R.color.gray_quote));
-      selectedShelfItems.add(shelfItem);
-
-    } else {
-      v.setSelected(false);
-      v.setBackground(background);
-      selectedShelfItems.remove(shelfItem);
-    }
+=======
 
     // TODO update menu toolbar when only one item is selected and when multiple items are selected
   }
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
 }

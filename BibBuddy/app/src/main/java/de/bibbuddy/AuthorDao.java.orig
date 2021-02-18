@@ -119,6 +119,8 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
 
+<<<<<<< HEAD
+=======
   /**
    * Deletes the relevant author entries.
    *
@@ -141,6 +143,7 @@ public class AuthorDao implements InterfaceAuthorDao {
     db.close();
   }
 
+>>>>>>> 672439db64da8e32282868d13a23b04494a8d9c6
   /**
    * Deletes the relevant author entries.
    *
