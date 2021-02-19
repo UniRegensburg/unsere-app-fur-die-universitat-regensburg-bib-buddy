@@ -24,7 +24,7 @@ public class LibraryRecyclerViewAdapter
   private List<ShelfItem> libraryList;
 
   /**
-   * Constructor of the BookRecyclerViewAdapter.
+   * Constructor of the LibraryRecyclerViewAdapter.
    *
    * @param libraryList libraryList of the current shelves
    * @param listener    listener for the interface and callback of the shelves
@@ -32,6 +32,7 @@ public class LibraryRecyclerViewAdapter
    */
   public LibraryRecyclerViewAdapter(List<ShelfItem> libraryList, LibraryListener listener,
                                     Context context) {
+
     this.libraryList = libraryList;
     this.listener = listener;
     this.context = context;
@@ -101,19 +102,6 @@ public class LibraryRecyclerViewAdapter
     return noteCount + " " + context.getString(R.string.navigation_notes);
   }
 
-  public void deselectAllItems() { // TODO
-    for (ShelfItem shelf : libraryList) {
-    //  shelf.setSelected(false);
-    //  v.setBackground(background);
-    }
-  }
-
-
-  public void setSelectedItems(List<ShelfItem> selectedShelfItems) { // TODO
-    this.libraryList = selectedShelfItems;
-    notifyDataSetChanged();
-  }
-
   @Override
   public int getItemCount() {
     // RecyclerView calls this method to get the size of the data set.
@@ -128,7 +116,7 @@ public class LibraryRecyclerViewAdapter
   }
 
 
-  public static class LibraryViewHolder extends RecyclerView.ViewHolder {
+  public class LibraryViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView textView;
     private final ImageView imageView;

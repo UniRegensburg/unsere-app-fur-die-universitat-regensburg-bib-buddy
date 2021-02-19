@@ -3,7 +3,6 @@ package de.bibbuddy;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The LibraryFragment is responsible for the shelfs in the library.
+ * The LibraryFragment is responsible for the shelves in the library.
  *
  * @author Claudia Schönherr
  */
@@ -31,11 +30,10 @@ public class LibraryFragment extends Fragment
 
   private View view;
   private Context context;
-  private Drawable background;
-
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems;
+
 
   @Nullable
   @Override
@@ -101,11 +99,12 @@ public class LibraryFragment extends Fragment
     MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
     MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
 
-    if (selectedShelfItems.isEmpty()) {
+    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
       renameShelf.setVisible(false);
       deleteShelf.setVisible(false);
     } else if (selectedShelfItems.size() != 1) {
       renameShelf.setVisible(false);
+      deleteShelf.setVisible(true);
     } else {
       renameShelf.setVisible(true);
       deleteShelf.setVisible(true);
@@ -154,8 +153,8 @@ public class LibraryFragment extends Fragment
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
-            adapter.notifyDataSetChanged();
             unselectLibraryItems();
+            adapter.notifyDataSetChanged();
           }
         });
 
@@ -165,10 +164,12 @@ public class LibraryFragment extends Fragment
   }
 
   private void unselectLibraryItems() {
-    selectedShelfItems.clear();
+    RecyclerView shelfListView = getView().findViewById(R.id.library_recycler_view);
+    for (int i = 0; i < shelfListView.getChildCount(); i++) {
+      shelfListView.getChildAt(i).setSelected(false);
+    }
 
-    // TODO deselect items
-    // view.findViewById(R.id.library_recycler_view);
+    selectedShelfItems.clear();
   }
 
   private void setupRecyclerView() {
@@ -228,6 +229,7 @@ public class LibraryFragment extends Fragment
           public void onShelfAdded(String name, Long shelfId) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
+            unselectLibraryItems();
           }
         });
 
@@ -285,6 +287,7 @@ public class LibraryFragment extends Fragment
   @Override
   public void onItemClicked(int position) {
     closeAddShelfFragment();
+
     LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
     ((MainActivity) getActivity()).updateHeaderFragment(libraryItem.getName());
     updateBookListView(libraryItem);
@@ -294,33 +297,12 @@ public class LibraryFragment extends Fragment
   public void onLongItemClicked(int position, ShelfItem shelfItem, View v) {
     closeAddShelfFragment();
 
-    if (!v.isSelected()) {
-      v.setSelected(true);
-      v.setBackgroundColor(context.getColor(R.color.gray_quote));
-      selectedShelfItems.add(shelfItem);
-
-    } else {
+    if (v.isSelected()) {
       v.setSelected(false);
-      v.setBackground(background);
       selectedShelfItems.remove(shelfItem);
-    }
-  }
-
-  @Override
-  public void onLongItemClicked(int position, ShelfItem shelfItem, View v) {
-    closeAddShelfFragment();
-
-    if (!v.isSelected()) {
-      v.setSelected(true);
-      v.setBackgroundColor(context.getColor(R.color.gray_quote));
-      selectedShelfItems.add(shelfItem);
-
     } else {
-      v.setSelected(false);
-      v.setBackground(background);
-      selectedShelfItems.remove(shelfItem);
+      v.setSelected(true);
+      selectedShelfItems.add(shelfItem);
     }
-
-    // TODO update menu toolbar when only one item is selected and when multiple items are selected
   }
 }

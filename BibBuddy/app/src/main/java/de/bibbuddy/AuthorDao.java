@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * AuthorDao includes all sql queries related to Author.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Claudia Schönherr
  */
 public class AuthorDao implements InterfaceAuthorDao {
 
@@ -142,28 +142,6 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   /**
-   * Deletes the relevant author entries.
-   *
-   * @param authorId test
-   * @param bookId test
-   */
-  public void delete(Long authorId, Long bookId) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.AUTHOR_ID
-                  + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
-              new String[] {String.valueOf(authorId), String.valueOf(bookId)});
-
-    // delete author only if author has no link to another book
-    if (!existAuthorBookLink(authorId)) {
-      db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-                new String[] {String.valueOf(authorId)});
-    }
-
-    db.close();
-  }
-
-  /**
    * Method to check if a certain Author already exists in the database.
    *
    * @param author instance of author
@@ -186,7 +164,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   /**
    * Method to create an Author if it does not exist yet.
    *
-   * @param authorList lis of all authors
+   * @param authorList list of all authors
    */
   public void createAuthors(List<Author> authorList) {
     for (Author author : authorList) {
