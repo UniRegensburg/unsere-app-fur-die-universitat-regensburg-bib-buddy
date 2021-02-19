@@ -84,6 +84,7 @@ public class NoteRecyclerViewAdapter
   @Override
   public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
     Long id = data.get(position).getId();
+    String text = noteModel.getNoteById(id).getText();
     setupCardView(holder, position);
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -91,6 +92,7 @@ public class NoteRecyclerViewAdapter
         TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
         Bundle args = new Bundle();
         args.putLong(LibraryKeys.NOTE_ID, id);
+        args.putString(LibraryKeys.NOTE_TEXT, text);
         nextFrag.setArguments(args);
         activity.getSupportFragmentManager().beginTransaction()
             .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")
