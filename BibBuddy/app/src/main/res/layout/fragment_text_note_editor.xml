@@ -22,7 +22,7 @@
             android:contentDescription="@string/format_options"
             android:scaleType="fitXY"
             android:src="@drawable/text_format"
-            android:tint="@color/flirt" />
+            android:tint="@color/true_black" />
 
         <ImageButton
             android:id="@+id/formatArrow"
@@ -33,20 +33,21 @@
             android:contentDescription="@string/format_arrow"
             android:scaleType="fitCenter"
             android:src="@drawable/arrow_down"
-            android:tint="@color/flirt" />
+            android:tint="@color/true_black" />
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <HorizontalScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/flirt_dark"
-            android:elevation="10dp"
+
             android:scrollbars="horizontal"
             android:translationZ="15dp"
             android:visibility="gone">
@@ -89,12 +90,12 @@
                     android:src="@drawable/italic" />
 
                 <ImageButton
-                    android:id="@+id/action_strikethrough"
+                    android:id="@+id/action_strikeThrough"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@null"
                     android:contentDescription="@null"
-                    android:src="@drawable/strikethrough" />
+                    android:src="@drawable/strike_through" />
 
                 <ImageButton
                     android:id="@+id/action_underline"

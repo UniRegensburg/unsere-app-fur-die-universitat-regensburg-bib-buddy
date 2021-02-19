@@ -242,7 +242,7 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void setupStrikethrough() {
-    ImageButton strikethrough = view.findViewById(R.id.action_strikethrough);
+    ImageButton strikethrough = view.findViewById(R.id.action_strikeThrough);
 
     strikethrough.setOnClickListener(new View.OnClickListener() {
       @Override
