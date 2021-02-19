@@ -1,5 +1,11 @@
 package de.bibbuddy;
 
+/**
+ * The NoteItem is responsible for holding the information of the note items.
+ * It is the parent of NoteAudioItem, NoteImageItem and NoteTextItem.
+ *
+ * @author Sarah Kurek
+ */
 public class NoteItem {
 
   private final String modDate;

@@ -4,6 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * DatabaseHelper contains all sql commands to create the database with all its tables.
+ *
+ * @author Sarah Kurek
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
   // Table Names

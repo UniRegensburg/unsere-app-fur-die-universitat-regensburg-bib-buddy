@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 import java.util.List;
 
-public interface ITagDAO {
+public interface InterfaceTagDao {
 
   boolean create(Tag tag);
 

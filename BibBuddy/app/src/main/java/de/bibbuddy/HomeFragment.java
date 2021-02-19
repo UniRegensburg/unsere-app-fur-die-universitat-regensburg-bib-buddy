@@ -8,11 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * The HomeFragment is responsible for TODO.
+ *
+ * @author Claudia Schönherr
+ */
 public class HomeFragment extends Fragment {
 
-  //   public HomeFragment() {
-  //      super(R.layout.fragment_home);
-  //   }
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

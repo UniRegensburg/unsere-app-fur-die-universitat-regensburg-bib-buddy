@@ -10,6 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
+/**
+ * The LibraryRecyclerViewAdapter provides a binding from the libraryList to the view
+ * that is displayed within the RecyclerView of the LibraryFragment.
+ *
+ * @author Claudia Schönherr
+ */
 public class LibraryRecyclerViewAdapter
     extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.LibraryViewHolder> {
 
@@ -18,11 +24,11 @@ public class LibraryRecyclerViewAdapter
   private final Context context;
 
   /**
-   * DUMMY COMMENT - PLEASE ADJUST.
+   * Constructor of the BookRecyclerViewAdapter.
    *
-   * @param libraryList test
-   * @param listener    test
-   * @param context     test
+   * @param libraryList libraryList of the current shelves
+   * @param listener    listener for the interface and callback of the shelves
+   * @param context     context is required for the LibraryRecyclerViewAdapter texts (getBookString)
    */
   public LibraryRecyclerViewAdapter(List<ShelfItem> libraryList, LibraryListener listener,
                                     Context context) {
@@ -41,7 +47,7 @@ public class LibraryRecyclerViewAdapter
     // has not yet been bound to specific data.
 
     return new LibraryViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.list_view_item_library, parent, false));
+                                     .inflate(R.layout.list_view_item_library, parent, false));
   }
 
   @Override
@@ -103,9 +109,8 @@ public class LibraryRecyclerViewAdapter
     private final TextView textNoteCount;
 
     /**
-     * DUMMY COMMENT - PLEASE ADJUST.
-     *
-     * @param itemView test
+     * The LibraryViewHolder describes a shelf item view and metadata about its place
+     * within the RecyclerView of the LibraryFragment.
      */
     public LibraryViewHolder(@NonNull View itemView) {
       super(itemView);

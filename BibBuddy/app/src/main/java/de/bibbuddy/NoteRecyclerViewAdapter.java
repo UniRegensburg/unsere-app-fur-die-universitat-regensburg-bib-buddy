@@ -20,6 +20,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * NoteRecyclerViewAdapter provides a binding from the noteList to the view
+ * that is displayed within the RecyclerView of the NotesFragment.
+ *
+ * @author Sabrina Freisleben
+ */
 public class NoteRecyclerViewAdapter
     extends RecyclerView.Adapter<NoteRecyclerViewAdapter.MyViewHolder> {
 

@@ -1,5 +1,10 @@
 package de.bibbuddy;
 
+/**
+ * The Note class maps the data of the database from the table Note.
+ *
+ * @author Sarah Kurek
+ */
 public class Note {
 
   private Long id;
