@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
   BottomNavigationView bottomNavigationView;
   FragmentManager fragmentManager;
   DatabaseHelper dbHelper;
+  boolean isKeyboardShowing = false;
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
@@ -123,4 +124,5 @@ public class MainActivity extends AppCompatActivity {
         headerText.setText(getString(R.string.app_name));
     }
   }
+
 }

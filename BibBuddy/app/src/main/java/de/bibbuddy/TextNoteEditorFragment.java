@@ -6,7 +6,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
@@ -88,7 +87,7 @@ public class TextNoteEditorFragment extends Fragment {
     setupBold();
     setupItalic();
     setupUnderline();
-    setupStrikethrough();
+    setupStrikeThrough();
     setupBullet();
     setupQuote();
     setupAlignment();
@@ -108,240 +107,169 @@ public class TextNoteEditorFragment extends Fragment {
 
   private void setupUndo() {
     ImageButton undo = view.findViewById(R.id.action_undo);
-    undo.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        richTextEditor.undo();
-        undo.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            undo.setBackgroundColor(0);
-          }
-        }, 1000);
-      }
+    undo.setOnClickListener(v -> {
+      richTextEditor.undo();
+      backgroundColorChange(undo);
     });
+  }
+
+  private void backgroundColorChange(ImageButton button) {
+    button.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
+    Handler handler = new Handler();
+    handler.postDelayed(() -> button.setBackgroundColor(0), 1000);
   }
 
   private void setupRedo() {
     ImageButton redo = view.findViewById(R.id.action_redo);
-    redo.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        richTextEditor.redo();
-        redo.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-          @Override
-          public void run() {
-            redo.setBackgroundColor(0);
-          }
-        }, 1000);
-      }
+    redo.setOnClickListener(v -> {
+      richTextEditor.redo();
+      backgroundColorChange(redo);
     });
   }
 
   private void setupBold() {
     ImageButton bold = view.findViewById(R.id.action_bold);
 
-    bold.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        highlightSelectedItem(bold);
-        richTextEditor.bold(bold.isSelected());
-      }
+    bold.setOnClickListener(v -> {
+      highlightSelectedItem(bold);
+      richTextEditor.bold(bold.isSelected());
     });
 
-    bold.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_bold, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    bold.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_bold, Toast.LENGTH_SHORT).show();
+      return true;
     });
   }
 
   private void setupItalic() {
     ImageButton italic = view.findViewById(R.id.action_italic);
 
-    italic.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        highlightSelectedItem(italic);
-        richTextEditor.italic(italic.isSelected());
-      }
+    italic.setOnClickListener(v -> {
+      highlightSelectedItem(italic);
+      richTextEditor.italic(italic.isSelected());
     });
 
-    italic.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_italic, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    italic.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_italic, Toast.LENGTH_SHORT).show();
+      return true;
     });
   }
 
   private void setupUnderline() {
     ImageButton underline = view.findViewById(R.id.action_underline);
 
-    underline.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        highlightSelectedItem(underline);
-        richTextEditor.underline(underline.isSelected());
-      }
+    underline.setOnClickListener(v -> {
+      highlightSelectedItem(underline);
+      richTextEditor.underline(underline.isSelected());
     });
 
-    underline.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_underline, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    underline.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_underline, Toast.LENGTH_SHORT).show();
+      return true;
     });
   }
 
-  private void setupStrikethrough() {
-    ImageButton strikethrough = view.findViewById(R.id.action_strikethrough);
+  private void setupStrikeThrough() {
+    ImageButton strikeThrough = view.findViewById(R.id.action_strikethrough);
 
-    strikethrough.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        highlightSelectedItem(strikethrough);
-        richTextEditor.strikeThrough(strikethrough.isSelected());
-      }
+    strikeThrough.setOnClickListener(v -> {
+      highlightSelectedItem(strikeThrough);
+      richTextEditor.strikeThrough(strikeThrough.isSelected());
     });
 
-    strikethrough.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    strikeThrough.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
+      return true;
     });
   }
 
   private void setupBullet() {
     ImageButton bullet = view.findViewById(R.id.action_insert_bullets);
-
-    bullet.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-
-        highlightSelectedItem(bullet);
-        richTextEditor.bullet(bullet.isSelected());
-      }
+    bullet.setOnClickListener(v -> {
+      highlightSelectedItem(bullet);
+      richTextEditor.bullet(bullet.isSelected());
     });
-
-
-    bullet.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_bullet, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    bullet.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_bullet, Toast.LENGTH_SHORT).show();
+      return true;
     });
   }
 
   private void setupQuote() {
     ImageButton quote = view.findViewById(R.id.action_quote);
-
-    quote.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        highlightSelectedItem(quote);
-        richTextEditor.quote(quote.isSelected());
-      }
+    quote.setOnClickListener(v -> {
+      highlightSelectedItem(quote);
+      richTextEditor.quote(quote.isSelected());
     });
-
-    quote.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_quote, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    quote.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_quote, Toast.LENGTH_SHORT).show();
+      return true;
     });
   }
 
   private void setupAlignment() {
     ImageButton alignLeft = view.findViewById(R.id.action_alignLeft);
-
-    alignLeft.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        richTextEditor.alignLeft();
-        highlightSelectedItem(alignLeft);
-      }
-    });
-
-    alignLeft.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_alignLeft, Toast.LENGTH_SHORT).show();
-        return true;
-      }
-    });
-
     ImageButton alignRight = view.findViewById(R.id.action_alignRight);
-
-    alignRight.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        richTextEditor.alignRight();
-        highlightSelectedItem(alignRight);
-      }
-    });
-
-    alignRight.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_alignRight, Toast.LENGTH_SHORT).show();
-        return true;
-      }
-    });
-
     ImageButton alignCenter = view.findViewById(R.id.action_alignCenter);
 
-    alignCenter.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        richTextEditor.alignCenter();
-        highlightSelectedItem(alignCenter);
-      }
+    alignLeft.setOnClickListener(v -> {
+      richTextEditor.alignLeft();
+      backgroundColorChange(alignLeft);
+      deselectOtherAlignment(alignRight);
+      deselectOtherAlignment(alignCenter);
     });
 
-    alignCenter.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        Toast.makeText(getContext(), R.string.toast_alignCenter, Toast.LENGTH_SHORT).show();
-        return true;
-      }
+    alignLeft.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_alignLeft, Toast.LENGTH_SHORT).show();
+      return true;
     });
+
+    alignRight.setOnClickListener(v -> {
+      richTextEditor.alignRight();
+      highlightSelectedItem(alignRight);
+      deselectOtherAlignment(alignCenter);
+    });
+
+    alignRight.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_alignRight, Toast.LENGTH_SHORT).show();
+      return true;
+    });
+
+    alignCenter.setOnClickListener(v -> {
+      richTextEditor.alignCenter();
+      highlightSelectedItem(alignCenter);
+      deselectOtherAlignment(alignRight);
+    });
+
+    alignCenter.setOnLongClickListener(v -> {
+      Toast.makeText(getContext(), R.string.toast_alignCenter, Toast.LENGTH_SHORT).show();
+      return true;
+    });
+  }
+
+  private void deselectOtherAlignment(ImageButton align) {
+    if (align.isSelected()) {
+      highlightSelectedItem(align);
+    }
   }
 
   private void initSlidingButtons() {
     View rightArrowView = view.findViewById(R.id.slidebar_right);
     View leftArrowView = view.findViewById(R.id.slidebar_left);
     View scrollView = view.findViewById(R.id.scroll_view);
-
     scrollView.getViewTreeObserver()
-        .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-          @Override
-          public void onScrollChanged() {
-            if (scrollView.canScrollHorizontally(-1)) {
-              leftArrowView.setVisibility(View.VISIBLE);
-            } else {
-              leftArrowView.setVisibility(View.GONE);
-            }
-            if (scrollView.canScrollHorizontally(1)) {
-              rightArrowView.setVisibility(View.VISIBLE);
-            } else {
-              rightArrowView.setVisibility(View.GONE);
-            }
+        .addOnScrollChangedListener(() -> {
+          if (scrollView.canScrollHorizontally(-1)) {
+            leftArrowView.setVisibility(View.VISIBLE);
+          } else {
+            leftArrowView.setVisibility(View.GONE);
+          }
+          if (scrollView.canScrollHorizontally(1)) {
+            rightArrowView.setVisibility(View.VISIBLE);
+          } else {
+            rightArrowView.setVisibility(View.GONE);
           }
         });
-
     rightArrowView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
