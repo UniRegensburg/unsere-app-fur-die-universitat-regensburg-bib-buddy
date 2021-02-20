@@ -21,10 +21,9 @@
     <string name="back">zurück</string>
     <string name="add">+</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
-    <string name="cancel">abbrechen</string>
-    <string name="delete">löschen</string>
-    <string name="rename">umbenennen</string>
-    <string name="change">ändern</string>
+    <string name="delete">Löschen</string>
+    <string name="rename">Umbenennen</string>
+    <string name="change">Ändern</string>
     <string name="export">Export</string>
     <string name="help">Hilfe</string>
 
