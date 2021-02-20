@@ -92,9 +92,7 @@ public class LibraryFragment extends Fragment
         break;
 
       case R.id.menu_help_library:
-        // TODO Sarah Hilfe
-        // handleHelpLibrary();
-        Toast.makeText(getContext(), "Hilfe wurde geklickt", Toast.LENGTH_SHORT).show();
+        handleManualLibrary();
         break;
 
       default:
@@ -102,6 +100,22 @@ public class LibraryFragment extends Fragment
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleManualLibrary() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.library_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+            LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
   }
 
   @Override

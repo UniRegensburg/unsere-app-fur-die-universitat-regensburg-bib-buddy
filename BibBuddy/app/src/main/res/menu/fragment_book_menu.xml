@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_delete_shelf"
+        android:id="@+id/menu_delete_book"
         android:title="@string/delete" />
 
     <item
-        android:id="@+id/menu_rename_shelf"
-        android:title="@string/rename" />
+        android:id="@+id/menu_change_book_data"
+        android:title="@string/change" />
 
     <item
-        android:id="@+id/menu_export_library"
+        android:id="@+id/menu_export_book"
         android:title="@string/export" />
 
     <item
-        android:id="@+id/menu_help_library"
+        android:id="@+id/menu_help_book"
         android:title="@string/help" />
 
 </menu>

@@ -21,6 +21,7 @@ public class LibraryKeys {
   public static final String FRAGMENT_LIBRARY = "fragment_library";
   public static final String FRAGMENT_BOOK = "fragment_book";
   public static final String FRAGMENT_TEXT_NOTE_EDITOR = "fragment_text_note_editor";
+  public static final String FRAGMENT_HELP_VIEW = "fragment_help";
 
   public static final String MANUAL_TEXT = "manual_text";
 }

@@ -3,6 +3,9 @@ package de.bibbuddy;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -16,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +27,7 @@ import java.util.List;
  *
  * @author Claudia Schönherr
  */
+
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
   private Long shelfId;
   private String shelfName;
@@ -61,12 +66,66 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
 
-    //createBackBtnListener();
+    setHasOptionsMenu(true);
     createAddBookListener();
     updateEmptyView(bookList);
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
 
     return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_book_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.menu_change_book_data:
+        // TODO Luis
+        Toast.makeText(getContext(), "Buchdaten ändern wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
+
+      case R.id.menu_delete_book:
+        // TODO Luis
+        Toast.makeText(getContext(), "Buch löschen wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
+
+      case R.id.menu_export_book:
+        // TODO Silvia Export
+        // handleExportLibrary();
+        Toast.makeText(getContext(), "Export wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
+
+      case R.id.menu_help_book:
+        handleManualBook();
+        break;
+
+      default:
+        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleManualBook() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.book_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+            LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
   }
 
   private Bundle createBookBundle(LibraryItem item) {
