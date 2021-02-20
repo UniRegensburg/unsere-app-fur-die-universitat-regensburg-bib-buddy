@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * NoteDao contains all sql queries related to Note.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Claudia Schönherr
  */
 public class NoteDao implements InterfaceNoteDao {
 
@@ -132,6 +132,9 @@ public class NoteDao implements InterfaceNoteDao {
     db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
         new String[] {String.valueOf(id)});
 
+    db.delete(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, DatabaseHelper.NOTE_ID + " = ?",
+              new String[] {String.valueOf(id)});
+
     db.close();
   }
 
@@ -179,9 +182,13 @@ public class NoteDao implements InterfaceNoteDao {
     return true;
   }
 
-
-  // get all Notes for a book by the bookId
-  private List<Long> getAllNoteIdsForBook(Long bookId) {
+  /**
+   * Gets all notes of a book by the bookId.
+   *
+   * @param bookId id of the book
+   * @return a list of all noteIds of a book
+   */
+  public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> noteIds = new ArrayList<Long>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
@@ -240,5 +247,4 @@ public class NoteDao implements InterfaceNoteDao {
 
     return noteText;
   }
-
 }

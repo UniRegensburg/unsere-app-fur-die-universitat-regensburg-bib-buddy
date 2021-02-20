@@ -19,12 +19,12 @@ import java.util.List;
 public class LibraryRecyclerViewAdapter
     extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.LibraryViewHolder> {
 
-  private final List<ShelfItem> libraryList;
   private final LibraryListener listener;
   private final Context context;
+  private List<ShelfItem> libraryList;
 
   /**
-   * Constructor of the BookRecyclerViewAdapter.
+   * Constructor of the LibraryRecyclerViewAdapter.
    *
    * @param libraryList libraryList of the current shelves
    * @param listener    listener for the interface and callback of the shelves
@@ -32,6 +32,7 @@ public class LibraryRecyclerViewAdapter
    */
   public LibraryRecyclerViewAdapter(List<ShelfItem> libraryList, LibraryListener listener,
                                     Context context) {
+
     this.libraryList = libraryList;
     this.listener = listener;
     this.context = context;
@@ -71,6 +72,18 @@ public class LibraryRecyclerViewAdapter
         listener.onItemClicked(position);
       }
     });
+
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        if (position == RecyclerView.NO_POSITION) {
+          return false;
+        }
+
+        listener.onLongItemClicked(position, shelfItem, v);
+        return true;
+      }
+    });
   }
 
   private String getBookString(int bookCount) {
@@ -98,10 +111,12 @@ public class LibraryRecyclerViewAdapter
 
   public interface LibraryListener { // create an interface
     void onItemClicked(int position); // create callback function
+
+    void onLongItemClicked(int position, ShelfItem shelfItem, View v);
   }
 
 
-  public static class LibraryViewHolder extends RecyclerView.ViewHolder {
+  public class LibraryViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView textView;
     private final ImageView imageView;
