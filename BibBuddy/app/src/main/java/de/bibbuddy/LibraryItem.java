@@ -8,7 +8,7 @@ package de.bibbuddy;
  */
 public class LibraryItem {
 
-  private final String name;
+  private String name;
   private final int image;
   private final Long id;
   private final Long parentId;
@@ -34,6 +34,10 @@ public class LibraryItem {
 
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public int getImage() {

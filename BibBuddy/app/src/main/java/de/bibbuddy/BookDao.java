@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * BookDao contains all sql queries related to Book.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Claudia Schönherr
  */
 public class BookDao implements InterfaceBookDao {
   private final DatabaseHelper dbHelper;
@@ -74,13 +74,15 @@ public class BookDao implements InterfaceBookDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_BOOK,
-        new String[] {DatabaseHelper._ID, DatabaseHelper.ISBN,
-            DatabaseHelper.TITLE, DatabaseHelper.SUBTITLE, DatabaseHelper.PUB_YEAR,
-            DatabaseHelper.PUBLISHER,
-            DatabaseHelper.VOLUME, DatabaseHelper.EDITION, DatabaseHelper.ADD_INFOS,
-            DatabaseHelper.CREATE_DATE,
-            DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + "=?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+                             new String[] {DatabaseHelper._ID, DatabaseHelper.ISBN,
+                                 DatabaseHelper.TITLE, DatabaseHelper.SUBTITLE,
+                                 DatabaseHelper.PUB_YEAR,
+                                 DatabaseHelper.PUBLISHER,
+                                 DatabaseHelper.VOLUME, DatabaseHelper.EDITION,
+                                 DatabaseHelper.ADD_INFOS,
+                                 DatabaseHelper.CREATE_DATE,
+                                 DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + "=?",
+                             new String[] {String.valueOf(id)}, null, null, null, null);
 
     Book book = null;
     if (cursor != null) {
@@ -147,7 +149,26 @@ public class BookDao implements InterfaceBookDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_BOOK, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
+
+    db.close();
+  }
+
+  /**
+   * Deletes all the relevant book data in the tables.
+   *
+   * @param bookId  id of the book
+   * @param shelfId id of the shelf
+   */
+  public void delete(Long bookId, Long shelfId) {
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    db.delete(DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK, DatabaseHelper.BOOK_ID + " = ?"
+                  + " AND " + DatabaseHelper.SHELF_ID + " = ?",
+              new String[] {String.valueOf(bookId), String.valueOf(shelfId)});
+
+    db.delete(DatabaseHelper.TABLE_NAME_BOOK, DatabaseHelper._ID + " = ?",
+              new String[] {String.valueOf(bookId)});
 
     db.close();
   }
@@ -250,7 +271,13 @@ public class BookDao implements InterfaceBookDao {
     return bookList;
   }
 
-  private List<Long> getAllAuthorsIdsForBook(Long bookId) {
+  /**
+   * Method to get all Books for a specific Shelf with a list of all bookIds.
+   *
+   * @param bookId id of the book
+   * @return list of all authors of a book
+   */
+  public List<Long> getAllAuthorsIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
@@ -311,5 +338,6 @@ public class BookDao implements InterfaceBookDao {
 
     return noteCount;
   }
+
 
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_export_library"
+        android:title="@string/export" />
+
+    <item
+        android:id="@+id/menu_delete_shelf"
+        android:title="@string/delete" />
+
+    <item
+        android:id="@+id/menu_rename_shelf"
+        android:title="@string/rename" />
+
+    <item
+        android:id="@+id/menu_help_library"
+        android:title="@string/help" />
+
+</menu>

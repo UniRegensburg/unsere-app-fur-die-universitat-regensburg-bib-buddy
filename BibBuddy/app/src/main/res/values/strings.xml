@@ -21,6 +21,11 @@
     <string name="back">zurück</string>
     <string name="add">+</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht erlaubt.</string>
+    <string name="delete">Löschen</string>
+    <string name="rename">Umbenennen</string>
+    <string name="change">Ändern</string>
+    <string name="export">Export</string>
+    <string name="help">Hilfe</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
@@ -30,6 +35,13 @@
     <string name="input_shelf_name">Neuen Regalnamen eingeben</string>
     <string name="shelf_added">Regal wurde hinzugefügt</string>
     <string name="name_exists">Name existiert bereits in der Bibliothek</string>
+    <string name="rename_shelf">Regal umbenennen</string>
+    <string name="delete_shelf">Regal(e) löschen</string>
+    <string name="delete_shelf_message">Alle ausgewählten Regale werden gelöscht inklusive der Bücher und Notizen.
+        \nACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="deleted_shelf">Regal(e) wurde(n) gelöscht</string>
+    <string name="renamed_shelf">Regal wurde umbenannt</string>
+
 
     <!-- Book -->
     <string name="book">Buch</string>
