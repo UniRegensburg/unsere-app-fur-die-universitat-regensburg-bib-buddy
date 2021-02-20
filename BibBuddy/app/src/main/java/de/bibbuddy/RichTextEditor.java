@@ -564,13 +564,13 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         lineStart = lineStart + lines[lineEnd].length() + 1;
       }
       lineEnd = lineStart + lines[i].length();
-      if(lineEnd == lineStart){
-        if(alignmentRight){
-          setGravity(Gravity.RIGHT);
-        } else if (alignmentCenter){
+      if (lineEnd == lineStart) {
+        if (alignmentRight) {
+          setGravity(Gravity.END);
+        } else if (alignmentCenter) {
           setGravity(Gravity.CENTER);
         } else {
-          setGravity(Gravity.LEFT);
+          setGravity(Gravity.START);
         }
       }
       if (lineStart < lineEnd) {
