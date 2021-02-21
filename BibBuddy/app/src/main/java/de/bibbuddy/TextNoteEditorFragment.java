@@ -6,8 +6,8 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -26,11 +26,13 @@ import org.jsoup.Jsoup;
  */
 public class TextNoteEditorFragment extends Fragment {
 
+  ImageView arrow;
   private View view;
   private RichTextEditor richTextEditor;
   private Note note;
   private NoteModel noteModel;
   private Long bookId;
+  private View formatOptions;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,9 @@ public class TextNoteEditorFragment extends Fragment {
                            @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     richTextEditor = view.findViewById(R.id.editor);
+    ImageButton formatIndicator = view.findViewById(R.id.formatIndicator);
+    ImageButton formatArrow = view.findViewById(R.id.formatArrow);
+    arrow = view.findViewById(R.id.formatArrow);
     noteModel = new NoteModel(getContext());
     bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
     if (getArguments().size() == 2) {
@@ -83,17 +88,51 @@ public class TextNoteEditorFragment extends Fragment {
       richTextEditor.setText(Html.fromHtml(note.getText(), 33));
     }
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
-    setupUndo();
-    setupRedo();
-    setupBold();
-    setupItalic();
-    setupUnderline();
-    setupStrikethrough();
-    setupBullet();
-    setupQuote();
-    setupAlignment();
-    initSlidingButtons();
+    formatIndicator.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        formatOptions = view.findViewById(R.id.scroll_view);
+        slideUpOrDown();
+      }
+    });
+    formatArrow.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        formatOptions = view.findViewById(R.id.scroll_view);
+        slideUpOrDown();
+      }
+    });
     return view;
+  }
+
+  /**
+   * Method to perform an upside-down animation for the deletePanel.
+   */
+  public void slideUpOrDown() {
+    if (!formatOptionsAreShown()) {
+      formatOptions.setVisibility(View.VISIBLE);
+      arrow.setImageResource(R.drawable.arrow_up);
+      setupUndo();
+      setupRedo();
+      setupBold();
+      setupItalic();
+      setupUnderline();
+      setupStrikethrough();
+      setupBullet();
+      setupQuote();
+      setupAlignment();
+    } else if (formatOptionsAreShown()) {
+      hideFormatOptions();
+    }
+  }
+
+  private void hideFormatOptions() {
+    formatOptions.setVisibility(View.GONE);
+    arrow.setImageResource(R.drawable.arrow_down);
+  }
+
+  private boolean formatOptionsAreShown() {
+    return formatOptions.getVisibility() == View.VISIBLE;
   }
 
   private void highlightSelectedItem(View view) {
@@ -111,6 +150,7 @@ public class TextNoteEditorFragment extends Fragment {
     undo.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         richTextEditor.undo();
         undo.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
         Handler handler = new Handler();
@@ -129,6 +169,7 @@ public class TextNoteEditorFragment extends Fragment {
     redo.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         richTextEditor.redo();
         redo.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
         Handler handler = new Handler();
@@ -148,6 +189,7 @@ public class TextNoteEditorFragment extends Fragment {
     bold.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         highlightSelectedItem(bold);
         richTextEditor.bold(bold.isSelected());
       }
@@ -168,6 +210,7 @@ public class TextNoteEditorFragment extends Fragment {
     italic.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         highlightSelectedItem(italic);
         richTextEditor.italic(italic.isSelected());
       }
@@ -188,6 +231,7 @@ public class TextNoteEditorFragment extends Fragment {
     underline.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         highlightSelectedItem(underline);
         richTextEditor.underline(underline.isSelected());
       }
@@ -203,11 +247,12 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void setupStrikethrough() {
-    ImageButton strikethrough = view.findViewById(R.id.action_strikethrough);
+    ImageButton strikethrough = view.findViewById(R.id.action_strikeThrough);
 
     strikethrough.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         highlightSelectedItem(strikethrough);
         richTextEditor.strikeThrough(strikethrough.isSelected());
       }
@@ -228,7 +273,7 @@ public class TextNoteEditorFragment extends Fragment {
     bullet.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-
+        hideFormatOptions();
         highlightSelectedItem(bullet);
         richTextEditor.bullet(bullet.isSelected());
       }
@@ -250,6 +295,7 @@ public class TextNoteEditorFragment extends Fragment {
     quote.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         highlightSelectedItem(quote);
         richTextEditor.quote(quote.isSelected());
       }
@@ -270,6 +316,7 @@ public class TextNoteEditorFragment extends Fragment {
     alignLeft.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         richTextEditor.alignLeft();
         highlightSelectedItem(alignLeft);
       }
@@ -288,6 +335,7 @@ public class TextNoteEditorFragment extends Fragment {
     alignRight.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         richTextEditor.alignRight();
         highlightSelectedItem(alignRight);
       }
@@ -306,6 +354,7 @@ public class TextNoteEditorFragment extends Fragment {
     alignCenter.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        hideFormatOptions();
         richTextEditor.alignCenter();
         highlightSelectedItem(alignCenter);
       }
@@ -318,44 +367,6 @@ public class TextNoteEditorFragment extends Fragment {
         return true;
       }
     });
-  }
-
-  private void initSlidingButtons() {
-    View rightArrowView = view.findViewById(R.id.slidebar_right);
-    View leftArrowView = view.findViewById(R.id.slidebar_left);
-    View scrollView = view.findViewById(R.id.scroll_view);
-
-    scrollView.getViewTreeObserver()
-        .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-          @Override
-          public void onScrollChanged() {
-            if (scrollView.canScrollHorizontally(-1)) {
-              leftArrowView.setVisibility(View.VISIBLE);
-            } else {
-              leftArrowView.setVisibility(View.GONE);
-            }
-            if (scrollView.canScrollHorizontally(1)) {
-              rightArrowView.setVisibility(View.VISIBLE);
-            } else {
-              rightArrowView.setVisibility(View.GONE);
-            }
-          }
-        });
-
-    rightArrowView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        scrollView.scrollTo((int) scrollView.getX() + 100, 0);
-      }
-    });
-
-    leftArrowView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        scrollView.scrollTo((int) (scrollView.getX() - 100), 0);
-      }
-    });
-
   }
 
 }

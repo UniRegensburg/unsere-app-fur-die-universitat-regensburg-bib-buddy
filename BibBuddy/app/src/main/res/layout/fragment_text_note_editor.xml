@@ -2,22 +2,55 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_text_note_editor"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="80dp"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="70dp"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/flirt_dark">
+        android:layout_gravity="end"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/formatIndicator"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@null"
+            android:contentDescription="@string/format_options"
+            android:scaleType="fitXY"
+            android:src="@drawable/text_format"
+            android:tint="@color/true_black" />
+
+        <ImageButton
+            android:id="@+id/formatArrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@null"
+            android:contentDescription="@string/format_arrow"
+            android:scaleType="fitCenter"
+            android:src="@drawable/arrow_down"
+            android:tint="@color/true_black" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <HorizontalScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="50dp">
+            android:background="@color/flirt_dark"
+
+            android:scrollbars="horizontal"
+            android:translationZ="15dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -57,12 +90,12 @@
                     android:src="@drawable/italic" />
 
                 <ImageButton
-                    android:id="@+id/action_strikethrough"
+                    android:id="@+id/action_strikeThrough"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@null"
                     android:contentDescription="@null"
-                    android:src="@drawable/strikethrough" />
+                    android:src="@drawable/strike_through" />
 
                 <ImageButton
                     android:id="@+id/action_underline"
@@ -116,64 +149,25 @@
 
         </HorizontalScrollView>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/slidebar_left"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentStart="true"
-                android:background="@null"
-                android:contentDescription="@string/slidebar_left"
-                android:src="@drawable/slidebar_arrow_left"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/slidebar_right"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
-                android:background="@null"
-                android:contentDescription="@string/slidebar_right"
-                android:src="@drawable/slidebar_arrow_right" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/roundBorder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="40dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/rounded_border"
-            android:contentDescription="@string/round_border"
-            android:minHeight="400dp" />
-
-        <de.bibbuddy.RichTextEditor
-            android:id="@+id/editor"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/roundBorder"
-            android:layout_marginEnd="50dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="10dp"
-            android:gravity="top"
-            app:bulletColor="@color/true_black"
-            app:bulletGapWidth="3dp"
-            app:bulletRadius="3dp"
-            app:layout_constrainedHeight="true" />
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="20dp">
+
+            <de.bibbuddy.RichTextEditor
+                android:id="@+id/editor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                app:bulletColor="@color/true_black"
+                app:bulletGapWidth="3dp"
+                app:bulletRadius="3dp"
+                app:layout_constrainedHeight="true" />
+
+        </ScrollView>
 
     </RelativeLayout>
 
 </LinearLayout>
+
