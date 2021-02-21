@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +11,15 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.jsoup.Jsoup;
 
 /**
@@ -26,7 +29,7 @@ import org.jsoup.Jsoup;
  */
 public class TextNoteEditorFragment extends Fragment {
 
-  ImageView arrow;
+  ImageView formatArrow;
   private View view;
   private RichTextEditor richTextEditor;
   private Note note;
@@ -62,6 +65,7 @@ public class TextNoteEditorFragment extends Fragment {
       e.printStackTrace();
     }
     if (rawText.length() != 0) {
+      assert getArguments() != null;
       if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
@@ -78,30 +82,25 @@ public class TextNoteEditorFragment extends Fragment {
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     richTextEditor = view.findViewById(R.id.editor);
     ImageButton formatIndicator = view.findViewById(R.id.formatIndicator);
-    ImageButton formatArrow = view.findViewById(R.id.formatArrow);
-    arrow = view.findViewById(R.id.formatArrow);
+    formatArrow = view.findViewById(R.id.formatArrow);
+    formatIndicator.setOnClickListener(v -> {
+      formatOptions = view.findViewById(R.id.scroll_view);
+      slideUpOrDown();
+    });
+    formatArrow.setOnClickListener(v -> {
+      formatOptions = view.findViewById(R.id.scroll_view);
+      slideUpOrDown();
+    });
     noteModel = new NoteModel(getContext());
-    bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
-    if (getArguments().size() == 2) {
-      Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);
-      note = noteModel.getNoteById(noteId);
-      richTextEditor.setText(Html.fromHtml(note.getText(), 33));
+    if (getArguments() != null) {
+      bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
+      if (getArguments().size() == 2) {
+        Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);
+        note = noteModel.getNoteById(noteId);
+        richTextEditor.setText(Html.fromHtml(note.getText(), 33));
+      }
     }
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
-    formatIndicator.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        formatOptions = view.findViewById(R.id.scroll_view);
-        slideUpOrDown();
-      }
-    });
-    formatArrow.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        formatOptions = view.findViewById(R.id.scroll_view);
-        slideUpOrDown();
-      }
-    });
     return view;
   }
 
@@ -111,13 +110,13 @@ public class TextNoteEditorFragment extends Fragment {
   public void slideUpOrDown() {
     if (!formatOptionsAreShown()) {
       formatOptions.setVisibility(View.VISIBLE);
-      arrow.setImageResource(R.drawable.arrow_up);
+      formatArrow.setImageResource(R.drawable.arrow_up);
       setupUndo();
       setupRedo();
       setupBold();
       setupItalic();
       setupUnderline();
-      setupStrikethrough();
+      setupStrikeThrough();
       setupBullet();
       setupQuote();
       setupAlignment();
@@ -128,7 +127,7 @@ public class TextNoteEditorFragment extends Fragment {
 
   private void hideFormatOptions() {
     formatOptions.setVisibility(View.GONE);
-    arrow.setImageResource(R.drawable.arrow_down);
+    formatArrow.setImageResource(R.drawable.arrow_down);
   }
 
   private boolean formatOptionsAreShown() {
@@ -137,7 +136,7 @@ public class TextNoteEditorFragment extends Fragment {
 
   private void highlightSelectedItem(View view) {
     if (!view.isSelected()) {
-      view.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
+      view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.flirt_light));
       view.setSelected(true);
     } else {
       view.setBackgroundColor(0);
@@ -154,9 +153,9 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void backgroundColorChange(ImageButton button) {
-    button.setBackgroundColor(getActivity().getColor(R.color.flirt_light));
-    Handler handler = new Handler();
-    handler.postDelayed(() -> button.setBackgroundColor(0), 1000);
+    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.flirt_light));
+    ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
+    backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }
 
   private void setupRedo() {
@@ -206,7 +205,7 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void setupStrikeThrough() {
-    ImageButton strikeThrough = view.findViewById(R.id.action_strikethrough);
+    ImageButton strikeThrough = view.findViewById(R.id.action_strikeThrough);
     strikeThrough.setOnClickListener(v -> {
       highlightSelectedItem(strikeThrough);
       richTextEditor.strikeThrough(strikeThrough.isSelected());
