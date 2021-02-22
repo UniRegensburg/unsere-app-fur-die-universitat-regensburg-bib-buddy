@@ -65,9 +65,7 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * Method to setup the custom ViewHolder components
-   * Consider: if text has more than 40 characters, only first 35 characters are displayed as title
-   * and adding " ..." as indicator for a longer text
+   * Method to setup the custom ViewHolder components for notes.
    *
    * @param holder   custom ViewHolder instance
    * @param position adapterPosition of the viewHolder-item
@@ -129,8 +127,6 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupCardView(MyViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view
-    // with that element
     NoteItem noteItem = data.get(position);
     holder.getModDateView().setText(noteItem.getModDate());
     holder.getNameView().setText(noteItem.getName());
