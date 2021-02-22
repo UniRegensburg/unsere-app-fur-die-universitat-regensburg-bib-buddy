@@ -21,6 +21,7 @@ public class NotesFragment extends Fragment {
   static List<NoteItem> notes;
   private NoteRecyclerViewAdapter adapter;
   private RecyclerView recyclerView;
+  private static NoteModel noteModel;
 
   @Nullable
   @Override
@@ -28,7 +29,7 @@ public class NotesFragment extends Fragment {
                            @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
     recyclerView = view.findViewById(R.id.recyclerView);
-    NoteModel noteModel = new NoteModel(getContext());
+    noteModel = new NoteModel(getContext());
     notes = noteModel.getCompleteNoteList();
     setupRecyclerView();
     enableSwipeToDelete();
@@ -45,6 +46,10 @@ public class NotesFragment extends Fragment {
         new SwipeToDeleteCallback(getContext(), adapter, (MainActivity) getActivity());
     ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
     itemTouchhelper.attachToRecyclerView(recyclerView);
+  }
+
+  public static void deleteNote(Long id) {
+    noteModel.deleteNote(id);
   }
 
 }

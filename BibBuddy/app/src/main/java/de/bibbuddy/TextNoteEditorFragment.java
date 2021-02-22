@@ -135,13 +135,8 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void highlightSelectedItem(View view) {
-    if (!view.isSelected()) {
-      view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.flirt_light));
-      view.setSelected(true);
-    } else {
-      view.setBackgroundColor(0);
-      view.setSelected(false);
-    }
+    hideFormatOptions();
+    view.setSelected(!view.isSelected());
   }
 
   private void setupUndo() {

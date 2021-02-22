@@ -46,11 +46,10 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/flirt_dark"
-
             android:scrollbars="horizontal"
             android:translationZ="15dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:background="@color/flirt_dark">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -61,7 +60,7 @@
                     android:id="@+id/action_undo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/undo" />
 
@@ -69,7 +68,7 @@
                     android:id="@+id/action_redo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/redo" />
 
@@ -77,7 +76,7 @@
                     android:id="@+id/action_bold"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/bold" />
 
@@ -85,7 +84,7 @@
                     android:id="@+id/action_italic"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/italic" />
 
@@ -93,7 +92,7 @@
                     android:id="@+id/action_strikeThrough"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/strike_through" />
 
@@ -101,7 +100,7 @@
                     android:id="@+id/action_underline"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/underline" />
 
@@ -109,7 +108,7 @@
                     android:id="@+id/action_insert_bullets"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/bullets" />
 
@@ -117,7 +116,7 @@
                     android:id="@+id/action_quote"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/quote" />
 
@@ -125,7 +124,7 @@
                     android:id="@+id/action_alignLeft"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/align_left" />
 
@@ -133,7 +132,7 @@
                     android:id="@+id/action_alignRight"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/align_right" />
 
@@ -141,7 +140,7 @@
                     android:id="@+id/action_alignCenter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@null"
+                    android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/align_center" />
 
