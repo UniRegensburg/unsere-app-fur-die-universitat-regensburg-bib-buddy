@@ -74,10 +74,10 @@ public class LibraryFragment extends Fragment
   public boolean onOptionsItemSelected(MenuItem item) {
 
     switch (item.getItemId()) {
-      case R.id.menu_export_library:
+      case R.id.menu_backup_library:
         // TODO Silvia Export
-        // handleExportLibrary();
-        Toast.makeText(getContext(), "Export wurde geklickt", Toast.LENGTH_SHORT).show();
+        // handleBackupLibrary();
+        Toast.makeText(getContext(), "Backup wurde geklickt", Toast.LENGTH_SHORT).show();
         break;
 
       case R.id.menu_rename_shelf:

@@ -10,8 +10,8 @@
         android:title="@string/rename" />
 
     <item
-        android:id="@+id/menu_export_library"
-        android:title="@string/export" />
+        android:id="@+id/menu_backup_library"
+        android:title="@string/backup" />
 
     <item
         android:id="@+id/menu_help_library"
