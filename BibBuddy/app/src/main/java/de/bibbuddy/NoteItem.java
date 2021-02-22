@@ -24,7 +24,7 @@ public class NoteItem {
    * @param id      id of the note
    * @param bookId  id of the book that the note is connected to
    */
-  public NoteItem(String modDate, String name, String text,int image, Long id, Long bookId) {
+  public NoteItem(String modDate, String name, String text, int image, Long id, Long bookId) {
     this.modDate = modDate;
     this.name = name;
     this.text = text;
