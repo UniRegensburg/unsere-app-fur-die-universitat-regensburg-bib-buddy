@@ -135,8 +135,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void handleAddBookManually() {
-    BookAddManuallyFragment fragment = new BookAddManuallyFragment(
-        new BookAddManuallyFragment.AddBookManuallyListener() {
+    BookFormFragment fragment = new BookFormFragment(
+        new BookFormFragment.AddBookManuallyListener() {
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
             addBook(book, authorList);

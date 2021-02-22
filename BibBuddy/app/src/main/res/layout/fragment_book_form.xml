@@ -16,7 +16,7 @@
         tools:ignore="MissingConstraints">
 
         <Button
-            android:id="@+id/btn_book_manually_cancel"
+            android:id="@+id/btn_book_form_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/back"
@@ -24,11 +24,11 @@
             tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/btn_book_manually_confirm"
+            android:id="@+id/btn_book_form_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/btn_book_manually_cancel"
+            android:layout_toEndOf="@id/btn_book_form_cancel"
             android:text="@string/add_shelf"
             android:theme="@style/Button.Pink"
             tools:ignore="MissingConstraints" />

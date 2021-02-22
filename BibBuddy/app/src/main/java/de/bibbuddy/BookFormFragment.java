@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The BookAddManuallyFragment is responsible for adding a book manually to a shelf.
+ * The BookFormFragment is responsible for adding a book manually to a shelf.
  *
  * @author Claudia Schönherr
  */
-public class BookAddManuallyFragment extends Fragment {
+public class BookFormFragment extends Fragment {
   private final AddBookManuallyListener listener;
   List<Author> authorList;
   private boolean validInput;
@@ -29,7 +29,7 @@ public class BookAddManuallyFragment extends Fragment {
   private int greenColor;
   private Book book;
 
-  public BookAddManuallyFragment(AddBookManuallyListener listener) {
+  public BookFormFragment(AddBookManuallyListener listener) {
     this.listener = listener;
   }
 
@@ -38,7 +38,7 @@ public class BookAddManuallyFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
     // Called to have the fragment instantiate its user interface view.
-    View view = inflater.inflate(R.layout.fragment_book_add_manually, container, false);
+    View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
     setupButtons(view);
     setupInput(view);
@@ -57,18 +57,18 @@ public class BookAddManuallyFragment extends Fragment {
 
   private void setupInput(View view) {
     view.findViewById(R.id.book_form_isbn_input).requestFocus();
-    InputMethodManager imm =
+    InputMethodManager inputManager =
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
   }
 
   /**
-   * Closes the BookAddManuallyFragment.
+   * Closes the BookFormFragment.
    */
   public void closeFragment() {
-    InputMethodManager imm =
+    InputMethodManager inputManager =
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
+    inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
 
     BookFragment fragment = new BookFragment();
     getActivity().getSupportFragmentManager().beginTransaction()
@@ -89,7 +89,7 @@ public class BookAddManuallyFragment extends Fragment {
   }
 
   private void setupButtons(View view) {
-    Button cancelBtn = view.findViewById(R.id.btn_book_manually_cancel);
+    Button cancelBtn = view.findViewById(R.id.btn_book_form_cancel);
 
     cancelBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -102,9 +102,9 @@ public class BookAddManuallyFragment extends Fragment {
   }
 
   private void setupAddBookBtnListener(View view) {
-    Button addShelfBtn = view.findViewById(R.id.btn_book_manually_confirm);
+    Button addBookBtn = view.findViewById(R.id.btn_book_form_confirm);
 
-    addShelfBtn.setOnClickListener(new View.OnClickListener() {
+    addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
         handleUserInput();
@@ -128,19 +128,20 @@ public class BookAddManuallyFragment extends Fragment {
     handleAuthors();
 
     if (validInput) {
-      handleValidInput();
+      listener.onBookAdded(book, authorList);
+      closeFragment();
     }
   }
 
 
   private void handleIsbn() {
     EditText isbnInput = getView().findViewById(R.id.book_form_isbn_input);
-    String isbnStr = isbnInput.getText().toString();
+    String isbn = isbnInput.getText().toString();
 
-    if (DataValidation.isValidIsbn10or13(isbnStr)) {
+    if (DataValidation.isValidIsbn10or13(isbn)) {
       isbnInput.setBackgroundColor(greenColor);
-      book.setIsbn(isbnStr);
-    } else if (!DataValidation.isValidIsbn10or13(isbnStr)) {
+      book.setIsbn(isbn);
+    } else {
       isbnInput.setBackgroundColor(redColor);
       validInput = false;
     }
@@ -148,12 +149,12 @@ public class BookAddManuallyFragment extends Fragment {
 
   private void handleTitle() {
     EditText titleInput = getView().findViewById(R.id.book_form_title_input);
-    String titleStr = titleInput.getText().toString();
+    String title = titleInput.getText().toString();
 
-    if (!DataValidation.isStringEmpty(titleStr)) {
+    if (!DataValidation.isStringEmpty(title)) {
       titleInput.setBackgroundColor(greenColor);
-      book.setTitle(titleStr);
-    } else if (DataValidation.isStringEmpty(titleStr)) {
+      book.setTitle(title);
+    } else {
       titleInput.setBackgroundColor(redColor);
       validInput = false;
     }
@@ -163,21 +164,22 @@ public class BookAddManuallyFragment extends Fragment {
     EditText subtitleInput = getView().findViewById(R.id.book_form_subtitle_input);
     subtitleInput.setBackgroundColor(greenColor);
 
-    String subtitleStr = subtitleInput.getText().toString();
-    if (!DataValidation.isStringEmpty(subtitleStr)) {
-      book.setSubtitle(subtitleStr);
+    String subtitle = subtitleInput.getText().toString();
+    if (!DataValidation.isStringEmpty(subtitle)) {
+      book.setSubtitle(subtitle);
     }
   }
 
   private void handlePubYear() {
     EditText pubYearInput = getView().findViewById(R.id.book_form_pub_year_input);
-    String pubYearStr = pubYearInput.getText().toString();
+    String pubYear = pubYearInput.getText().toString();
 
-    boolean validPubYear = DataValidation.isValidYear(pubYearStr);
+    boolean validPubYear = DataValidation.isValidYear(pubYear);
 
-    if (DataValidation.isStringEmpty(pubYearStr) || validPubYear) {
+    if (DataValidation.isStringEmpty(pubYear) || validPubYear) {
+      book.setPubYear(0);
       if (validPubYear) {
-        book.setPubYear(Integer.valueOf(pubYearStr));
+        book.setPubYear(Integer.valueOf(pubYear));
       }
       pubYearInput.setBackgroundColor(greenColor);
     } else {
@@ -186,14 +188,13 @@ public class BookAddManuallyFragment extends Fragment {
     }
   }
 
-
   private void handlePublisher() {
     EditText publisherInput = getView().findViewById(R.id.book_form_publisher_input);
     publisherInput.setBackgroundColor(greenColor);
 
-    String publisherStr = publisherInput.getText().toString();
-    if (!DataValidation.isStringEmpty(publisherStr)) {
-      book.setPublisher(publisherStr);
+    String publisher = publisherInput.getText().toString();
+    if (!DataValidation.isStringEmpty(publisher)) {
+      book.setPublisher(publisher);
     }
   }
 
@@ -201,9 +202,9 @@ public class BookAddManuallyFragment extends Fragment {
     EditText volumeInput = getView().findViewById(R.id.book_form_volume_input);
     volumeInput.setBackgroundColor(greenColor);
 
-    String volumeStr = volumeInput.getText().toString();
-    if (!DataValidation.isStringEmpty(volumeStr)) {
-      book.setVolume(volumeStr);
+    String volume = volumeInput.getText().toString();
+    if (!DataValidation.isStringEmpty(volume)) {
+      book.setVolume(volume);
     }
   }
 
@@ -211,9 +212,9 @@ public class BookAddManuallyFragment extends Fragment {
     EditText editionInput = getView().findViewById(R.id.book_form_edition_input);
     editionInput.setBackgroundColor(greenColor);
 
-    String editionStr = editionInput.getText().toString();
-    if (!DataValidation.isStringEmpty(editionStr)) {
-      book.setEdition(editionStr);
+    String edition = editionInput.getText().toString();
+    if (!DataValidation.isStringEmpty(edition)) {
+      book.setEdition(edition);
     }
   }
 
@@ -221,42 +222,41 @@ public class BookAddManuallyFragment extends Fragment {
     EditText addInfosInput = getView().findViewById(R.id.book_form_add_infos_input);
     addInfosInput.setBackgroundColor(greenColor);
 
-    String addInfosStr = addInfosInput.getText().toString();
-    if (!DataValidation.isStringEmpty(addInfosStr)) {
-      book.setAddInfo(addInfosStr);
+    String addInfos = addInfosInput.getText().toString();
+    if (!DataValidation.isStringEmpty(addInfos)) {
+      book.setAddInfo(addInfos);
     }
   }
 
   private void handleAuthors() {
-    // TODO AUTHORS
-    //  tmp only the main author can be added
+    // TODO add more edit texts via plus button to add more than one author
     authorList = new ArrayList<>();
     Author author = new Author();
     boolean isAuthor = false;
 
-    EditText authorTitleInput = getView().findViewById(R.id.book_form_author_title);
+    EditText authorTitleInput = getView().findViewById(R.id.book_form_author_title_input);
     authorTitleInput.setBackgroundColor(greenColor);
-    String authorTitleStr = authorTitleInput.getText().toString();
+    String authorTitle = authorTitleInput.getText().toString();
 
-    if (!DataValidation.isStringEmpty(authorTitleStr)) {
-      author.setTitle(authorTitleStr);
+    if (!DataValidation.isStringEmpty(authorTitle)) {
+      author.setTitle(authorTitle);
     }
 
-    EditText authorFirstNameInput = getView().findViewById(R.id.book_form_author_first_name);
+    EditText authorFirstNameInput = getView().findViewById(R.id.book_form_author_first_name_input);
     authorFirstNameInput.setBackgroundColor(greenColor);
-    String authorFirstNameStr = authorFirstNameInput.getText().toString();
+    String authorFirstName = authorFirstNameInput.getText().toString();
 
-    if (!DataValidation.isStringEmpty(authorFirstNameStr)) {
-      author.setFirstName(authorFirstNameStr);
+    if (!DataValidation.isStringEmpty(authorFirstName)) {
+      author.setFirstName(authorFirstName);
       isAuthor = true;
     }
 
-    EditText authorLastNameInput = getView().findViewById(R.id.book_form_author_last_name);
+    EditText authorLastNameInput = getView().findViewById(R.id.book_form_author_last_name_input);
     authorLastNameInput.setBackgroundColor(greenColor);
-    String authorLastNameStr = authorLastNameInput.getText().toString();
+    String authorLastName = authorLastNameInput.getText().toString();
 
-    if (!DataValidation.isStringEmpty(authorLastNameStr)) {
-      author.setLastName(authorLastNameStr);
+    if (!DataValidation.isStringEmpty(authorLastName)) {
+      author.setLastName(authorLastName);
       isAuthor = true;
     }
 
@@ -264,11 +264,6 @@ public class BookAddManuallyFragment extends Fragment {
       authorList.add(author);
     }
 
-  }
-
-  private void handleValidInput() {
-    listener.onBookAdded(book, authorList);
-    closeFragment();
   }
 
   public interface AddBookManuallyListener { // create an interface

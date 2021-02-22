@@ -88,26 +88,23 @@ public class BookDao implements InterfaceBookDao {
     if (cursor != null) {
       cursor.moveToFirst();
 
-      book = new Book();
-      book.setId(Long.parseLong(cursor.getString(0))); // Id
-      book.setIsbn(cursor.getString(1));  // Isbn
-      book.setTitle(cursor.getString(2)); // Title
-      book.setSubtitle(cursor.getString(3)); // Subtitle
-
-      String pubYearStr = cursor.getString(4);
-      if (pubYearStr != null) {
-        book.setPubYear(Integer.parseInt(pubYearStr)); // Pub year
-      }
-
-      book.setPublisher(cursor.getString(5)); // Publisher
-      book.setVolume(cursor.getString(6)); // Volume
-      book.setEdition(cursor.getString(7)); // Edition
-      book.setAddInfo(cursor.getString(8)); // Add Infos
-      book.setCreateDate(Integer.parseInt(cursor.getString(9))); // Create date
-      book.setModDate(Integer.parseInt(cursor.getString(10))); // Mod date
-
-      cursor.close();
+      book = new Book(
+          Long.parseLong(cursor.getString(0)), // Id
+          cursor.getString(1), // Isbn
+          cursor.getString(2), // Title
+          cursor.getString(3), // Subtitle
+          Integer.parseInt(cursor.getString(4)), // Pub year
+          cursor.getString(5), // Publisher
+          cursor.getString(6), // Volume
+          cursor.getString(7), // Edition
+          cursor.getString(8), // Add Infos
+          Integer.parseInt(cursor.getString(9)), // Create date
+          Integer.parseInt(cursor.getString(10)) // Mod date
+      );
     }
+
+    cursor.close();
+
     return book;
   }
 

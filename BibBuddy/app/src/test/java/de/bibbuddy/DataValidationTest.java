@@ -3,7 +3,6 @@ package de.bibbuddy;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
 import org.junit.Test;
 
 /**
@@ -16,7 +15,7 @@ public class DataValidationTest {
   @Test
   public void isStringEmpty_Test() {
     assertTrue(DataValidation.isStringEmpty(""));
-    assertFalse(DataValidation.isStringEmpty(" sdfdsf"));
+    assertFalse(DataValidation.isStringEmpty(" nicht leer"));
   }
 
   @Test
@@ -46,7 +45,7 @@ public class DataValidationTest {
   }
 
   @Test
-  public void isValidPositveNumber_Test() {
+  public void isValidYear_Test() {
     assertTrue(DataValidation.isValidYear("2000"));
     assertFalse(DataValidation.isValidYear("20020"));
     assertFalse(DataValidation.isValidYear("-2000"));
