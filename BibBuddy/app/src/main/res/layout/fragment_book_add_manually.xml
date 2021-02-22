@@ -185,8 +185,8 @@
                 android:id="@+id/book_form_add_infos_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:hint="@string/book_form_add_infos"
-                android:layout_marginBottom="5dp"
                 android:inputType="text" />
 
             <!-- TODO AUTHORS -->
@@ -194,9 +194,16 @@
                 android:id="@+id/book_form_authors"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="@string/authors"
-                android:theme="@style/TextViewCustom"
-                android:layout_marginBottom="80dp"/>
+                android:theme="@style/TextViewCustom" />
+
+            <include
+                layout="@layout/element_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="70dp">
+            </include>
 
         </LinearLayout>
 

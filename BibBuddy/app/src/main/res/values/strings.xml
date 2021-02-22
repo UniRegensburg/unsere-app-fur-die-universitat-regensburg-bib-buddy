@@ -56,19 +56,19 @@
     <!-- Book Form -->
     <string name="book_form_isbn">ISBN</string>
     <string name="book_form_title">Titel</string>
-    <string name="book_form_subtitle">Untertitel</string>
-    <string name="book_form_pub_year">Jahr der Veröffentlichung</string>
-    <string name="book_form_publisher">Herausgeber</string>
-    <string name="book_form_volume">Band</string>
-    <string name="book_form_edition">Edition</string>
-    <string name="book_form_add_infos">Zusätzliche Informationen</string>
+    <string name="book_form_subtitle">Untertitel (optional)</string>
+    <string name="book_form_pub_year">Jahr der Veröffentlichung (optional)</string>
+    <string name="book_form_publisher">Herausgeber (optional)</string>
+    <string name="book_form_volume">Band (optional)</string>
+    <string name="book_form_edition">Auflage (optional)</string>
+    <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
 
     <!-- Author -->
     <string name="author">Autor</string>
     <string name="authors">Autoren</string>
     <string name="author_first_name">Vorname</string>
     <string name="author_last_name">Nachname</string>
-    <string name="author_title">Titel</string>
+    <string name="author_title">Titel (optional)</string>
 
 
     <!-- Note -->

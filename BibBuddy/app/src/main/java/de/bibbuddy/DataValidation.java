@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * The DataValidation is responsible for checking if the input is valid or not.
  *
- * @author Silvia Ivanova
+ * @author Silvia Ivanova, Claudia Schönherr
  */
 public class DataValidation {
 
@@ -122,4 +122,19 @@ public class DataValidation {
     return validateIsbn10(isbnStr) || validateIsbn13(isbnStr);
   }
 
+  /**
+   * Checks if the String is a valid positive number.
+   *
+   * @param numberStr String of the input
+   * @return Returns true if the String is a valid positive number
+   */
+  public static boolean isValidPositiveNumber(String numberStr) {
+    if (isStringEmpty(numberStr)) {
+      return false;
+    }
+
+    boolean isNumber = numberStr.chars().allMatch(Character::isDigit);
+
+    return isNumber && Integer.parseInt(numberStr) > 0;
+  }
 }
