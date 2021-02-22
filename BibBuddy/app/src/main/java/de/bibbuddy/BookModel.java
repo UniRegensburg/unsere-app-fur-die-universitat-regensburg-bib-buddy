@@ -30,6 +30,10 @@ public class BookModel {
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
+    if (authorList == null) {
+      return "";
+    }
+
     StringBuilder authors = new StringBuilder();
 
     boolean savedAuthor = false;
@@ -56,8 +60,17 @@ public class BookModel {
   public void addBook(Book book, List<Author> authorList) {
     bookDao.create(book, authorList, shelfId);
     String authors = convertAuthorListToString(authorList);
+
     bookList
-        .add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
+        .add(new BookItem(book.getTitle(), book.getId(), shelfId, getBookYear(book), authors, 0));
+  }
+
+  private int getBookYear(Book book) {
+    if (book.getPubYear() == null) {
+      return 0; // if there is no published year it will display 0
+    } else {
+      return book.getPubYear();
+    }
   }
 
   /**
@@ -73,7 +86,7 @@ public class BookModel {
     for (Book book : bookDbList) {
       List<Author> authorList = bookDao.getAllAuthorsForBook(book.getId());
       int noteCount = bookDao.countAllNotesForBook(book.getId());
-      bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(),
+      bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, getBookYear(book),
                                 convertAuthorListToString(authorList), noteCount));
     }
 

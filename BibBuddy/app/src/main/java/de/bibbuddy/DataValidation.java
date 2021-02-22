@@ -17,7 +17,7 @@ public class DataValidation {
    * @return Returns true if the String is empty
    */
   public static boolean isStringEmpty(String inputStr) {
-    return inputStr == null || inputStr.isEmpty();
+    return inputStr == null || inputStr.isEmpty() || inputStr.trim().isEmpty();
   }
 
   /**
@@ -123,18 +123,17 @@ public class DataValidation {
   }
 
   /**
-   * Checks if the String is a valid positive number.
+   * Checks if the String is a valid year.
    *
    * @param numberStr String of the input
-   * @return Returns true if the String is a valid positive number
+   * @return Returns true if the String is a valid year
    */
-  public static boolean isValidPositiveNumber(String numberStr) {
+  public static boolean isValidYear(String numberStr) {
     if (isStringEmpty(numberStr)) {
       return false;
     }
-
     boolean isNumber = numberStr.chars().allMatch(Character::isDigit);
 
-    return isNumber && Integer.parseInt(numberStr) > 0;
+    return isNumber && Integer.parseInt(numberStr) > 0 && numberStr.length() < 5;
   }
 }

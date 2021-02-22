@@ -47,9 +47,11 @@ public class DataValidationTest {
 
   @Test
   public void isValidPositveNumber_Test() {
-    assertTrue(DataValidation.isValidPositiveNumber("213214"));
-    assertFalse(DataValidation.isValidPositiveNumber("213214f"));
-    assertFalse(DataValidation.isValidPositiveNumber("2 "));
-    assertFalse(DataValidation.isValidPositiveNumber("number"));
+    assertTrue(DataValidation.isValidYear("2000"));
+    assertFalse(DataValidation.isValidYear("20020"));
+    assertFalse(DataValidation.isValidYear("-2000"));
+    assertFalse(DataValidation.isValidYear("213214f"));
+    assertFalse(DataValidation.isValidYear("2 "));
+    assertFalse(DataValidation.isValidYear("number"));
   }
 }

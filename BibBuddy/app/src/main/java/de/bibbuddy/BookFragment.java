@@ -130,16 +130,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       @Override
       public void onClick(View v) {
         pm.show();
-        // TODO currently a test book is added to the database
-        //  until a form for adding a new book is implemented and input is validated
-        //        Book book =
-        //            new Book("978-3-16-148410-0", "Buch mit Regal ID " + shelfId, "testen von Büchern",
-        //                     2020, "Testverlag", "Volume 1", "Edition 1", "zusätzliche Infos");
-        //        List<Author> authorList = new ArrayList<>();
-        //        authorList.add(new Author("Vorname", "Nachname"));
-        //        authorList.add(new Author("Autorvorname", "Autornachname", "Dr"));
-        //
-        //        addBook(book, authorList);
       }
     });
   }
@@ -149,8 +139,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         new BookAddManuallyFragment.AddBookManuallyListener() {
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
-            // addBook(book, authorList); // TODO
-            Toast.makeText(getContext(), "TODO Buch", Toast.LENGTH_SHORT).show();
+            addBook(book, authorList);
+            Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
           }
         });
 
@@ -164,7 +154,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void addBook(Book book, List<Author> authorList) {
-    // TODO
     bookModel.addBook(book, authorList);
     Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
     adapter.notifyDataSetChanged();

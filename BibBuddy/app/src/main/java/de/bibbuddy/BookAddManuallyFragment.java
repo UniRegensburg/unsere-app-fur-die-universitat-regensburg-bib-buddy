@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -22,8 +21,13 @@ import java.util.List;
  */
 public class BookAddManuallyFragment extends Fragment {
   private final AddBookManuallyListener listener;
+  List<Author> authorList;
+  private boolean validInput;
   private Long shelfId;
   private String shelfName;
+  private int redColor;
+  private int greenColor;
+  private Book book;
 
   public BookAddManuallyFragment(AddBookManuallyListener listener) {
     this.listener = listener;
@@ -42,6 +46,9 @@ public class BookAddManuallyFragment extends Fragment {
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+
+    redColor = getResources().getColor(R.color.alert_red);
+    greenColor = getResources().getColor(R.color.green);
 
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
 
@@ -82,7 +89,6 @@ public class BookAddManuallyFragment extends Fragment {
   }
 
   private void setupButtons(View view) {
-    Context context = view.getContext();
     Button cancelBtn = view.findViewById(R.id.btn_book_manually_cancel);
 
     cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -92,10 +98,10 @@ public class BookAddManuallyFragment extends Fragment {
       }
     });
 
-    setupAddShelfBtnListener(context, view);
+    setupAddBookBtnListener(view);
   }
 
-  private void setupAddShelfBtnListener(Context context, View view) {
+  private void setupAddBookBtnListener(View view) {
     Button addShelfBtn = view.findViewById(R.id.btn_book_manually_confirm);
 
     addShelfBtn.setOnClickListener(new View.OnClickListener() {
@@ -107,83 +113,161 @@ public class BookAddManuallyFragment extends Fragment {
   }
 
   private void handleUserInput() {
-    boolean validInput = true;
+    validInput = true;
+    book = new Book();
 
-    int redColor = getResources().getColor(R.color.alert_red);
-    int greenColor = getResources().getColor(R.color.green);
+    handleIsbn();
+    handleTitle();
+    handleSubtitle();
+    handlePubYear();
+    handlePublisher();
+    handleVolume();
+    handleEdition();
+    handleAddInfos();
 
-    EditText isbnInput = getView().findViewById(R.id.book_form_isbn_input);
-    String isbnStr = isbnInput.getText().toString();
-    if (DataValidation.isValidIsbn10or13(isbnStr)) {
-      isbnInput.setBackgroundColor(greenColor);
-    } else if (!DataValidation.isValidIsbn10or13(isbnStr)) {
-      isbnInput.setBackgroundColor(redColor);
-      validInput = false;
-    }
-
-
-    EditText titleInput = getView().findViewById(R.id.book_form_title_input);
-    String titleStr = titleInput.getText().toString();
-    if (!DataValidation.isStringEmpty(titleStr)) {
-      titleInput.setBackgroundColor(greenColor);
-    } else if (DataValidation.isStringEmpty(titleStr)) {
-      titleInput.setBackgroundColor(redColor);
-      validInput = false;
-    }
-
-    EditText subtitleInput = getView().findViewById(R.id.book_form_subtitle_input);
-    subtitleInput.setBackgroundColor(greenColor);
-
-    EditText pubYearInput = getView().findViewById(R.id.book_form_pub_year_input);
-    String pubYearStr = pubYearInput.getText().toString();
-    if (DataValidation.isStringEmpty(pubYearStr)
-        || DataValidation.isValidPositiveNumber(pubYearStr)) {
-      pubYearInput.setBackgroundColor(greenColor);
-    } else {
-      pubYearInput.setBackgroundColor(redColor);
-      validInput = false;
-    }
-
-    EditText publisherInput = getView().findViewById(R.id.book_form_publisher_input);
-    publisherInput.setBackgroundColor(greenColor);
-
-    EditText volumeInput = getView().findViewById(R.id.book_form_volume_input);
-    volumeInput.setBackgroundColor(greenColor);
-
-    EditText editionInput = getView().findViewById(R.id.book_form_edition_input);
-    editionInput.setBackgroundColor(greenColor);
-
-    EditText addInfosInput = getView().findViewById(R.id.book_form_add_infos_input);
-    addInfosInput.setBackgroundColor(greenColor);
-
-    // TODO AUTHORS
-    // tmp only the main author can be added
-    // author can be optional
-    EditText authorTitleInput = getView().findViewById(R.id.book_form_author_title);
-    authorTitleInput.setBackgroundColor(greenColor);
-
-    EditText authorFirstNameInput = getView().findViewById(R.id.book_form_author_first_name);
-    authorFirstNameInput.setBackgroundColor(greenColor);
-
-    EditText authorLastNameInput = getView().findViewById(R.id.book_form_author_last_name);
-    authorLastNameInput.setBackgroundColor(greenColor);
+    handleAuthors();
 
     if (validInput) {
       handleValidInput();
     }
   }
 
+
+  private void handleIsbn() {
+    EditText isbnInput = getView().findViewById(R.id.book_form_isbn_input);
+    String isbnStr = isbnInput.getText().toString();
+
+    if (DataValidation.isValidIsbn10or13(isbnStr)) {
+      isbnInput.setBackgroundColor(greenColor);
+      book.setIsbn(isbnStr);
+    } else if (!DataValidation.isValidIsbn10or13(isbnStr)) {
+      isbnInput.setBackgroundColor(redColor);
+      validInput = false;
+    }
+  }
+
+  private void handleTitle() {
+    EditText titleInput = getView().findViewById(R.id.book_form_title_input);
+    String titleStr = titleInput.getText().toString();
+
+    if (!DataValidation.isStringEmpty(titleStr)) {
+      titleInput.setBackgroundColor(greenColor);
+      book.setTitle(titleStr);
+    } else if (DataValidation.isStringEmpty(titleStr)) {
+      titleInput.setBackgroundColor(redColor);
+      validInput = false;
+    }
+  }
+
+  private void handleSubtitle() {
+    EditText subtitleInput = getView().findViewById(R.id.book_form_subtitle_input);
+    subtitleInput.setBackgroundColor(greenColor);
+
+    String subtitleStr = subtitleInput.getText().toString();
+    if (!DataValidation.isStringEmpty(subtitleStr)) {
+      book.setSubtitle(subtitleStr);
+    }
+  }
+
+  private void handlePubYear() {
+    EditText pubYearInput = getView().findViewById(R.id.book_form_pub_year_input);
+    String pubYearStr = pubYearInput.getText().toString();
+
+    boolean validPubYear = DataValidation.isValidYear(pubYearStr);
+
+    if (DataValidation.isStringEmpty(pubYearStr) || validPubYear) {
+      if (validPubYear) {
+        book.setPubYear(Integer.valueOf(pubYearStr));
+      }
+      pubYearInput.setBackgroundColor(greenColor);
+    } else {
+      pubYearInput.setBackgroundColor(redColor);
+      validInput = false;
+    }
+  }
+
+
+  private void handlePublisher() {
+    EditText publisherInput = getView().findViewById(R.id.book_form_publisher_input);
+    publisherInput.setBackgroundColor(greenColor);
+
+    String publisherStr = publisherInput.getText().toString();
+    if (!DataValidation.isStringEmpty(publisherStr)) {
+      book.setPublisher(publisherStr);
+    }
+  }
+
+  private void handleVolume() {
+    EditText volumeInput = getView().findViewById(R.id.book_form_volume_input);
+    volumeInput.setBackgroundColor(greenColor);
+
+    String volumeStr = volumeInput.getText().toString();
+    if (!DataValidation.isStringEmpty(volumeStr)) {
+      book.setVolume(volumeStr);
+    }
+  }
+
+  private void handleEdition() {
+    EditText editionInput = getView().findViewById(R.id.book_form_edition_input);
+    editionInput.setBackgroundColor(greenColor);
+
+    String editionStr = editionInput.getText().toString();
+    if (!DataValidation.isStringEmpty(editionStr)) {
+      book.setEdition(editionStr);
+    }
+  }
+
+  private void handleAddInfos() {
+    EditText addInfosInput = getView().findViewById(R.id.book_form_add_infos_input);
+    addInfosInput.setBackgroundColor(greenColor);
+
+    String addInfosStr = addInfosInput.getText().toString();
+    if (!DataValidation.isStringEmpty(addInfosStr)) {
+      book.setAddInfo(addInfosStr);
+    }
+  }
+
+  private void handleAuthors() {
+    // TODO AUTHORS
+    //  tmp only the main author can be added
+    authorList = new ArrayList<>();
+    Author author = new Author();
+    boolean isAuthor = false;
+
+    EditText authorTitleInput = getView().findViewById(R.id.book_form_author_title);
+    authorTitleInput.setBackgroundColor(greenColor);
+    String authorTitleStr = authorTitleInput.getText().toString();
+
+    if (!DataValidation.isStringEmpty(authorTitleStr)) {
+      author.setTitle(authorTitleStr);
+    }
+
+    EditText authorFirstNameInput = getView().findViewById(R.id.book_form_author_first_name);
+    authorFirstNameInput.setBackgroundColor(greenColor);
+    String authorFirstNameStr = authorFirstNameInput.getText().toString();
+
+    if (!DataValidation.isStringEmpty(authorFirstNameStr)) {
+      author.setFirstName(authorFirstNameStr);
+      isAuthor = true;
+    }
+
+    EditText authorLastNameInput = getView().findViewById(R.id.book_form_author_last_name);
+    authorLastNameInput.setBackgroundColor(greenColor);
+    String authorLastNameStr = authorLastNameInput.getText().toString();
+
+    if (!DataValidation.isStringEmpty(authorLastNameStr)) {
+      author.setLastName(authorLastNameStr);
+      isAuthor = true;
+    }
+
+    if (isAuthor) {
+      authorList.add(author);
+    }
+
+  }
+
   private void handleValidInput() {
-    Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
-
-    Book book = new Book();
-    // TODO book data
-    List<Author> authorList = new ArrayList<>();
-
-    // TODO author list
-    // authors author author_first_name author_last_name author_title
-
-    // listener.onBookAdded(book, authorList);
+    listener.onBookAdded(book, authorList);
     closeFragment();
   }
 

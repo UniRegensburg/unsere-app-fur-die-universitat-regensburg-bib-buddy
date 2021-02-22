@@ -92,7 +92,7 @@ public class LibraryRenameShelfFragment extends DialogFragment {
         EditText editShelfName = view.findViewById(R.id.input_rename_shelf_name);
         String shelfName = editShelfName.getText().toString();
 
-        if (shelfName.isEmpty() || shelfName.trim().isEmpty()) {
+        if (DataValidation.isStringEmpty(shelfName)) {
           Toast.makeText(context, getString(R.string.invalid_name), Toast.LENGTH_SHORT).show();
           return;
         }
