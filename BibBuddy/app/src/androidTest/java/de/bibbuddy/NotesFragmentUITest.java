@@ -1,6 +1,5 @@
 package de.bibbuddy;
 
-import static androidx.test.InstrumentationRegistry.getContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.longClick;
@@ -49,10 +48,7 @@ public class NotesFragmentUITest {
         (ActivityScenario.ActivityAction<MainActivity>) activity -> {
           nF = (NotesFragment) activity.getSupportFragmentManager().getFragments().get(0);
           NotesFragment.notes.clear();
-          NoteModel noteModel = new NoteModel(getContext());
-          noteModel.cle
           if (NotesFragment.notes.size() == 0) {
-            // TODO:  Needs to be adjusted as soon as more note types are added
             Note textNote =
                 new Note(exampleText, 0, exampleText);
             modDate = String.valueOf(textNote.getModDate());
