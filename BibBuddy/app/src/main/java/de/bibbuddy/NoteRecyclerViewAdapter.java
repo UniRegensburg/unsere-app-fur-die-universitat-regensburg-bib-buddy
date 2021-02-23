@@ -88,6 +88,7 @@ public class NoteRecyclerViewAdapter
           .addToBackStack(null)
           .commit();
     });
+
     holder.itemView.setOnLongClickListener(v -> {
       if (position == RecyclerView.NO_POSITION) {
         return false;
