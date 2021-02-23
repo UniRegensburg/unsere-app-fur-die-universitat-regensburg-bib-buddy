@@ -82,7 +82,7 @@ public class NoteRecyclerViewAdapter
       args.putString(LibraryKeys.NOTE_TEXT, text);
       nextFrag.setArguments(args);
       activity.getSupportFragmentManager().beginTransaction()
-          .replace(R.id.fragment_container_view, nextFrag, "fragment_text_note_editor")
+          .replace(R.id.fragment_container_view, nextFrag,  LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
           .addToBackStack(null)
           .commit();
     });
