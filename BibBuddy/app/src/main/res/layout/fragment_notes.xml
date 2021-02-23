@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/alert_red"
-        android:forceHasOverlappingRendering="true"
-        android:translationY="475dp"
+        android:translationY="550dp"
+        android:translationZ="12dp"
         android:visibility="gone">
 
         <ImageButton

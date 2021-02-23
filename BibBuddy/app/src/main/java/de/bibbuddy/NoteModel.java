@@ -34,6 +34,10 @@ public class NoteModel {
     noteDao.delete(id);
   }
 
+  public void clear(){
+    noteDao.clear();
+  }
+
   public Note getNoteById(Long id) {
     return noteDao.findById(id);
   }
