@@ -61,6 +61,7 @@ public class NoteRecyclerViewAdapter
         LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
     hiddenDeletePanel = parent.getRootView().findViewById(R.id.hidden_delete_panel);
     panelDelete = hiddenDeletePanel.findViewById(R.id.panel_delete);
+
     return new MyViewHolder(itemView);
   }
 
