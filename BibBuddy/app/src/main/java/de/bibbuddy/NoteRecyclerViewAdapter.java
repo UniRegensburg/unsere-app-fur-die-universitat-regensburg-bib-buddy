@@ -93,6 +93,7 @@ public class NoteRecyclerViewAdapter
       }
       v.setSelected(!v.isSelected());
       slideUpOrDown();
+
       return true;
     });
     setupDeleteListener();
