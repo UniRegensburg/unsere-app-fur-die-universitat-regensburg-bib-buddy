@@ -86,14 +86,13 @@ public class NoteModel {
       Long noteId = note.getId();
       String modDate = getDate(note.getModDate());
       String name = "";
-      String text = note.getText();
       if (note.getType() == 0) {
         name = note.getName();
         name = Jsoup.parse(name).text();
         if (name.length() > 40) {
           name = name.substring(0, 35) + " ...";
         }
-        noteItemList.add(new NoteTextItem(modDate, name, text, noteId));
+        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId));
       } else if (note.getType() == 1) {
         noteItemList.add(new NoteAudioItem(modDate, name, noteId));
       } else {
