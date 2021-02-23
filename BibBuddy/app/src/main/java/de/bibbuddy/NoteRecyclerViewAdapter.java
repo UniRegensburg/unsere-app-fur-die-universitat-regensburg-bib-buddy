@@ -75,6 +75,7 @@ public class NoteRecyclerViewAdapter
     Long id = data.get(position).getId();
     String text = data.get(position).getNoteText();
     setupCardView(holder, position);
+
     holder.itemView.setOnClickListener(v -> {
       TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
       Bundle args = new Bundle();
