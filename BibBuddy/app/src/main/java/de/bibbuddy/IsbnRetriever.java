@@ -29,27 +29,22 @@ public class IsbnRetriever implements Runnable {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     InputSource is = new InputSource(new StringReader(xml));
+
     return builder.parse(is);
   }
 
   private Book createRecord(Document xmlMetadata) {
-    long id = 0L;
-    String isbn = xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent();
-    String title = xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent();
-    String subttle = xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent();
-    int pubYear = Integer
-        .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent());
-    String publisher =
-        xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent();
-    String volume = "";
-    String edition = "";
-    String addInfos = "";
-    int createDate = 0;
-    int modDate = 0;
-
-    Book book = new Book(id, isbn, title, subttle, pubYear, publisher, volume, edition, addInfos,
-        createDate, modDate);
-    return book;
+    return new Book(xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent() // isbn
+        , xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent() // title
+        , "" // subtitle
+        , Integer
+        .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent())
+        // pubYear
+        , xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent()
+        // publisher
+        , "" // volume
+        , "" // edition
+        , ""); // addInfos
   }
 
   /**
@@ -58,55 +53,60 @@ public class IsbnRetriever implements Runnable {
    * @author Luis Moßburger
    */
   public void run() {
-    //initialize variables
+    // initialize variables
     Thread thread;
     ApiReader apiReader;
-    String metadata = "";
+    String metadata;
     Document xmlMetadata = null;
-    //Read from API with isbn (Thread)
+    // read from API with isbn (Thread)
     apiReader = new ApiReader(String.format(this.isbnApi, this.isbn));
     thread = new Thread(apiReader);
     thread.start();
+
     try {
       thread.join();
     } catch (Exception e) {
       System.out.println(e);
     }
-    //Retrieve metadata that was saved
+
+    // retrieve metadata that was saved
     metadata = apiReader.getMetadata();
     if (metadata != null) {
-      //parse xml
+      // parse xml
       try {
         xmlMetadata = loadXmlFromString(metadata);
       } catch (Exception e) {
         System.out.println(e);
       }
 
-      //extract url
+      // extract url
       Node sameAsNode = xmlMetadata.getElementsByTagName("owl:sameAs").item(0);
       Element sameAsEl = (Element) sameAsNode;
       String sameAsUrl = sameAsEl.getAttribute("rdf:resource");
       String endUrl = this.apiUrl + "data/" + sameAsUrl.split(".de/")[1] + apiXmlParameter;
 
-      //Read from API with bv-nr
+      // read from API with bv-nr
       apiReader = new ApiReader(endUrl);
       thread = new Thread(apiReader);
       thread.start();
+
       try {
         thread.join();
       } catch (Exception e) {
         System.out.println(e);
       }
-      //Retrieve metadata that was saved
+
+      // retrieve metadata that was saved
       metadata = apiReader.getMetadata();
       if (metadata != null) {
-        //parse xml
+        // parse xml
         try {
           xmlMetadata = loadXmlFromString(metadata);
         } catch (Exception e) {
           System.out.println(e);
         }
-        //create a record
+
+        // create a record
         book = createRecord(xmlMetadata);
       }
     }

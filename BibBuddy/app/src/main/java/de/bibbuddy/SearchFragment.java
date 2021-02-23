@@ -31,12 +31,14 @@ public class SearchFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_search, container, false);
     searchField = view.findViewById(R.id.searchField);
     searchFieldText = searchField.getEditText();
+
     searchFieldText.setOnKeyListener(new View.OnKeyListener() {
       public boolean onKey(View v, int keyCode, KeyEvent event) {
         handleIsbnInput(keyCode, event);
         return true;
       }
     });
+
     return view;
   }
 
@@ -46,12 +48,14 @@ public class SearchFragment extends Fragment {
         isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
         thread = new Thread(isbnRetriever);
         thread.start();
+
         try {
           thread.join();
         } catch (Exception e) {
           System.out.println(e);
         }
-        //Retrieve metadata that was saved
+
+        // retrieve metadata that was saved
         Book book = isbnRetriever.getBook();
         if (book != null) {
           // @ClaudiaSchönherr - continue here with book to UI implementation :)
