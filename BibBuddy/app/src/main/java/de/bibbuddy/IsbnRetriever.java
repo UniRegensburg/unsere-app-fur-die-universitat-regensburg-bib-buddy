@@ -34,17 +34,17 @@ public class IsbnRetriever implements Runnable {
   }
 
   private Book createRecord(Document xmlMetadata) {
-    return new Book(xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent() // isbn
-        , xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent() // title
-        , "" // subtitle
-        , Integer
-        .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent())
+    return new Book(xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent(), // isbn
+        xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent(), // title
+        "", // subtitle
+        Integer
+            .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent()),
         // pubYear
-        , xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent()
+        xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent(),
         // publisher
-        , "" // volume
-        , "" // edition
-        , ""); // addInfos
+        "", // volume
+        "", // edition
+        ""); // addInfos
   }
 
   /**
@@ -56,7 +56,6 @@ public class IsbnRetriever implements Runnable {
     // initialize variables
     Thread thread;
     ApiReader apiReader;
-    String metadata;
     Document xmlMetadata = null;
     // read from API with isbn (Thread)
     apiReader = new ApiReader(String.format(this.isbnApi, this.isbn));
@@ -70,7 +69,7 @@ public class IsbnRetriever implements Runnable {
     }
 
     // retrieve metadata that was saved
-    metadata = apiReader.getMetadata();
+    String metadata = apiReader.getMetadata();
     if (metadata != null) {
       // parse xml
       try {
