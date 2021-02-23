@@ -8,12 +8,15 @@ package de.bibbuddy;
  */
 public class NoteTextItem extends NoteItem {
 
-  public NoteTextItem(String modDate, String name, Long id) {
+  private String text;
+
+  public NoteTextItem(String modDate, String name, String text, Long id) {
     super(modDate, name, R.drawable.document, id);
+    this.text = text;
   }
 
-  public NoteTextItem(String modDate, String name, Long id, Long bookId) {
-    super(modDate, name, R.drawable.document, id, bookId);
+  public NoteTextItem(String modDate, String name, String text, Long id, Long bookId) {
+    super(modDate, name, text, R.drawable.document, id, bookId);
   }
 
 }

@@ -92,7 +92,7 @@ public class NoteModel {
         if (name.length() > 40) {
           name = name.substring(0, 35) + " ...";
         }
-        noteItemList.add(new NoteTextItem(modDate, name, noteId));
+        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId));
       } else if (note.getType() == 1) {
         noteItemList.add(new NoteAudioItem(modDate, name, noteId));
       } else {

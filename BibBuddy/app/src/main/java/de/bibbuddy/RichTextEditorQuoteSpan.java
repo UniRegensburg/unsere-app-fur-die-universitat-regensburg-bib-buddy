@@ -15,20 +15,14 @@ import android.text.style.QuoteSpan;
 public class RichTextEditorQuoteSpan extends QuoteSpan {
 
   private final int quoteColor;
-  private final int quoteStripeWidth;
-  private final int quoteGapWidth;
+  private final int quoteStripeWidth = 10;
+  private final int quoteGapWidth = 10;
 
   /**
    * Constructor to setup default color, stripeWidth and gapWidth for quotes.
-   *
-   * @param quoteColor       id for the color to apply to the quote stripe
-   * @param quoteStripeWidth width of the quote stripe
-   * @param quoteGapWidth    wifth between quote stripe end and first character in the same line
    */
-  public RichTextEditorQuoteSpan(int quoteColor, int quoteStripeWidth, int quoteGapWidth) {
-    this.quoteColor = quoteColor;
-    this.quoteStripeWidth = quoteStripeWidth != 0 ? quoteStripeWidth : 2;
-    this.quoteGapWidth = quoteGapWidth != 0 ? quoteGapWidth : 2;
+  public RichTextEditorQuoteSpan() {
+    this.quoteColor = R.color.gray_background;
   }
 
   /**

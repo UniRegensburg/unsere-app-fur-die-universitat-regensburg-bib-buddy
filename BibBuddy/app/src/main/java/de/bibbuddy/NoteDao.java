@@ -49,7 +49,6 @@ public class NoteDao implements InterfaceNoteDao {
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
                 null, null, null);
         cursor.moveToLast();
-        System.out.println(cursor.getColumnName(0));
         long id = cursor.getLong(0);
         cursor.close();
         note.setId(id);
