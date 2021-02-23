@@ -101,9 +101,10 @@ public class BookDao implements InterfaceBookDao {
           Integer.parseInt(cursor.getString(9)), // Create date
           Integer.parseInt(cursor.getString(10)) // Mod date
       );
-
-      cursor.close();
     }
+
+    cursor.close();
+
     return book;
   }
 

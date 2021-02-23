@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * The DataValidation is responsible for checking if the input is valid or not.
  *
- * @author Silvia Ivanova
+ * @author Silvia Ivanova, Claudia Schönherr
  */
 public class DataValidation {
 
@@ -17,7 +17,7 @@ public class DataValidation {
    * @return Returns true if the String is empty
    */
   public static boolean isStringEmpty(String inputStr) {
-    return inputStr == null || inputStr.isEmpty();
+    return inputStr == null || inputStr.isEmpty() || inputStr.trim().isEmpty();
   }
 
   /**
@@ -122,4 +122,18 @@ public class DataValidation {
     return validateIsbn10(isbnStr) || validateIsbn13(isbnStr);
   }
 
+  /**
+   * Checks if the String is a valid year.
+   *
+   * @param numberStr String of the input
+   * @return Returns true if the String is a valid year
+   */
+  public static boolean isValidYear(String numberStr) {
+    if (isStringEmpty(numberStr)) {
+      return false;
+    }
+    boolean isNumber = numberStr.chars().allMatch(Character::isDigit);
+
+    return isNumber && Integer.parseInt(numberStr) > 0 && numberStr.length() < 5;
+  }
 }

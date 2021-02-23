@@ -42,13 +42,34 @@
     <string name="deleted_shelf">Regal(e) wurde(n) gelöscht</string>
     <string name="renamed_shelf">Regal wurde umbenannt</string>
 
-
     <!-- Book -->
     <string name="book">Buch</string>
     <string name="books">Bücher</string>
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
     <string name="book_icon">Buch Icon</string>
+
+    <string name="add_book_scan_text">Barcode scannen</string>
+    <string name="add_book_online_text">Im Online-Katalog suchen</string>
+    <string name="add_book_manually_text">Manuell hinzufügen</string>
+
+    <!-- Book Form -->
+    <string name="book_form_isbn">ISBN</string>
+    <string name="book_form_title">Titel</string>
+    <string name="book_form_subtitle">Untertitel (optional)</string>
+    <string name="book_form_pub_year">Jahr der Veröffentlichung (optional)</string>
+    <string name="book_form_publisher">Verlag (optional)</string>
+    <string name="book_form_volume">Band (optional)</string>
+    <string name="book_form_edition">Auflage (optional)</string>
+    <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
+
+    <!-- Author -->
+    <string name="author">Autor</string>
+    <string name="authors">Autoren</string>
+    <string name="author_first_name">Vorname</string>
+    <string name="author_last_name">Nachname</string>
+    <string name="author_title">Titel (optional)</string>
+
 
     <!-- Note -->
     <string name="note">Notiz</string>
@@ -86,5 +107,5 @@
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
 
-</resources>
 
+</resources>

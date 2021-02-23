@@ -2,8 +2,10 @@ package de.bibbuddy;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -13,7 +15,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,6 @@ import java.util.List;
  *
  * @author Claudia Schönherr
  */
-
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
   private Long shelfId;
   private String shelfName;
@@ -70,6 +70,14 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     return bundle;
   }
 
+  private Bundle createBookBundle() {
+    Bundle bundle = new Bundle();
+    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
+    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+
+    return bundle;
+  }
+
   @Override
   public void onItemClicked(int position) {
     BookItem bookItem = bookModel.getSelectedBookItem(position);
@@ -97,24 +105,59 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void createAddBookListener() {
     FloatingActionButton addBookBtn = view.findViewById(R.id.btn_add_book);
+    PopupMenu pm = new PopupMenu(getContext(), addBookBtn);
+    pm.getMenuInflater().inflate(R.menu.add_book_menu, pm.getMenu());
+
+    pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+      @Override
+      public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.add_book_scan) {
+          Toast.makeText(getContext(), getString(R.string.add_book_scan_text), Toast.LENGTH_SHORT)
+              .show();
+        } else if (item.getItemId() == R.id.add_book_online) {
+          Toast.makeText(getContext(), getString(R.string.add_book_online_text), Toast.LENGTH_SHORT)
+              .show();
+        } else if (item.getItemId() == R.id.add_book_manually) {
+          handleAddBookManually();
+        }
+
+        return true;
+      }
+    });
+
+
     addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        // TODO currently a test book is added to the database
-        //  until a form for adding a new book is implemented and input is validated
-        Book book =
-            new Book("978-3-16-148410-0", "Buch mit Regal ID " + shelfId, "testen von Büchern",
-                     2020, "Testverlag", "Volume 1", "Edition 1", "zusätzliche Infos");
-        List<Author> authorList = new ArrayList<>();
-        authorList.add(new Author("Vorname", "Nachname"));
-        authorList.add(new Author("Autorvorname", "Autornachname", "Dr"));
-
-        bookModel.addBook(book, authorList);
-        Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
-        adapter.notifyDataSetChanged();
-        updateEmptyView(bookModel.getCurrentBookList());
+        pm.show();
       }
     });
+  }
+
+  private void handleAddBookManually() {
+    BookFormFragment fragment = new BookFormFragment(
+        new BookFormFragment.AddBookManuallyListener() {
+          @Override
+          public void onBookAdded(Book book, List<Author> authorList) {
+            addBook(book, authorList);
+            Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+          }
+        });
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
+
+    fragment.setArguments(createBookBundle());
+  }
+
+  private void addBook(Book book, List<Author> authorList) {
+    bookModel.addBook(book, authorList);
+    Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+    adapter.notifyDataSetChanged();
+    updateEmptyView(bookModel.getCurrentBookList());
   }
 
   private void createBackBtnListener() {

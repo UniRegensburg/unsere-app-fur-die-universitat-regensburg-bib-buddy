@@ -30,6 +30,10 @@ public class BookModel {
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
+    if (authorList == null) {
+      return "";
+    }
+
     StringBuilder authors = new StringBuilder();
 
     boolean savedAuthor = false;
@@ -56,6 +60,7 @@ public class BookModel {
   public void addBook(Book book, List<Author> authorList) {
     bookDao.create(book, authorList, shelfId);
     String authors = convertAuthorListToString(authorList);
+
     bookList
         .add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
   }

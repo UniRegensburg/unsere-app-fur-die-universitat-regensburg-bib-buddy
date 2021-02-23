@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/add_book_scan"
+        android:title="@string/add_book_scan_text" />
+
+    <item
+        android:id="@+id/add_book_online"
+        android:title="@string/add_book_online_text" />
+
+    <item
+        android:id="@+id/add_book_manually"
+        android:title="@string/add_book_manually_text" />
+
+</menu>
