@@ -26,6 +26,7 @@
     <string name="change">Ändern</string>
     <string name="export">Export</string>
     <string name="help">Hilfe</string>
+    <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
