@@ -24,7 +24,7 @@
             tools:ignore="MissingConstraints" />
 
         <Button
-            android:id="@+id/btn_book_form_confirm"
+            android:id="@+id/btn_book_form_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

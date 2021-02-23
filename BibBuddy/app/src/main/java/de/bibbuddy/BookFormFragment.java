@@ -102,7 +102,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void setupAddBookBtnListener(View view) {
-    Button addBookBtn = view.findViewById(R.id.btn_book_form_confirm);
+    Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
 
     addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override
