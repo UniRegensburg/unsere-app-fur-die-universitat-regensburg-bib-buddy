@@ -3,6 +3,9 @@ package de.bibbuddy;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -52,7 +55,49 @@ public class TextNoteEditorFragment extends Fragment {
         }
       }
     });
+
+    setHasOptionsMenu(true);
+
   }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_texteditor_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.menu_help_texteditor:
+        handleManualTexteditor();
+        break;
+
+      default:
+        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleManualTexteditor() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.texteditor_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+            LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
+  }
+
 
   private void saveNote() {
     String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
