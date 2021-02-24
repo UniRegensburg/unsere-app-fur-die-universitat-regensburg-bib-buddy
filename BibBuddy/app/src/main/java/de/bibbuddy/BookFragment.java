@@ -24,7 +24,6 @@ import java.util.List;
  *
  * @author Claudia Schönherr
  */
-
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
   private Long shelfId;
   private String shelfName;
@@ -181,8 +180,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       @Override
       public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.add_book_scan) {
-          Toast.makeText(getContext(), getString(R.string.add_book_scan_text), Toast.LENGTH_SHORT)
-              .show();
+          handleAddBookBarcodeFragment();
         } else if (item.getItemId() == R.id.add_book_online) {
           handleAddBookOnline();
         } else if (item.getItemId() == R.id.add_book_manually) {
@@ -238,6 +236,16 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
     adapter.notifyDataSetChanged();
     updateEmptyView(bookModel.getCurrentBookList());
+  }
+
+  private void handleAddBookBarcodeFragment() {
+    BookBarcodeScannerFragment fragment = new BookBarcodeScannerFragment();
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment, LibraryKeys.FRAGMENT_BARCODE_SCANNER)
+        .addToBackStack(null)
+        .commit();
+
+    fragment.setArguments(createBookBundle());
   }
 
   /*private void createBackBtnListener() {
