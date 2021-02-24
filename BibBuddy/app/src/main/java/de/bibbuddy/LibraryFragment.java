@@ -151,9 +151,8 @@ public class LibraryFragment extends Fragment
                                          String[] permissions, int[] grantResults) {
     switch (requestCode) {
       case STORAGE_PERMISSION_CODE:
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) { }
-        else {
+        if (grantResults.length <= 0
+            || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
           Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
         }
         return;
