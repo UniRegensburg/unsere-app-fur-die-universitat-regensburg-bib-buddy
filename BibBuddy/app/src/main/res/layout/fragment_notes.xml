@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="@color/alert_red"
-        android:translationY="550dp"
+        android:translationY="495dp"
         android:translationZ="12dp"
         android:visibility="gone">
 
