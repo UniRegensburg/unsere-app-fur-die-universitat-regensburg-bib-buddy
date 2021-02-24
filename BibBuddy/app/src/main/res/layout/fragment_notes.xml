@@ -4,7 +4,8 @@
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:translationY="100dp">
+    android:layout_marginBottom="150dp"
+    android:translationY="80dp">
 
     <RelativeLayout
         android:id="@+id/hidden_delete_panel"
