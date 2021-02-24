@@ -140,8 +140,8 @@ public class LibraryFragment extends Fragment
         .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+            dialog.dismiss();
+          }
         })
         .create().show();
   }
@@ -152,7 +152,7 @@ public class LibraryFragment extends Fragment
     switch (requestCode) {
       case STORAGE_PERMISSION_CODE:
         if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {}
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) { }
         else {
           Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
         }
