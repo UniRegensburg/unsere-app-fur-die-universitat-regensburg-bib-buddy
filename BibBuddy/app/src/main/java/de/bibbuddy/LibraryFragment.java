@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * The LibraryFragment is responsible for the shelves in the library.
  *
- * @author Claudia Schönherr,Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener, BookRecyclerViewAdapter.BookListener {
@@ -78,7 +78,7 @@ public class LibraryFragment extends Fragment
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_backup_library:
-        handleBackupLibrary();
+        setStoragePermission();
         break;
 
       case R.id.menu_rename_shelf:
@@ -103,10 +103,6 @@ public class LibraryFragment extends Fragment
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleBackupLibrary() {
-    setStoragePermission();
-  }
-
   private void setStoragePermission() {
     if (ContextCompat.checkSelfPermission(getContext(),
               Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -126,10 +122,10 @@ public class LibraryFragment extends Fragment
 
   private void showRequestPermissionDialog() {
     new AlertDialog.Builder(getContext())
-        .setTitle("Zugriff erforderlich")
-        .setMessage("Zugriff auf den Gerätespeicher erforderlich, "
-            + "um Dateien aus dieser App zu exportieren.")
-        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        .setTitle(R.string.storage_permission_needed)
+        .setMessage(R.string.storage_permission_alert_msg)
+
+        .setPositiveButton(R.string.storage_permission_ok_btn, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             ActivityCompat.requestPermissions(getActivity(),
@@ -137,7 +133,8 @@ public class LibraryFragment extends Fragment
                 STORAGE_PERMISSION_CODE);
           }
         })
-        .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+
+        .setNegativeButton(R.string.storage_permission_cancel_btn, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
@@ -153,9 +150,9 @@ public class LibraryFragment extends Fragment
       case STORAGE_PERMISSION_CODE:
         if (grantResults.length <= 0
             || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-          Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
+          Toast.makeText(context, R.string.storage_permission_denied, Toast.LENGTH_SHORT).show();
         }
-        return;
+        break;
       default:
     }
   }

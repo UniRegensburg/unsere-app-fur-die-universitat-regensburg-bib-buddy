@@ -137,6 +137,14 @@
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
 
+
+    <!-- Export Dialog Alert Window Descriptions -->
+    <string name="storage_permission_needed">Zugriff erforderlich</string>
+    <string name="storage_permission_alert_msg">Zugriff auf den Gerätespeicher erforderlich, um Dateien aus dieser App zu exportieren.</string>
+    <string name="storage_permission_ok_btn">OK</string>
+    <string name="storage_permission_cancel_btn">Abbrechen</string>
+    <string name="storage_permission_denied">Zugriff verweigert</string>
+
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
 
@@ -322,6 +330,11 @@
         exportiert.</p>
         ]]>
     </string>
+
+
+
+
+    ""
 
 
 </resources>
