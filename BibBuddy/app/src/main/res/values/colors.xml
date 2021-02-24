@@ -26,5 +26,6 @@
     <color name="gray_btn">#8394A3</color>
     <color name="gray_light">#FAFAFB</color>
     <color name="alert_red">#FA3C3C</color>
+    <color name="green">#65DA69</color>
 
 </resources>

@@ -2,14 +2,19 @@ package de.bibbuddy;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -34,6 +39,20 @@ public class BookNotesView extends Fragment
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+          fm.popBackStack();
+        } else {
+          requireActivity().onBackPressed();
+        }
+      }
+    });
+
     view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
     recyclerView = view.findViewById(R.id.bookNotesViewRecyclerView);
 
@@ -53,8 +72,8 @@ public class BookNotesView extends Fragment
     bookTitleView.setText(bookTitle);
 
     setupRecyclerView();
+    setHasOptionsMenu(true);
     setupAddButton();
-    setupBackButton();
     updateNoteListView(noteList);
 
     return view;
@@ -63,6 +82,55 @@ public class BookNotesView extends Fragment
 
   private void setupRecyclerView() {
     recyclerView.setAdapter(new BookNotesRecyclerViewAdapter(noteList, this));
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_book_note_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.menu_delete_note:
+        // TODO
+        Toast.makeText(getContext(), "Notiz löschen wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
+
+      case R.id.menu_export_note:
+        // TODO Silvia Export
+        // handleExportLibrary();
+        Toast.makeText(getContext(), "Export wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
+
+      case R.id.menu_help_book_note:
+        handleManualBookNotes();
+        break;
+
+      default:
+        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleManualBookNotes() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.book_note_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+            LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
   }
 
   private void setupAddButton() {
@@ -116,23 +184,6 @@ public class BookNotesView extends Fragment
     bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
 
     return bundle;
-  }
-
-  private void setupBackButton() {
-    View backButton = view.findViewById(R.id.btn_back);
-
-    backButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        BookFragment nextFrag = new BookFragment();
-        nextFrag.setArguments(createBookBundle());
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-            .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_BOOK)
-            .addToBackStack(null)
-            .commit();
-      }
-    });
   }
 
   private Bundle createNoteBundle(NoteItem item) {

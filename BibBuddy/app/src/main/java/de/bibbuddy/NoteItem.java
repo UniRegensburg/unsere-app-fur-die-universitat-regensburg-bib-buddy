@@ -10,6 +10,7 @@ public class NoteItem {
 
   private final String modDate;
   private final String name;
+  private final String text;
   private final int image;
   private final Long id;
   private final Long bookId;
@@ -23,16 +24,17 @@ public class NoteItem {
    * @param id      id of the note
    * @param bookId  id of the book that the note is connected to
    */
-  public NoteItem(String modDate, String name, int image, Long id, Long bookId) {
+  public NoteItem(String modDate, String name, String text, int image, Long id, Long bookId) {
     this.modDate = modDate;
     this.name = name;
+    this.text = text;
     this.image = image;
     this.id = id;
     this.bookId = bookId;
   }
 
   public NoteItem(String modDate, String name, int image, Long id) {
-    this(modDate, name, image, id, null);
+    this(modDate, name, null, image, id, null);
   }
 
   public String getModDate() {
@@ -53,6 +55,10 @@ public class NoteItem {
 
   public Long getBookId() {
     return bookId;
+  }
+
+  public String getNoteText() {
+    return text;
   }
 
 }

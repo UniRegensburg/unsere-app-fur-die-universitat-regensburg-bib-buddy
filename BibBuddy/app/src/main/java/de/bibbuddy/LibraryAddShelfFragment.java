@@ -42,9 +42,9 @@ public class LibraryAddShelfFragment extends DialogFragment {
 
   private void setupInput(View view) {
     view.findViewById(R.id.input_shelf_name).requestFocus();
-    InputMethodManager imm =
+    InputMethodManager inputManager =
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
   }
 
   /**
@@ -53,9 +53,9 @@ public class LibraryAddShelfFragment extends DialogFragment {
   public void closeFragment() {
     onDestroyView();
 
-    InputMethodManager imm =
+    InputMethodManager inputManager =
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
+    inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
   }
 
   private void setupButtons(View view, Bundle bundle) {
@@ -81,7 +81,7 @@ public class LibraryAddShelfFragment extends DialogFragment {
         EditText editShelfName = view.findViewById(R.id.input_shelf_name);
         String shelfName = editShelfName.getText().toString();
 
-        if (shelfName.isEmpty() || shelfName.trim().isEmpty()) {
+        if (DataValidation.isStringEmpty(shelfName)) {
           Toast.makeText(context, getString(R.string.invalid_name), Toast.LENGTH_SHORT).show();
           return;
         }

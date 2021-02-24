@@ -8,11 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-/**
- * The SearchFragment is responsible for the search of books.
- *
- * @author Claudia Schönherr
- */
 public class SearchFragment extends Fragment {
 
   @Nullable
