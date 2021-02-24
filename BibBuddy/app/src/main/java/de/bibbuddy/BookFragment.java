@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
@@ -154,13 +153,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     BookItem bookItem = bookModel.getSelectedBookItem(position);
     ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
 
-    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
     BookNotesView fragment = new BookNotesView();
-    fragmentTransaction.replace(R.id.fragment_container_view, fragment);
-    fragmentTransaction.setReorderingAllowed(true);
-    fragmentTransaction.addToBackStack(null);
-    fragmentTransaction.commit();
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
 
     fragment.setArguments(createBookBundle(bookItem));
   }
@@ -186,8 +184,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           Toast.makeText(getContext(), getString(R.string.add_book_scan_text), Toast.LENGTH_SHORT)
               .show();
         } else if (item.getItemId() == R.id.add_book_online) {
-          Toast.makeText(getContext(), getString(R.string.add_book_online_text), Toast.LENGTH_SHORT)
-              .show();
+          handleAddBookOnline();
         } else if (item.getItemId() == R.id.add_book_manually) {
           handleAddBookManually();
         }
@@ -203,6 +200,18 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         pm.show();
       }
     });
+  }
+
+  private void handleAddBookOnline() {
+    BookOnlineFragment fragment = new BookOnlineFragment();
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
+
+    fragment.setArguments(createBookBundle());
   }
 
   private void handleAddBookManually() {
