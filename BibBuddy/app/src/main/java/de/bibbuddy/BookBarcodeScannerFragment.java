@@ -10,10 +10,12 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -44,6 +46,19 @@ public class BookBarcodeScannerFragment extends Fragment {
                            @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
 
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+          fm.popBackStack();
+        } else {
+          requireActivity().onBackPressed();
+        }
+      }
+    });
+
     surfaceView = view.findViewById(R.id.surface_view);
     barcodeText = view.findViewById(R.id.barcode_value);
     Bundle bundle = getArguments();
@@ -59,7 +74,7 @@ public class BookBarcodeScannerFragment extends Fragment {
 
   private void setupDetectorsAndSources(View view) {
     barcodeDetector = new BarcodeDetector.Builder(view.getContext())
-        .setBarcodeFormats(Barcode.ISBN | Barcode.EAN_13) // TODO more barcode formats?
+        .setBarcodeFormats(Barcode.ISBN | Barcode.EAN_13)
         .build();
 
     cameraSource = new CameraSource.Builder(getContext(), barcodeDetector)
@@ -100,6 +115,9 @@ public class BookBarcodeScannerFragment extends Fragment {
       public void release() {
       }
 
+      /**
+       * Receives the ISBN of a book.
+       */
       @Override
       public void receiveDetections(Detector.Detections<Barcode> detections) {
         final SparseArray<Barcode> barcodes = detections.getDetectedItems();
@@ -120,6 +138,7 @@ public class BookBarcodeScannerFragment extends Fragment {
               // if not exists: display error message and open create new book form alternative
               // TODO check if valid data / book information data display
               // TODO add book to shelf
+              // TODO bundle for BookFragment with shelfId and shelfName
             }
           });
 

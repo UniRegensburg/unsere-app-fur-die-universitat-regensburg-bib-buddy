@@ -92,9 +92,6 @@
     <string name="isbn_scan">ISBN scannen</string>
     <string name="barcode_value">ISBN Nummer: </string>
 
-    <!-- Barcode Scanner -->
-    <string name="isbn_scan">ISBN scannen</string>
-    <string name="barcode_value">ISBN Nummer: </string>
 
     <!-- Note -->
     <string name="note">Notiz</string>

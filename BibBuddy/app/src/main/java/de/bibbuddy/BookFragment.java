@@ -180,8 +180,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       @Override
       public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.add_book_scan) {
-          Toast.makeText(getContext(), getString(R.string.add_book_scan_text), Toast.LENGTH_SHORT)
-              .show();
+          handleAddBookBarcodeFragment();
         } else if (item.getItemId() == R.id.add_book_online) {
           handleAddBookOnline();
         } else if (item.getItemId() == R.id.add_book_manually) {
@@ -237,47 +236,17 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
     adapter.notifyDataSetChanged();
     updateEmptyView(bookModel.getCurrentBookList());
-
-        // openBarcodeScannerFragment(); // TODO move when menu available
-  }
   }
 
-  private Bundle createBarcodeBundle() {
-    Bundle bundle = new Bundle();
-
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-
-    return bundle;
-  }
-
-  private void openBarcodeScannerFragment() {
+  private void handleAddBookBarcodeFragment() {
     BookBarcodeScannerFragment fragment = new BookBarcodeScannerFragment();
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment, LibraryKeys.FRAGMENT_BARCODE_SCANNER)
         .addToBackStack(null)
         .commit();
 
-    fragment.setArguments(createBarcodeBundle());
+    fragment.setArguments(createBookBundle());
   }
-
-  private Bundle createBarcodeBundle() {
-    Bundle bundle = new Bundle();
-
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-
-    return bundle;
-  }
-
-  private void openBarcodeScannerFragment() {
-    BookBarcodeScannerFragment fragment = new BookBarcodeScannerFragment();
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment, LibraryKeys.FRAGMENT_BARCODE_SCANNER)
-        .addToBackStack(null)
-        .commit();
-
-    fragment.setArguments(createBarcodeBundle());
 
   /*private void createBackBtnListener() {
     TextView backView = view.findViewById(R.id.text_view_back_to);
