@@ -76,7 +76,6 @@ public class LibraryFragment extends Fragment
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
     switch (item.getItemId()) {
       case R.id.menu_backup_library:
         handleBackupLibrary();
@@ -105,33 +104,37 @@ public class LibraryFragment extends Fragment
   }
 
   private void handleBackupLibrary() {
-      setStoragePermission();
+    setStoragePermission();
   }
 
   private void setStoragePermission() {
-      if(ContextCompat.checkSelfPermission(getContext(),
+    if (ContextCompat.checkSelfPermission(getContext(),
               Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-          requestStoragePermission();
-      }
+      requestStoragePermission();
+    }
   }
 
   private void requestStoragePermission() {
-      if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-          showRequestPermissionDialog();
-      } else {
-          requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-      }
+    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      showRequestPermissionDialog();
+    } else {
+      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+              STORAGE_PERMISSION_CODE);
+    }
   }
 
   private void showRequestPermissionDialog() {
       new AlertDialog.Builder (getContext())
               .setTitle("Zugriff erforderlich")
-              .setMessage("Zugriff auf den Gerätespeicher erforderlich, um Dateien aus dieser App zu exportieren.")
+              .setMessage("Zugriff auf den Gerätespeicher erforderlich, " +
+                      "um Dateien aus dieser App zu exportieren.")
               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
                       ActivityCompat.requestPermissions(getActivity(),
-                              new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                              new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                              STORAGE_PERMISSION_CODE);
                     }
                 })
                 .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
@@ -145,15 +148,16 @@ public class LibraryFragment extends Fragment
 
   @Override
   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-      switch (requestCode) {
-          case STORAGE_PERMISSION_CODE:
-              if(grantResults.length > 0 &&
-                      grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-              } else {
-                  Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
-              }
-              return;
-      }
+    switch (requestCode) {
+      case STORAGE_PERMISSION_CODE:
+        if(grantResults.length > 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        } else {
+          Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
+        }
+        return;
+      default:
+    }
   }
 
     private void handleManualLibrary() {
