@@ -140,7 +140,10 @@
 
     <!-- Export Dialog Alert Window Descriptions -->
     <string name="storage_permission_needed">Zugriff erforderlich</string>
-    <string name="storage_permission_alert_msg">Zugriff auf den Gerätespeicher erforderlich, um Dateien aus dieser App zu exportieren.</string>
+    <string name="storage_permission_alert_msg">
+        Zugriff auf den Gerätespeicher erforderlich,
+        um Dateien aus dieser App zu exportieren.
+    </string>
     <string name="storage_permission_ok_btn">OK</string>
     <string name="storage_permission_cancel_btn">Abbrechen</string>
     <string name="storage_permission_denied">Zugriff verweigert</string>

@@ -125,7 +125,8 @@ public class LibraryFragment extends Fragment
         .setTitle(R.string.storage_permission_needed)
         .setMessage(R.string.storage_permission_alert_msg)
 
-        .setPositiveButton(R.string.storage_permission_ok_btn, new DialogInterface.OnClickListener() {
+        .setPositiveButton(R.string.storage_permission_ok_btn,
+            new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             ActivityCompat.requestPermissions(getActivity(),
@@ -134,7 +135,8 @@ public class LibraryFragment extends Fragment
           }
         })
 
-        .setNegativeButton(R.string.storage_permission_cancel_btn, new DialogInterface.OnClickListener() {
+        .setNegativeButton(R.string.storage_permission_cancel_btn,
+            new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
