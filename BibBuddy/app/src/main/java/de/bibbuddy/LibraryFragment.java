@@ -1,8 +1,10 @@
 package de.bibbuddy;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,7 +28,7 @@ import java.util.List;
 /**
  * The LibraryFragment is responsible for the shelves in the library.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr,Silvia Ivanova
  */
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener, BookRecyclerViewAdapter.BookListener {
@@ -34,7 +38,7 @@ public class LibraryFragment extends Fragment
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems;
-
+  private static final int STORAGE_PERMISSION_CODE = 1;
 
   @Nullable
   @Override
@@ -75,9 +79,7 @@ public class LibraryFragment extends Fragment
 
     switch (item.getItemId()) {
       case R.id.menu_backup_library:
-        // TODO Silvia Export
-        // handleBackupLibrary();
-        Toast.makeText(getContext(), "Backup wurde geklickt", Toast.LENGTH_SHORT).show();
+        handleBackupLibrary();
         break;
 
       case R.id.menu_rename_shelf:
@@ -102,7 +104,59 @@ public class LibraryFragment extends Fragment
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleManualLibrary() {
+  private void handleBackupLibrary() {
+      setStoragePermission();
+  }
+
+  private void setStoragePermission() {
+      if(ContextCompat.checkSelfPermission(getContext(),
+              Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+          requestStoragePermission();
+      }
+  }
+
+  private void requestStoragePermission() {
+      if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+          showRequestPermissionDialog();
+      } else {
+          requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+      }
+  }
+
+  private void showRequestPermissionDialog() {
+      new AlertDialog.Builder (getContext())
+              .setTitle("Zugriff erforderlich")
+              .setMessage("Zugriff auf den Gerätespeicher erforderlich, um Dateien aus dieser App zu exportieren.")
+              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      ActivityCompat.requestPermissions(getActivity(),
+                              new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+                    }
+                })
+                .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
+    }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+      switch (requestCode) {
+          case STORAGE_PERMISSION_CODE:
+              if(grantResults.length > 0 &&
+                      grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+              } else {
+                  Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
+              }
+              return;
+      }
+  }
+
+    private void handleManualLibrary() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.library_help_text);
 
