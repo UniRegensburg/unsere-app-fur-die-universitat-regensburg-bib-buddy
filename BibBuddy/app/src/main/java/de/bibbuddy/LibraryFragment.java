@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +24,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +87,11 @@ public class LibraryFragment extends Fragment
     switch (item.getItemId()) {
       case R.id.menu_backup_library:
         setStoragePermission();
+
+        //use the same parameter in order to be able to write
+        //in a specific file that already exists
+        createBibFile("Download", "exampleBibFilename");
+        writeBibFile("Download", "exampleBibFilename");
         break;
 
       case R.id.menu_rename_shelf:
@@ -146,6 +159,64 @@ public class LibraryFragment extends Fragment
         break;
 
       default:
+    }
+  }
+
+  private void createBibFile(String folderName, String fileName) {
+    try {
+      String rootPath = Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/" + folderName + "/";
+      File root = new File(rootPath);
+
+      if (!root.exists()) {
+        root.mkdirs();
+      }
+
+      File file = new File(rootPath + fileName + ".bib");
+      if (file.exists()) {
+        file.delete();
+      }
+      file.createNewFile();
+
+      FileOutputStream out = new FileOutputStream(file);
+      out.flush();
+      out.close();
+
+      Toast.makeText(context, "File exported in: " + '\n'
+          + rootPath + fileName + ".bib", Toast.LENGTH_LONG).show();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void writeBibFile(String folderName, String fileName) {
+    try {
+      File dir = new File(Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/" + folderName + "/");
+
+      if (!dir.exists()) {
+        dir.mkdirs();
+      }
+
+      File statText = new File(Environment.getExternalStorageDirectory()
+          + "/" + folderName + "/" + fileName + ".bib");
+
+      FileOutputStream fos = new FileOutputStream(statText);
+      OutputStreamWriter osw = new OutputStreamWriter(fos);
+      Writer fileWriter = new BufferedWriter(osw);
+
+      fileWriter.write("@book{hawking1988," + '\n'
+          + "title        = {The impossible book}," + '\n'
+          + "author       = {Stefa{n} Sweig}," + '\n'
+          +  "year         = 1942," + '\n'
+          + "publisher    = {Dead Poet Society}" + '\n'
+          + "note         = some note example" + '\n' + "}" + '\n'
+      );
+      fileWriter.close();
+
+    } catch (IOException e) {
+      Log.e("Exception", R.string.file_write_failed + e.toString());
     }
   }
 
