@@ -153,6 +153,7 @@ public class LibraryFragment extends Fragment
           Toast.makeText(context, R.string.storage_permission_denied, Toast.LENGTH_SHORT).show();
         }
         break;
+
       default:
     }
   }
