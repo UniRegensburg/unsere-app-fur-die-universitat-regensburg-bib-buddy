@@ -125,34 +125,35 @@ public class LibraryFragment extends Fragment
   }
 
   private void showRequestPermissionDialog() {
-      new AlertDialog.Builder (getContext())
-              .setTitle("Zugriff erforderlich")
-              .setMessage("Zugriff auf den Gerätespeicher erforderlich, " +
-                      "um Dateien aus dieser App zu exportieren.")
-              .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int which) {
-                      ActivityCompat.requestPermissions(getActivity(),
-                              new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                              STORAGE_PERMISSION_CODE);
-                    }
-                })
-                .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+    new AlertDialog.Builder(getContext())
+        .setTitle("Zugriff erforderlich")
+        .setMessage("Zugriff auf den Gerätespeicher erforderlich, "
+            + "um Dateien aus dieser App zu exportieren.")
+        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+            ActivityCompat.requestPermissions(getActivity(),
+                new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                STORAGE_PERMISSION_CODE);
+          }
+        })
+        .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                })
-                .create().show();
-    }
+        })
+        .create().show();
+  }
 
   @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode,
+                                         String[] permissions, int[] grantResults) {
     switch (requestCode) {
       case STORAGE_PERMISSION_CODE:
-        if(grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        } else {
+        if (grantResults.length > 0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {}
+        else {
           Toast.makeText(context, "Zugriff verweigert", Toast.LENGTH_SHORT).show();
         }
         return;
@@ -160,7 +161,7 @@ public class LibraryFragment extends Fragment
     }
   }
 
-    private void handleManualLibrary() {
+  private void handleManualLibrary() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.library_help_text);
 
