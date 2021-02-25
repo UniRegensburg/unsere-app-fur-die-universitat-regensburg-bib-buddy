@@ -27,7 +27,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NotesFragmentUiTest {
+public class NotesFragmentInstrumentedTest {
 
   static NotesFragment nF;
   private static View itemView;
