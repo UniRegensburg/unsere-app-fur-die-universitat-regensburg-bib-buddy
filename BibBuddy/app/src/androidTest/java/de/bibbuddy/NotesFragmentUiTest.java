@@ -12,7 +12,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 
-
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -28,7 +27,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NotesFragmentUITest {
+public class NotesFragmentUiTest {
 
   static NotesFragment nF;
   private static View itemView;
@@ -36,9 +35,10 @@ public class NotesFragmentUITest {
   private String modDate;
   private String name;
   private int idText;
-  private int idVoice;
-  private int idPicture;
 
+  /**
+   * This method initiates the basic NotesFragment setup before every test-case.
+   */
   @Before
   public void init() {
     ActivityScenario scenario = ActivityScenario.launch(MainActivity.class);
@@ -53,7 +53,8 @@ public class NotesFragmentUITest {
                 new Note(exampleText, 0, exampleText);
             modDate = String.valueOf(textNote.getModDate());
             name = textNote.getName();
-            NoteTextItem noteTextItem = new NoteTextItem(modDate, name, textNote.getId());
+            NoteTextItem noteTextItem =
+                new NoteTextItem(modDate, name, textNote.getText(), textNote.getId());
             NotesFragment.notes.add(noteTextItem);
           }
         });
@@ -67,13 +68,12 @@ public class NotesFragmentUITest {
   }
 
   @Test
-  public void NotesFragmentDisplay_Test() {
+  public void NotesFragmentDisplayTest() {
     onView(withId(R.id.fragment_notes)).check(matches(isDisplayed()));
   }
 
-  // TODO: Needs to be adjusted as soon as more note types are added
   @Test
-  public void RecyclerViewListDisplay_Test() {
+  public void RecyclerViewListDisplayTest() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).check(matches(isDisplayed()));
     onView(withId(R.id.noteModDate)).check(matches(isDisplayed()));
@@ -81,26 +81,17 @@ public class NotesFragmentUITest {
     onView(withId(R.id.noteType)).check(matches(isDisplayed()));
     new DrawableMatcher(R.drawable.document)
         .matchesSafely(itemView);
-    // onView(withId(R.id.noteType)).check(matches(withId(R.drawable.microphone));
-    // onView(withId(R.id.noteType)).check(matches(withId(R.drawable.picture)));
   }
 
-  // TODO: Needs to be adjusted as soon as more note types are added
   @Test
-  public void OpenEditorOnItemClick_Test() {
+  public void OpenEditorOnItemClickTest() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(click());
     onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
-      /*
-      onView(withId(id2)).perform(click());
-      onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_voice_note_editor).getId())).check(matches(isDisplayed()));
-      onView(withId(id3)).perform(click());
-      onView(withId(nF.getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_picture_note_editor).getId())).check(matches(isDisplayed()));
-      */
   }
 
   @Test
-  public void DeletePanelDisplay_Test() {
+  public void DeletePanelDisplayTest() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(longClick());
     new DrawableMatcher(R.color.flirt_light).matchesSafely(itemView);
@@ -114,7 +105,7 @@ public class NotesFragmentUITest {
   }
 
   @Test
-  public void DeletePanelPerformDelete_Test() {
+  public void DeletePanelPerformDeleteTest() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(longClick());
     onView(withId(R.id.hidden_delete_panel)).check(matches(isDisplayed()));
@@ -124,21 +115,21 @@ public class NotesFragmentUITest {
 
 
   @Test
-  public void OnItemSwipeLeft_Test() {
+  public void OnItemSwipeLeftTest() {
     onView(withId(idText)).perform(swipeLeft());
     new DrawableMatcher(R.color.alert_red).matchesSafely(itemView);
     new DrawableMatcher(R.drawable.delete).matchesSafely(itemView);
   }
 
   @Test
-  public void DeleteSnackbarDisplayOnSwipeLeft_Test() {
+  public void DeleteSnackbarDisplayOnSwipeLeftTest() {
     onView(withId(idText)).perform(swipeLeft());
     onView(withText(R.string.delete_notification)).check(matches(isDisplayed()));
     onView(withText(R.string.undo)).check(matches(isDisplayed()));
   }
 
   @Test
-  public void RestoreItemViewOnUndo_Test() {
+  public void RestoreItemViewOnUndoTest() {
     onView(withId(idText)).perform(swipeLeft());
     onView(withText(R.string.undo)).perform(click());
     onView(withId(R.id.noteType)).check(matches(isDisplayed()));
