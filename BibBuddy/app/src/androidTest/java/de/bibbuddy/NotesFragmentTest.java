@@ -27,7 +27,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
-public class NotesFragmentInstrumentedTest {
+public class NotesFragmentTest {
 
   static NotesFragment nF;
   private static View itemView;
@@ -73,7 +73,7 @@ public class NotesFragmentInstrumentedTest {
   }
 
   @Test
-  public void RecyclerViewListDisplayTest() {
+  public void RecyclerViewListDisplayed() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).check(matches(isDisplayed()));
     onView(withId(R.id.noteModDate)).check(matches(isDisplayed()));
@@ -84,7 +84,7 @@ public class NotesFragmentInstrumentedTest {
   }
 
   @Test
-  public void OpenEditorOnItemClickTest() {
+  public void OpenEditorOnItemClicked() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(click());
     onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
