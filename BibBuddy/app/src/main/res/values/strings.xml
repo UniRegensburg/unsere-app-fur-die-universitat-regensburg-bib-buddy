@@ -113,6 +113,11 @@
         zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
 
+    <string name="delete_note">Notizen löschen</string>
+    <string name="deleted_notes">Notiz(en) wurde(n) gelöscht</string>
+    <string name="delete_note_message">Alle ausgewählten Notizen werden gelöscht.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>
     <string name="create_voice_note">Sprachnotiz</string>

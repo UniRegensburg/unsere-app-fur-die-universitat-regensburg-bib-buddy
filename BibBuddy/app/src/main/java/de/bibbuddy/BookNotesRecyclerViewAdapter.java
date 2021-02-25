@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,20 @@ public class BookNotesRecyclerViewAdapter extends
 
   private final List<NoteItem> noteList;
   private final BookNotesViewListener listener;
+  private final Context context;
 
-  public BookNotesRecyclerViewAdapter(List<NoteItem> noteList, BookNotesViewListener listener) {
+  public BookNotesRecyclerViewAdapter(List<NoteItem> noteList, BookNotesViewListener listener,
+                                      Context context) {
     this.noteList = noteList;
     this.listener = listener;
+    this.context = context;
   }
 
   @NonNull
   @Override
   public BookNotesViewHolder
       onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new BookNotesViewHolder(LayoutInflater.from(parent.getContext())
+    return new BookNotesRecyclerViewAdapter.BookNotesViewHolder(LayoutInflater.from(parent.getContext())
         .inflate(R.layout.list_view_item_book_notes_view, parent, false));
   }
 
@@ -38,6 +42,8 @@ public class BookNotesRecyclerViewAdapter extends
   public void onBindViewHolder(@NonNull BookNotesViewHolder holder, int position) {
     // Get element from your dataset at this position and replace the contents of the view
     // with that element
+    NoteItem noteItem = noteList.get(position);
+
     holder.getTextView().setText(noteList.get(position).getName());
     holder.getImageView().setImageResource(noteList.get(position).getImage());
 
@@ -45,6 +51,18 @@ public class BookNotesRecyclerViewAdapter extends
       @Override
       public void onClick(View v) {
         listener.onItemClicked(position);
+      }
+    });
+
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        if (position == RecyclerView.NO_POSITION) {
+          return false;
+        }
+
+        listener.onLongItemClicked(position, noteItem, v);
+        return true;
       }
     });
   }
@@ -56,6 +74,8 @@ public class BookNotesRecyclerViewAdapter extends
 
   public interface BookNotesViewListener {
     void onItemClicked(int position); // callback function
+
+    void onLongItemClicked(int position, NoteItem noteItem, View v);
   }
 
   public static class BookNotesViewHolder extends RecyclerView.ViewHolder {
