@@ -48,15 +48,14 @@ public class NotesFragmentTest {
         (ActivityScenario.ActivityAction<MainActivity>) activity -> {
           nF = (NotesFragment) activity.getSupportFragmentManager().getFragments().get(0);
           NotesFragment.notes.clear();
-          if (NotesFragment.notes.size() == 0) {
-            Note textNote =
-                new Note(exampleText, 0, exampleText);
-            modDate = String.valueOf(textNote.getModDate());
-            name = textNote.getName();
-            NoteTextItem noteTextItem =
-                new NoteTextItem(modDate, name, textNote.getText(), textNote.getId());
-            NotesFragment.notes.add(noteTextItem);
-          }
+          NotesFragment.notes.size();
+          Note textNote =
+              new Note(exampleText, 0, exampleText);
+          modDate = String.valueOf(textNote.getModDate());
+          name = textNote.getName();
+          NoteTextItem noteTextItem =
+              new NoteTextItem(modDate, name, textNote.getText(), textNote.getId());
+          NotesFragment.notes.add(noteTextItem);
         });
 
     onView(ViewMatchers.withId(R.id.recyclerView))
@@ -68,12 +67,12 @@ public class NotesFragmentTest {
   }
 
   @Test
-  public void notesFragmentDisplay_Test() {
+  public void notesFragmentIsDisplayed_Test() {
     onView(withId(R.id.fragment_notes)).check(matches(isDisplayed()));
   }
 
   @Test
-  public void recyclerViewListDisplay_Test() {
+  public void noteListIsDisplayed_Test() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).check(matches(isDisplayed()));
     onView(withId(R.id.noteModDate)).check(matches(isDisplayed()));
@@ -84,14 +83,14 @@ public class NotesFragmentTest {
   }
 
   @Test
-  public void openEditorOnItemClicked_Test() {
+  public void editorIsOpenedOnItemClick_Test() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(click());
     onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
   }
 
   @Test
-  public void deletePanelDisplay_Test() {
+  public void deletePanelIsDisplayed_Test() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(longClick());
     new DrawableMatcher(R.color.flirt_light).matchesSafely(itemView);
@@ -105,7 +104,7 @@ public class NotesFragmentTest {
   }
 
   @Test
-  public void useDeletePanelToDelete_Test() {
+  public void itemIsDeletedOnDeletePanelUsage_Test() {
     ViewActions.closeSoftKeyboard();
     onView(withId(idText)).perform(longClick());
     onView(withId(R.id.hidden_delete_panel)).check(matches(isDisplayed()));
@@ -115,21 +114,21 @@ public class NotesFragmentTest {
 
 
   @Test
-  public void deleteOnItemSwipeLeft_Test() {
+  public void itemIsDeletedOnItemSwipeLeft_Test() {
     onView(withId(idText)).perform(swipeLeft());
     new DrawableMatcher(R.color.alert_red).matchesSafely(itemView);
     new DrawableMatcher(R.drawable.delete).matchesSafely(itemView);
   }
 
   @Test
-  public void deleteSnackbarDisplayOnSwipeLeft_Test() {
+  public void deleteSnackbarIsDisplayedOnSwipeLeft_Test() {
     onView(withId(idText)).perform(swipeLeft());
     onView(withText(R.string.delete_notification)).check(matches(isDisplayed()));
     onView(withText(R.string.undo)).check(matches(isDisplayed()));
   }
 
   @Test
-  public void restoreItemViewOnUndo_Test() {
+  public void itemViewIsRestoredOnUndoClick_Test() {
     onView(withId(idText)).perform(swipeLeft());
     onView(withText(R.string.undo)).perform(click());
     onView(withId(R.id.noteType)).check(matches(isDisplayed()));
