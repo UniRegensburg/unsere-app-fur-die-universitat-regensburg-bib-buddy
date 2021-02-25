@@ -71,6 +71,18 @@ public class BookRecyclerViewAdapter
         listener.onItemClicked(position);
       }
     });
+
+    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+      @Override
+      public boolean onLongClick(View v) {
+        if (position == RecyclerView.NO_POSITION) {
+          return false;
+        }
+
+        listener.onLongItemClicked(position, bookItem, v);
+        return true;
+      }
+    });
   }
 
   @Override
@@ -81,6 +93,8 @@ public class BookRecyclerViewAdapter
 
   public interface BookListener { // create an interface
     void onItemClicked(int position); // create callback function
+
+    void onLongItemClicked(int position, BookItem bookItem, View v);
   }
 
   public class BookViewHolder extends RecyclerView.ViewHolder {

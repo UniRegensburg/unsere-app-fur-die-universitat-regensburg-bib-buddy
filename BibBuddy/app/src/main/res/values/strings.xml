@@ -66,6 +66,12 @@
         erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
 
+    <string name="delete_book">Bücher löschen</string>
+    <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
+    <string name="delete_book_message">Alle ausgewählten Bücher werden gelöscht inklusive der
+        Notizen.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+
     <string name="add_book_scan_text">Barcode scannen</string>
     <string name="add_book_online_text">Im Online-Katalog suchen</string>
     <string name="add_book_manually_text">Manuell hinzufügen</string>
