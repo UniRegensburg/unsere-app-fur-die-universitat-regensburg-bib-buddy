@@ -40,6 +40,7 @@ public class LibraryFragment extends Fragment
   private List<ShelfItem> selectedShelfItems;
   private List<BookItem> selectedBookItems;
   private static final int STORAGE_PERMISSION_CODE = 1;
+  private List<BookItem> selectedBookItems;
 
   @Nullable
   @Override
