@@ -86,12 +86,7 @@ public class LibraryFragment extends Fragment
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_backup_library:
-        setStoragePermission();
-
-        //use the same parameter in order to be able to write
-        //in a specific file that already exists
-        createBibFile("Download", "exampleBibFilename");
-        writeBibFile("Download", "exampleBibFilename");
+        
         break;
 
       case R.id.menu_rename_shelf:
@@ -114,110 +109,6 @@ public class LibraryFragment extends Fragment
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  private void setStoragePermission() {
-    if (ContextCompat.checkSelfPermission(getContext(),
-              Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-      requestStoragePermission();
-    }
-  }
-
-  private void requestStoragePermission() {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      showRequestPermissionDialog();
-    } else {
-      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-              STORAGE_PERMISSION_CODE);
-    }
-  }
-
-  private void showRequestPermissionDialog() {
-    new AlertDialog.Builder(getContext())
-        .setTitle(R.string.storage_permission_needed)
-        .setMessage(R.string.storage_permission_alert_msg)
-
-        .setPositiveButton(R.string.storage_permission_ok_btn,
-            (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-                new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE))
-
-        .setNegativeButton(R.string.storage_permission_cancel_btn,
-            (dialog, which) -> dialog.dismiss())
-        .create().show();
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         String[] permissions, int[] grantResults) {
-    switch (requestCode) {
-      case STORAGE_PERMISSION_CODE:
-        if (grantResults.length <= 0
-            || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-          Toast.makeText(context, R.string.storage_permission_denied, Toast.LENGTH_SHORT).show();
-        }
-        break;
-
-      default:
-    }
-  }
-
-  private void createBibFile(String folderName, String fileName) {
-    try {
-      String rootPath = Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + "/" + folderName + "/";
-      File root = new File(rootPath);
-
-      if (!root.exists()) {
-        root.mkdirs();
-      }
-
-      File file = new File(rootPath + fileName + ".bib");
-      if (file.exists()) {
-        file.delete();
-      }
-      file.createNewFile();
-
-      FileOutputStream out = new FileOutputStream(file);
-      out.flush();
-      out.close();
-
-      Toast.makeText(context, "File exported in: " + '\n'
-          + rootPath + fileName + ".bib", Toast.LENGTH_LONG).show();
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void writeBibFile(String folderName, String fileName) {
-    try {
-      File dir = new File(Environment.getExternalStorageDirectory()
-          .getAbsolutePath() + "/" + folderName + "/");
-
-      if (!dir.exists()) {
-        dir.mkdirs();
-      }
-
-      File statText = new File(Environment.getExternalStorageDirectory()
-          + "/" + folderName + "/" + fileName + ".bib");
-
-      FileOutputStream fos = new FileOutputStream(statText);
-      OutputStreamWriter osw = new OutputStreamWriter(fos);
-      Writer fileWriter = new BufferedWriter(osw);
-
-      fileWriter.write("@book{hawking1988," + '\n'
-          + "title        = {The impossible book}," + '\n'
-          + "author       = {Stefa{n} Sweig}," + '\n'
-          +  "year         = 1942," + '\n'
-          + "publisher    = {Dead Poet Society}" + '\n'
-          + "note         = some note example" + '\n' + "}" + '\n'
-      );
-      fileWriter.close();
-
-    } catch (IOException e) {
-      Log.e("Exception", R.string.file_write_failed + e.toString());
-    }
   }
 
   private void handleManualLibrary() {

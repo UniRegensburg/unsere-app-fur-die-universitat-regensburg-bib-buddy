@@ -1,6 +1,12 @@
 package de.bibbuddy;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,16 +19,26 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The BookFragment is responsible for the current books of a shelf in the library.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
   private Long shelfId;
@@ -31,6 +47,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private BookModel bookModel;
   private BookRecyclerViewAdapter adapter;
+
+  private static final int STORAGE_PERMISSION_CODE = 1;
+  private String bibExportContent = "";
 
   @Nullable
   @Override
@@ -76,7 +95,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -91,10 +109,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         Toast.makeText(getContext(), "Buch löschen wurde geklickt", Toast.LENGTH_SHORT).show();
         break;
 
-      case R.id.menu_export_book:
+      case R.id.menu_export_book_list:
         // TODO Silvia Export
-        // handleExportLibrary();
-        Toast.makeText(getContext(), "Export wurde geklickt", Toast.LENGTH_SHORT).show();
+        checkEmptyBookList();
         break;
 
       case R.id.menu_help_book:
@@ -106,6 +123,192 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+
+  private void checkEmptyBookList() {
+    DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+    BookDao bd = new BookDao(dbHelper);
+    if (bd.getAllBooksForShelf(shelfId).isEmpty()) {
+      AlertDialog.Builder ee = new AlertDialog.Builder(getContext());
+      ee.setTitle(R.string.empty_booklist);
+      ee.setMessage(R.string.empty_booklist_description);
+      ee.setPositiveButton(R.string.ok,
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+          });
+      ee.create().show();
+    } else {
+      setStoragePermission();
+    }
+  }
+
+  private void setStoragePermission() {
+    if (ContextCompat.checkSelfPermission(getContext(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      requestStoragePermission();
+    } else {
+      /*
+      if the user has already allowed access to
+      device external storage
+      */
+      createBibFile("Download", shelfName);
+      retrieveBibContent();
+      writeBibFile("Download", shelfName, bibExportContent);
+    }
+  }
+
+  private void requestStoragePermission() {
+    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      showRequestPermissionDialog();
+    } else {
+      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          STORAGE_PERMISSION_CODE);
+    }
+  }
+
+  private void showRequestPermissionDialog() {
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
+    reqAlertDialog.setTitle(R.string.storage_permission_needed);
+    reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
+    reqAlertDialog.setPositiveButton(R.string.ok,
+        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            STORAGE_PERMISSION_CODE));
+    reqAlertDialog.setNegativeButton(R.string.storage_permission_cancel_btn,
+            (dialog, which) -> dialog.dismiss());
+    reqAlertDialog.create().show();
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         String[] permissions, int[] grantResults) {
+
+    switch (requestCode) {
+
+      case STORAGE_PERMISSION_CODE:
+        if (grantResults.length > 0
+            || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          createBibFile("Download", shelfName);
+          retrieveBibContent();
+          writeBibFile("Download", shelfName, bibExportContent);
+        } else {
+          Toast.makeText(getContext(), R.string.storage_permission_denied,
+              Toast.LENGTH_SHORT).show();
+        }
+        break;
+
+      default:
+    }
+  }
+
+  private void createBibFile(String folderName, String fileName) {
+    try {
+      String rootPath = Environment.getExternalStorageDirectory() + "/" + folderName + "/";
+      File root = new File(rootPath);
+
+      if (!root.exists()) {
+        root.mkdirs();
+      }
+
+      File file = new File(rootPath + fileName + ".bib");
+      if (file.exists()) {
+        file.delete();
+      }
+      file.createNewFile();
+
+      FileOutputStream out = new FileOutputStream(file);
+      out.flush();
+      out.close();
+
+      Toast.makeText(getContext(), R.string.exported_file_stored_in + '\n'
+          + rootPath + fileName + ".bib", Toast.LENGTH_LONG).show();
+
+    } catch (Exception e) {
+
+      e.printStackTrace();
+    }
+  }
+
+  private void retrieveBibContent() {
+
+    DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+    BookDao bd = new BookDao(dbHelper);
+    NoteDao nd = new NoteDao(dbHelper);
+
+    List<Long> bookIdsCurrShelf = bd.getAllBookIdsForShelf(shelfId);
+    List<Author> authorsCurrBook = new ArrayList<>();
+    List<Long> notesCurrBook = new ArrayList<>();
+    String allNotesCurrBook = "";
+
+    //for each book in the current shelf
+    for (int i = 0; i < bookIdsCurrShelf.size(); i++) {
+      Book currBook;
+      Long currBookId = bookIdsCurrShelf.get(i);
+      authorsCurrBook = bd.getAllAuthorsForBook(currBookId);
+      notesCurrBook = nd.getAllNoteIdsForBook(currBookId);
+      currBook = bd.findById(currBookId);
+
+      /*
+      get the notes for the current book
+      and save them together in one string
+      */
+      for (int k = 0; k < notesCurrBook.size(); k++) {
+        String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
+        allNotesCurrBook += noteTextCurrBook + '\n';
+      }
+
+      /*
+      get author's first and last name and include
+      the needed book data in a bib format
+      finally, save all bib data into a list
+      */
+      for (int j = 0; j < authorsCurrBook.size(); j++) {
+        bibExportContent = bibExportContent
+            + "@book{" + currBook.getTitle() + currBook.getPubYear() + "," + '\n'
+            + "author={" + authorsCurrBook.get(j).getFirstName() + " "
+            + authorsCurrBook.get(j).getLastName() + "}," + '\n'
+            + "title={" + currBook.getTitle() + "}," + '\n'
+            + "publisher={" + currBook.getPublisher() + "}," + '\n'
+            + "year=" + currBook.getPubYear() + "," + '\n'
+            + "edition={" + currBook.getEdition() + "}," + '\n'
+            + "note={" + allNotesCurrBook + "}" + '\n' + "}" + '\n';
+      }
+    }
+  }
+
+  /*
+  used to write a file with given name and content
+  the folder name is in the device external storage
+   */
+  private void writeBibFile(String folderName, String fileName, String content) {
+
+    try {
+      File dir = new File(Environment.getExternalStorageDirectory() + "/" + folderName + "/");
+      /*Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/" + folderName + "/");*/
+
+      if (!dir.exists()) {
+        dir.mkdirs();
+      }
+
+      File statText = new File(Environment.getExternalStorageDirectory()
+          + "/" + folderName + "/" + fileName + ".bib");
+
+      FileOutputStream fos = new FileOutputStream(statText);
+      OutputStreamWriter osw = new OutputStreamWriter(fos);
+      Writer fileWriter = new BufferedWriter(osw);
+
+      fileWriter.write(content);
+      fileWriter.close();
+
+    } catch (IOException e) {
+
+      Log.e("Exception", R.string.file_write_failed + e.toString());
+    }
   }
 
   private void handleManualBook() {
