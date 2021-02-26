@@ -59,7 +59,7 @@ public class SearchModel {
           new SearchItem(note.getName(), R.drawable.document, note.getId(),
                          note.getModDate().intValue(),
                          // TODO change modDate to Integer type in Note class in final release
-                         SearchItemType.SEARCH_NOTE));
+                         SearchItemType.SEARCH_TEXT_NOTE));
     }
 
     return searchResultList;
@@ -75,12 +75,7 @@ public class SearchModel {
     return searchResultList.get(position);
   }
 
-  /**
-   * Gets the current searchResultList.
-   *
-   * @return Returns the current searchResultList
-   */
-  public List<SearchItem> getCurrentSearchResultList() {
-    return searchResultList;
+  public Long getBookIdByNoteId(Long noteId) {
+    return noteDao.findBookIdByNoteId(noteId);
   }
 }

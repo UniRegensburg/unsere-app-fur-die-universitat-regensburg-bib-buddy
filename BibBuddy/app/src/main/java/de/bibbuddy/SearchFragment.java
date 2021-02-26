@@ -10,9 +10,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,21 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
                            @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_search, container, false);
     context = view.getContext();
+
+    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_search));
+
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+          fm.popBackStack();
+        } else {
+          requireActivity().onBackPressed();
+        }
+      }
+    });
 
     setupRecyclerView();
     setupSearchInput();
@@ -101,7 +118,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     // TODO get filters
     // TODO sort Name, modDate
     // TODO search Results depending on filters
-    Toast.makeText(context, "Suche ... " + searchInputStr, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
 
     searchResultList = searchModel.getSearchResultList(searchInputStr);
     // adapter.notifyDataSetChanged(); // it doesn't work
@@ -113,8 +130,72 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
   @Override
   public void onItemClicked(int position) {
-    // TODO open book in BookNotesView
-    // TODO open note directly
-    // TODO open shelf in BookFragment View
+    SearchItem searchItem = searchModel.getSelectedSearchItem(position);
+
+    ((MainActivity) getActivity()).updateHeaderFragment(searchItem.getName());
+
+    SearchItemType searchItemType = searchItem.getItemType();
+
+    if (searchItemType == SearchItemType.SEARCH_SHELF) {
+      openShelf(searchItem);
+    } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
+      openBook(searchItem);
+    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
+      openTextNote(searchItem);
+    }
+
   }
+
+  private Bundle createShelfBundle(SearchItem searchItem) {
+    Bundle bundle = new Bundle();
+
+    bundle.putLong(LibraryKeys.SHELF_ID, searchItem.getId());
+    bundle.putString(LibraryKeys.SHELF_NAME, searchItem.getName());
+
+    return bundle;
+  }
+
+  private void openShelf(SearchItem searchItem) {
+    BookFragment fragment = new BookFragment();
+    fragment.setArguments(createShelfBundle(searchItem));
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  private void openBook(SearchItem searchItem) {
+    BookNotesView fragment = new BookNotesView();
+    fragment.setArguments(createShelfBundle(searchItem));
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  private Bundle createNoteBundle(SearchItem searchItem) {
+    Long noteId = searchItem.getId();
+
+    Bundle bundle = new Bundle();
+    bundle.putLong(LibraryKeys.BOOK_ID, searchModel.getBookIdByNoteId(noteId));
+    bundle.putLong(LibraryKeys.NOTE_ID, noteId);
+
+    return bundle;
+  }
+
+  private void openTextNote(SearchItem searchItem) {
+    TextNoteEditorFragment fragment = new TextNoteEditorFragment();
+    fragment.setArguments(createNoteBundle(searchItem));
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .addToBackStack(null)
+        .commit();
+  }
+
+
 }

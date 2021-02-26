@@ -293,4 +293,30 @@ public class NoteDao implements InterfaceNoteDao {
 
     return noteList;
   }
+
+  /**
+   * Finds the id of the book by the given noteId.
+   *
+   * @param noteId id of the note
+   * @return Returns the book id which contains the noteId.
+   */
+  public Long findBookIdByNoteId(Long noteId) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.BOOK_ID + " FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
+            + " WHERE " + DatabaseHelper.NOTE_ID + "=" + noteId + " LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    Long bookId = 0L;
+    if (cursor != null) {
+      cursor.moveToFirst();
+      bookId = cursor.getLong(0);
+
+      cursor.close();
+    }
+
+    return bookId;
+  }
 }
