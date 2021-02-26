@@ -31,7 +31,7 @@ public class NoteDao implements InterfaceNoteDao {
         db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFile);
         Cursor c =
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
-                null, null, null, null);
+                     null, null, null, null);
         c.moveToLast();
 
         ContentValues contentValues = new ContentValues();
@@ -47,7 +47,7 @@ public class NoteDao implements InterfaceNoteDao {
 
         Cursor cursor =
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
-                null, null, null);
+                     null, null, null);
         cursor.moveToLast();
         long id = cursor.getLong(0);
         cursor.close();
@@ -68,11 +68,13 @@ public class NoteDao implements InterfaceNoteDao {
   public Note findById(long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID},
-        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-        null, null, null, null);
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
+                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.NOTE_FILE_ID},
+                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+                             null, null, null, null);
 
     Note note = null;
     if (cursor != null) {
@@ -129,7 +131,7 @@ public class NoteDao implements InterfaceNoteDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.delete(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, DatabaseHelper.NOTE_ID + " = ?",
               new String[] {String.valueOf(id)});
@@ -153,7 +155,8 @@ public class NoteDao implements InterfaceNoteDao {
     values.put("text", text);
     values.put("modifikation_date", currentTime);
     dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
-        DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)});
+                                          DatabaseHelper._ID + " = ?",
+                                          new String[] {String.valueOf(id)});
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.close();
   }
@@ -230,11 +233,13 @@ public class NoteDao implements InterfaceNoteDao {
   public String findTextById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.NAME, DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE, DatabaseHelper.NOTE_FILE_ID},
-        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-        null, null, null, null);
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
+                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.NOTE_FILE_ID},
+                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+                             null, null, null, null);
 
     String noteText = null;
     if (cursor != null) {
@@ -245,5 +250,47 @@ public class NoteDao implements InterfaceNoteDao {
     }
 
     return noteText;
+  }
+
+  private Note createNoteData(Cursor cursor) { // TODO use at other places after 2nd release
+
+    return new Note(
+        Long.parseLong(cursor.getString(0)), // Id
+        cursor.getString(1), // Name
+        Integer.parseInt(cursor.getString(2)), // Type
+        cursor.getString(3), // Text
+        Long.parseLong(cursor.getString(4)), // Create date
+        Long.parseLong(cursor.getString(5)), // Mod date
+        cursor.getLong(6) // Note file id
+    );
+  }
+
+  /**
+   * Finds all notes which which contain searchInput.
+   *
+   * @param searchInput searchInput of the user
+   * @return Returns a list of notes which have the searchInput in the name
+   */
+  public List<Note> findNotesByName(String searchInput) {
+    List<Note> noteList = new ArrayList<>();
+
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_NOTE + " WHERE "
+        + DatabaseHelper.NAME + " LIKE '%" + searchInput + "%'";
+
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+      do {
+        Note note = createNoteData(cursor);
+        noteList.add(note);
+
+      } while (cursor.moveToNext());
+
+      cursor.close();
+    }
+
+    return noteList;
   }
 }

@@ -340,5 +340,51 @@ public class BookDao implements InterfaceBookDao {
     return noteCount;
   }
 
+  private Book createBookData(Cursor cursor) { // TODO use at other places after 2nd release
+
+    return new Book(
+        Long.parseLong(cursor.getString(0)),
+        cursor.getString(1),
+        cursor.getString(2),
+        cursor.getString(3),
+        Integer.parseInt(cursor.getString(4)),
+        cursor.getString(5),
+        cursor.getString(6),
+        cursor.getString(7),
+        cursor.getString(8),
+        Integer.parseInt(cursor.getString(9)),
+        Integer.parseInt(cursor.getString(10))
+    );
+  }
+
+
+  /**
+   * Finds all books which contain searchInput.
+   *
+   * @param searchInput searchInput of the user
+   * @return Returns a list of books which have the searchInput in the name
+   */
+  public List<Book> findBooksByTitle(String searchInput) {
+    List<Book> bookList = new ArrayList<>();
+
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_BOOK + " WHERE "
+        + DatabaseHelper.TITLE + " LIKE '%" + searchInput + "%'";
+
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+      do {
+        Book book = createBookData(cursor);
+        bookList.add(book);
+
+      } while (cursor.moveToNext());
+
+      cursor.close();
+    }
+
+    return bookList;
+  }
 
 }

@@ -334,10 +334,10 @@
         ]]>
     </string>
 
-
-
-
-    ""
-
+    <!-- Search -->
+    <string name="search">Suche nach ...</string>
+    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben. Reine Whitespaces sind nicht
+        erlaubt.</string>
+    <string name="search_empty">keine Suchergebnisse vorhanden</string>
 
 </resources>
