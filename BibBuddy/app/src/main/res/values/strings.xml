@@ -152,7 +152,7 @@
     <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
 
     <!-- Export: Empty Booklist -->
-    <string name="empty_booklist">Die Buchliste ist leer</string>
+    <string name="empty_booklist">Die Bücherliste ist leer</string>
     <string name="empty_booklist_description">
         Bitte füge ein/ mehrere Bücher in die
          Liste um den Export zu ermöglichen.
