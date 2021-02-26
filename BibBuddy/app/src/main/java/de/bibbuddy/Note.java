@@ -23,7 +23,7 @@ public class Note {
   }
 
   /**
-   * Constructor to set up a new note with only.
+   * Constructor to set up a new note with only name, type and text.
    *
    * @param name name of the note object
    * @param type type of the note object (text, voice or picture)
