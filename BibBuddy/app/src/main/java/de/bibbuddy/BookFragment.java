@@ -179,7 +179,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
             STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.storage_permission_cancel_btn,
-            (dialog, which) -> dialog.dismiss());
+        (dialog, which) -> dialog.dismiss());
     reqAlertDialog.create().show();
   }
 
@@ -191,7 +191,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       case STORAGE_PERMISSION_CODE:
         if (grantResults.length > 0
-            || grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           createBibFile("Download", shelfName);
           retrieveBibContent();
           writeBibFile("Download", shelfName, bibExportContent);
@@ -453,7 +453,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   /*private void createBackBtnListener() {
     TextView backView = view.findViewById(R.id.text_view_back_to);
-
     backView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
