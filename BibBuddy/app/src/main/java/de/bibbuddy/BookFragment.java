@@ -270,8 +270,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       out.flush();
       out.close();
 
-      Toast.makeText(getContext(), R.string.exported_file_stored_in + '\n'
-          + rootPath + fileName + ".bib", Toast.LENGTH_LONG).show();
+      Toast.makeText(getContext(), getString(R.string.exported_file_stored_in) + '\n'
+          + "/" + folderName + "/" + fileName + ".bib", Toast.LENGTH_LONG).show();
 
     } catch (Exception e) {
 
@@ -297,6 +297,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     List<Author> authorsCurrBook = new ArrayList<>();
     List<Long> notesCurrBook = new ArrayList<>();
     String allNotesCurrBook = "";
+    String authorNamesCurrBook = "";
 
     //for each book in the current shelf
     for (int i = 0; i < bookIdsCurrShelf.size(); i++) {
@@ -308,29 +309,31 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       /*
       get the notes for the current book
-      and save them together in one string
+      and save the bib content in one string
       */
       for (int k = 0; k < notesCurrBook.size(); k++) {
         String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
-        allNotesCurrBook += noteTextCurrBook + '\n';
+        allNotesCurrBook +=  "anote={" + noteTextCurrBook + "}," + '\n';
       }
 
       /*
       get author's first and last name and include
       the needed book data in a bib format
-      finally, save all bib data into a list
       */
-      for (int j = 0; j < authorsCurrBook.size(); j++) {
-        bibExportContent = bibExportContent
-            + "@book{" + currBook.getTitle() + currBook.getPubYear() + "," + '\n'
-            + "author={" + authorsCurrBook.get(j).getFirstName() + " "
-            + authorsCurrBook.get(j).getLastName() + "}," + '\n'
-            + "title={" + currBook.getTitle() + "}," + '\n'
-            + "publisher={" + currBook.getPublisher() + "}," + '\n'
-            + "year=" + currBook.getPubYear() + "," + '\n'
-            + "edition={" + currBook.getEdition() + "}," + '\n'
-            + "note={" + allNotesCurrBook + "}" + '\n' + "}" + '\n';
+      for (int u = 0; u < authorsCurrBook.size(); u++) {
+        authorNamesCurrBook = authorsCurrBook.get(u).getFirstName()
+            + " " + authorsCurrBook.get(u).getLastName();
       }
+
+      bibExportContent = bibExportContent
+          + "@book{" + currBook.getTitle() + currBook.getPubYear() + "," + '\n'
+          + "isbn={" + currBook.getIsbn() + "}," + '\n'
+          + "author={" + authorNamesCurrBook + "}," + '\n'
+          + "title={" + currBook.getTitle() + "}," + '\n'
+          + "publisher={" + currBook.getPublisher() + "}," + '\n'
+          + "edition={" + currBook.getEdition() + "}," + '\n'
+          + allNotesCurrBook + "}," + '\n'
+          + "year=" + currBook.getPubYear() + '\n' + "}" + '\n';
     }
   }
 
