@@ -9,7 +9,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -35,7 +34,6 @@ public class BookBarcodeScannerFragment extends Fragment {
 
   private SurfaceView surfaceView;
   private CameraSource cameraSource;
-  private TextView barcodeText;
   private BarcodeDetector barcodeDetector;
   private IsbnRetriever isbnRetriever;
   private Thread thread;
@@ -63,7 +61,6 @@ public class BookBarcodeScannerFragment extends Fragment {
     });
 
     surfaceView = view.findViewById(R.id.surface_view);
-    barcodeText = view.findViewById(R.id.barcode_value);
     Bundle bundle = getArguments();
 
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
@@ -127,6 +124,7 @@ public class BookBarcodeScannerFragment extends Fragment {
         if (barcodes.size() != 0) {
 
           isbnRetriever = new IsbnRetriever(barcodes.valueAt(0).displayValue);
+          System.out.println(isbnRetriever);
           thread = new Thread(isbnRetriever);
           thread.start();
 
@@ -143,8 +141,12 @@ public class BookBarcodeScannerFragment extends Fragment {
             handleAddBook(book);
           } else {
             closeFragment();
-            //Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
-            //    Toast.LENGTH_LONG).show();
+            getActivity().runOnUiThread(new Runnable() {
+              public void run() {
+                Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
+                    Toast.LENGTH_SHORT).show();
+              }
+            });
           }
         }
       }
@@ -152,12 +154,16 @@ public class BookBarcodeScannerFragment extends Fragment {
   }
 
   private void handleAddBook(Book book) {
-    //Toast.makeText(getActivity(), getString(R.string.added_book),
-    //    Toast.LENGTH_LONG).show();
-
     // TODO authors of a book
     BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
     bookDao.create(book, new ArrayList<Author>(), shelfId);
+
+    getActivity().runOnUiThread(new Runnable() {
+      public void run() {
+        Toast.makeText(getActivity(), getString(R.string.added_book),
+            Toast.LENGTH_SHORT).show();
+      }
+    });
 
     closeFragment();
   }
@@ -183,7 +189,6 @@ public class BookBarcodeScannerFragment extends Fragment {
 
     return bundle;
   }
-
 
   @Override
   public void onPause() {
