@@ -92,12 +92,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     switch (item.getItemId()) {
       case R.id.menu_change_book_data:
         handleChangeBookData();
-        Toast.makeText(getContext(), "Buchdaten ändern wurde geklickt", Toast.LENGTH_SHORT).show();
         break;
 
       case R.id.menu_delete_book:
         handleDeleteBook();
-        Toast.makeText(getContext(), "Buch löschen wurde geklickt", Toast.LENGTH_SHORT).show();
         break;
 
       case R.id.menu_export_book:
@@ -118,6 +116,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void handleChangeBookData() {
+    if (selectedBookItems.isEmpty()) {
+      return;
+    }
+
     Bundle bundle = new Bundle();
     BookItem bookItem = selectedBookItems.get(0);
     bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
@@ -157,9 +159,11 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     alertDeleteBook.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        bookModel.deleteBooks(selectedBookItems);
+        bookModel.deleteBooks(selectedBookItems, shelfId);
 
+        adapter.setBookList(bookModel.getCurrentBookList());
         adapter.notifyDataSetChanged();
+
         updateEmptyView(bookModel.getCurrentBookList());
         Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
         unselectBookItems();
@@ -318,6 +322,22 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     selectedBookItems.clear();
   }
 
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem changeBookData = menu.findItem(R.id.menu_change_book_data);
+    MenuItem deleteBook = menu.findItem(R.id.menu_delete_book);
+
+    if (selectedBookItems == null || selectedBookItems.isEmpty()) {
+      changeBookData.setVisible(false);
+      deleteBook.setVisible(false);
+    } else if (selectedBookItems.size() == 1) {
+      changeBookData.setVisible(true);
+      deleteBook.setVisible(true);
+    } else {
+      changeBookData.setVisible(false);
+      deleteBook.setVisible(true);
+    }
+  }
 
   @Override
   public void onLongItemClicked(int position, BookItem bookItem, View v) {

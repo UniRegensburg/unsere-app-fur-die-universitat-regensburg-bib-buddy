@@ -115,8 +115,8 @@ public class BookModel {
    *
    * @param selectedBookItems selected book items
    */
-  public void deleteBooks(List<BookItem> selectedBookItems) {
-    if (selectedBookItems == null) {
+  public void deleteBooks(List<BookItem> selectedBookItems, Long shelfId) {
+    if (selectedBookItems == null || selectedBookItems.isEmpty()) {
       return;
     }
 
@@ -126,7 +126,7 @@ public class BookModel {
       deleteNotes(bookId);
       deleteAuthors(bookId);
 
-      bookDao.delete(bookId);
+      bookDao.delete(bookId, shelfId);
       deleteBookFromBookList(book);
     }
   }

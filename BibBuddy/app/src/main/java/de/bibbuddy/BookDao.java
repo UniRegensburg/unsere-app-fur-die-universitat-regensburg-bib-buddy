@@ -89,9 +89,7 @@ public class BookDao implements InterfaceBookDao {
                              new String[] {String.valueOf(id)}, null, null, null, null);
 
     Book book = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
-
+    if (cursor.moveToFirst()) {
       book = new Book(
           Long.parseLong(cursor.getString(0)), // Id
           cursor.getString(1), // Isbn

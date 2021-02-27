@@ -118,6 +118,12 @@ public class BookNotesView extends Fragment
     return super.onOptionsItemSelected(item);
   }
 
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
+    deleteNote.setVisible(selectedNoteItems != null && !selectedNoteItems.isEmpty());
+  }
+
   private void handleDeleteNote() {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
 
