@@ -39,7 +39,7 @@ import java.util.List;
  * @author Claudia Schönherr, Silvia Ivanova
  */
 public class LibraryFragment extends Fragment
-    implements LibraryRecyclerViewAdapter.LibraryListener, BookRecyclerViewAdapter.BookListener {
+    implements LibraryRecyclerViewAdapter.LibraryListener {
 
   private View view;
   private Context context;

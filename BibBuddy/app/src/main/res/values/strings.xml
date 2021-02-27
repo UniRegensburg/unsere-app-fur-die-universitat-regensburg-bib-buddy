@@ -58,6 +58,7 @@
     <string name="books">Bücher</string>
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
+    <string name="change_book">Buchdaten ändern</string>
     <string name="book_icon">Buch Icon</string>
     <string name="add_book_tooltip">Neues Buch hinzufügen</string>
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
@@ -66,6 +67,12 @@
         angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem Buch
         erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
+
+    <string name="delete_book">Bücher löschen</string>
+    <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
+    <string name="delete_book_message">Alle ausgewählten Bücher werden gelöscht inklusive der
+        Notizen.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
 
     <string name="add_book_scan_text">Barcode scannen</string>
     <string name="add_book_online_text">Im Online-Katalog suchen</string>
@@ -107,6 +114,11 @@
         die Notiz gespeichert. Sie ist dann unter dem jeweiligen Buch und in der gesamten Notizliste
         zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
+
+    <string name="delete_note">Notizen löschen</string>
+    <string name="deleted_notes">Notiz(en) wurde(n) gelöscht</string>
+    <string name="delete_note_message">Alle ausgewählten Notizen werden gelöscht.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
 
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>

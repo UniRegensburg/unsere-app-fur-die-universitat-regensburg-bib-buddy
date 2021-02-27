@@ -7,15 +7,15 @@ package de.bibbuddy;
  */
 public class Book {
 
-  private Long id;
-  private String isbn;
-  private String title;
-  private String subtitle;
+  private Long id = Long.valueOf(0);
+  private String isbn = new String();
+  private String title = new String();
+  private String subtitle = new String();
   private Integer pubYear;
-  private String publisher;
-  private String volume;
-  private String edition;
-  private String addInfo;
+  private String publisher = new String();
+  private String volume = new String();
+  private String edition = new String();
+  private String addInfo = new String();
   private Integer createDate;
   private Integer modDate;
 
