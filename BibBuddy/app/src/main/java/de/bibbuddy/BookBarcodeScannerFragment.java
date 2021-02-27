@@ -116,41 +116,45 @@ public class BookBarcodeScannerFragment extends Fragment {
       }
 
       /**
-       * Receives the ISBN of a book.
+       * Receives a barcode ISBN, hands the ISBN over the the API.
        */
       @Override
       public void receiveDetections(Detector.Detections<Barcode> detections) {
         final SparseArray<Barcode> barcodes = detections.getDetectedItems();
         if (barcodes.size() != 0) {
-
-          isbnRetriever = new IsbnRetriever(barcodes.valueAt(0).displayValue);
-          System.out.println(isbnRetriever);
-          thread = new Thread(isbnRetriever);
-          thread.start();
-
-          try {
-            thread.join();
-          } catch (Exception e) {
-            System.out.println(e);
-          }
-
-          // retrieve metadata that was saved
-          Book book = isbnRetriever.getBook();
-          if (book != null) {
-            closeFragment();
-            handleAddBook(book);
-          } else {
-            closeFragment();
-            getActivity().runOnUiThread(new Runnable() {
-              public void run() {
-                Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
-                    Toast.LENGTH_SHORT).show();
-              }
-            });
-          }
+          barcodeDetector.release();
+          handleIsbnInput(barcodes.valueAt(0).displayValue);
         }
       }
     });
+  }
+
+  private void handleIsbnInput(String isbn) {
+    isbnRetriever = new IsbnRetriever(isbn);
+    System.out.println(isbnRetriever);
+    thread = new Thread(isbnRetriever);
+    thread.start();
+
+    try {
+      thread.join();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+
+    // retrieve metadata that was saved
+    Book book = isbnRetriever.getBook();
+    closeFragment();
+    if (book != null) {
+      handleAddBook(book);
+    } else {
+      
+      getActivity().runOnUiThread(new Runnable() {
+        public void run() {
+          Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
+              Toast.LENGTH_SHORT).show();
+        }
+      });
+    }
   }
 
   private void handleAddBook(Book book) {
