@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +24,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +86,7 @@ public class LibraryFragment extends Fragment
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_backup_library:
-        setStoragePermission();
+        
         break;
 
       case R.id.menu_rename_shelf:
@@ -101,52 +109,6 @@ public class LibraryFragment extends Fragment
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  private void setStoragePermission() {
-    if (ContextCompat.checkSelfPermission(getContext(),
-              Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-      requestStoragePermission();
-    }
-  }
-
-  private void requestStoragePermission() {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      showRequestPermissionDialog();
-    } else {
-      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-              STORAGE_PERMISSION_CODE);
-    }
-  }
-
-  private void showRequestPermissionDialog() {
-    new AlertDialog.Builder(getContext())
-        .setTitle(R.string.storage_permission_needed)
-        .setMessage(R.string.storage_permission_alert_msg)
-
-        .setPositiveButton(R.string.storage_permission_ok_btn,
-            (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-                new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE))
-
-        .setNegativeButton(R.string.storage_permission_cancel_btn,
-            (dialog, which) -> dialog.dismiss())
-        .create().show();
-  }
-
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         String[] permissions, int[] grantResults) {
-    switch (requestCode) {
-      case STORAGE_PERMISSION_CODE:
-        if (grantResults.length <= 0
-            || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-          Toast.makeText(context, R.string.storage_permission_denied, Toast.LENGTH_SHORT).show();
-        }
-        break;
-
-      default:
-    }
   }
 
   private void handleManualLibrary() {

@@ -10,7 +10,7 @@
         android:title="@string/change" />
 
     <item
-        android:id="@+id/menu_export_book"
+        android:id="@+id/menu_export_book_list"
         android:title="@string/export" />
 
     <item
