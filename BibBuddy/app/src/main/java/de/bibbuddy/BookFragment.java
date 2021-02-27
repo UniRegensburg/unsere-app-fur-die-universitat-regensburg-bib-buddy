@@ -259,9 +259,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     //for each book in the current shelf
     for (int i = 0; i < bookIdsCurrShelf.size(); i++) {
+
+      Book currBook;
       Long currBookId = bookIdsCurrShelf.get(i);
-      Book currBook = bd.findById(currBookId);
-      String bookTitle = currBook.getTitle().replaceAll("\\s+", "");
+      currBook = bd.findById(currBookId);
       allNotesCurrBook = "";
       authorNamesCurrBook = "";
       authorsCurrBook = bd.getAllAuthorsForBook(currBookId);
@@ -301,6 +302,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           authorNamesCurrBook = "";
         }
       }
+
+      String bookTitle = currBook.getTitle().replaceAll("\\s+", "");
 
       bibExportContent = bibExportContent
           + "@book{" + bookTitle + currBook.getPubYear() + "," + '\n'
