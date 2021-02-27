@@ -23,6 +23,13 @@ public class BookNotesRecyclerViewAdapter extends
   private final BookNotesViewListener listener;
   private final Context context;
 
+  /**
+   * Constructor for BookNotesRecyclerViewAdapter.
+   *
+   * @param noteList list of notes
+   * @param listener listener for bookNotesView
+   * @param context context
+   */
   public BookNotesRecyclerViewAdapter(List<NoteItem> noteList, BookNotesViewListener listener,
                                       Context context) {
     this.noteList = noteList;
@@ -32,10 +39,10 @@ public class BookNotesRecyclerViewAdapter extends
 
   @NonNull
   @Override
-  public BookNotesViewHolder
-      onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new BookNotesRecyclerViewAdapter.BookNotesViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.list_view_item_book_notes_view, parent, false));
+  public BookNotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    return new BookNotesRecyclerViewAdapter.BookNotesViewHolder(
+        LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.list_view_item_book_notes_view, parent, false));
   }
 
   @Override
@@ -44,8 +51,8 @@ public class BookNotesRecyclerViewAdapter extends
     // with that element
     NoteItem noteItem = noteList.get(position);
 
-    holder.getTextView().setText(noteList.get(position).getName());
-    holder.getImageView().setImageResource(noteList.get(position).getImage());
+    holder.getTextView().setText(noteItem.getName());
+    holder.getImageView().setImageResource(noteItem.getImage());
 
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override

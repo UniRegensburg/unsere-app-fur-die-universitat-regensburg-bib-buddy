@@ -57,6 +57,7 @@
     <string name="books">Bücher</string>
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
+    <string name="change_book">Buchdaten ändern</string>
     <string name="book_icon">Buch Icon</string>
     <string name="add_book_tooltip">Neues Buch hinzufügen</string>
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es

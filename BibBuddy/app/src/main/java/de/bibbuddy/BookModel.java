@@ -89,8 +89,12 @@ public class BookModel {
     return bookList;
   }
 
+  public List<Author> getAuthorList(Long bookId) {
+    return bookDao.getAllAuthorsForBook(bookId);
+  }
+
   private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorsIdsForBook(bookId);
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
 
     for (Long authorId : authorIds) {
       authorDao.delete(authorId, bookId);
@@ -135,11 +139,19 @@ public class BookModel {
     }
   }
 
+  public void updateBook(Book book, List<Author> authorList) {
+    bookDao.updateBook(book, authorList);
+  }
+
   public List<BookItem> getCurrentBookList() {
     return bookList;
   }
 
   public BookItem getSelectedBookItem(int position) {
     return bookList.get(position);
+  }
+
+  public Book getBookById(Long id) {
+    return bookDao.findById(id);
   }
 }

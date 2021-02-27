@@ -86,7 +86,6 @@ public class BookNotesView extends Fragment
   }
 
 
-
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.fragment_book_note_menu, menu);
@@ -235,7 +234,8 @@ public class BookNotesView extends Fragment
     bookNotesViewModel = new BookNotesViewModel(getContext());
     noteList = bookNotesViewModel.getNoteList(bookId);
 
-    RecyclerView bookNotesRecyclerViewAdapter = view.findViewById(R.id.book_notes_view_recycler_view);
+    RecyclerView bookNotesRecyclerViewAdapter =
+        view.findViewById(R.id.book_notes_view_recycler_view);
     adapter = new BookNotesRecyclerViewAdapter(noteList, this, context);
     bookNotesRecyclerViewAdapter.setAdapter(adapter);
 

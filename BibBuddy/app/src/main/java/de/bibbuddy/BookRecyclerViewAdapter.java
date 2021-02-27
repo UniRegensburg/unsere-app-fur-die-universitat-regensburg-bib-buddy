@@ -19,9 +19,9 @@ import java.util.List;
 
 public class BookRecyclerViewAdapter
     extends RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder> {
-  private final List<BookItem> bookList;
   private final BookRecyclerViewAdapter.BookListener listener;
   private final Context context;
+  private List<BookItem> bookList;
 
   /**
    * Constructor of the BookRecyclerViewAdapter.
@@ -37,13 +37,17 @@ public class BookRecyclerViewAdapter
     this.context = context;
   }
 
+  public void setBookList(List<BookItem> bookList) {
+    this.bookList = bookList;
+  }
+
   @NonNull
   @Override
   public BookRecyclerViewAdapter.BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                    int viewType) {
-    return new BookRecyclerViewAdapter.BookViewHolder(LayoutInflater.from(parent.getContext())
-                                                          .inflate(R.layout.list_view_item_book,
-                                                                   parent, false));
+    return new BookRecyclerViewAdapter.BookViewHolder(
+        LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.list_view_item_book, parent, false));
   }
 
   private String getNoteString(int noteCount) {

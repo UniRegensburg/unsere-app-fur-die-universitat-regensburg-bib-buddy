@@ -28,7 +28,8 @@ import java.util.List;
  *
  * @author Claudia Schönherr
  */
-public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
+public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener,
+    BookFormFragment.ChangeBookListener {
   private Long shelfId;
   private String shelfName;
   private View view;
@@ -90,7 +91,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     switch (item.getItemId()) {
       case R.id.menu_change_book_data:
-        // TODO Luis
+        handleChangeBookData();
         Toast.makeText(getContext(), "Buchdaten ändern wurde geklickt", Toast.LENGTH_SHORT).show();
         break;
 
@@ -114,6 +115,30 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleChangeBookData() {
+    Bundle bundle = new Bundle();
+    BookItem bookItem = selectedBookItems.get(0);
+    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
+    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+    bundle.putLong(LibraryKeys.BOOK_ID, bookItem.getId());
+
+    BookFormFragment bookFormFragment = new BookFormFragment(this);
+
+    bookFormFragment.setArguments(bundle);
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  @Override
+  public void onBookChanged(Book book, List<Author> authorList) {
+    bookModel.updateBook(book, authorList);
+
+    adapter.setBookList(bookModel.getBookList(shelfId));
+    adapter.notifyDataSetChanged();
   }
 
   private void handleDeleteBook() {
@@ -250,7 +275,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void handleAddBookManually() {
     BookFormFragment fragment = new BookFormFragment(
-        new BookFormFragment.AddBookManuallyListener() {
+        new BookFormFragment.ChangeBookListener() {
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
             addBook(book, authorList);
