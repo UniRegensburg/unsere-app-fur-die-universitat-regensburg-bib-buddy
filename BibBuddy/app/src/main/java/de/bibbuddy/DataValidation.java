@@ -134,6 +134,6 @@ public class DataValidation {
     }
     boolean isNumber = numberStr.chars().allMatch(Character::isDigit);
 
-    return isNumber && Integer.parseInt(numberStr) > 0 && numberStr.length() < 5;
+    return isNumber && Integer.parseInt(numberStr) >= 0 && numberStr.length() < 5;
   }
 }

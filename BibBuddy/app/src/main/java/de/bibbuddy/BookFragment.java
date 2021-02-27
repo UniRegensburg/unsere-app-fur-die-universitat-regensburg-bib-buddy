@@ -1,5 +1,8 @@
 package de.bibbuddy;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,13 +28,16 @@ import java.util.List;
  *
  * @author Claudia Schönherr
  */
-public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener {
+public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener,
+    BookFormFragment.ChangeBookListener {
   private Long shelfId;
   private String shelfName;
   private View view;
+  private Context context;
 
   private BookModel bookModel;
   private BookRecyclerViewAdapter adapter;
+  private List<BookItem> selectedBookItems;
 
   @Nullable
   @Override
@@ -51,6 +58,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     });
 
     view = inflater.inflate(R.layout.fragment_book, container, false);
+    context = view.getContext();
 
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
@@ -66,6 +74,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     createAddBookListener();
     updateEmptyView(bookList);
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
+    selectedBookItems = new ArrayList<BookItem>();
 
     return view;
   }
@@ -82,13 +91,11 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     switch (item.getItemId()) {
       case R.id.menu_change_book_data:
-        // TODO Luis
-        Toast.makeText(getContext(), "Buchdaten ändern wurde geklickt", Toast.LENGTH_SHORT).show();
+        handleChangeBookData();
         break;
 
       case R.id.menu_delete_book:
-        // TODO Luis
-        Toast.makeText(getContext(), "Buch löschen wurde geklickt", Toast.LENGTH_SHORT).show();
+        handleDeleteBook();
         break;
 
       case R.id.menu_export_book:
@@ -106,6 +113,64 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleChangeBookData() {
+    if (selectedBookItems.isEmpty()) {
+      return;
+    }
+
+    Bundle bundle = new Bundle();
+    BookItem bookItem = selectedBookItems.get(0);
+    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
+    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+    bundle.putLong(LibraryKeys.BOOK_ID, bookItem.getId());
+
+    BookFormFragment bookFormFragment = new BookFormFragment(this);
+
+    bookFormFragment.setArguments(bundle);
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  @Override
+  public void onBookChanged(Book book, List<Author> authorList) {
+    bookModel.updateBook(book, authorList);
+
+    adapter.setBookList(bookModel.getBookList(shelfId));
+    adapter.notifyDataSetChanged();
+  }
+
+  private void handleDeleteBook() {
+    AlertDialog.Builder alertDeleteBook = new AlertDialog.Builder(context);
+
+    alertDeleteBook.setCancelable(false);
+    alertDeleteBook.setTitle(R.string.delete_book);
+    alertDeleteBook.setMessage(R.string.delete_book_message);
+
+    alertDeleteBook.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
+
+    alertDeleteBook.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        bookModel.deleteBooks(selectedBookItems, shelfId);
+
+        adapter.setBookList(bookModel.getCurrentBookList());
+        adapter.notifyDataSetChanged();
+
+        updateEmptyView(bookModel.getCurrentBookList());
+        Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
+        unselectBookItems();
+      }
+    });
+
+    alertDeleteBook.show();
   }
 
   private void handleManualBook() {
@@ -214,7 +279,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void handleAddBookManually() {
     BookFormFragment fragment = new BookFormFragment(
-        new BookFormFragment.AddBookManuallyListener() {
+        new BookFormFragment.ChangeBookListener() {
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
             addBook(book, authorList);
@@ -248,18 +313,40 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     fragment.setArguments(createBookBundle());
   }
 
-  /*private void createBackBtnListener() {
-    TextView backView = view.findViewById(R.id.text_view_back_to);
+  private void unselectBookItems() {
+    RecyclerView bookListView = getView().findViewById(R.id.book_recycler_view);
+    for (int i = 0; i < bookListView.getChildCount(); i++) {
+      bookListView.getChildAt(i).setSelected(false);
+    }
 
-    backView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        LibraryFragment fragment = new LibraryFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-            .replace(R.id.fragment_container_view, fragment, LibraryKeys.FRAGMENT_LIBRARY)
-            .addToBackStack(null)
-            .commit();
-      }
-    });
-  }*/
+    selectedBookItems.clear();
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem changeBookData = menu.findItem(R.id.menu_change_book_data);
+    MenuItem deleteBook = menu.findItem(R.id.menu_delete_book);
+
+    if (selectedBookItems == null || selectedBookItems.isEmpty()) {
+      changeBookData.setVisible(false);
+      deleteBook.setVisible(false);
+    } else if (selectedBookItems.size() == 1) {
+      changeBookData.setVisible(true);
+      deleteBook.setVisible(true);
+    } else {
+      changeBookData.setVisible(false);
+      deleteBook.setVisible(true);
+    }
+  }
+
+  @Override
+  public void onLongItemClicked(int position, BookItem bookItem, View v) {
+    if (v.isSelected()) {
+      v.setSelected(false);
+      selectedBookItems.remove(bookItem);
+    } else {
+      v.setSelected(true);
+      selectedBookItems.add(bookItem);
+    }
+  }
 }
