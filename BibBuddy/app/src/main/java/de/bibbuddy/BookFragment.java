@@ -125,14 +125,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     return super.onOptionsItemSelected(item);
   }
 
-  /**
-   * This method checks if the book list of a particular
-   * shelf is empty when the user tries to export the
-   * book list from the selected shelf.
-   * If yes: then an Alert dialog with further information
-   * will be shown.
-   * If no: then the external storage permission are checked.
-   */
   private void checkEmptyBookList() {
     DatabaseHelper dbHelper = new DatabaseHelper(getContext());
     BookDao bd = new BookDao(dbHelper);
@@ -152,12 +144,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  /**
-   * This method checks if the user has already granted
-   * the storage permission.
-   * If yes: a .bib-file is generated.
-   * If no: then request permission dialog is shown.
-   */
   private void checkStoragePermission() {
     if (ContextCompat.checkSelfPermission(getContext(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -173,11 +159,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  /**
-   * If the user has first denied the request permission request,
-   * then show another dialog with more detailed information
-   * why the permission is needed.
-   */
   private void requestStoragePermission() {
     if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -188,11 +169,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  /**
-   * This method shows an alert dialog with further information
-   * about the importance of the permission and what the user
-   * should do after allowing the storage permission.
-   */
   private void showRequestPermissionDialog() {
     AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
     reqAlertDialog.setTitle(R.string.storage_permission_needed);
@@ -205,7 +181,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         (dialog, which) -> dialog.dismiss());
     reqAlertDialog.create().show();
   }
-
 
   /**
    * Callback method, that checks the result from requesting permissions.
@@ -240,17 +215,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  /**
-   * This method creates a .bib-file in the "Download"-folder
-   * in case of granted external storage permissions.
-   * If the current file already exists, then it will be
-   * overwritten.
-   *
-   * @param folderName name of the folder where
-   *                   the .bib-file will be stored
-   * @param fileName name of the .bib-file
-   *
-   */
   private void createBibFile(String folderName, String fileName) {
     try {
       String rootPath = Environment.getExternalStorageDirectory() + "/" + folderName + "/";
@@ -274,19 +238,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           + "/" + folderName + "/" + fileName + ".bib", Toast.LENGTH_LONG).show();
 
     } catch (Exception e) {
-
       e.printStackTrace();
     }
   }
 
-  /**
-   * This method is used to retrieve data from the database,
-   * that is used as content for the .bib-file.
-   * The data contains all needed information about a current
-   * books that are listed in currently selected shelf and
-   * all notes, written by user for this book.
-   * Finally, all this data is stored in a list.
-   */
   private void retrieveBibContent() {
 
     DatabaseHelper dbHelper = new DatabaseHelper(getContext());
@@ -336,16 +291,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           + "year=" + currBook.getPubYear() + '\n' + "}" + '\n';
     }
   }
-
-  /**
-   * This method is used to write the retrieved .bib data content
-   * into already created/ existing .bib-file.
-   *
-   * @param folderName name of the folder where
-   *                   the .bib-file will be stored
-   * @param fileName name of the .bib-file
-   * @param content content of the .bib-file
-   */
 
   private void writeBibFile(String folderName, String fileName, String content) {
 
