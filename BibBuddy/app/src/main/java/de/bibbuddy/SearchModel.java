@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.content.Context;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,8 +37,10 @@ public class SearchModel {
    *
    * @return Returns the searchResultList
    */
-  public List<SearchItem> getSearchResultList(String searchInput) { // TODO filter, sort
+  public List<SearchItem> getSearchResultList(String searchInput, SearchSortCriteria sortCriteria) {
     searchResultList.clear();
+
+    // TODO filter
 
     List<Shelf> shelfList = shelfDao.findShelvesByName(searchInput);
     for (Shelf shelf : shelfList) {
@@ -62,7 +65,49 @@ public class SearchModel {
                          SearchItemType.SEARCH_TEXT_NOTE));
     }
 
+    sortSearchResultList(sortCriteria);
+
     return searchResultList;
+  }
+
+  private void sortSearchResultList(SearchSortCriteria sortCriteria) {
+    if (sortCriteria == SearchSortCriteria.NAME_ASCENDING) {
+      sortSearchResultListByName(false);
+    } else if (sortCriteria == SearchSortCriteria.NAME_DESCENDING) {
+      sortSearchResultListByName(true);
+    } else if (sortCriteria == SearchSortCriteria.MOD_DATE_OLDEST) {
+      sortSearchResultListByModDate(false);
+    } else if (sortCriteria == SearchSortCriteria.MOD_DATE_LATEST) {
+      sortSearchResultListByModDate(true);
+    }
+  }
+
+  private void sortSearchResultListByName(boolean isSortNameDescending) {
+    searchResultList.sort((o1, o2) -> { // sort name ascending
+      if (o1.getName() == null || o2.getName() == null) {
+        return 0;
+      }
+      return o1.getName().compareTo(o2.getName());
+    });
+
+    if (isSortNameDescending) {
+      Collections.reverse(searchResultList);  // sort name descending
+    }
+  }
+
+
+  private void sortSearchResultListByModDate(boolean isSortModDateLatest) {
+    searchResultList.sort((o1, o2) -> { // oldest modDate is at the beginning
+      if (o1.getModDate() == null || o2.getModDate() == null) {
+        return 0;
+      }
+      return o1.getModDate().compareTo(o2.getModDate());
+    });
+
+    if (isSortModDateLatest) {
+      Collections.reverse(searchResultList); // latest modDate is at the beginning
+    }
+
   }
 
   /**

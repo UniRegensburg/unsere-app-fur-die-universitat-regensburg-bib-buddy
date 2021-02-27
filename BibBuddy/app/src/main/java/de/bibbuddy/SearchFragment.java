@@ -1,9 +1,14 @@
 package de.bibbuddy;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,18 +25,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The SearchFragment is responsible for searching for books.
+ * The SearchFragment is responsible for searching for shelves, books and notes.
  *
  * @author Claudia Schönherr
  */
 public class SearchFragment extends Fragment implements SearchRecyclerViewAdapter.SearchListener {
-  private EditText searchInput;
+
   private View view;
   private Context context;
   private SearchModel searchModel;
   private SearchRecyclerViewAdapter adapter;
   private RecyclerView searchRecyclerView;
   private List<SearchItem> searchResultList;
+  private EditText searchInput;
+  private SearchSortCriteria sortCriteria;
 
   @Nullable
   @Override
@@ -59,7 +66,112 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     setupSearchInput();
     setupSearchButton();
 
+    setHasOptionsMenu(true);
+    sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
+
     return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_search_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_search_sort:
+        handleSearchSort();
+        break;
+
+      case R.id.menu_search_filter:
+        handleSearchFilter();
+        break;
+
+      case R.id.menu_help_search:
+        handleHelp();
+        break;
+
+      default:
+    }
+
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleSearchSort() {
+    AlertDialog.Builder selectSearchCriteria = new AlertDialog.Builder(context);
+    selectSearchCriteria.setTitle(R.string.search_sort_to);
+
+    int checkedItem = SearchSortCriteria.getCriteriaNum(sortCriteria);
+
+    String[] sortChoices = {getString(R.string.sort_name_ascending),
+        getString(R.string.sort_name_descending),
+        getString(R.string.sort_modDate_oldest),
+        getString(R.string.sort_modDate_latest)};
+
+    selectSearchCriteria
+        .setSingleChoiceItems(sortChoices, checkedItem, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int choice) {
+            handleSelectedSortChoice(choice);
+          }
+        });
+
+    selectSearchCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
+          searchItems();
+        }
+      }
+    });
+
+    selectSearchCriteria.show();
+  }
+
+  private void handleSelectedSortChoice(int choice) {
+    switch (choice) {
+      case 0:
+        sortCriteria = SearchSortCriteria.NAME_ASCENDING;
+        break;
+
+      case 1:
+        sortCriteria = SearchSortCriteria.NAME_DESCENDING;
+        break;
+
+      case 2:
+        sortCriteria = SearchSortCriteria.MOD_DATE_OLDEST;
+        break;
+
+      case 3:
+        sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
+        break;
+
+      default:
+    }
+  }
+
+  private void handleSearchFilter() { // TODO implement filter
+    Toast.makeText(context, R.string.search_filter, Toast.LENGTH_SHORT).show();
+    // TODO filter search results
+  }
+
+  private void handleHelp() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.search_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+                 LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
   }
 
   private void setupRecyclerView() {
@@ -115,15 +227,15 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
       return;
     }
 
-    // TODO get filters
-    // TODO sort Name, modDate
-    // TODO search Results depending on filters
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
 
-    searchResultList = searchModel.getSearchResultList(searchInputStr);
-    // adapter.notifyDataSetChanged(); // it doesn't work
-    adapter = new SearchRecyclerViewAdapter(searchResultList, this);
-    searchRecyclerView.setAdapter(adapter);
+    // TODO get filter criterias from view
+
+    searchResultList = searchModel.getSearchResultList(searchInputStr, sortCriteria);
+
+    adapter.setSearchResultList(searchResultList);
+    adapter.notifyDataSetChanged();
+
     updateEmptyView(searchResultList);
   }
 

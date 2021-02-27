@@ -334,10 +334,44 @@
         ]]>
     </string>
 
-    <!-- Search -->
+    <string name="search_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zur Suche</u></h1>
+        <p>Sie befinden sich in der Suche. Hier können Sie nach Regalen, Büchern und Notizen suchen.
+        </p>
+
+        <h2>Sortieren</h2>
+        <p>Sie können ein Kriterium nach dem Sie ihre Suchergebnisse sortieren wollen auswählen.
+        Dabei können Sie ihre Suchergebnisse absteigend oder aufsteigend nach Namen sortieren.
+        Außerdem können Sie die Suchergebnisse nach dem neuesten oder ältesten Veränderungsdatum
+        sortieren. </p>
+
+        <h2>Filtern</h2>
+        <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
+        Klicken Sie dazu einfach die entsprechende Optionen an, nach der Sie ihre Suchergebnisse
+        filtern wollen.</p>
+
+        ]]>
+    </string>
+
+    <!-- Search Fragment -->
     <string name="search">Suchen …</string>
-    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben. Reine Whitespaces sind nicht
-        erlaubt.</string>
-    <string name="search_empty">keine Suchergebnisse vorhanden</string>
+    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben.
+        Reine Whitespaces sind nicht erlaubt.</string>
+    <string name="search_empty">Keine Suchergebnisse vorhanden</string>
+
+    <!-- Search menu -->
+    <string name="search_sort">Sortieren</string>
+    <string name="search_filter">Filtern</string>
+
+    <!-- Search Alert -->
+    <string name="search_sort_to">Sortieren nach</string>
+    <string name="ok">OK</string>
+
+    <!-- Sort criteria -->
+    <string name="sort_name_ascending">Name aufsteigend</string>
+    <string name="sort_name_descending">Name absteigend</string>
+    <string name="sort_modDate_oldest">Datum älteste</string>
+    <string name="sort_modDate_latest">Datum neueste</string>
 
 </resources>

@@ -25,7 +25,7 @@ public class SearchRecyclerViewAdapter
    * Constructor of the SearchRecyclerViewAdapter.
    *
    * @param searchResultList searchList TODO
-   * @param listener    listener for the interface and callback of the search
+   * @param listener         listener for the interface and callback of the search
    */
   public SearchRecyclerViewAdapter(List<SearchItem> searchResultList, SearchListener listener) {
 
@@ -36,7 +36,7 @@ public class SearchRecyclerViewAdapter
   @NonNull
   @Override
   public SearchRecyclerViewAdapter.SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                                         int viewType) {
+                                                                       int viewType) {
     // RecyclerView calls this method whenever it needs to create a new ViewHolder.
     // The method creates and initializes the ViewHolder and its associated View,
     // but does not fill in the view's contents—the ViewHolder
@@ -69,6 +69,10 @@ public class SearchRecyclerViewAdapter
     // RecyclerView calls this method to get the size of the data set.
     // RecyclerView uses this to determine when there are no more items that can be displayed.
     return searchResultList.size();
+  }
+
+  public void setSearchResultList(List<SearchItem> searchResultList) {
+    this.searchResultList = searchResultList;
   }
 
   public interface SearchListener { // create an interface
