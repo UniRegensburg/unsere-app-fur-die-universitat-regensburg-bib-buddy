@@ -138,13 +138,16 @@ public class BookBarcodeScannerFragment extends Fragment {
 
           // retrieve metadata that was saved
           Book book = isbnRetriever.getBook();
+          closeFragment();
           if (book != null) {
-            closeFragment();
             handleAddBook(book);
           } else {
-            closeFragment();
-            //Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
-            //    Toast.LENGTH_LONG).show();
+            getActivity().runOnUiThread(new Runnable() {
+              public void run() {
+                Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
+                    Toast.LENGTH_SHORT).show();
+              }
+            });
           }
         }
       }
@@ -152,8 +155,12 @@ public class BookBarcodeScannerFragment extends Fragment {
   }
 
   private void handleAddBook(Book book) {
-    //Toast.makeText(getActivity(), getString(R.string.added_book),
-    //    Toast.LENGTH_LONG).show();
+    getActivity().runOnUiThread(new Runnable() {
+      public void run() {
+        Toast.makeText(getActivity(), getString(R.string.added_book),
+            Toast.LENGTH_SHORT).show();
+      }
+    });
 
     // TODO authors of a book
     BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
