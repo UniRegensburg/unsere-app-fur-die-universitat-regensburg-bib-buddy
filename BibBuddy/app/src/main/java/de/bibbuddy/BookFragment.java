@@ -110,7 +110,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         break;
 
       case R.id.menu_export_book_list:
-        // TODO Silvia Export
         checkEmptyBookList();
         break;
 
@@ -251,49 +250,53 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     List<Long> bookIdsCurrShelf = bd.getAllBookIdsForShelf(shelfId);
     List<Author> authorsCurrBook = new ArrayList<>();
     List<Long> notesCurrBook = new ArrayList<>();
-    String allNotesCurrBook = "";
-    String authorNamesCurrBook = "";
+    String allNotesCurrBook;
+    String authorNamesCurrBook;
 
     //for each book in the current shelf
     for (int i = 0; i < bookIdsCurrShelf.size(); i++) {
-      Book currBook;
       Long currBookId = bookIdsCurrShelf.get(i);
+      Book currBook = bd.findById(currBookId);
+      String bookTitle = currBook.getTitle().replaceAll("\\s+", "");
+      allNotesCurrBook = "";
+      authorNamesCurrBook = "";
       authorsCurrBook = bd.getAllAuthorsForBook(currBookId);
       notesCurrBook = nd.getAllNoteIdsForBook(currBookId);
-      currBook = bd.findById(currBookId);
-
+      
       /*
       get the notes for the current book
       and save the bib content in one string
       */
-      for (int k = 0; k < notesCurrBook.size(); k++) {
-        String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
-        allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
+      if(notesCurrBook.isEmpty()){
+        allNotesCurrBook = "";
+      } else{
+        for (int k = 0; k < notesCurrBook.size(); k++) {
+          String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
+          allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
+        }
       }
 
       /*
       get author's first and last name and include
       the needed book data in a bib format
       */
-      for (int u = 0; u < authorsCurrBook.size(); u++) {
-        if (authorsCurrBook.size() > 1) {
-          authorNamesCurrBook = authorNamesCurrBook + " and "
+      if (authorsCurrBook.size() > 1) {
+        for (int u = 0; u < authorsCurrBook.size(); u++) {
+          authorNamesCurrBook = authorNamesCurrBook
               + authorsCurrBook.get(u).getFirstName()
               + " " + authorsCurrBook.get(u).getLastName();
-        } else {
-          authorNamesCurrBook = authorsCurrBook.get(u).getFirstName()
-              + " " + authorsCurrBook.get(u).getLastName();
+          if (u < authorsCurrBook.size()) {
+            authorNamesCurrBook = authorNamesCurrBook + " and ";
+          }
+        }
+      } else {
+        try {
+          authorNamesCurrBook = authorsCurrBook.get(0).getFirstName()
+              + " " + authorsCurrBook.get(0).getLastName();
+        } catch (Exception e) {
+          authorNamesCurrBook = "";
         }
       }
-
-      //remove the last "and" in case of more than one author
-      if (authorNamesCurrBook.contains("and")) {
-        authorNamesCurrBook = authorNamesCurrBook.substring(0,
-            authorNamesCurrBook.length() - 5);
-      }
-
-      String bookTitle = currBook.getTitle();
-      bookTitle = bookTitle.replaceAll("\\s+", "");
 
       bibExportContent = bibExportContent
           + "@book{" + bookTitle + currBook.getPubYear() + "," + '\n'
@@ -302,7 +305,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           + "title={" + currBook.getTitle() + "}," + '\n'
           + "publisher={" + currBook.getPublisher() + "}," + '\n'
           + "edition={" + currBook.getEdition() + "}," + '\n'
-          + allNotesCurrBook + "," + '\n'
+          + allNotesCurrBook
           + "year=" + currBook.getPubYear() + '\n' + "}" + '\n' + '\n';
     }
   }
