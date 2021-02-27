@@ -1,11 +1,22 @@
 package de.bibbuddy;
 
+/**
+ * SearchSortCriteria enum for the sorting criteria for the search.
+ *
+ * @author Claudia Schönherr
+ */
 public enum SearchSortCriteria {
   NAME_ASCENDING,
   NAME_DESCENDING,
   MOD_DATE_OLDEST,
   MOD_DATE_LATEST;
 
+  /**
+   * Gets the int value of the sortingCriteria.
+   *
+   * @param sortCriteria the selected sortingCriteria
+   * @return Returns the int of the enum.
+   */
   public static int getCriteriaNum(SearchSortCriteria sortCriteria) {
     if (sortCriteria == NAME_ASCENDING) {
       return 0;

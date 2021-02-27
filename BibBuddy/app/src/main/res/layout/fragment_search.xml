@@ -12,11 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
-        layout="@layout/search_sort_selection"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <TextView
         android:id="@+id/list_view_search_empty"
         android:layout_width="match_parent"
