@@ -10,6 +10,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,12 +22,13 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * The BookBarcodeScannerFragment is responsible to scan the ISBN of the book
  * that a user wants to add to a shelf.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Luis Moßburger
  */
 public class BookBarcodeScannerFragment extends Fragment {
   private static final int REQUEST_CAMERA_PERMISSION = 201;
@@ -34,8 +36,9 @@ public class BookBarcodeScannerFragment extends Fragment {
   private SurfaceView surfaceView;
   private CameraSource cameraSource;
   private TextView barcodeText;
-  private String barcodeData;
   private BarcodeDetector barcodeDetector;
+  private IsbnRetriever isbnRetriever;
+  private Thread thread;
 
   private Long shelfId;
   private String shelfName;
@@ -123,28 +126,62 @@ public class BookBarcodeScannerFragment extends Fragment {
         final SparseArray<Barcode> barcodes = detections.getDetectedItems();
         if (barcodes.size() != 0) {
 
-          barcodeText.post(new Runnable() {
+          isbnRetriever = new IsbnRetriever(barcodes.valueAt(0).displayValue);
+          thread = new Thread(isbnRetriever);
+          thread.start();
 
-            @Override
-            public void run() {
-              barcodeData = barcodes.valueAt(0).displayValue;
-              String barcodeDisplay = getString(R.string.barcode_value) + " " + barcodeData;
-              barcodeText.setText(barcodeDisplay);
-              // TODO get display message with ISBN successfully scanned
-              // TODO temporary stop the barcode scanner
-              // TODO new fragment user wait for search
-              // TODO check if book exists in API
-              // TODO API get book data
-              // if not exists: display error message and open create new book form alternative
-              // TODO check if valid data / book information data display
-              // TODO add book to shelf
-              // TODO bundle for BookFragment with shelfId and shelfName
-            }
-          });
+          try {
+            thread.join();
+          } catch (Exception e) {
+            System.out.println(e);
+          }
 
+          // retrieve metadata that was saved
+          Book book = isbnRetriever.getBook();
+          if (book != null) {
+            closeFragment();
+            handleAddBook(book);
+          } else {
+            closeFragment();
+            //Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
+            //    Toast.LENGTH_LONG).show();
+          }
         }
       }
     });
+  }
+
+  private void handleAddBook(Book book) {
+    //Toast.makeText(getActivity(), getString(R.string.added_book),
+    //    Toast.LENGTH_LONG).show();
+
+    // TODO authors of a book
+    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    bookDao.create(book, new ArrayList<Author>(), shelfId);
+
+    closeFragment();
+  }
+
+  /**
+   * Closes the BookBarcodeScannerFragment.
+   */
+  public void closeFragment() {
+    LibraryFragment fragment = new LibraryFragment();
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
+
+    fragment.setArguments(createBookBundle());
+  }
+
+  private Bundle createBookBundle() {
+    Bundle bundle = new Bundle();
+    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
+    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
+
+    return bundle;
   }
 
 
