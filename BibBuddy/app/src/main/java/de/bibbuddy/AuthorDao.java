@@ -65,7 +65,7 @@ public class AuthorDao implements InterfaceAuthorDao {
 
       db.update(DatabaseHelper.TABLE_NAME_AUTHOR, contentValues,
           DatabaseHelper._ID + " = ?",
-          new String[] { String.valueOf(author.getId()) });
+          new String[] {String.valueOf(author.getId())});
 
     } catch (SQLiteException ex) {
       return false;
@@ -118,15 +118,18 @@ public class AuthorDao implements InterfaceAuthorDao {
             DatabaseHelper.FIRST_NAME,
             DatabaseHelper.LAST_NAME,
             DatabaseHelper.TITLE},
-        DatabaseHelper.FIRST_NAME + " = ? AND " +
-            DatabaseHelper.LAST_NAME + " = ? AND " +
-            DatabaseHelper.TITLE + " = ?",
-        new String[] {authorToFind.getFirstName(), authorToFind.getLastName(), authorToFind.getTitle()},
+        DatabaseHelper.FIRST_NAME + " = ? AND "
+            + DatabaseHelper.LAST_NAME + " = ? AND "
+            + DatabaseHelper.TITLE + " = ?",
+        new String[] {authorToFind.getFirstName(),
+            authorToFind.getLastName(),
+            authorToFind.getTitle()},
         null, null, null, null);
 
     try {
-      if (!cursor.moveToFirst())
+      if (!cursor.moveToFirst()) {
         return null;
+      }
 
       return new Author(
           Long.parseLong(cursor.getString(0)), // Id
@@ -187,19 +190,19 @@ public class AuthorDao implements InterfaceAuthorDao {
    * Deletes the relevant author entries.
    *
    * @param authorId Id of the author
-   * @param bookId Id of the book
+   * @param bookId   Id of the book
    */
   public void delete(Long authorId, Long bookId) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.AUTHOR_ID
-                  + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
-              new String[] {String.valueOf(authorId), String.valueOf(bookId)});
+            + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
+        new String[] {String.valueOf(authorId), String.valueOf(bookId)});
 
     // delete author only if author has no link to another book
     if (!existsAuthorBookLink(authorId)) {
       db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-                new String[] {String.valueOf(authorId)});
+          new String[] {String.valueOf(authorId)});
     }
 
     db.close();
@@ -214,8 +217,9 @@ public class AuthorDao implements InterfaceAuthorDao {
   public boolean existsAuthor(Author author) {
     Author dbAuthor = findByTitleAndFullName(author);
 
-    if (dbAuthor == null)
+    if (dbAuthor == null) {
       return false;
+    }
 
     author.setId(dbAuthor.getId());
     return true;
@@ -228,8 +232,9 @@ public class AuthorDao implements InterfaceAuthorDao {
    */
   public void createOrUpdateAuthors(List<Author> authorList) {
     for (Author author : authorList) {
-      if (existsAuthor(author))
+      if (existsAuthor(author)) {
         continue;
+      }
 
       if (author.getId() != null
           && countAuthorBookLinks(author.getId()) == 1) {
@@ -241,8 +246,9 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   private int countAuthorBookLinks(Long authorId) {
-    if (authorId == null || authorId == 0)
+    if (authorId == null || authorId == 0) {
       return 0;
+    }
 
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -250,11 +256,12 @@ public class AuthorDao implements InterfaceAuthorDao {
         + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
         + DatabaseHelper.AUTHOR_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, new String[]{ authorId.toString() });
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()});
 
     try {
-      if (!cursor.moveToFirst())
+      if (!cursor.moveToFirst()) {
         return 0;
+      }
 
       return cursor.getInt(0);
     } finally {
