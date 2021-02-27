@@ -293,7 +293,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       }
 
       String bookTitle = currBook.getTitle();
-      bookTitle = bookTitle.replaceAll("\\s+","");
+      bookTitle = bookTitle.replaceAll("\\s+", "");
 
       bibExportContent = bibExportContent
           + "@book{" + bookTitle + currBook.getPubYear() + "," + '\n'
