@@ -130,8 +130,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     BookDao bd = new BookDao(dbHelper);
     if (bd.getAllBooksForShelf(shelfId).isEmpty()) {
       AlertDialog.Builder ee = new AlertDialog.Builder(getContext());
-      ee.setTitle(R.string.empty_booklist);
-      ee.setMessage(R.string.empty_booklist_description);
+      ee.setTitle(R.string.empty_shelf);
+      ee.setMessage(R.string.empty_shelf_description);
       ee.setPositiveButton(R.string.ok,
           new DialogInterface.OnClickListener() {
             @Override
@@ -268,7 +268,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       */
       for (int k = 0; k < notesCurrBook.size(); k++) {
         String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
-        allNotesCurrBook +=  "anote={" + noteTextCurrBook + "}," + '\n';
+        allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
       }
 
       /*
@@ -276,8 +276,20 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       the needed book data in a bib format
       */
       for (int u = 0; u < authorsCurrBook.size(); u++) {
-        authorNamesCurrBook = authorsCurrBook.get(u).getFirstName()
-            + " " + authorsCurrBook.get(u).getLastName();
+        if (authorsCurrBook.size() > 1) {
+          authorNamesCurrBook = authorNamesCurrBook + " and "
+              + authorsCurrBook.get(u).getFirstName()
+              + " " + authorsCurrBook.get(u).getLastName();
+        } else {
+          authorNamesCurrBook = authorsCurrBook.get(u).getFirstName()
+              + " " + authorsCurrBook.get(u).getLastName();
+        }
+      }
+
+      //remove the last "and" in case of more than one author
+      if (authorNamesCurrBook.contains("and")) {
+        authorNamesCurrBook = authorNamesCurrBook.substring(0,
+            authorNamesCurrBook.length() - 5);
       }
 
       bibExportContent = bibExportContent
@@ -287,8 +299,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           + "title={" + currBook.getTitle() + "}," + '\n'
           + "publisher={" + currBook.getPublisher() + "}," + '\n'
           + "edition={" + currBook.getEdition() + "}," + '\n'
-          + allNotesCurrBook + "}," + '\n'
-          + "year=" + currBook.getPubYear() + '\n' + "}" + '\n';
+          + allNotesCurrBook + "," + '\n'
+          + "year=" + currBook.getPubYear() + '\n' + "}" + '\n' + '\n';
     }
   }
 
@@ -313,7 +325,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       fileWriter.close();
 
     } catch (IOException e) {
-
       Log.e("Exception", R.string.file_write_failed + e.toString());
     }
   }
