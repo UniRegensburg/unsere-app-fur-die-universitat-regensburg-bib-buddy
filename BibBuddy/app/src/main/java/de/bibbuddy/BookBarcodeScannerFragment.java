@@ -116,7 +116,7 @@ public class BookBarcodeScannerFragment extends Fragment {
       }
 
       /**
-       * Receives a barcode ISBN, hands the ISBN over the the API.
+       * Receives a barcode ISBN, hands the ISBN over to the API.
        */
       @Override
       public void receiveDetections(Detector.Detections<Barcode> detections) {
