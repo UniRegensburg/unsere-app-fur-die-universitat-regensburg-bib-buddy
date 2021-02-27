@@ -38,8 +38,8 @@
             android:id="@+id/image_book"
             android:layout_width="60dp"
             android:layout_height="105dp"
-            android:layout_marginEnd="15dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="15dp"
             android:src="@drawable/ic_book" />
 
         <ImageView
@@ -54,8 +54,8 @@
             android:id="@+id/text_view_book"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/image_book"
             android:text="TODO Buchtitel"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -67,8 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_book"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/note_pen_icon"
             android:text="@string/navigation_notes"
             android:textColor="@color/black" />
@@ -90,8 +90,8 @@
                 android:id="@+id/empty_notelist_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
 
                 android:text="@string/note_list_help"
@@ -106,9 +106,11 @@
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 android:scrollbars="vertical"
+                android:layout_marginBottom="70dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </RelativeLayout>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_add_note"
             android:layout_width="wrap_content"
@@ -123,8 +125,7 @@
             android:tooltipText="@string/add_note_tooltip"
             app:maxImageSize="40dp"
             app:srcCompat="@android:drawable/ic_input_add"
-            tools:targetApi="o"
-            />
+            tools:targetApi="o" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </RelativeLayout>
