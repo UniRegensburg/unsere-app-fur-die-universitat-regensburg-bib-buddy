@@ -292,8 +292,11 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
             authorNamesCurrBook.length() - 5);
       }
 
+      String bookTitle = currBook.getTitle();
+      bookTitle = bookTitle.replaceAll("\\s+","");
+
       bibExportContent = bibExportContent
-          + "@book{" + currBook.getTitle() + currBook.getPubYear() + "," + '\n'
+          + "@book{" + bookTitle + currBook.getPubYear() + "," + '\n'
           + "isbn={" + currBook.getIsbn() + "}," + '\n'
           + "author={" + authorNamesCurrBook + "}," + '\n'
           + "title={" + currBook.getTitle() + "}," + '\n'
