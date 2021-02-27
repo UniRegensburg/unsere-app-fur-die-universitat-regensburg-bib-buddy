@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginTop="354dp"
+            android:layout_marginBottom="100dp"
             android:layout_marginEnd="30dp"
             android:clickable="true"
             android:contentDescription="@string/add_note"
