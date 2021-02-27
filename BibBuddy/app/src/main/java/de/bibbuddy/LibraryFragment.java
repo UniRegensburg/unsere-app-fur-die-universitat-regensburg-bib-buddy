@@ -31,14 +31,13 @@ import java.util.List;
  * @author Claudia Schönherr, Silvia Ivanova
  */
 public class LibraryFragment extends Fragment
-    implements LibraryRecyclerViewAdapter.LibraryListener, BookRecyclerViewAdapter.BookListener {
+    implements LibraryRecyclerViewAdapter.LibraryListener {
 
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems;
-  private List<BookItem> selectedBookItems;
   private static final int STORAGE_PERMISSION_CODE = 1;
 
   @Nullable
@@ -64,7 +63,6 @@ public class LibraryFragment extends Fragment
 
     setHasOptionsMenu(true);
     selectedShelfItems = new ArrayList<ShelfItem>();
-    selectedBookItems = new ArrayList<BookItem>();
 
     return view;
   }
@@ -364,17 +362,6 @@ public class LibraryFragment extends Fragment
     LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
     ((MainActivity) getActivity()).updateHeaderFragment(libraryItem.getName());
     updateBookListView(libraryItem);
-  }
-
-  @Override
-  public void onLongItemClicked(int position, BookItem bookItem, View v) {
-    if (v.isSelected()) {
-      v.setSelected(false);
-      selectedBookItems.remove(bookItem);
-    } else {
-      v.setSelected(true);
-      selectedBookItems.add(bookItem);
-    }
   }
 
   @Override
