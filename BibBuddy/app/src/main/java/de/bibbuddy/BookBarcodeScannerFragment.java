@@ -160,7 +160,6 @@ public class BookBarcodeScannerFragment extends Fragment {
   }
 
   private void handleAddBook(Book book, List<Author> authors) {
-    // TODO authors of a book
     BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
     bookDao.create(book, authors, shelfId);
 

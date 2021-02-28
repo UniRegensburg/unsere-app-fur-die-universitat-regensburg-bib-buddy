@@ -32,9 +32,9 @@ public class IsbnRetriever implements Runnable {
   private static Document loadXmlFromString(String xml) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
-    InputSource is = new InputSource(new StringReader(xml));
+    InputSource inputSource = new InputSource(new StringReader(xml));
 
-    return builder.parse(is);
+    return builder.parse(inputSource);
   }
 
   private Book createRecord(Document xmlMetadata) {

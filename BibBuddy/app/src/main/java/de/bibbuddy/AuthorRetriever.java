@@ -28,9 +28,9 @@ public class AuthorRetriever {
   private static Document loadXmlFromString(String xml) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
-    InputSource is = new InputSource(new StringReader(xml));
+    InputSource inputSource = new InputSource(new StringReader(xml));
 
-    return builder.parse(is);
+    return builder.parse(inputSource);
   }
 
   /**
@@ -114,7 +114,7 @@ public class AuthorRetriever {
       NodeList authorNameWrapper = (NodeList) exprResult;
       String authorName = authorNameWrapper.item(0).getTextContent();
       // MARCXML datafield "100" subfield code "a" is always in this form: Lastname, First Name
-      author = new Author(authorName.split(",")[1], authorName.split(",")[0]);
+      author = new Author(authorName.split(",")[1].trim(), authorName.split(",")[0].trim());
     } catch (Exception e) {
       System.out.println(e);
     }
