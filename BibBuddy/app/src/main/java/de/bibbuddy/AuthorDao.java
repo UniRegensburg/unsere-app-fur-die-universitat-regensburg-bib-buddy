@@ -104,6 +104,14 @@ public class AuthorDao implements InterfaceAuthorDao {
     return author;
   }
 
+  private String partSqlOperator(String checkPart) {
+    if (checkPart == null) {
+      return " IS NULL ";
+    } else {
+      return " = ? ";
+    }
+  }
+
   /**
    * Find an existing author by its title, first and last name.
    *
@@ -113,17 +121,19 @@ public class AuthorDao implements InterfaceAuthorDao {
   public Author findByTitleAndFullName(Author authorToFind) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
+    String selection = DatabaseHelper.FIRST_NAME + partSqlOperator(authorToFind.getFirstName())
+        + " AND " + DatabaseHelper.LAST_NAME + partSqlOperator(authorToFind.getLastName())
+        + " AND " + DatabaseHelper.TITLE + partSqlOperator(authorToFind.getTitle());
+
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
-        new String[] {DatabaseHelper._ID,
+        new String[] { DatabaseHelper._ID,
             DatabaseHelper.FIRST_NAME,
             DatabaseHelper.LAST_NAME,
-            DatabaseHelper.TITLE},
-        DatabaseHelper.FIRST_NAME + " = ? AND "
-            + DatabaseHelper.LAST_NAME + " = ? AND "
-            + DatabaseHelper.TITLE + " = ?",
-        new String[] {authorToFind.getFirstName(),
-            authorToFind.getLastName(),
-            authorToFind.getTitle()},
+            DatabaseHelper.TITLE },
+            selection,
+        new String[] { authorToFind.getFirstName(),
+            authorToFind.getLastName()
+              },
         null, null, null, null);
 
     try {
