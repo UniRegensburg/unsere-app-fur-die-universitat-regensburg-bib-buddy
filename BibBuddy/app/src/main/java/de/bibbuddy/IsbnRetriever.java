@@ -1,6 +1,8 @@
 package de.bibbuddy;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -15,6 +17,7 @@ public class IsbnRetriever implements Runnable {
 
   private final String isbn;
   private Book book = null;
+  private List<Author> authors = new ArrayList<Author>();
 
   /**
    * The IsbnRetriever class connects to the API and returns metadata for an ISBN.
@@ -48,14 +51,17 @@ public class IsbnRetriever implements Runnable {
         ""); // addInfos
   }
 
-  private void createAuthors(Document xmlMetadata) {
+  private List<Author> createAuthors(Document xmlMetadata) {
+    List<Author> authors = new ArrayList<Author>();
     AuthorRetriever authorRetriever = new AuthorRetriever();
-    System.out.println("autoren aufrufen");
+
     if (xmlMetadata.getElementsByTagName("marcrel:aut").getLength() > 0) {
-      authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("marcrel:aut"));
+      authors = authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("marcrel:aut"));
     } else {
-      authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("dcterms:contributor"));
+      authors = authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("dcterms:contributor"));
     }
+
+    return authors;
   }
 
   /**
@@ -117,7 +123,7 @@ public class IsbnRetriever implements Runnable {
         }
 
         // create record & authors
-        createAuthors(xmlMetadata);
+        authors = createAuthors(xmlMetadata);
         book = createRecord(xmlMetadata);
       }
     }
@@ -125,6 +131,10 @@ public class IsbnRetriever implements Runnable {
 
   public Book getBook() {
     return book;
+  }
+
+  public List<Author> getAuthors() {
+    return authors;
   }
 
 }

@@ -1,6 +1,8 @@
 package de.bibbuddy;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -32,14 +34,14 @@ public class AuthorRetriever {
     return builder.parse(is);
   }
 
-  public void extractAuthors(NodeList authors) {
+  public List<Author> extractAuthors(NodeList authors) {
     String url;
     Element autEl;
+    List<Author> authorArray = new ArrayList<Author>();
+
     Thread thread;
     ApiReader apiReader;
     Document xmlMetadata = null;
-
-    System.out.println("autoren aufgerufen");
 
     if (authors.getLength() > 0) {
       for (int i = 0; i < authors.getLength(); i++) {
@@ -62,19 +64,20 @@ public class AuthorRetriever {
         if (metadata != null) {
           // parse xml
           try {
-            System.out.println(metadata);
             xmlMetadata = loadXmlFromString(metadata);
-            extractAuthorName(xmlMetadata);
+            authorArray.add(constructAuthor(xmlMetadata));
           } catch (Exception e) {
             System.out.println(e);
           }
         }
       }
     }
+
+    return authorArray;
   }
 
-  private String extractAuthorName(Document xmlMetadata) {
-    String authorName = "";
+  private Author constructAuthor(Document xmlMetadata) {
+    Author author = null;
     XPath xpath = XPathFactory.newInstance().newXPath();
 
     try {
@@ -83,13 +86,14 @@ public class AuthorRetriever {
       XPathExpression expr = xpath.compile("//datafield[@tag=\"100\"]//subfield[@code=\"a\"]");
       Object exprResult = expr.evaluate(xmlMetadata, XPathConstants.NODESET);
       NodeList authorNameWrapper = (NodeList) exprResult;
-      String aut = authorNameWrapper.item(0).getTextContent();
-      authorName = aut;
+      String authorName = authorNameWrapper.item(0).getTextContent();
+      // MARCXML datafield "100" subfield code "a" is always in this form: Lastname, First Name
+      author = new Author(authorName.split(",")[1], authorName.split(",")[0]);
     } catch (Exception e) {
       System.out.println(e);
     }
 
-    return authorName;
+    return author;
   }
 
 }
