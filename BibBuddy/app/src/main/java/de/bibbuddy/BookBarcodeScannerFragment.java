@@ -22,6 +22,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The BookBarcodeScannerFragment is responsible to scan the ISBN of the book
@@ -143,9 +144,10 @@ public class BookBarcodeScannerFragment extends Fragment {
 
     // retrieve metadata that was saved
     Book book = isbnRetriever.getBook();
+    List<Author> authors = isbnRetriever.getAuthors();
     closeFragment();
     if (book != null) {
-      handleAddBook(book);
+      handleAddBook(book, authors);
     } else {
       
       getActivity().runOnUiThread(new Runnable() {
@@ -157,10 +159,9 @@ public class BookBarcodeScannerFragment extends Fragment {
     }
   }
 
-  private void handleAddBook(Book book) {
-    // TODO authors of a book
+  private void handleAddBook(Book book, List<Author> authors) {
     BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
-    bookDao.create(book, new ArrayList<Author>(), shelfId);
+    bookDao.create(book, authors, shelfId);
 
     getActivity().runOnUiThread(new Runnable() {
       public void run() {
