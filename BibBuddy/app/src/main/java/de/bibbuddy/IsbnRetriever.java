@@ -12,6 +12,7 @@ public class IsbnRetriever implements Runnable {
   private final String apiUrl = "https://lod.b3kat.de/";
   private final String apiXmlParameter = "?output=xml";
   private final String isbnApi = apiUrl + "data/isbn/%s" + apiXmlParameter;
+
   private final String isbn;
   private Book book = null;
 
@@ -45,6 +46,16 @@ public class IsbnRetriever implements Runnable {
         "", // volume
         "", // edition
         ""); // addInfos
+  }
+
+  private void createAuthors(Document xmlMetadata) {
+    AuthorRetriever authorRetriever = new AuthorRetriever();
+    System.out.println("autoren aufrufen");
+    if (xmlMetadata.getElementsByTagName("marcrel:aut").getLength() > 0) {
+      authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("marcrel:aut"));
+    } else {
+      authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("dcterms:contributor"));
+    }
   }
 
   /**
@@ -105,7 +116,8 @@ public class IsbnRetriever implements Runnable {
           System.out.println(e);
         }
 
-        // create a record
+        // create record & authors
+        createAuthors(xmlMetadata);
         book = createRecord(xmlMetadata);
       }
     }
