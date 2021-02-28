@@ -133,7 +133,7 @@ public class AuthorDao implements InterfaceAuthorDao {
             selection,
         new String[] { authorToFind.getFirstName(),
             authorToFind.getLastName()
-              },
+            },
         null, null, null, null);
 
     try {
