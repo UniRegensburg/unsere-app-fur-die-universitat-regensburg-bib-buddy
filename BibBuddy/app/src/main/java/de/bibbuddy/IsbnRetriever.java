@@ -54,13 +54,7 @@ public class IsbnRetriever implements Runnable {
   private List<Author> createAuthors(Document xmlMetadata) {
     List<Author> authors = new ArrayList<Author>();
     AuthorRetriever authorRetriever = new AuthorRetriever();
-
-    if (xmlMetadata.getElementsByTagName("marcrel:aut").getLength() > 0) {
-      authors = authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("marcrel:aut"));
-    } else {
-      authors = authorRetriever.extractAuthors(xmlMetadata.getElementsByTagName("dcterms:contributor"));
-    }
-
+    authors = authorRetriever.extractAuthors(xmlMetadata);
     return authors;
   }
 

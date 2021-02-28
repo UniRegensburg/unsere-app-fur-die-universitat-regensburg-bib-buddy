@@ -11,13 +11,12 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 
 /**
- * The IsbnRetriever class connects to the API and returns metadata for an ISBN.
+ * The AuthorRetriever class connects to the API and returns authors for a given book.
  *
  * @author Luis Moßburger
  */
@@ -34,7 +33,34 @@ public class AuthorRetriever {
     return builder.parse(is);
   }
 
-  public List<Author> extractAuthors(NodeList authors) {
+  /**
+   * Extracts authors from the given xmlDocument and gathers their names from an API.
+   *
+   * @param xmlMetadata XML metadata about a book, contains URL to author information
+   * @return list of authors/relevant persons for this book
+   * @author Luis Moßburger
+   */
+  public List<Author> extractAuthors(Document xmlMetadata) {
+    List<Author> authors;
+    NodeList authorList = null;
+    NodeList[] relevantPersons = {
+        xmlMetadata.getElementsByTagName("marcrel:aut"), // "authors"
+        xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
+        xmlMetadata.getElementsByTagName("dcterms:creator"), // "creator"
+        xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
+    };
+
+    for (NodeList persons : relevantPersons) {
+      if (persons.getLength() > 0) {
+        authorList = persons;
+      }
+    }
+
+    authors = makeAuthorList(authorList);
+    return authors;
+  }
+
+  private List<Author> makeAuthorList(NodeList authors) {
     String url;
     Element autEl;
     List<Author> authorArray = new ArrayList<Author>();
@@ -43,7 +69,7 @@ public class AuthorRetriever {
     ApiReader apiReader;
     Document xmlMetadata = null;
 
-    if (authors.getLength() > 0) {
+    if (authors != null) {
       for (int i = 0; i < authors.getLength(); i++) {
 
         // read from API with isbn (Thread)
