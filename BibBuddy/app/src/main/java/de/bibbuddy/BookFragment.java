@@ -132,16 +132,16 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     DatabaseHelper dbHelper = new DatabaseHelper(getContext());
     BookDao bd = new BookDao(dbHelper);
     if (bd.getAllBooksForShelf(shelfId).isEmpty()) {
-      AlertDialog.Builder ee = new AlertDialog.Builder(getContext());
-      ee.setTitle(R.string.empty_shelf);
-      ee.setMessage(R.string.empty_shelf_description);
-      ee.setPositiveButton(R.string.ok,
+      AlertDialog.Builder alertDialogEmptyShelf = new AlertDialog.Builder(getContext());
+      alertDialogEmptyShelf.setTitle(R.string.empty_shelf);
+      alertDialogEmptyShelf.setMessage(R.string.empty_shelf_description);
+      alertDialogEmptyShelf.setPositiveButton(R.string.ok,
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
           });
-      ee.create().show();
+      alertDialogEmptyShelf.create().show();
     } else {
       checkStoragePermission();
     }
@@ -180,7 +180,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
             STORAGE_PERMISSION_CODE));
-    reqAlertDialog.setNegativeButton(R.string.storage_permission_cancel_btn,
+    reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
     reqAlertDialog.create().show();
   }
@@ -201,7 +201,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
                                          String[] permissions, int[] grantResults) {
 
     switch (requestCode) {
-
       case STORAGE_PERMISSION_CODE:
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -296,6 +295,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         }
       } else {
         try {
+          //if one author presented
           authorNamesCurrBook = authorsCurrBook.get(0).getFirstName()
               + " " + authorsCurrBook.get(0).getLastName();
         } catch (Exception e) {
@@ -303,6 +303,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         }
       }
 
+      //remove whitespaces from book's title
       String bookTitle = currBook.getTitle().replaceAll("\\s+", "");
 
       bibExportContent = bibExportContent
