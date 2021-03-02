@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The BookOnlineFragment is responsible for the online search of books.
@@ -103,8 +104,9 @@ public class BookOnlineFragment extends Fragment {
 
         // retrieve metadata that was saved
         Book book = isbnRetriever.getBook();
+        List<Author> authors = isbnRetriever.getAuthors();
         if (book != null) {
-          handleAddBook(book);
+          handleAddBook(book, authors);
         } else {
           Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
               Toast.LENGTH_LONG).show();
@@ -113,14 +115,17 @@ public class BookOnlineFragment extends Fragment {
     }
   }
 
-  private void handleAddBook(Book book) {
-    Toast.makeText(getActivity(), getString(R.string.added_book),
-                   Toast.LENGTH_LONG).show();
+  private void handleAddBook(Book book, List<Author> authors) {
+    try {
+      BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+      bookDao.create(book, authors, shelfId);
 
-    // TODO authors of a book
-    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
-    bookDao.create(book, new ArrayList<Author>(), shelfId);
+      Toast.makeText(getActivity(), getString(R.string.added_book),
+          Toast.LENGTH_LONG).show();
 
-    closeFragment();
+      closeFragment();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
   }
 }

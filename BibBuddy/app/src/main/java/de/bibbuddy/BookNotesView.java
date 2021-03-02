@@ -1,5 +1,8 @@
 package de.bibbuddy;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,13 +30,16 @@ import java.util.List;
 public class BookNotesView extends Fragment
     implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
 
-  static List<NoteItem> noteList;
+
   private View view;
-  private RecyclerView recyclerView;
-  private BookNotesViewModel model;
+  private Context context;
+  private BookNotesViewModel bookNotesViewModel;
+  private BookNotesRecyclerViewAdapter adapter;
   private Long bookId;
   private Long shelfId;
   private String shelfName;
+  private List<NoteItem> noteList;
+  private List<NoteItem> selectedNoteItems;
 
 
   @Nullable
@@ -53,36 +60,31 @@ public class BookNotesView extends Fragment
       }
     });
 
-    view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
-    recyclerView = view.findViewById(R.id.bookNotesViewRecyclerView);
-
-    model = new BookNotesViewModel(getContext());
     Bundle bundle = this.getArguments();
-
     bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-
 
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
 
-    noteList = model.getNoteList(bookId);
+    view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
+    context = view.getContext();
+
+    setupRecyclerView(bookId);
 
     TextView bookTitleView = view.findViewById(R.id.text_view_book);
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
     bookTitleView.setText(bookTitle);
 
-    setupRecyclerView();
+
     setHasOptionsMenu(true);
     setupAddButton();
-    updateNoteListView(noteList);
+    updateEmptyView(noteList);
+    ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
+    selectedNoteItems = new ArrayList<NoteItem>();
 
     return view;
   }
 
-
-  private void setupRecyclerView() {
-    recyclerView.setAdapter(new BookNotesRecyclerViewAdapter(noteList, this));
-  }
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
@@ -96,8 +98,7 @@ public class BookNotesView extends Fragment
 
     switch (item.getItemId()) {
       case R.id.menu_delete_note:
-        // TODO
-        Toast.makeText(getContext(), "Notiz löschen wurde geklickt", Toast.LENGTH_SHORT).show();
+        handleDeleteNote();
         break;
 
       case R.id.menu_export_note:
@@ -115,6 +116,49 @@ public class BookNotesView extends Fragment
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
+    deleteNote.setVisible(selectedNoteItems != null && !selectedNoteItems.isEmpty());
+  }
+
+  private void handleDeleteNote() {
+    AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
+
+    alertDeleteBookNote.setCancelable(false);
+    alertDeleteBookNote.setTitle(R.string.delete_note);
+    alertDeleteBookNote.setMessage(R.string.delete_note_message);
+
+    alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
+
+    alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        bookNotesViewModel.deleteNotes(selectedNoteItems);
+
+        adapter.notifyDataSetChanged();
+        updateEmptyView(bookNotesViewModel.getCurrentNoteList());
+        Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        unselectNoteItems();
+      }
+    });
+
+    alertDeleteBookNote.show();
+  }
+
+  private void unselectNoteItems() {
+    RecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_view_recycler_view);
+    for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
+      bookNotesListView.getChildAt(i).setSelected(false);
+    }
+
+    selectedNoteItems.clear();
   }
 
   private void handleManualBookNotes() {
@@ -165,9 +209,6 @@ public class BookNotesView extends Fragment
     });
 
 
-    /*popup menu for choosing note type to add
-        -> maybe there is a more suitable UI form?
-     */
     addButtonView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -195,8 +236,19 @@ public class BookNotesView extends Fragment
     return bundle;
   }
 
-  private void updateNoteListView(List noteList) {
-    recyclerView.setAdapter(new BookNotesRecyclerViewAdapter(noteList, this));
+  private void setupRecyclerView(Long bookId) {
+    bookNotesViewModel = new BookNotesViewModel(getContext());
+    noteList = bookNotesViewModel.getNoteList(bookId);
+
+    RecyclerView bookNotesRecyclerViewAdapter =
+        view.findViewById(R.id.book_notes_view_recycler_view);
+    adapter = new BookNotesRecyclerViewAdapter(noteList, this, context);
+    bookNotesRecyclerViewAdapter.setAdapter(adapter);
+
+    updateEmptyView(noteList);
+  }
+
+  private void updateEmptyView(List<NoteItem> noteList) {
     TextView emptyView = view.findViewById(R.id.empty_notelist_view);
 
     if (noteList.isEmpty()) {
@@ -208,7 +260,7 @@ public class BookNotesView extends Fragment
 
   @Override
   public void onItemClicked(int position) {
-    NoteItem noteItem = model.getSelectedNoteItem(position);
+    NoteItem noteItem = bookNotesViewModel.getSelectedNoteItem(position);
 
     TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
     nextFrag.setArguments(createNoteBundle(noteItem));
@@ -216,6 +268,17 @@ public class BookNotesView extends Fragment
         .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
         .addToBackStack(null)
         .commit();
+  }
+
+  @Override
+  public void onLongItemClicked(int position, NoteItem noteItem, View v) {
+    if (v.isSelected()) {
+      v.setSelected(false);
+      selectedNoteItems.remove(noteItem);
+    } else {
+      v.setSelected(true);
+      selectedNoteItems.add(noteItem);
+    }
   }
 
 }

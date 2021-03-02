@@ -2,10 +2,12 @@ package de.bibbuddy;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * BookDao contains all sql queries related to Book.
@@ -64,8 +66,10 @@ public class BookDao implements InterfaceBookDao {
       return;
     }
 
-    authorDao.createAuthors(authorList);
-    linkBookWithAuthors(authorList, bookId, authorDao.getAuthorIds(authorList));
+    authorDao.createOrUpdateAuthors(authorList);
+    List<Long> authorIds = authorList.stream().map(a -> a.getId()).collect(Collectors.toList());
+
+    linkBookWithAuthors(bookId, authorIds);
   }
 
   // get a single book entry by id
@@ -85,9 +89,7 @@ public class BookDao implements InterfaceBookDao {
                              new String[] {String.valueOf(id)}, null, null, null, null);
 
     Book book = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
-
+    if (cursor.moveToFirst()) {
       book = new Book(
           Long.parseLong(cursor.getString(0)), // Id
           cursor.getString(1), // Isbn
@@ -147,6 +149,7 @@ public class BookDao implements InterfaceBookDao {
 
   // delete single book entry
   @Override
+  @Deprecated
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_BOOK, DatabaseHelper._ID + " = ?",
@@ -210,23 +213,41 @@ public class BookDao implements InterfaceBookDao {
     }
   }
 
-  private void linkBookWithAuthors(List<Author> authorList, Long bookId, List<Long> authorIds) {
+  private void linkBookWithAuthors(Long bookId, List<Long> authorIds) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    for (Long id : authorIds) {
-      try {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.AUTHOR_ID, id);
-        contentValues.put(DatabaseHelper.BOOK_ID, bookId);
-        db.insert(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, null, contentValues);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+    try {
+      List<Long> existingAuthorIds = getAllAuthorIdsForBook(bookId);
+      existingAuthorIds.stream()
+          .filter(id -> !authorIds.contains(id))
+          .forEach(id -> deleteAuthorBookLink(db, bookId, id));
 
-    }
-    if (db != null) {
+      authorIds.stream()
+          .filter(id -> !existingAuthorIds.contains(id))
+          .forEach(id -> insertAuthorBookLink(db, bookId, id));
+    } catch (SQLException ex) {
+      // TODO error handling
+      ex.printStackTrace();
+    } finally {
       db.close();
     }
+  }
+
+  private void insertAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
+    try {
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(DatabaseHelper.AUTHOR_ID, authorId);
+      contentValues.put(DatabaseHelper.BOOK_ID, bookId);
+      db.insert(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, null, contentValues);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void deleteAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
+    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.BOOK_ID + " = ?"
+            + " AND " + DatabaseHelper.AUTHOR_ID + " = ?",
+        new String[] {bookId.toString(), authorId.toString()});
   }
 
   /**
@@ -278,7 +299,7 @@ public class BookDao implements InterfaceBookDao {
    * @param bookId id of the book
    * @return list of all authors of a book
    */
-  public List<Long> getAllAuthorsIdsForBook(Long bookId) {
+  public List<Long> getAllAuthorIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
@@ -306,7 +327,7 @@ public class BookDao implements InterfaceBookDao {
    */
   public List<Author> getAllAuthorsForBook(Long bookId) {
     List<Author> authorList = new ArrayList<Author>();
-    List<Long> authorIds = getAllAuthorsIdsForBook(bookId);
+    List<Long> authorIds = getAllAuthorIdsForBook(bookId);
     for (Long id : authorIds) {
       authorList.add(authorDao.findById(id));
     }
@@ -385,6 +406,44 @@ public class BookDao implements InterfaceBookDao {
     }
 
     return bookList;
+  }
+
+  /**
+   * Method to update an existing book.
+   *
+   * @param book book data for the database and bookList
+   */
+  public void updateBook(Book book, List<Author> authorList) {
+    long currentTime = System.currentTimeMillis() / 1_000L;
+    ContentValues contentValues = new ContentValues();
+
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
+    contentValues.put(DatabaseHelper.TITLE, book.getTitle());
+    contentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
+    contentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
+    contentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
+    contentValues.put(DatabaseHelper.VOLUME, book.getVolume());
+    contentValues.put(DatabaseHelper.EDITION, book.getEdition());
+    contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
+    contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
+
+    try {
+      dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
+          DatabaseHelper._ID + " = ?",
+          new String[] {String.valueOf(book.getId())});
+    } finally {
+      db.close();
+    }
+
+    if (authorList == null || authorList.isEmpty()) {
+      return;
+    }
+
+    authorDao.createOrUpdateAuthors(authorList);
+    List<Long> authorIds = authorList.stream().map(a -> a.getId()).collect(Collectors.toList());
+    linkBookWithAuthors(book.getId(), authorIds);
   }
 
 }

@@ -21,12 +21,13 @@
     <string name="navigation_settings">Einstellungen</string>
     <string name="back">zurück</string>
     <string name="add">+</string>
+    <string name="ok">OK</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht
         erlaubt.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
-    <string name="export">Export</string>
+    <string name="export">Regal exportieren (BibTeX)</string>
     <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
 
@@ -57,6 +58,7 @@
     <string name="books">Bücher</string>
     <string name="add_book">Buch hinzufügen</string>
     <string name="added_book">Buch wurde hinzufügt</string>
+    <string name="change_book">Buchdaten ändern</string>
     <string name="book_icon">Buch Icon</string>
     <string name="add_book_tooltip">Neues Buch hinzufügen</string>
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
@@ -65,6 +67,12 @@
         angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem Buch
         erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
+
+    <string name="delete_book">Bücher löschen</string>
+    <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
+    <string name="delete_book_message">Alle ausgewählten Bücher werden gelöscht inklusive der
+        Notizen.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
 
     <string name="add_book_scan_text">Barcode scannen</string>
     <string name="add_book_online_text">Im Online-Katalog suchen</string>
@@ -107,6 +115,11 @@
         zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
 
+    <string name="delete_note">Notizen löschen</string>
+    <string name="deleted_notes">Notiz(en) wurde(n) gelöscht</string>
+    <string name="delete_note_message">Alle ausgewählten Notizen werden gelöscht.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>
     <string name="create_voice_note">Sprachnotiz</string>
@@ -137,16 +150,23 @@
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
 
-
     <!-- Export Dialog Alert Window Descriptions -->
     <string name="storage_permission_needed">Zugriff erforderlich</string>
     <string name="storage_permission_alert_msg">
-        Zugriff auf den Gerätespeicher erforderlich,
-        um Dateien aus dieser App zu exportieren.
+        Wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="storage_permission_ok_btn">OK</string>
     <string name="storage_permission_cancel_btn">Abbrechen</string>
     <string name="storage_permission_denied">Zugriff verweigert</string>
+    <string name="file_write_failed">File write failed:</string>
+    <string name="exported_file_stored_in">
+        Exportierte Datei ist gespeichert unter:
+    </string>
+
+    <!-- Export: Empty Booklist -->
+    <string name="empty_shelf">Das Regal ist leer.</string>
+    <string name="empty_shelf_description">
+        Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.
+    </string>
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>

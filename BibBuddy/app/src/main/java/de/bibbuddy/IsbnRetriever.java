@@ -1,6 +1,8 @@
 package de.bibbuddy;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -12,8 +14,10 @@ public class IsbnRetriever implements Runnable {
   private final String apiUrl = "https://lod.b3kat.de/";
   private final String apiXmlParameter = "?output=xml";
   private final String isbnApi = apiUrl + "data/isbn/%s" + apiXmlParameter;
+
   private final String isbn;
   private Book book = null;
+  private List<Author> authors = new ArrayList<Author>();
 
   /**
    * The IsbnRetriever class connects to the API and returns metadata for an ISBN.
@@ -28,9 +32,9 @@ public class IsbnRetriever implements Runnable {
   private static Document loadXmlFromString(String xml) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
-    InputSource is = new InputSource(new StringReader(xml));
+    InputSource inputSource = new InputSource(new StringReader(xml));
 
-    return builder.parse(is);
+    return builder.parse(inputSource);
   }
 
   private Book createRecord(Document xmlMetadata) {
@@ -45,6 +49,13 @@ public class IsbnRetriever implements Runnable {
         "", // volume
         "", // edition
         ""); // addInfos
+  }
+
+  private List<Author> createAuthors(Document xmlMetadata) {
+    List<Author> authors = new ArrayList<Author>();
+    AuthorRetriever authorRetriever = new AuthorRetriever();
+    authors = authorRetriever.extractAuthors(xmlMetadata);
+    return authors;
   }
 
   /**
@@ -105,7 +116,8 @@ public class IsbnRetriever implements Runnable {
           System.out.println(e);
         }
 
-        // create a record
+        // create record & authors
+        authors = createAuthors(xmlMetadata);
         book = createRecord(xmlMetadata);
       }
     }
@@ -113,6 +125,10 @@ public class IsbnRetriever implements Runnable {
 
   public Book getBook() {
     return book;
+  }
+
+  public List<Author> getAuthors() {
+    return authors;
   }
 
 }

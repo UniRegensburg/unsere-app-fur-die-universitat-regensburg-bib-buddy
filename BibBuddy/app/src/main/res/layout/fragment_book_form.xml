@@ -1,212 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="65dp"
-    android:layout_marginBottom="100dp">
+    android:layout_marginBottom="100dp"
+    android:fitsSystemWindows="false"
+    android:windowSoftInputMode="adjustResize">
 
     <RelativeLayout
-        android:id="@+id/book_form_btns"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gray_light"
-        android:gravity="center_horizontal"
-        tools:ignore="MissingConstraints">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btn_book_form_cancel"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/book_form_btns"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/back"
-            android:theme="@style/Button.Grey"
-            tools:ignore="MissingConstraints" />
+            android:layout_marginBottom="20dp"
+            android:background="@color/gray_light"
+            android:gravity="center_horizontal"
+            tools:ignore="MissingConstraints">
 
-        <Button
-            android:id="@+id/btn_book_form_add"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btn_book_form_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:theme="@style/Button.Grey"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/btn_book_form_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@id/btn_book_form_cancel"
+                android:text="@string/add_shelf"
+                android:theme="@style/Button.Pink"
+                tools:ignore="MissingConstraints" />
+
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_toEndOf="@id/btn_book_form_cancel"
-            android:text="@string/add_shelf"
-            android:theme="@style/Button.Pink"
-            tools:ignore="MissingConstraints" />
+            android:layout_below="@id/book_form_btns"
+            android:layout_marginTop="15dp"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/book_form_btns"
+            tools:ignore="MissingConstraints">
+
+            <LinearLayout
+                android:id="@+id/book_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="40dp"
+                android:orientation="vertical">
+
+                <!-- ISBN -->
+                <TextView
+                    android:id="@+id/book_form_isbn_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_isbn"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_isbn_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:focusedByDefault="true"
+                    android:hint="@string/book_form_isbn"
+                    android:inputType="text" />
+
+                <!-- title -->
+                <TextView
+                    android:id="@+id/book_form_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_title"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_title_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_title"
+                    android:inputType="text" />
+
+                <!-- subtitle -->
+                <TextView
+                    android:id="@+id/book_form_subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_subtitle"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_subtitle_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_subtitle"
+                    android:inputType="text" />
+
+                <!-- pub_year -->
+                <TextView
+                    android:id="@+id/book_form_pub_year"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_pub_year"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_pub_year_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_pub_year"
+                    android:inputType="number" />
+
+                <!-- publisher -->
+                <TextView
+                    android:id="@+id/book_form_publisher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_publisher"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_publisher_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_publisher"
+                    android:inputType="text" />
+
+                <!-- volume -->
+                <TextView
+                    android:id="@+id/book_form_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_volume"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_volume_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_volume"
+                    android:inputType="text" />
+
+                <!-- edition -->
+                <TextView
+                    android:id="@+id/book_form_edition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_edition"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_edition_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_edition"
+                    android:inputType="text" />
+
+                <!-- add_infos -->
+                <TextView
+                    android:id="@+id/book_form_add_infos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_add_infos"
+                    android:theme="@style/TextViewCustom" />
+
+                <EditText
+                    android:id="@+id/book_form_add_infos_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/book_form_add_infos"
+                    android:inputType="text" />
+
+                <!-- TODO AUTHORS -->
+                <TextView
+                    android:id="@+id/book_form_authors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/authors"
+                    android:theme="@style/TextViewCustom" />
+
+                <include
+                    layout="@layout/element_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="170dp" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:fillViewport="true"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/book_form_btns"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:id="@+id/book_form"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="40dp"
-            android:orientation="vertical">
-
-            <!-- ISBN -->
-            <TextView
-                android:id="@+id/book_form_isbn_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_isbn"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_isbn_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:focusedByDefault="true"
-                android:hint="@string/book_form_isbn"
-                android:inputType="text" />
-
-            <!-- title -->
-            <TextView
-                android:id="@+id/book_form_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_title"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_title_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_title"
-                android:inputType="text" />
-
-            <!-- subtitle -->
-            <TextView
-                android:id="@+id/book_form_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_subtitle"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_subtitle_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_subtitle"
-                android:inputType="text" />
-
-            <!-- pub_year -->
-            <TextView
-                android:id="@+id/book_form_pub_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_pub_year"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_pub_year_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_pub_year"
-                android:inputType="number" />
-
-            <!-- publisher -->
-            <TextView
-                android:id="@+id/book_form_publisher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_publisher"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_publisher_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_publisher"
-                android:inputType="text" />
-
-            <!-- volume -->
-            <TextView
-                android:id="@+id/book_form_volume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_volume"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_volume_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_volume"
-                android:inputType="text" />
-
-            <!-- edition -->
-            <TextView
-                android:id="@+id/book_form_edition"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_edition"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_edition_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_edition"
-                android:inputType="text" />
-
-            <!-- add_infos -->
-            <TextView
-                android:id="@+id/book_form_add_infos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_add_infos"
-                android:theme="@style/TextViewCustom" />
-
-            <EditText
-                android:id="@+id/book_form_add_infos_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/book_form_add_infos"
-                android:inputType="text" />
-
-            <!-- TODO AUTHORS -->
-            <TextView
-                android:id="@+id/book_form_authors"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/authors"
-                android:theme="@style/TextViewCustom" />
-
-            <include
-                layout="@layout/element_author"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="70dp">
-            </include>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

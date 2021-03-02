@@ -12,6 +12,8 @@ import java.util.List;
 
 public class BookModel {
   private final BookDao bookDao;
+  private final AuthorDao authorDao;
+  private final NoteDao noteDao;
   private final Long shelfId;
 
   private List<BookItem> bookList;
@@ -27,6 +29,8 @@ public class BookModel {
     this.shelfId = shelfId;
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.bookDao = new BookDao(databaseHelper);
+    this.authorDao = new AuthorDao(databaseHelper);
+    this.noteDao = new NoteDao(databaseHelper);
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
@@ -85,11 +89,69 @@ public class BookModel {
     return bookList;
   }
 
+  public List<Author> getAuthorList(Long bookId) {
+    return bookDao.getAllAuthorsForBook(bookId);
+  }
+
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+
+  }
+
+  /**
+   * Deletes all selected books and their respective notes.
+   *
+   * @param selectedBookItems selected book items
+   */
+  public void deleteBooks(List<BookItem> selectedBookItems, Long shelfId) {
+    if (selectedBookItems == null || selectedBookItems.isEmpty()) {
+      return;
+    }
+
+    for (BookItem book : selectedBookItems) {
+      Long bookId = book.getId();
+
+      deleteNotes(bookId);
+      deleteAuthors(bookId);
+
+      bookDao.delete(bookId, shelfId);
+      deleteBookFromBookList(book);
+    }
+  }
+
+  private void deleteBookFromBookList(BookItem book) {
+    for (int i = 0; i < bookList.size(); i++) {
+      if (book.equals(bookList.get(i))) {
+        bookList.remove(i);
+      }
+    }
+  }
+
+  public void updateBook(Book book, List<Author> authorList) {
+    bookDao.updateBook(book, authorList);
+  }
+
   public List<BookItem> getCurrentBookList() {
     return bookList;
   }
 
   public BookItem getSelectedBookItem(int position) {
     return bookList.get(position);
+  }
+
+  public Book getBookById(Long id) {
+    return bookDao.findById(id);
   }
 }

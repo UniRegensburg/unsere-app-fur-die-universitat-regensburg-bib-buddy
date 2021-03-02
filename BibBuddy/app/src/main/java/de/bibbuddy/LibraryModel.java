@@ -135,7 +135,7 @@ public class LibraryModel {
   }
 
   private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorsIdsForBook(bookId);
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
 
     for (Long authorId : authorIds) {
       authorDao.delete(authorId, bookId);
