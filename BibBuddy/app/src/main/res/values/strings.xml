@@ -386,8 +386,6 @@
 
     <!-- Search Alert -->
     <string name="search_sort_to">Sortieren nach</string>
-    <string name="ok">OK</string>
-
     <!-- Sort criteria -->
     <string name="sort_name_ascending">Name aufsteigend</string>
     <string name="sort_name_descending">Name absteigend</string>
