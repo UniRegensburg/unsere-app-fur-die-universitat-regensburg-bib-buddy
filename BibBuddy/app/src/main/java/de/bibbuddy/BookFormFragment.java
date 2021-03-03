@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * The BookFormFragment is responsible for adding a book manually to a shelf.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Sarah Kurek
  */
 public class BookFormFragment extends Fragment {
   private final ChangeBookListener listener;

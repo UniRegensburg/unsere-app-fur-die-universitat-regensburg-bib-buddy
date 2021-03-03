@@ -79,7 +79,7 @@
     <string name="add_book_manually_text">Manuell hinzufügen</string>
 
     <!-- Book Form -->
-    <string name="book_form_isbn">ISBN</string>
+    <string name="book_form_isbn">ISBN (optional)</string>
     <string name="book_form_title">Titel</string>
     <string name="book_form_subtitle">Untertitel (optional)</string>
     <string name="book_form_pub_year">Jahr der Veröffentlichung (optional)</string>
