@@ -59,9 +59,7 @@ public class SearchModel {
     List<Note> noteList = noteDao.findNotesByName(searchInput);
     for (Note note : noteList) {
       searchResultList.add(
-          new SearchItem(note.getName(), R.drawable.document, note.getId(),
-                         note.getModDate().intValue(),
-                         // TODO change modDate to Integer type in Note class in final release
+          new SearchItem(note.getName(), R.drawable.document, note.getId(), note.getModDate(),
                          SearchItemType.SEARCH_TEXT_NOTE));
     }
 
@@ -84,10 +82,7 @@ public class SearchModel {
 
   private void sortSearchResultListByName(boolean isSortNameDescending) {
     searchResultList.sort((o1, o2) -> { // sort name ascending
-      if (o1.getName() == null || o2.getName() == null) {
-        return 0;
-      }
-      return o1.getName().compareTo(o2.getName());
+      return o1.getName().compareToIgnoreCase(o2.getName());
     });
 
     if (isSortNameDescending) {
@@ -98,16 +93,12 @@ public class SearchModel {
 
   private void sortSearchResultListByModDate(boolean isSortModDateLatest) {
     searchResultList.sort((o1, o2) -> { // oldest modDate is at the beginning
-      if (o1.getModDate() == null || o2.getModDate() == null) {
-        return 0;
-      }
       return o1.getModDate().compareTo(o2.getModDate());
     });
 
     if (isSortModDateLatest) {
       Collections.reverse(searchResultList); // latest modDate is at the beginning
     }
-
   }
 
   /**
@@ -122,5 +113,17 @@ public class SearchModel {
 
   public Long getBookIdByNoteId(Long noteId) {
     return noteDao.findBookIdByNoteId(noteId);
+  }
+
+  /**
+   * Gets the sorted search result list by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted search results
+   */
+  public List<SearchItem> getSortedSearchResultList(SearchSortCriteria sortCriteria) {
+    sortSearchResultList(sortCriteria);
+
+    return searchResultList;
   }
 }

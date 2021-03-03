@@ -16,8 +16,8 @@ public class Book {
   private String volume = new String();
   private String edition = new String();
   private String addInfo = new String();
-  private Integer createDate;
-  private Integer modDate;
+  private Long createDate;
+  private Long modDate;
 
   /**
    * Constructor with all its parameters.
@@ -36,7 +36,7 @@ public class Book {
    */
   public Book(Long id, String isbn, String title, String subtitle, Integer pubYear,
               String publisher, String volume, String edition, String addInfo,
-              Integer createDate, Integer modDate) {
+              Long createDate, Long modDate) {
     this.id = id;
     this.isbn = isbn;
     this.title = title;
@@ -151,19 +151,19 @@ public class Book {
     this.addInfo = addInfo;
   }
 
-  public Integer getCreateDate() {
+  public Long getCreateDate() {
     return createDate;
   }
 
-  public void setCreateDate(Integer createDate) {
+  public void setCreateDate(Long createDate) {
     this.createDate = createDate;
   }
 
-  public Integer getModDate() {
+  public Long getModDate() {
     return modDate;
   }
 
-  public void setModDate(Integer modDate) {
+  public void setModDate(Long modDate) {
     this.modDate = modDate;
   }
 

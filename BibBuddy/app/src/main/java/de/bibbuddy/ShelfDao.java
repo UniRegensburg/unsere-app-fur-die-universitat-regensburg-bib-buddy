@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class ShelfDao implements InterfaceShelfDao {
 
   @Override
   public boolean create(Shelf shelf) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
+    Long currentTime = new Date().getTime();
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     try {
@@ -235,7 +236,7 @@ public class ShelfDao implements InterfaceShelfDao {
     ContentValues values = new ContentValues();
 
     values.put(DatabaseHelper.NAME, shelfName);
-    values.put(DatabaseHelper.MOD_DATE, System.currentTimeMillis() / 1_000L);
+    values.put(DatabaseHelper.MOD_DATE, new Date().getTime());
 
     dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_SHELF, values,
                                           DatabaseHelper._ID + " = ?",
@@ -248,8 +249,8 @@ public class ShelfDao implements InterfaceShelfDao {
 
     return new Shelf(Long.parseLong(cursor.getString(0)), // Id
                      cursor.getString(1), // Name
-                     Integer.parseInt(cursor.getString(2)), // Create date
-                     Integer.parseInt(cursor.getString(3)), // Mod date
+                     Long.parseLong(cursor.getString(2)), // Create date
+                     Long.parseLong(cursor.getString(3)), // Mod date
                      null // parent shelf id is deprecated
     );
   }

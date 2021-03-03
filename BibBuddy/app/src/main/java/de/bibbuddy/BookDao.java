@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,20 +27,13 @@ public class BookDao implements InterfaceBookDao {
 
   @Override
   public boolean create(Book book) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
     SQLiteDatabase db = dbHelper.getWritableDatabase();
+
     try {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
-      contentValues.put(DatabaseHelper.TITLE, book.getTitle());
-      contentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
-      contentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
-      contentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
-      contentValues.put(DatabaseHelper.VOLUME, book.getVolume());
-      contentValues.put(DatabaseHelper.EDITION, book.getEdition());
-      contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
+      Long currentTime = new Date().getTime();
+
+      ContentValues contentValues = createBookContentValues(book);
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
-      contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
       long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
       book.setId(id);
     } catch (SQLiteException ex) {
@@ -90,19 +84,7 @@ public class BookDao implements InterfaceBookDao {
 
     Book book = null;
     if (cursor.moveToFirst()) {
-      book = new Book(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // Isbn
-          cursor.getString(2), // Title
-          cursor.getString(3), // Subtitle
-          Integer.parseInt(cursor.getString(4)), // Pub year
-          cursor.getString(5), // Publisher
-          cursor.getString(6), // Volume
-          cursor.getString(7), // Edition
-          cursor.getString(8), // Add Infos
-          Integer.parseInt(cursor.getString(9)), // Create date
-          Integer.parseInt(cursor.getString(10)) // Mod date
-      );
+      book = createBookData(cursor);
     }
 
     cursor.close();
@@ -123,21 +105,7 @@ public class BookDao implements InterfaceBookDao {
     // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
-        Book book = new Book();
-
-        book.setId(Long.parseLong(cursor.getString(0)));
-        book.setIsbn(cursor.getString(1));
-        book.setTitle(cursor.getString(2));
-        book.setSubtitle(cursor.getString(3));
-        book.setPubYear(Integer.parseInt(cursor.getString(4)));
-        book.setPublisher(cursor.getString(5));
-        book.setVolume(cursor.getString(6));
-        book.setEdition(cursor.getString(7));
-        book.setAddInfo(cursor.getString(8));
-        book.setCreateDate(Integer.parseInt(cursor.getString(9)));
-        book.setModDate(Integer.parseInt(cursor.getString(10)));
-
-        bookList.add(book);
+        bookList.add(createBookData(cursor));
 
       } while (cursor.moveToNext());
       cursor.close();
@@ -177,6 +145,39 @@ public class BookDao implements InterfaceBookDao {
     db.close();
   }
 
+  private Book createBookData(Cursor cursor) {
+
+    return new Book(
+        Long.parseLong(cursor.getString(0)),
+        cursor.getString(1),
+        cursor.getString(2),
+        cursor.getString(3),
+        Integer.parseInt(cursor.getString(4)),
+        cursor.getString(5),
+        cursor.getString(6),
+        cursor.getString(7),
+        cursor.getString(8),
+        Long.parseLong(cursor.getString(9)),
+        Long.parseLong(cursor.getString(10))
+    );
+  }
+
+  private ContentValues createBookContentValues(Book book) {
+    ContentValues bookContentValues = new ContentValues();
+
+    bookContentValues.put(DatabaseHelper.ISBN, book.getIsbn());
+    bookContentValues.put(DatabaseHelper.TITLE, book.getTitle());
+    bookContentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
+    bookContentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
+    bookContentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
+    bookContentValues.put(DatabaseHelper.VOLUME, book.getVolume());
+    bookContentValues.put(DatabaseHelper.EDITION, book.getEdition());
+    bookContentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
+    bookContentValues.put(DatabaseHelper.MOD_DATE, new Date().getTime());
+
+    return bookContentValues;
+  }
+
   /**
    * Method to find the last added id.
    *
@@ -190,8 +191,7 @@ public class BookDao implements InterfaceBookDao {
     Cursor cursor = db.rawQuery(selectQuery, null);
 
     Long id = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
       id = cursor.getLong(0); // Id
       cursor.close();
     }
@@ -361,24 +361,6 @@ public class BookDao implements InterfaceBookDao {
     return noteCount;
   }
 
-  private Book createBookData(Cursor cursor) { // TODO use at other places after 2nd release
-
-    return new Book(
-        Long.parseLong(cursor.getString(0)),
-        cursor.getString(1),
-        cursor.getString(2),
-        cursor.getString(3),
-        Integer.parseInt(cursor.getString(4)),
-        cursor.getString(5),
-        cursor.getString(6),
-        cursor.getString(7),
-        cursor.getString(8),
-        Integer.parseInt(cursor.getString(9)),
-        Integer.parseInt(cursor.getString(10))
-    );
-  }
-
-
   /**
    * Finds all books which contain searchInput.
    *
@@ -414,20 +396,10 @@ public class BookDao implements InterfaceBookDao {
    * @param book book data for the database and bookList
    */
   public void updateBook(Book book, List<Author> authorList) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
-    ContentValues contentValues = new ContentValues();
+
+    ContentValues contentValues = createBookContentValues(book);
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
-    contentValues.put(DatabaseHelper.TITLE, book.getTitle());
-    contentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
-    contentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
-    contentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
-    contentValues.put(DatabaseHelper.VOLUME, book.getVolume());
-    contentValues.put(DatabaseHelper.EDITION, book.getEdition());
-    contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
-    contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
     try {
       dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,

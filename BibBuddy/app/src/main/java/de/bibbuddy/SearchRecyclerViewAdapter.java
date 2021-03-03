@@ -24,7 +24,7 @@ public class SearchRecyclerViewAdapter
   /**
    * Constructor of the SearchRecyclerViewAdapter.
    *
-   * @param searchResultList searchList TODO
+   * @param searchResultList result list of the search
    * @param listener         listener for the interface and callback of the search
    */
   public SearchRecyclerViewAdapter(List<SearchItem> searchResultList, SearchListener listener) {
@@ -54,6 +54,7 @@ public class SearchRecyclerViewAdapter
 
     holder.getTextView().setText(searchItem.getName());
     holder.getImageView().setImageResource(searchItem.getImage());
+    holder.getModDateView().setText(searchItem.getModDateStr()); // TODO date format
 
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -75,8 +76,8 @@ public class SearchRecyclerViewAdapter
     this.searchResultList = searchResultList;
   }
 
-  public interface SearchListener { // create an interface
-    void onItemClicked(int position); // create callback function
+  public interface SearchListener {
+    void onItemClicked(int position);
   }
 
 
@@ -84,6 +85,7 @@ public class SearchRecyclerViewAdapter
 
     private final TextView textView;
     private final ImageView imageView;
+    private final TextView modDateView;
 
     /**
      * The SearchViewHolder describes a search item view and metadata about its place
@@ -94,6 +96,7 @@ public class SearchRecyclerViewAdapter
 
       textView = itemView.findViewById(R.id.search_result_name);
       imageView = itemView.findViewById(R.id.search_result_icon);
+      modDateView = itemView.findViewById(R.id.search_mod_date);
     }
 
     public TextView getTextView() {
@@ -102,6 +105,10 @@ public class SearchRecyclerViewAdapter
 
     public ImageView getImageView() {
       return imageView;
+    }
+
+    public TextView getModDateView() {
+      return modDateView;
     }
 
     public void setImageView(int image) {

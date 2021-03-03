@@ -79,15 +79,7 @@ public class NoteDao implements InterfaceNoteDao {
     Note note = null;
     if (cursor != null) {
       cursor.moveToFirst();
-      note = new Note(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // Name
-          Integer.parseInt(cursor.getString(2)), // Type
-          cursor.getString(3), // Text
-          Long.parseLong(cursor.getString(4)), // Create date
-          Long.parseLong(cursor.getString(5)), // Mod date
-          cursor.getLong(6) // Note file id
-      );
+      note = createNoteData(cursor);
       cursor.close();
     }
     return note;
@@ -106,15 +98,7 @@ public class NoteDao implements InterfaceNoteDao {
     // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
-        Note note = new Note();
-
-        note.setId(Long.parseLong(cursor.getString(0)));
-        note.setName(cursor.getString(1));
-        note.setType(Integer.parseInt(cursor.getString(2)));
-        note.setText(cursor.getString(3));
-        note.setCreateDate(Long.parseLong(cursor.getString(4)));
-        note.setModDate(Long.parseLong(cursor.getString(5)));
-        note.setNoteFileId(cursor.getLong(6));
+        Note note = createNoteData(cursor);
 
         // Adding note to list
         noteList.add(note);
@@ -310,8 +294,7 @@ public class NoteDao implements InterfaceNoteDao {
     Cursor cursor = db.rawQuery(selectQuery, null);
 
     Long bookId = 0L;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
       bookId = cursor.getLong(0);
 
       cursor.close();

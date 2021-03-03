@@ -10,9 +10,8 @@
         android:id="@+id/search_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="60dp"
-        android:hint="@string/search"
+        android:layout_marginEnd="110dp"
+        android:hint="@string/search_hint"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:singleLine="true"
@@ -20,14 +19,28 @@
 
     <ImageButton
         android:id="@+id/search_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
         android:adjustViewBounds="true"
+        android:background="@color/gray_light"
         android:scaleType="fitCenter"
         android:src="@drawable/magnifyingglass"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toStartOf="@id/filter_btn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@id/search_input"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="5dp" />
 
+    <ImageButton
+        android:id="@+id/filter_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/btn_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/arrow_drop_down"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
