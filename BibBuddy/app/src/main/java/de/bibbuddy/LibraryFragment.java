@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,11 +40,13 @@ public class LibraryFragment extends Fragment
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems;
 
-  private DatabaseHelper dbHelper;
   private BookDao bookDao;
-  private String folderName = "Download";
-  private String fileName = "library_export_BibBuddy";
-  private String fileTypeBib = ".bib";
+  private NoteDao noteDao;
+
+  private ExportBibTex exportBibTex;
+  private final String folderName = "Download";
+  private final String fileName = "library_export_BibBuddy";
+  private final String fileTypeBibToast = ".bib";
   private static final int STORAGE_PERMISSION_CODE = 1;
 
   @Nullable
@@ -77,6 +72,9 @@ public class LibraryFragment extends Fragment
 
     setHasOptionsMenu(true);
     selectedShelfItems = new ArrayList<ShelfItem>();
+    bookDao = libraryModel.getBookDao();
+    noteDao = libraryModel.getNoteDao();
+    exportBibTex = new ExportBibTex(folderName, fileName);
 
     return view;
   }
@@ -117,21 +115,19 @@ public class LibraryFragment extends Fragment
   }
 
   private void checkEmptyLibrary() {
-    //if no shelf or no books
-
-    dbHelper = new DatabaseHelper(getContext());
-    bookDao = new BookDao(dbHelper);
-
+    // if no shelf or no books
     if (libraryModel.getCurrentLibraryList().isEmpty() || bookDao.findAllBooks().isEmpty()) {
       AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
       alertDialogEmptyLib.setTitle(R.string.empty_library);
       alertDialogEmptyLib.setMessage(R.string.empty_library_description);
+
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
           new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
           });
+
       alertDialogEmptyLib.create().show();
 
     } else {
@@ -144,8 +140,14 @@ public class LibraryFragment extends Fragment
         Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
       requestStoragePermission();
     } else {
-      //if the user has already allowed access to device external storage
-      bibExportLibrary();
+      // if the user has already allowed access to device external storage
+      exportBibTex.createBibFile();
+      exportBibTex.writeBibFile(retrieveBibContentShelf());
+
+      Toast.makeText(getContext(),
+          getString(R.string.exported_file_stored_in) + '\n'
+              + File.separator + folderName + File.separator + fileName
+              + fileTypeBibToast, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -163,12 +165,14 @@ public class LibraryFragment extends Fragment
     AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
     reqAlertDialog.setTitle(R.string.storage_permission_needed);
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
+
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
             STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
+
     reqAlertDialog.create().show();
   }
 
@@ -192,7 +196,13 @@ public class LibraryFragment extends Fragment
       case STORAGE_PERMISSION_CODE:
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          bibExportLibrary();
+          exportBibTex.createBibFile();
+          exportBibTex.writeBibFile(retrieveBibContentShelf());
+
+          Toast.makeText(getContext(),
+              getString(R.string.exported_file_stored_in) + '\n'
+                  + File.separator + folderName + File.separator + fileName
+                  + fileTypeBibToast, Toast.LENGTH_LONG).show();
 
         } else {
           Toast.makeText(getContext(), R.string.storage_permission_denied,
@@ -204,129 +214,40 @@ public class LibraryFragment extends Fragment
     }
   }
 
-  private void bibExportLibrary() {
-    String rootPathStr = Environment.getExternalStorageDirectory() + File.separator
-        + folderName + File.separator + fileName + fileTypeBib;
-    try {
-      File file = new File(rootPathStr);
-
-      if (file.exists()) {
-        file.delete();
-      }
-
-      file.createNewFile();
-      FileOutputStream out = new FileOutputStream(file);
-      out.flush();
-      out.close();
-
-      writeBibFile();
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    Toast.makeText(getContext(),
-        getString(R.string.exported_file_stored_in) + '\n'
-            + File.separator + folderName + File.separator + fileName
-            + fileTypeBib, Toast.LENGTH_LONG).show();
-  }
-
-  private String retrieveBibContent() {
-
-    dbHelper = new DatabaseHelper(getContext());
-    bookDao = new BookDao(dbHelper);
-    NoteDao noteDao = new NoteDao(dbHelper);
-
+  private String retrieveBibContentShelf() {
     List<ShelfItem> shelfItem = new ArrayList<>();
     shelfItem = libraryModel.getCurrentLibraryList();
     String bibLibraryContent = "";
 
-    //for each shelf in the library
+    // for each shelf in the library
     for (int i = 0; i < shelfItem.size(); i++) {
-      Long currShelfId = shelfItem.get(i).getId();
 
-      List<Long> bookIdsCurrShelf = bookDao.getAllBookIdsForShelf(currShelfId);
-      List<Author> authorsCurrBook = new ArrayList<>();
-      List<Long> notesCurrBook = new ArrayList<>();
-      String allNotesCurrBook;
-      String authorNamesCurrBook;
+      Long currentShelfId = shelfItem.get(i).getId();
+      List<Long> bookIdsCurrentShelf = bookDao.getAllBookIdsForShelf(currentShelfId);
+      List<Author> authorsCurrentBook = new ArrayList<>();
+      List<Long> notesCurrentBook = new ArrayList<>();
+      String allNotesCurrentBook;
+      String authorNamesCurrentBook;
 
-      for (int j = 0; j < bookIdsCurrShelf.size(); j++) {
-        Book currBook;
-        Long currBookId = bookIdsCurrShelf.get(j);
-        currBook = bookDao.findById(currBookId);
-        allNotesCurrBook = "";
-        authorNamesCurrBook = "";
-        authorsCurrBook = bookDao.getAllAuthorsForBook(currBookId);
-        notesCurrBook = noteDao.getAllNoteIdsForBook(currBookId);
+      for (int j = 0; j < bookIdsCurrentShelf.size(); j++) {
+        Book currentBook;
+        Long currentBookId = bookIdsCurrentShelf.get(j);
+        currentBook = bookDao.findById(currentBookId);
 
-        /*
-        get the notes for the current book
-        and save the bib content in one string
-        */
-        if (notesCurrBook.isEmpty()) {
-          allNotesCurrBook = "";
-        } else {
-          for (int k = 0; k < notesCurrBook.size(); k++) {
-            String noteTextCurrBook = noteDao.findTextById(notesCurrBook.get(k));
-            allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
-          }
-        }
-        /*
-        get author's first and last name and include
-        the needed book data in a bib format
-        */
-        if (authorsCurrBook.size() > 1) {
-          for (int u = 0; u < authorsCurrBook.size(); u++) {
-            authorNamesCurrBook = authorNamesCurrBook
-                + authorsCurrBook.get(u).getFirstName()
-                + " " + authorsCurrBook.get(u).getLastName();
-            if (u < authorsCurrBook.size()) {
-              authorNamesCurrBook = authorNamesCurrBook + " and ";
-            }
-          }
-        } else {
+        notesCurrentBook = noteDao.getAllNoteIdsForBook(currentBookId);
+        allNotesCurrentBook = exportBibTex.getBibNotes(notesCurrentBook, noteDao);
 
-          try {
-            //if one author presented
-            authorNamesCurrBook = authorsCurrBook.get(0).getFirstName()
-                + " " + authorsCurrBook.get(0).getLastName();
-          } catch (Exception e) {
-            authorNamesCurrBook = "";
-          }
-        }
+        authorsCurrentBook = bookDao.getAllAuthorsForBook(currentBookId);
+        authorNamesCurrentBook = exportBibTex.getBibAuthorNames(authorsCurrentBook);
 
-        //remove whitespaces from book's title
-        String bookTitle = currBook.getTitle().replaceAll("\\s+", "");
+        // remove whitespaces from book's title
+        String bookTitle = currentBook.getTitle().replaceAll("\\s+", "");
 
-        bibLibraryContent = bibLibraryContent
-            + "@book{" + bookTitle + currBook.getPubYear() + "," + '\n'
-            + "isbn={" + currBook.getIsbn() + "}," + '\n'
-            + "author={" + authorNamesCurrBook + "}," + '\n'
-            + "title={" + currBook.getTitle() + "}," + '\n'
-            + "publisher={" + currBook.getPublisher() + "}," + '\n'
-            + "edition={" + currBook.getEdition() + "}," + '\n'
-            + allNotesCurrBook
-            + "year=" + currBook.getPubYear() + '\n' + "}" + '\n' + '\n';
+        bibLibraryContent = bibLibraryContent + exportBibTex.getBibFormatBook(bookTitle,
+            authorNamesCurrentBook, currentBook, allNotesCurrentBook);
       }
     }
     return bibLibraryContent;
-  }
-
-  private void writeBibFile() {
-    try {
-      File bibFile = new File(Environment.getExternalStorageDirectory()
-          + File.separator + folderName + File.separator + fileName + fileTypeBib);
-
-      FileOutputStream fos = new FileOutputStream(bibFile);
-      OutputStreamWriter osw = new OutputStreamWriter(fos);
-      Writer fileWriter = new BufferedWriter(osw);
-      fileWriter.write(retrieveBibContent());
-      fileWriter.close();
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
   }
 
   private void handleManualLibrary() {
@@ -556,4 +477,5 @@ public class LibraryFragment extends Fragment
       selectedShelfItems.add(shelfItem);
     }
   }
+
 }
