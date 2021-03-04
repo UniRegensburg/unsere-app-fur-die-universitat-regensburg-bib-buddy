@@ -301,7 +301,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     dbHelper = new DatabaseHelper(getContext());
     bookDao = new BookDao(dbHelper);
-    NoteDao nd = new NoteDao(dbHelper);
+    NoteDao noteDao = new NoteDao(dbHelper);
 
     List<Long> bookIdsCurrShelf = bookDao.getAllBookIdsForShelf(shelfId);
     List<Author> authorsCurrBook = new ArrayList<>();
@@ -319,7 +319,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       allNotesCurrBook = "";
       authorNamesCurrBook = "";
       authorsCurrBook = bookDao.getAllAuthorsForBook(currBookId);
-      notesCurrBook = nd.getAllNoteIdsForBook(currBookId);
+      notesCurrBook = noteDao.getAllNoteIdsForBook(currBookId);
 
       /*
       get the notes for the current book
@@ -329,7 +329,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         allNotesCurrBook = "";
       } else {
         for (int k = 0; k < notesCurrBook.size(); k++) {
-          String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
+          String noteTextCurrBook = noteDao.findTextById(notesCurrBook.get(k));
           allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
         }
       }

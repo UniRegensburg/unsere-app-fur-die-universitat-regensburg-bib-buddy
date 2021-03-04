@@ -47,7 +47,6 @@ public class LibraryFragment extends Fragment
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems;
 
-
   private DatabaseHelper dbHelper;
   private BookDao bookDao;
   private String folderName = "Download";
@@ -236,7 +235,7 @@ public class LibraryFragment extends Fragment
 
     dbHelper = new DatabaseHelper(getContext());
     bookDao = new BookDao(dbHelper);
-    NoteDao nd = new NoteDao(dbHelper);
+    NoteDao noteDao = new NoteDao(dbHelper);
 
     List<ShelfItem> shelfItem = new ArrayList<>();
     shelfItem = libraryModel.getCurrentLibraryList();
@@ -259,7 +258,7 @@ public class LibraryFragment extends Fragment
         allNotesCurrBook = "";
         authorNamesCurrBook = "";
         authorsCurrBook = bookDao.getAllAuthorsForBook(currBookId);
-        notesCurrBook = nd.getAllNoteIdsForBook(currBookId);
+        notesCurrBook = noteDao.getAllNoteIdsForBook(currBookId);
 
         /*
         get the notes for the current book
@@ -269,7 +268,7 @@ public class LibraryFragment extends Fragment
           allNotesCurrBook = "";
         } else {
           for (int k = 0; k < notesCurrBook.size(); k++) {
-            String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
+            String noteTextCurrBook = noteDao.findTextById(notesCurrBook.get(k));
             allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
           }
         }
