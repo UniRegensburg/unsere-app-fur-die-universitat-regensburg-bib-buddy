@@ -157,7 +157,6 @@
         Wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
     <string name="storage_permission_denied">Zugriff verweigert</string>
-    <string name="file_write_failed">File write failed:</string>
 
     <!-- Export Shelf Data Path Storage -->
     <string name="exported_file_stored_in">
@@ -165,9 +164,6 @@
     </string>
 
     <!-- Export Library Data Path Storage -->
-    <string name="export_library_file_stored_in">
-        Sicherungskopie ist gespeichert unter:
-    </string>
     <string name="export_library">Bibliothek exportieren (BibTeX)</string>
 
     <!-- Export: Empty Booklist -->
@@ -177,9 +173,9 @@
     </string>
 
     <!-- Export: Empty Library -->
-    <string name="empty_library">Das Regal ist leer.</string>
+    <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
     <string name="empty_library_description">
-        Bitte erstelle mindestens ein Regal, um den Export zu ermöglichen.
+        Bitte füge mindestens ein Regal und ein Buch hinzu, um den Export zu ermöglichen.
     </string>
 
     <!-- Help Fragment -->

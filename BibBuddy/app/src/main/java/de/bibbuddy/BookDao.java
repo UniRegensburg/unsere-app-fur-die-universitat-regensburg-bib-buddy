@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * BookDao contains all sql queries related to Book.
  *
- * @author Sarah Kurek, Claudia Schönherr
+ * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
  */
 public class BookDao implements InterfaceBookDao {
   private final DatabaseHelper dbHelper;
@@ -399,6 +399,39 @@ public class BookDao implements InterfaceBookDao {
     linkBookWithAuthors(book.getId(), authorIds);
   }
 
+  /**
+   * Method that finds all books in the database.
+   *
+   * @return bookList all books as a list
+   */
+  public List<Book> findAllBooks() {
+    List<Book> bookList = new ArrayList<Book>();
+    // Select All Query
+    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK;
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    Cursor cursor = db.rawQuery(selectQuery, null);
 
+    // looping through all rows and adding to list
+    if (cursor.moveToFirst()) {
+      do {
+        Book book = new Book();
 
+        book.setId(Long.parseLong(cursor.getString(0)));
+        book.setIsbn(cursor.getString(1));
+        book.setTitle(cursor.getString(2));
+        book.setSubtitle(cursor.getString(3));
+        book.setPubYear(Integer.parseInt(cursor.getString(4)));
+        book.setPublisher(cursor.getString(5));
+        book.setVolume(cursor.getString(6));
+        book.setEdition(cursor.getString(7));
+        book.setAddInfo(cursor.getString(8));
+        book.setCreateDate(Integer.parseInt(cursor.getString(9)));
+        book.setModDate(Integer.parseInt(cursor.getString(10)));
+
+        bookList.add(book);
+      } while (cursor.moveToNext());
+    }
+    cursor.close();
+    return bookList;
+  }
 }
