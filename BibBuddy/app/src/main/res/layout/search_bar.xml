@@ -10,7 +10,8 @@
         android:id="@+id/search_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="110dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="55dp"
         android:hint="@string/search_hint"
         android:imeOptions="actionSearch"
         android:inputType="text"
@@ -24,23 +25,12 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
         android:adjustViewBounds="true"
-        android:background="@color/gray_light"
+        android:background="@color/search_selector"
+        android:padding="5dp"
         android:scaleType="fitCenter"
         android:src="@drawable/magnifyingglass"
-        app:layout_constraintEnd_toStartOf="@id/filter_btn"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/search_input"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="5dp" />
-
-    <ImageButton
-        android:id="@+id/filter_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="5dp"
-        android:background="@color/btn_selector"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/arrow_drop_down"
         tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

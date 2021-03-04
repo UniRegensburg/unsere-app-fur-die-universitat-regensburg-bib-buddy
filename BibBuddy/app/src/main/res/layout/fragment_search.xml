@@ -7,58 +7,37 @@
     android:layout_marginTop="65dp"
     android:layout_marginBottom="75dp">
 
-    <RelativeLayout
+    <include
+        layout="@layout/search_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:id="@+id/bars"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/list_view_search_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_bar"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="58dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/search_empty"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-            <include
-                layout="@layout/search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_bar"
+        android:layout_gravity="bottom"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_anchor="@+id/search_bar"
+        app:layout_anchorGravity="bottom" />
 
-            <include
-                layout="@layout/sort_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="10dp" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/list_view_search_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/bars"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="58dp"
-            android:layout_marginRight="20dp"
-            android:text="@string/search_empty"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold"
-            android:visibility="gone" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bars"
-            android:layout_gravity="bottom"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:scrollbars="vertical"
-            app:layoutManager="LinearLayoutManager"
-            app:layout_anchor="@+id/bars"
-            app:layout_anchorGravity="bottom" />
-
-    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

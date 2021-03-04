@@ -381,15 +381,16 @@
         Reine Whitespaces sind nicht erlaubt.</string>
     <string name="search_empty">Keine Suchergebnisse vorhanden</string>
 
-    <!-- Search menu -->
-    <string name="search_sort">Sortieren</string>
-    <string name="search_filter">Filtern</string>
-
-    <!-- Search Alert -->
+    <!-- Sort -->
+    <string name="sort">Sortieren</string>
     <string name="search_sort_to">Sortieren nach</string>
 
-    <!-- Sort criteria -->
-    <string name="sort_name">Name</string>
-    <string name="sort_date">Datum</string>
+    <string name="sort_name_ascending">Name aufsteigend</string>
+    <string name="sort_name_descending">Name absteigend</string>
+    <string name="sort_modDate_oldest">Datum älteste</string>
+    <string name="sort_modDate_latest">Datum neueste</string>
+
+    <!-- Filter -->
+    <string name="filter">Filtern</string>
 
 </resources>

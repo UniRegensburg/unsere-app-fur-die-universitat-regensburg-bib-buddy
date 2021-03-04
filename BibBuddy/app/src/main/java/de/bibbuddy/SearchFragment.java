@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,10 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,7 +65,6 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     setupSearchInput();
     setupRecyclerView();
     setupSearchButton();
-    setupSortBar();
 
     setHasOptionsMenu(true);
     sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
@@ -80,23 +80,35 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.menu_help_search) {
-      handleHelp();
+    switch (item.getItemId()) {
+      case R.id.menu_search_sort:
+        handleSearchSort();
+        break;
+
+      case R.id.menu_search_filter:
+        handleSearchFilter();
+        break;
+
+      case R.id.menu_search_help:
+        handleHelp();
+        break;
+
+      default:
     }
 
     return super.onOptionsItemSelected(item);
   }
 
+
   private void setupRecyclerView() {
     searchRecyclerView = view.findViewById(R.id.search_recycler_view);
-    String searchInputStr = searchInput.getText().toString();
 
     searchModel = new SearchModel(context);
     searchResultList = new ArrayList<>();
 
-    if (!DataValidation.isStringEmpty(searchInputStr)) {
-      searchItems(); // TODO find out why search Input String is always empty when this fragment
-      // is newly created even if the text is filled in
+    // TODO String is always empty when this fragment is newly created even if the text is filled in
+    if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
+      searchItems();
     }
 
     adapter = new SearchRecyclerViewAdapter(searchResultList, this);
@@ -158,50 +170,59 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     updateEmptyView(searchResultList);
   }
 
-  private void setupSortBar() {
-    ToggleButton sortNameBtn = view.findViewById(R.id.sort_name);
+  private void handleSearchSort() {
+    AlertDialog.Builder selectSearchCriteria = new AlertDialog.Builder(context);
+    selectSearchCriteria.setTitle(R.string.search_sort_to);
 
-    sortNameBtn.setOnClickListener(new View.OnClickListener() {
+    int checkedItem = SearchSortCriteria.getCriteriaNum(sortCriteria);
+
+    String[] sortChoices = {
+        getString(R.string.sort_name_ascending),
+        getString(R.string.sort_name_descending),
+        getString(R.string.sort_modDate_oldest),
+        getString(R.string.sort_modDate_latest)
+    };
+
+    selectSearchCriteria
+        .setSingleChoiceItems(sortChoices, checkedItem, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int choice) {
+            handleSelectedSortChoice(choice);
+          }
+        });
+
+    selectSearchCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
       @Override
-      public void onClick(View v) {
-        handleSortName(sortNameBtn);
+      public void onClick(DialogInterface dialog, int which) {
+        if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
+          sortResultList();
+        }
       }
     });
 
-    ToggleButton sortDateBtn = view.findViewById(R.id.sort_date);
-
-    sortDateBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSortDate();
-      }
-    });
+    selectSearchCriteria.show();
   }
 
-  private void handleSortName(ToggleButton sortNameBtn) {
-    if (sortNameBtn.isChecked()) {
-      sortNameBtn.setChecked(true);
-      sortCriteria = SearchSortCriteria.NAME_ASCENDING;
-    } else {
-      sortNameBtn.setChecked(false);
-      sortCriteria = SearchSortCriteria.NAME_DESCENDING;
+  private void handleSelectedSortChoice(int choice) {
+    switch (choice) {
+      case 0:
+        sortCriteria = SearchSortCriteria.NAME_ASCENDING;
+        break;
+
+      case 1:
+        sortCriteria = SearchSortCriteria.NAME_DESCENDING;
+        break;
+
+      case 2:
+        sortCriteria = SearchSortCriteria.MOD_DATE_OLDEST;
+        break;
+
+      case 3:
+        sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
+        break;
+
+      default:
     }
-
-    sortResultList();
-  }
-
-  private void handleSortDate() {
-    ToggleButton sortDateBtn = view.findViewById(R.id.sort_date);
-
-    if (sortDateBtn.isChecked()) {
-      sortDateBtn.setChecked(true);
-      sortCriteria = SearchSortCriteria.MOD_DATE_OLDEST;
-    } else {
-      sortDateBtn.setChecked(false);
-      sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
-    }
-
-    sortResultList();
   }
 
   private void sortResultList() {
@@ -210,8 +231,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     adapter.notifyDataSetChanged();
   }
 
-  private void handleSearchFilter() { // TODO implement filter
-    Toast.makeText(context, R.string.search_filter, Toast.LENGTH_SHORT).show();
+  private void handleSearchFilter() {
+    Toast.makeText(context, R.string.filter, Toast.LENGTH_SHORT).show();
     // TODO filter search results
   }
 
