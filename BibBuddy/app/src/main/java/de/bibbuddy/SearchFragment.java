@@ -160,7 +160,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
 
-    // TODO get filter criterias from view
+    // TODO get filter categories from view
 
     searchResultList = searchModel.getSearchResultList(searchInputStr, sortCriteria);
 
@@ -193,7 +193,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     selectSearchCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
       @Override
-      public void onClick(DialogInterface dialog, int which) {
+      public void onClick(DialogInterface dialog, int choice) {
         if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
           sortResultList();
         }
@@ -241,8 +241,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     String htmlAsString = getString(R.string.search_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
     helpFragment.setArguments(bundle);
 
     getActivity().getSupportFragmentManager().beginTransaction()
