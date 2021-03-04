@@ -69,20 +69,30 @@ public class SearchModel {
   }
 
   private void sortSearchResultList(SearchSortCriteria sortCriteria) {
-    if (sortCriteria == SearchSortCriteria.NAME_ASCENDING) {
-      sortSearchResultListByName(false);
-    } else if (sortCriteria == SearchSortCriteria.NAME_DESCENDING) {
-      sortSearchResultListByName(true);
-    } else if (sortCriteria == SearchSortCriteria.MOD_DATE_OLDEST) {
-      sortSearchResultListByModDate(false);
-    } else if (sortCriteria == SearchSortCriteria.MOD_DATE_LATEST) {
-      sortSearchResultListByModDate(true);
+    switch (sortCriteria) {
+      case NAME_ASCENDING:
+        sortSearchResultListByName(false);
+        break;
+
+      case NAME_DESCENDING:
+        sortSearchResultListByName(true);
+        break;
+
+      case MOD_DATE_OLDEST:
+        sortSearchResultListByModDate(false);
+        break;
+
+      case MOD_DATE_LATEST:
+        sortSearchResultListByModDate(true);
+        break;
+
+      default:
     }
   }
 
   private void sortSearchResultListByName(boolean isSortNameDescending) {
-    searchResultList.sort((o1, o2) -> { // sort name ascending
-      return o1.getName().compareToIgnoreCase(o2.getName());
+    searchResultList.sort((searchItem, searchItemToCompare) -> { // sort name ascending
+      return searchItem.getName().compareToIgnoreCase(searchItemToCompare.getName());
     });
 
     if (isSortNameDescending) {
@@ -92,8 +102,9 @@ public class SearchModel {
 
 
   private void sortSearchResultListByModDate(boolean isSortModDateLatest) {
-    searchResultList.sort((o1, o2) -> { // oldest modDate is at the beginning
-      return o1.getModDate().compareTo(o2.getModDate());
+    searchResultList.sort((searchItem, searchItemToCompare) -> {
+      // oldest modDate is at the beginning
+      return searchItem.getModDate().compareTo(searchItemToCompare.getModDate());
     });
 
     if (isSortModDateLatest) {

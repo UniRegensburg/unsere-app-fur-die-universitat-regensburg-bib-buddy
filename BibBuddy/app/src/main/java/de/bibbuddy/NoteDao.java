@@ -74,14 +74,17 @@ public class NoteDao implements InterfaceNoteDao {
                                  DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
                                  DatabaseHelper.NOTE_FILE_ID},
                              DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-                             null, null, null, null);
+                             null, null, null, String.valueOf(1));
 
     Note note = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
-      note = createNoteData(cursor);
+    if (cursor.moveToFirst()) {
+      do {
+        note = createNoteData(cursor);
+      } while (cursor.moveToNext());
+
       cursor.close();
     }
+
     return note;
   }
 
@@ -99,10 +102,9 @@ public class NoteDao implements InterfaceNoteDao {
     if (cursor.moveToFirst()) {
       do {
         Note note = createNoteData(cursor);
-
-        // Adding note to list
         noteList.add(note);
       } while (cursor.moveToNext());
+
       cursor.close();
     }
 
@@ -177,13 +179,17 @@ public class NoteDao implements InterfaceNoteDao {
   public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> noteIds = new ArrayList<Long>();
+
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
-        + DatabaseHelper.BOOK_ID + "=" + bookId;
-    Cursor cursor = db.rawQuery(selectQuery, null);
+        + DatabaseHelper.BOOK_ID + " = ?";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
+
     if (cursor.moveToFirst()) {
       do {
         noteIds.add(Long.parseLong(cursor.getString(2)));
       } while (cursor.moveToNext());
+
       cursor.close();
     }
 
@@ -223,11 +229,10 @@ public class NoteDao implements InterfaceNoteDao {
                                  DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
                                  DatabaseHelper.NOTE_FILE_ID},
                              DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-                             null, null, null, null);
+                             null, null, null, String.valueOf(1));
 
     String noteText = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
       noteText = cursor.getString(3);
 
       cursor.close();
@@ -236,7 +241,7 @@ public class NoteDao implements InterfaceNoteDao {
     return noteText;
   }
 
-  private Note createNoteData(Cursor cursor) { // TODO use at other places after 2nd release
+  private Note createNoteData(Cursor cursor) {
 
     return new Note(
         Long.parseLong(cursor.getString(0)), // Id
@@ -287,11 +292,11 @@ public class NoteDao implements InterfaceNoteDao {
   public Long findBookIdByNoteId(Long noteId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    String selectQuery =
-        "SELECT " + DatabaseHelper.BOOK_ID + " FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
-            + " WHERE " + DatabaseHelper.NOTE_ID + "=" + noteId + " LIMIT 1";
-
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK,
+                             new String[] {DatabaseHelper.BOOK_ID},
+                             DatabaseHelper.NOTE_ID + "=?",
+                             new String[] {String.valueOf(noteId)},
+                             null, null, null, String.valueOf(1));
 
     Long bookId = 0L;
     if (cursor.moveToFirst()) {

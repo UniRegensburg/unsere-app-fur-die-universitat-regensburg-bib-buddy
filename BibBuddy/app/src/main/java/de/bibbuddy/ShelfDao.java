@@ -54,22 +54,23 @@ public class ShelfDao implements InterfaceShelfDao {
                              new String[] {DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE,
                                  DatabaseHelper.MOD_DATE, DatabaseHelper.SHELF_ID},
                              DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-                             null, null, null, null);
+                             null, null, null, String.valueOf(1));
 
     Shelf shelf = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
+      do {
+        shelf = createShelfData(cursor);
 
-      shelf = createShelfData(cursor);
-
-      if (cursor.getString(4) == null) { // without it an error occurs
-        shelf.setShelfId(null);
-      } else {
-        shelf.setShelfId(Long.parseLong(cursor.getString(4))); // Shelf id
-      }
+        if (cursor.getString(4) == null) { // without it an error occurs
+          shelf.setShelfId(null);
+        } else {
+          shelf.setShelfId(Long.parseLong(cursor.getString(4))); // Shelf id
+        }
+      } while (cursor.moveToNext());
 
       cursor.close();
     }
+
     return shelf;
   }
 
@@ -92,6 +93,7 @@ public class ShelfDao implements InterfaceShelfDao {
         // Adding shelf to list
         shelfList.add(shelf);
       } while (cursor.moveToNext());
+
       cursor.close();
     }
 
@@ -144,6 +146,7 @@ public class ShelfDao implements InterfaceShelfDao {
         // Adding shelf to list
         shelfList.add(shelf);
       } while (cursor.moveToNext());
+
       cursor.close();
     }
 
@@ -163,9 +166,11 @@ public class ShelfDao implements InterfaceShelfDao {
     Cursor cursor = db.rawQuery(selectQuery, null);
 
     Long id = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
-      id = cursor.getLong(0); // Id
+    if (cursor.moveToFirst()) {
+      do {
+        id = cursor.getLong(0); // Id
+      } while (cursor.moveToNext());
+
       cursor.close();
     }
 
@@ -185,14 +190,15 @@ public class ShelfDao implements InterfaceShelfDao {
     for (Long bookId : shelfBookIds) {
       String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
           + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
-          + DatabaseHelper.BOOK_ID + "=" + bookId;
+          + DatabaseHelper.BOOK_ID + " = ?";
 
-      Cursor cursor = db.rawQuery(selectQuery, null);
+      Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
 
       if (cursor.moveToFirst()) {
         do {
           noteCount += Integer.parseInt(cursor.getString(0));
         } while (cursor.moveToNext());
+
         cursor.close();
       }
     }
@@ -212,14 +218,15 @@ public class ShelfDao implements InterfaceShelfDao {
 
     String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
         + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
-        + DatabaseHelper.SHELF_ID + "=" + shelfId;
+        + DatabaseHelper.SHELF_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
 
     if (cursor.moveToFirst()) {
       do {
         bookCount = Integer.parseInt(cursor.getString(0));
       } while (cursor.moveToNext());
+
       cursor.close();
     }
 

@@ -260,9 +260,9 @@ public class BookDao implements InterfaceBookDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> bookIds = new ArrayList<Long>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
-        + DatabaseHelper.SHELF_ID + "=" + shelfId;
+        + DatabaseHelper.SHELF_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
 
     if (cursor.moveToFirst()) {
       do {
@@ -303,9 +303,9 @@ public class BookDao implements InterfaceBookDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
-        + DatabaseHelper.BOOK_ID + "=" + bookId;
+        + DatabaseHelper.BOOK_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
 
     if (cursor.moveToFirst()) {
       do {
@@ -347,9 +347,9 @@ public class BookDao implements InterfaceBookDao {
 
     String selectQuery =
         "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
-            + " WHERE " + DatabaseHelper.BOOK_ID + "=" + bookId;
+            + " WHERE " + DatabaseHelper.BOOK_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
 
     if (cursor.moveToFirst()) {
       do {

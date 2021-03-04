@@ -54,7 +54,7 @@ public class SearchRecyclerViewAdapter
 
     holder.getTextView().setText(searchItem.getName());
     holder.getImageView().setImageResource(searchItem.getImage());
-    holder.getModDateView().setText(searchItem.getModDateStr()); // TODO date format
+    holder.getModDateView().setText(searchItem.getModDateStr());
 
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -67,8 +67,6 @@ public class SearchRecyclerViewAdapter
 
   @Override
   public int getItemCount() {
-    // RecyclerView calls this method to get the size of the data set.
-    // RecyclerView uses this to determine when there are no more items that can be displayed.
     return searchResultList.size();
   }
 

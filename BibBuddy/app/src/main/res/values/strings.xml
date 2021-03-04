@@ -361,15 +361,12 @@
         </p>
 
         <h2>Sortieren</h2>
-        <p>Sie können ein Kriterium, nach dem Sie ihre Suchergebnisse sortieren wollen, auswählen.
-        Dabei können Sie ihre Suchergebnisse absteigend oder aufsteigend nach Namen sortieren.
-        Außerdem können Sie die Suchergebnisse nach dem neuesten oder ältesten Veränderungsdatum
-        sortieren. </p>
+        <p>Sie können ihre Suchergebnisse nach  \"Name\" oder  \"Änderungsdatum\" sortieren.
+        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p>
 
         <h2>Filtern</h2>
         <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
-        Klicken Sie dazu die entsprechenden Optionen an, nach der Sie ihre Suchergebnisse
-        filtern wollen.</p>
+        Klicken Sie dazu die entsprechenden Optionen im Menü an.</p>
 
         ]]>
     </string>
@@ -387,8 +384,8 @@
 
     <string name="sort_name_ascending">Name aufsteigend</string>
     <string name="sort_name_descending">Name absteigend</string>
-    <string name="sort_modDate_oldest">Datum älteste</string>
-    <string name="sort_modDate_latest">Datum neueste</string>
+    <string name="sort_mod_date_oldest">Datum ältestes</string>
+    <string name="sort_mod_date_latest">Datum neuestes</string>
 
     <!-- Filter -->
     <string name="filter">Filtern</string>
