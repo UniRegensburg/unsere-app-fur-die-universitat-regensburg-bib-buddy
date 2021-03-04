@@ -63,6 +63,7 @@ public class AuthorRetriever {
   private List<Author> makeAuthorList(NodeList authors) {
     String url;
     Element autEl;
+    int maxAuthors = 3; // read max. 3 authors (in line with library cataloguing practices)
     List<Author> authorArray = new ArrayList<Author>();
 
     Thread thread;
@@ -70,7 +71,7 @@ public class AuthorRetriever {
     Document xmlMetadata = null;
 
     if (authors != null) {
-      for (int i = 0; i < authors.getLength(); i++) {
+      for (int i = 0; i < maxAuthors; i++) {
 
         // read from API with isbn (Thread)
         autEl = (Element) authors.item(i);
