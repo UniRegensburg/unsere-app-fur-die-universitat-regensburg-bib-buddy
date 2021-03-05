@@ -49,6 +49,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private ExportBibTex exportBibTex;
   private final String folderName = "Download";
   private final String fileTypeBibToast = ".bib";
+
   private static final int STORAGE_PERMISSION_CODE = 1;
 
   @Nullable
@@ -114,7 +115,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         handleDeleteBook();
         break;
 
-      case R.id.menu_export_book_list:
+      case R.id.menu_export_shelf:
         checkEmptyShelf();
         break;
 
@@ -213,7 +214,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     } else {
       // if the user has already allowed access to device external storage
       exportBibTex.createBibFile();
-      exportBibTex.writeBibFile(exportBibTex.getBibFormatBook(shelfId, bookDao, noteDao));
+      exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
 
       Toast.makeText(getContext(),
           getString(R.string.exported_file_stored_in) + '\n'
@@ -259,28 +260,25 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
    *                     or PackageManager.PERMISSION_DENIED.
    */
   @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         @NonNull String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
 
-    switch (requestCode) {
-      case STORAGE_PERMISSION_CODE:
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          exportBibTex.createBibFile();
-          exportBibTex.writeBibFile(exportBibTex.getBibFormatBook(shelfId, bookDao, noteDao));
+    if (requestCode == STORAGE_PERMISSION_CODE) {
 
-          Toast.makeText(getContext(),
-              getString(R.string.exported_file_stored_in) + '\n'
-                  + File.separator + folderName + File.separator + shelfName
-                  + fileTypeBibToast, Toast.LENGTH_LONG).show();
+      if (grantResults.length > 0
+          && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        exportBibTex.createBibFile();
+        exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
 
-        } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied,
-              Toast.LENGTH_SHORT).show();
-        }
-        break;
+        Toast.makeText(getContext(),
+            getString(R.string.exported_file_stored_in) + '\n'
+                + File.separator + folderName + File.separator + shelfName
+                + fileTypeBibToast, Toast.LENGTH_LONG).show();
 
-      default:
+      } else {
+        Toast.makeText(getContext(), R.string.storage_permission_denied,
+            Toast.LENGTH_SHORT).show();
+      }
     }
   }
 

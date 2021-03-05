@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/menu_export_note"
-        android:title="@string/export" />
+        android:title="@string/export_note" />
 
     <item
         android:id="@+id/menu_help_book_note"

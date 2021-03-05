@@ -10,8 +10,8 @@
         android:title="@string/change" />
 
     <item
-        android:id="@+id/menu_export_book_list"
-        android:title="@string/export" />
+        android:id="@+id/menu_export_shelf"
+        android:title="@string/export_shelf" />
 
     <item
         android:id="@+id/menu_help_book"

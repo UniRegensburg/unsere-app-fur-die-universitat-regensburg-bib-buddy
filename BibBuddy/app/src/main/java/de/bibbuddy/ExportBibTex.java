@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class ExportBibTex {
   private final String folderName;
   private final String fileName;
 
-  private final String bibFileType = ".bib";
+  private final String bibFileType = ".txt";
 
   /**
    * The ExportBibTex is responsible for the creating, writing
@@ -64,43 +63,94 @@ public class ExportBibTex {
   }
 
   /**
-   * Generates the BibTex format for all books in a given shelf.
+   * Generates the BibTex format for all books inclusive their
+   * notes from the entire library.
    *
-   * @param shelfId id of the shelf
-   * @param bookDao object of the BookDao class
+   * @param libraryModel object of the LibraryModel class
+   * @param bookDao object of the class BookDao
    *                Depends on the used fragment.
-   *                Can be accessed through BookFragment or LibraryModel.
+   *                Can be accessed through BookModel, LibraryModel
+   *                or BookNotesViewModel.
    * @param noteDao object of the class NoteDao
    *                Depends on the used fragment.
-   *                Can be accessed through BookFragment, LibraryModel or
-   *                NoteModel.
-   * @return the BibTex format of a book as String
+   *                Can be accessed through BookModel, LibraryModel
+   *                or BookNotesViewModel.
+   * @return the BibTex format of a library as String
    */
-  public String getBibFormatBook(Long shelfId, BookDao bookDao, NoteDao noteDao) {
+  public String getBibDataLibrary(LibraryModel libraryModel,
+                                  BookDao bookDao, NoteDao noteDao) {
+    StringBuilder bibFormat = new StringBuilder();
 
-    List<Long> bookIdsCurrentShelf =
-        bookDao.getAllBookIdsForShelf(shelfId);
-    String bibFormat = "";
+    List<ShelfItem> shelfItem = libraryModel.getCurrentLibraryList();
 
-    // for each book in the current shelf
-    for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
-      Book book = bookDao.findById(bookIdsCurrentShelf.get(i));
-      Long bookId = bookIdsCurrentShelf.get(i);
+    // for each shelf in the library
+    for (int i = 0; i < shelfItem.size(); i++) {
+      Long currentShelfId = shelfItem.get(i).getId();
 
-      bibFormat =  "@book{" + getBibKey(book)
-          + "isbn={" + book.getIsbn() + "}," + '\n'
-          + getBibAuthorNames(bookId, bookDao)
-          + "title={" + book.getTitle() + "}," + '\n'
-          + "subtitle={" + book.getSubtitle() + "}," + '\n'
-          + "volume={" + book.getVolume() + "}," + '\n'
-          + "publisher={" + book.getPublisher() + "}," + '\n'
-          + "edition={" + book.getEdition() + "}," + '\n'
-          + getBibNotes(book, noteDao)
-          + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
+      bibFormat.append(getBibDataFromShelf(currentShelfId, bookDao,
+          noteDao));
 
     }
 
-    return bibFormat;
+    return bibFormat.toString();
+  }
+
+  /**
+   * Generates the BibTex format for all books in a given shelf.
+   *
+   * @param shelfId id of the shelf
+   * @param bookDao object of the class BookDao
+   *                Depends on the used fragment.
+   *                Can be accessed through BookModel, LibraryModel
+   *                or BookNotesViewModel.
+   * @param noteDao object of the class NoteDao
+   *                Depends on the used fragment.
+   *                Can be accessed through BookModel, LibraryModel
+   *                or BookNotesViewModel.
+   * @return the BibTex format of a collection of books as String
+   */
+  public String getBibDataFromShelf(Long shelfId, BookDao bookDao, NoteDao noteDao) {
+    List<Long> bookIdsCurrentShelf =
+        bookDao.getAllBookIdsForShelf(shelfId);
+    StringBuilder bibFormat = new StringBuilder();
+
+    // for each book in the current shelf
+    for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
+      Long bookId = bookIdsCurrentShelf.get(i);
+
+      bibFormat.append(getBibDataFromBook(bookId, bookDao, noteDao));
+
+    }
+
+    return bibFormat.toString();
+  }
+
+  /**
+   * Generates the BibTex format for a given book.
+   *
+   * @param bookId id of the book
+   * @param bookDao object of the class BookDao
+   *                Depends on the used fragment.
+   *                Can be accessed through BookModel, LibraryModel
+   *                or BookNotesViewModel.
+   * @param noteDao object of the class NoteDao
+   *                Depends on the used fragment.
+   *                Can be accessed through BookModel, LibraryModel
+   *                or BookNotesViewModel.
+   * @return the BibTex format of a book as String
+   */
+  public String getBibDataFromBook(Long bookId, BookDao bookDao, NoteDao noteDao) {
+    Book book = bookDao.findById(bookId);
+    return "@book{" + getBibKey(book)
+        + "isbn={" + book.getIsbn() + "}," + '\n'
+        + getBibAuthorNames(bookId, bookDao)
+        + "title={" + book.getTitle() + "}," + '\n'
+        + "subtitle={" + book.getSubtitle() + "}," + '\n'
+        + "volume={" + book.getVolume() + "}," + '\n'
+        + "publisher={" + book.getPublisher() + "}," + '\n'
+        + "edition={" + book.getEdition() + "}," + '\n'
+        + getBibNotesFromBook(book, noteDao)
+        + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
   }
 
   private String getBibKey(Book book) {
@@ -108,18 +158,18 @@ public class ExportBibTex {
     return book.getTitle().replaceAll("\\s+", "") + "," + '\n';
   }
 
-  private String getBibNotes(Book book, NoteDao noteDao) {
+  private String getBibNotesFromBook(Book book, NoteDao noteDao) {
     List<Long> notesList = noteDao.getAllNoteIdsForBook(book.getId());
     StringBuilder allNotes = new StringBuilder();
 
     if (!notesList.isEmpty()) {
       for (int k = 0; k < notesList.size(); k++) {
         String bookTextNotes = noteDao.findTextById(notesList.get(k));
-        allNotes.append("annote={").append(bookTextNotes).append("},").append('\n');
+        allNotes.append(bookTextNotes);
       }
     }
 
-    return allNotes.toString();
+    return "annote={" + allNotes + "}," + '\n';
   }
 
   private String getBibAuthorNames(Long bookId, BookDao bookDao) {
