@@ -227,7 +227,6 @@ public class LibraryFragment extends Fragment
       List<Author> authorsCurrentBook = new ArrayList<>();
       List<Long> notesCurrentBook = new ArrayList<>();
       String allNotesCurrentBook;
-      String authorNamesCurrentBook;
 
       for (int j = 0; j < bookIdsCurrentShelf.size(); j++) {
         Book currentBook;
@@ -238,13 +237,12 @@ public class LibraryFragment extends Fragment
         allNotesCurrentBook = exportBibTex.getBibNotes(notesCurrentBook, noteDao);
 
         authorsCurrentBook = bookDao.getAllAuthorsForBook(currentBookId);
-        authorNamesCurrentBook = exportBibTex.getBibAuthorNames(authorsCurrentBook);
 
         // remove whitespaces from book's title
         String bookTitle = currentBook.getTitle().replaceAll("\\s+", "");
 
         bibLibraryContent = bibLibraryContent + exportBibTex.getBibFormatBook(bookTitle,
-            authorNamesCurrentBook, currentBook, allNotesCurrentBook);
+            authorsCurrentBook, currentBook, allNotesCurrentBook);
       }
     }
     return bibLibraryContent;

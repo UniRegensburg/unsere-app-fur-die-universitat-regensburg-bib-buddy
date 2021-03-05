@@ -42,6 +42,7 @@ public class ExportBibTex {
   public void createBibFile() {
     String rootPathStr = Environment.getExternalStorageDirectory() + File.separator
         + folderName + File.separator + fileName + bibFileType;
+
     try {
       File file = new File(rootPathStr);
 
@@ -69,12 +70,12 @@ public class ExportBibTex {
    * @param book book as Book object
    * @param bookNotes notes of the Book as String
    */
-  public String getBibFormatBook(String bookTitle, String bookAuthors,
+  public String getBibFormatBook(String bookTitle, List<Author> bookAuthors,
                                       Book book, String bookNotes) {
 
     return "@book{" + bookTitle + book.getPubYear() + "," + '\n'
         + "isbn={" + book.getIsbn() + "}," + '\n'
-        + "author={" + bookAuthors + "}," + '\n'
+        + getBibAuthorNames(bookAuthors)
         + "title={" + book.getTitle() + "}," + '\n'
         + "subtitle={" + book.getSubtitle() + "}," + '\n'
         + "volume={" + book.getVolume() + "}," + '\n'
@@ -89,7 +90,7 @@ public class ExportBibTex {
    *
    * @param notesList list of all notes of a book
    * @param noteDao object of the class NoteDao
-   *                Depends on the used fragmnent.
+   *                Depends on the used fragment.
    *                Can be accessed through BookFragment or LibraryModel.
    */
   public String getBibNotes(List<Long> notesList, NoteDao noteDao) {
@@ -104,12 +105,7 @@ public class ExportBibTex {
     return allNotes;
   }
 
-  /**
-   * Converts a list of authors' names in a BibTex format.
-   *
-   * @param authorsList List of authors
-   */
-  public String getBibAuthorNames(List<Author> authorsList) {
+  private String getBibAuthorNames(List<Author> authorsList) {
     String authorNames = "";
 
     if (authorsList.size() > 1) {
@@ -133,7 +129,7 @@ public class ExportBibTex {
       }
 
     }
-    return authorNames;
+    return "author={" + authorNames + "}," + '\n';
   }
 
   /**

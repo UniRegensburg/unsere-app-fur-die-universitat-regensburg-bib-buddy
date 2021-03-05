@@ -289,7 +289,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     List<Author> authorsCurrentBook;
     List<Long> notesCurrentBook;
     String allNotesCurrentBook;
-    String authorNamesCurrentBook;
     String bibShelfContent = "";
 
     //for each book in the current shelf
@@ -302,13 +301,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       allNotesCurrentBook = exportBibTex.getBibNotes(notesCurrentBook, noteDao);
 
       authorsCurrentBook = bookDao.getAllAuthorsForBook(currentBookId);
-      authorNamesCurrentBook = exportBibTex.getBibAuthorNames(authorsCurrentBook);
 
       //remove whitespaces from book's title
       String bookTitle = currentBook.getTitle().replaceAll("\\s+", "");
 
       bibShelfContent = bibShelfContent + exportBibTex.getBibFormatBook(bookTitle,
-          authorNamesCurrentBook, currentBook, allNotesCurrentBook);
+          authorsCurrentBook, currentBook, allNotesCurrentBook);
     }
     return bibShelfContent;
   }
