@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The LibraryModel contains all the shelf data for the LibraryFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 public class LibraryModel {
 
@@ -30,6 +30,14 @@ public class LibraryModel {
     this.bookDao = new BookDao(databaseHelper);
     this.authorDao = new AuthorDao(databaseHelper);
     this.noteDao = new NoteDao(databaseHelper);
+  }
+
+  public BookDao getBookDao() {
+    return bookDao;
+  }
+
+  public NoteDao getNoteDao() {
+    return noteDao;
   }
 
   /**
@@ -170,4 +178,5 @@ public class LibraryModel {
       }
     }
   }
+
 }

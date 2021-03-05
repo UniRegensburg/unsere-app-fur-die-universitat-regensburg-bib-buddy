@@ -22,6 +22,7 @@
     <string name="back">zurück</string>
     <string name="add">+</string>
     <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht
         erlaubt.</string>
     <string name="delete">Löschen</string>
@@ -155,17 +156,26 @@
     <string name="storage_permission_alert_msg">
         Wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="storage_permission_cancel_btn">Abbrechen</string>
     <string name="storage_permission_denied">Zugriff verweigert</string>
-    <string name="file_write_failed">File write failed:</string>
+
+    <!-- Export Shelf Data Path Storage -->
     <string name="exported_file_stored_in">
         Exportierte Datei ist gespeichert unter:
     </string>
+
+    <!-- Export Library Data Path Storage -->
+    <string name="export_library">Bibliothek exportieren (BibTeX)</string>
 
     <!-- Export: Empty Booklist -->
     <string name="empty_shelf">Das Regal ist leer.</string>
     <string name="empty_shelf_description">
         Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.
+    </string>
+
+    <!-- Export: Empty Library -->
+    <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
+    <string name="empty_library_description">
+        Bitte füge mindestens ein Regal und ein Buch hinzu, um den Export zu ermöglichen.
     </string>
 
     <!-- Help Fragment -->
