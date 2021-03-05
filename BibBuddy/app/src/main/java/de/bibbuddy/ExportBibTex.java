@@ -160,9 +160,9 @@ public class ExportBibTex {
       File bibFile = new File(Environment.getExternalStorageDirectory()
           + File.separator + folderName + File.separator + fileName + bibFileType);
 
-      FileOutputStream fos = new FileOutputStream(bibFile);
-      OutputStreamWriter osw = new OutputStreamWriter(fos);
-      Writer fileWriter = new BufferedWriter(osw);
+      FileOutputStream fileOutputStream  = new FileOutputStream(bibFile);
+      OutputStreamWriter outputStreamWriter  = new OutputStreamWriter(fileOutputStream );
+      Writer fileWriter = new BufferedWriter(outputStreamWriter);
       fileWriter.write(bibContent);
       fileWriter.close();
     } catch (IOException e) {
