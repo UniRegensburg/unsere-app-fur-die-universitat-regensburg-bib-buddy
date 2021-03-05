@@ -213,7 +213,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     } else {
       // if the user has already allowed access to device external storage
       exportBibTex.createBibFile();
-      exportBibTex.writeBibFile(retrieveBibContent());
+      exportBibTex.writeBibFile(exportBibTex.getBibFormatBook(shelfId, bookDao, noteDao));
 
       Toast.makeText(getContext(),
           getString(R.string.exported_file_stored_in) + '\n'
@@ -267,7 +267,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           exportBibTex.createBibFile();
-          exportBibTex.writeBibFile(retrieveBibContent());
+          exportBibTex.writeBibFile(exportBibTex.getBibFormatBook(shelfId, bookDao, noteDao));
 
           Toast.makeText(getContext(),
               getString(R.string.exported_file_stored_in) + '\n'
@@ -285,28 +285,15 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private String retrieveBibContent() {
-    List<Long> bookIdsCurrentShelf = bookDao.getAllBookIdsForShelf(shelfId);
-    List<Author> authorsCurrentBook;
-    List<Long> notesCurrentBook;
-    String allNotesCurrentBook;
     String bibShelfContent = "";
+
+    List<Long> bookIdsCurrentShelf =
+        bookDao.getAllBookIdsForShelf(shelfId);
 
     // for each book in the current shelf
     for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
-      Book currentBook;
-      Long currentBookId = bookIdsCurrentShelf.get(i);
-      currentBook = bookDao.findById(currentBookId);
-
-      notesCurrentBook = noteDao.getAllNoteIdsForBook(currentBookId);
-      allNotesCurrentBook = exportBibTex.getBibNotes(notesCurrentBook, noteDao);
-
-      authorsCurrentBook = bookDao.getAllAuthorsForBook(currentBookId);
-
-      // remove whitespaces from book's title
-      String bookTitle = currentBook.getTitle().replaceAll("\\s+", "");
-
-      bibShelfContent = bibShelfContent + exportBibTex.getBibFormatBook(bookTitle,
-          authorsCurrentBook, currentBook, allNotesCurrentBook);
+      bibShelfContent = bibShelfContent
+          + exportBibTex.getBibFormatBook(shelfId, bookDao, noteDao);
     }
     return bibShelfContent;
   }

@@ -221,29 +221,9 @@ public class LibraryFragment extends Fragment
 
     // for each shelf in the library
     for (int i = 0; i < shelfItem.size(); i++) {
-
       Long currentShelfId = shelfItem.get(i).getId();
-      List<Long> bookIdsCurrentShelf = bookDao.getAllBookIdsForShelf(currentShelfId);
-      List<Author> authorsCurrentBook = new ArrayList<>();
-      List<Long> notesCurrentBook = new ArrayList<>();
-      String allNotesCurrentBook;
-
-      for (int j = 0; j < bookIdsCurrentShelf.size(); j++) {
-        Book currentBook;
-        Long currentBookId = bookIdsCurrentShelf.get(j);
-        currentBook = bookDao.findById(currentBookId);
-
-        notesCurrentBook = noteDao.getAllNoteIdsForBook(currentBookId);
-        allNotesCurrentBook = exportBibTex.getBibNotes(notesCurrentBook, noteDao);
-
-        authorsCurrentBook = bookDao.getAllAuthorsForBook(currentBookId);
-
-        // remove whitespaces from book's title
-        String bookTitle = currentBook.getTitle().replaceAll("\\s+", "");
-
-        bibLibraryContent = bibLibraryContent + exportBibTex.getBibFormatBook(bookTitle,
-            authorsCurrentBook, currentBook, allNotesCurrentBook);
-      }
+      bibLibraryContent = bibLibraryContent
+          + exportBibTex.getBibFormatBook(currentShelfId, bookDao, noteDao);
     }
     return bibLibraryContent;
   }

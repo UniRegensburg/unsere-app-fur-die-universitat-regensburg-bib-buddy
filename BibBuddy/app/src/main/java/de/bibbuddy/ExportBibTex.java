@@ -7,12 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The ExportBibTex creates and writes a BibTex file.
- * It contains methods for generation of contents used for the export
- * of the BibTex file.
+ * It contains methods for generation of contents used
+ * for the export of the BibTex file.
  *
  * @author Silvia Ivanova
  */
@@ -21,6 +22,7 @@ public class ExportBibTex {
 
   private final String folderName;
   private final String fileName;
+
   private final String bibFileType = ".bib";
 
   /**
@@ -62,38 +64,52 @@ public class ExportBibTex {
   }
 
   /**
-   * Generates the BibTex format.
+   * Generates the BibTex format for all books in a given shelf.
    *
-   * @param bookTitle title of the book
-   * @param bookAuthors names of all authors of the
-   *                    book as String
-   * @param book book as Book object
-   * @param bookNotes notes of the Book as String
-   */
-  public String getBibFormatBook(String bookTitle, List<Author> bookAuthors,
-                                      Book book, String bookNotes) {
-
-    return "@book{" + bookTitle + book.getPubYear() + "," + '\n'
-        + "isbn={" + book.getIsbn() + "}," + '\n'
-        + getBibAuthorNames(bookAuthors)
-        + "title={" + book.getTitle() + "}," + '\n'
-        + "subtitle={" + book.getSubtitle() + "}," + '\n'
-        + "volume={" + book.getVolume() + "}," + '\n'
-        + "publisher={" + book.getPublisher() + "}," + '\n'
-        + "edition={" + book.getEdition() + "}," + '\n'
-        + bookNotes
-        + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
-  }
-
-  /**
-   * Converts a list of notes in a BibTex format.
-   *
-   * @param notesList list of all notes of a book
-   * @param noteDao object of the class NoteDao
+   * @param shelfId id of the shelf
+   * @param bookDao object of the BookDao class
    *                Depends on the used fragment.
    *                Can be accessed through BookFragment or LibraryModel.
+   * @param noteDao object of the class NoteDao
+   *                Depends on the used fragment.
+   *                Can be accessed through BookFragment, LibraryModel or
+   *                NoteModel.
    */
-  public String getBibNotes(List<Long> notesList, NoteDao noteDao) {
+  public String getBibFormatBook(Long shelfId, BookDao bookDao, NoteDao noteDao) {
+
+    List<Long> bookIdsCurrentShelf =
+        bookDao.getAllBookIdsForShelf(shelfId);
+    String bibFormat = "";
+
+    // for each book in the current shelf
+    for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
+      Book book;
+      book = bookDao.findById(bookIdsCurrentShelf.get(i));
+      Long bookId = bookIdsCurrentShelf.get(i);
+
+      bibFormat =  "@book{" + getBibKey(book)
+          + "isbn={" + book.getIsbn() + "}," + '\n'
+          + getBibAuthorNames(bookId, bookDao)
+          + "title={" + book.getTitle() + "}," + '\n'
+          + "subtitle={" + book.getSubtitle() + "}," + '\n'
+          + "volume={" + book.getVolume() + "}," + '\n'
+          + "publisher={" + book.getPublisher() + "}," + '\n'
+          + "edition={" + book.getEdition() + "}," + '\n'
+          + getBibNotes(book, noteDao)
+          + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
+
+    }
+    return bibFormat;
+  }
+
+  private String getBibKey(Book book) {
+    // remove whitespaces from book's title
+    String bookTitle = book.getTitle().replaceAll("\\s+", "");
+    return bookTitle + "," + '\n';
+  }
+
+  private String getBibNotes(Book book, NoteDao noteDao) {
+    List<Long> notesList = noteDao.getAllNoteIdsForBook(book.getId());
     String allNotes = "";
 
     if (!notesList.isEmpty()) {
@@ -102,10 +118,16 @@ public class ExportBibTex {
         allNotes +=  "annote={" + bookTextNotes + "}," + '\n';
       }
     }
+
     return allNotes;
   }
 
-  private String getBibAuthorNames(List<Author> authorsList) {
+  private String getBibAuthorNames(Long bookId, BookDao bookDao) {
+    Book book;
+    book = bookDao.findById(bookId);
+
+    List<Author> authorsList = new ArrayList<>();
+    authorsList = bookDao.getAllAuthorsForBook(book.getId());
     String authorNames = "";
 
     if (authorsList.size() > 1) {
@@ -145,7 +167,6 @@ public class ExportBibTex {
       Writer fileWriter = new BufferedWriter(osw);
       fileWriter.write(bibContent);
       fileWriter.close();
-
     } catch (IOException e) {
       e.printStackTrace();
     }
