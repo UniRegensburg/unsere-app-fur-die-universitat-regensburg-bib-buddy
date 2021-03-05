@@ -125,8 +125,7 @@ public class ExportBibTex {
   private String getBibAuthorNames(Long bookId, BookDao bookDao) {
     Book book = bookDao.findById(bookId);
 
-    List<Author> authorsList = new ArrayList<>();
-    authorsList = bookDao.getAllAuthorsForBook(book.getId());
+    List<Author> authorsList = bookDao.getAllAuthorsForBook(book.getId());
     StringBuilder authorNames = new StringBuilder();
 
     if (authorsList.size() > 1) {
