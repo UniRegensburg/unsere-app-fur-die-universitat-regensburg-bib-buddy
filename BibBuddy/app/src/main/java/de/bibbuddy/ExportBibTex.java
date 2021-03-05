@@ -11,8 +11,8 @@ import java.util.List;
 
 /**
  * The ExportBibTex creates and writes a BibTex file.
- * It contains methods for generation of contents used
- * for the export of the BibTex file.
+ * It contains methods for generation of contents that are
+ * used for the export of the BibTex file.
  *
  * @author Silvia Ivanova
  */

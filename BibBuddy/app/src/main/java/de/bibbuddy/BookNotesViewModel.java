@@ -21,7 +21,6 @@ public class BookNotesViewModel {
    * BookNotesViewModel contains methods for managing the
    * data for the BookNotesView.
    *
-   *
    * @param context context for the BookNotesView
    */
   public BookNotesViewModel(Context context) {
