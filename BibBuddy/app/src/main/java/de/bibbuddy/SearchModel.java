@@ -87,6 +87,7 @@ public class SearchModel {
         break;
 
       default:
+        break;
     }
   }
 

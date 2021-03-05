@@ -53,9 +53,9 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
       @Override
       public void handleOnBackPressed() {
 
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
+        FragmentManager fragmentManager = getParentFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+          fragmentManager.popBackStack();
         } else {
           requireActivity().onBackPressed();
         }
@@ -94,6 +94,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         break;
 
       default:
+        break;
     }
 
     return super.onOptionsItemSelected(item);
@@ -222,6 +223,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         break;
 
       default:
+        break;
     }
   }
 

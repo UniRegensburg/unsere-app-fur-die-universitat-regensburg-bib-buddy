@@ -108,8 +108,9 @@ public class BookDao implements InterfaceBookDao {
         bookList.add(createBookData(cursor));
 
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return bookList;
   }
@@ -193,8 +194,9 @@ public class BookDao implements InterfaceBookDao {
     Long id = null;
     if (cursor.moveToFirst()) {
       id = cursor.getLong(0); // Id
-      cursor.close();
     }
+
+    cursor.close();
 
     return id;
   }
@@ -269,8 +271,9 @@ public class BookDao implements InterfaceBookDao {
         // Id, ShelfId, BookId
         bookIds.add(Long.parseLong(cursor.getString(2)));
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return bookIds;
   }
@@ -312,8 +315,9 @@ public class BookDao implements InterfaceBookDao {
         // Id, AuthorId, BookId
         authorIds.add(Long.parseLong(cursor.getString(1)));
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return authorIds;
   }
@@ -355,8 +359,9 @@ public class BookDao implements InterfaceBookDao {
       do {
         noteCount = Integer.parseInt(cursor.getString(0));
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return noteCount;
   }
@@ -383,9 +388,9 @@ public class BookDao implements InterfaceBookDao {
         bookList.add(book);
 
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return bookList;
   }

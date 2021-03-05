@@ -81,9 +81,9 @@ public class NoteDao implements InterfaceNoteDao {
       do {
         note = createNoteData(cursor);
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return note;
   }
@@ -104,10 +104,9 @@ public class NoteDao implements InterfaceNoteDao {
         Note note = createNoteData(cursor);
         noteList.add(note);
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
 
+    cursor.close();
 
     return noteList;
   }
@@ -189,9 +188,9 @@ public class NoteDao implements InterfaceNoteDao {
       do {
         noteIds.add(Long.parseLong(cursor.getString(2)));
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return noteIds;
   }
@@ -234,9 +233,9 @@ public class NoteDao implements InterfaceNoteDao {
     String noteText = null;
     if (cursor.moveToFirst()) {
       noteText = cursor.getString(3);
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return noteText;
   }
@@ -276,9 +275,9 @@ public class NoteDao implements InterfaceNoteDao {
         noteList.add(note);
 
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return noteList;
   }
@@ -301,9 +300,9 @@ public class NoteDao implements InterfaceNoteDao {
     Long bookId = 0L;
     if (cursor.moveToFirst()) {
       bookId = cursor.getLong(0);
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return bookId;
   }

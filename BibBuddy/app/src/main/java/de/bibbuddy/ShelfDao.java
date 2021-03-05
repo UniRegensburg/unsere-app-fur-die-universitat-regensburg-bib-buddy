@@ -67,9 +67,9 @@ public class ShelfDao implements InterfaceShelfDao {
           shelf.setShelfId(Long.parseLong(cursor.getString(4))); // Shelf id
         }
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return shelf;
   }
@@ -93,9 +93,9 @@ public class ShelfDao implements InterfaceShelfDao {
         // Adding shelf to list
         shelfList.add(shelf);
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return shelfList;
   }
@@ -146,9 +146,9 @@ public class ShelfDao implements InterfaceShelfDao {
         // Adding shelf to list
         shelfList.add(shelf);
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return shelfList;
   }
@@ -170,9 +170,9 @@ public class ShelfDao implements InterfaceShelfDao {
       do {
         id = cursor.getLong(0); // Id
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return id;
   }
@@ -198,9 +198,9 @@ public class ShelfDao implements InterfaceShelfDao {
         do {
           noteCount += Integer.parseInt(cursor.getString(0));
         } while (cursor.moveToNext());
-
-        cursor.close();
       }
+
+      cursor.close();
     }
 
     return noteCount;
@@ -226,9 +226,9 @@ public class ShelfDao implements InterfaceShelfDao {
       do {
         bookCount = Integer.parseInt(cursor.getString(0));
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return bookCount;
   }
@@ -284,9 +284,9 @@ public class ShelfDao implements InterfaceShelfDao {
         shelfList.add(shelf);
 
       } while (cursor.moveToNext());
-
-      cursor.close();
     }
+
+    cursor.close();
 
     return shelfList;
   }
