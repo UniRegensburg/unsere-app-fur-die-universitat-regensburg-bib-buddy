@@ -244,12 +244,11 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
                                              new DialogInterface.OnMultiChoiceClickListener() {
-                                               @Override
-                                               public void onClick(DialogInterface dialog,
-                                                                   int choice, boolean isChecked) {
-                                                 filterCriteria[choice] = isChecked;
-                                               }
-                                             });
+        @Override
+        public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
+          filterCriteria[choice] = isChecked;
+          }
+        });
 
     selectFilterCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
       @Override
