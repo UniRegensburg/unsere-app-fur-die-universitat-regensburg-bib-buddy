@@ -211,6 +211,7 @@ public class LibraryFragment extends Fragment
         break;
 
       default:
+        break;
     }
   }
 
@@ -225,6 +226,7 @@ public class LibraryFragment extends Fragment
       bibLibraryContent = bibLibraryContent
           + exportBibTex.getBibFormatBook(currentShelfId, bookDao, noteDao);
     }
+
     return bibLibraryContent;
   }
 

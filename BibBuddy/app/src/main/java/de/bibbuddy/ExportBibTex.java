@@ -74,6 +74,7 @@ public class ExportBibTex {
    *                Depends on the used fragment.
    *                Can be accessed through BookFragment, LibraryModel or
    *                NoteModel.
+   * @return the BibTex format of a book as String
    */
   public String getBibFormatBook(Long shelfId, BookDao bookDao, NoteDao noteDao) {
 
@@ -83,8 +84,7 @@ public class ExportBibTex {
 
     // for each book in the current shelf
     for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
-      Book book;
-      book = bookDao.findById(bookIdsCurrentShelf.get(i));
+      Book book = bookDao.findById(bookIdsCurrentShelf.get(i));
       Long bookId = bookIdsCurrentShelf.get(i);
 
       bibFormat =  "@book{" + getBibKey(book)
@@ -99,55 +99,53 @@ public class ExportBibTex {
           + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
 
     }
+
     return bibFormat;
   }
 
   private String getBibKey(Book book) {
     // remove whitespaces from book's title
-    String bookTitle = book.getTitle().replaceAll("\\s+", "");
-    return bookTitle + "," + '\n';
+    return book.getTitle().replaceAll("\\s+", "") + "," + '\n';
   }
 
   private String getBibNotes(Book book, NoteDao noteDao) {
     List<Long> notesList = noteDao.getAllNoteIdsForBook(book.getId());
-    String allNotes = "";
+    StringBuilder allNotes = new StringBuilder();
 
     if (!notesList.isEmpty()) {
       for (int k = 0; k < notesList.size(); k++) {
         String bookTextNotes = noteDao.findTextById(notesList.get(k));
-        allNotes +=  "annote={" + bookTextNotes + "}," + '\n';
+        allNotes.append("annote={").append(bookTextNotes).append("},").append('\n');
       }
     }
 
-    return allNotes;
+    return allNotes.toString();
   }
 
   private String getBibAuthorNames(Long bookId, BookDao bookDao) {
-    Book book;
-    book = bookDao.findById(bookId);
+    Book book = bookDao.findById(bookId);
 
     List<Author> authorsList = new ArrayList<>();
     authorsList = bookDao.getAllAuthorsForBook(book.getId());
-    String authorNames = "";
+    StringBuilder authorNames = new StringBuilder();
 
     if (authorsList.size() > 1) {
 
       for (int i = 0; i < authorsList.size(); i++) {
-        authorNames = authorNames
-            + authorsList.get(i).getFirstName()
-            + " " + authorsList.get(i).getLastName();
+        authorNames.append(authorsList.get(i).getFirstName()).append(" ")
+            .append(authorsList.get(i).getLastName());
         if (i < authorsList.size()) {
-          authorNames = authorNames + " and ";
+          authorNames.append(" and ");
         }
       }
 
     } else {
 
       try {
-        authorNames = authorsList.get(0).getFirstName()
-            + " " + authorsList.get(0).getLastName();
+        authorNames = new StringBuilder(authorsList.get(0).getFirstName()
+            + " " + authorsList.get(0).getLastName());
       } catch (Exception e) {
-        authorNames = "";
+        authorNames = new StringBuilder();
       }
 
     }

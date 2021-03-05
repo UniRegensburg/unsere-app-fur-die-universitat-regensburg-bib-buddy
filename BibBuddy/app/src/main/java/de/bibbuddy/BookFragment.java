@@ -128,7 +128,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     return super.onOptionsItemSelected(item);
   }
-      
+
   private void handleChangeBookData() {
     if (selectedBookItems.isEmpty()) {
       return;
