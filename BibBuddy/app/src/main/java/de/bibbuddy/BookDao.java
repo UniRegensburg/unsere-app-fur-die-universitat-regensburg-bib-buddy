@@ -449,8 +449,8 @@ public class BookDao implements InterfaceBookDao {
         book.setVolume(cursor.getString(6));
         book.setEdition(cursor.getString(7));
         book.setAddInfo(cursor.getString(8));
-        book.setCreateDate(Integer.parseInt(cursor.getString(9)));
-        book.setModDate(Integer.parseInt(cursor.getString(10)));
+        book.setCreateDate(Long.parseLong(cursor.getString(9)));
+        book.setModDate(Long.parseLong(cursor.getString(10)));
 
         bookList.add(book);
       } while (cursor.moveToNext());
