@@ -364,10 +364,40 @@
         ]]>
     </string>
 
+    <string name="search_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zur Suche</u></h1>
+        <p>Sie befinden sich in der Suche. Hier können Sie nach Regalen, Büchern und Notizen suchen.
+        </p>
 
+        <h2>Sortieren</h2>
+        <p>Sie können ihre Suchergebnisse nach  \"Name\" oder  \"Änderungsdatum\" sortieren.
+        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p>
 
+        <h2>Filtern</h2>
+        <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
+        Klicken Sie dazu die entsprechenden Optionen im Menü an.</p>
 
-    ""
+        ]]>
+    </string>
 
+    <!-- Search Fragment -->
+    <string name="search">Suchen …</string>
+    <string name="search_hint">Suche Regal, Buch oder Notiz</string>
+    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben.
+        Reine Whitespaces sind nicht erlaubt.</string>
+    <string name="search_empty">Keine Suchergebnisse vorhanden</string>
+
+    <!-- Sort -->
+    <string name="sort">Sortieren</string>
+    <string name="search_sort_to">Sortieren nach</string>
+
+    <string name="sort_name_ascending">Name aufsteigend</string>
+    <string name="sort_name_descending">Name absteigend</string>
+    <string name="sort_mod_date_oldest">Datum ältestes</string>
+    <string name="sort_mod_date_latest">Datum neuestes</string>
+
+    <!-- Filter -->
+    <string name="filter">Filtern</string>
 
 </resources>
