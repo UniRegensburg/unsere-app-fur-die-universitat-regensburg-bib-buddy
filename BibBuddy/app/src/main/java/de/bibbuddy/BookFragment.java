@@ -284,20 +284,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  private String retrieveBibContent() {
-    String bibShelfContent = "";
-
-    List<Long> bookIdsCurrentShelf =
-        bookDao.getAllBookIdsForShelf(shelfId);
-
-    // for each book in the current shelf
-    for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
-      bibShelfContent = bibShelfContent
-          + exportBibTex.getBibFormatBook(shelfId, bookDao, noteDao);
-    }
-    return bibShelfContent;
-  }
-
   private void handleManualBook() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.book_help_text);
