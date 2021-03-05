@@ -457,5 +457,4 @@ public class LibraryFragment extends Fragment
       selectedShelfItems.add(shelfItem);
     }
   }
-
 }

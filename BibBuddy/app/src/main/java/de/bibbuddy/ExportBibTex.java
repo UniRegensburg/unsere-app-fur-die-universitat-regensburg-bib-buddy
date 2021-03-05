@@ -154,6 +154,8 @@ public class ExportBibTex {
 
   /**
    * Writes a BibTex file.
+   *
+   * @param bibContent the content of the BibTex file as String
    */
   public void writeBibFile(String bibContent) {
     try {
@@ -161,7 +163,7 @@ public class ExportBibTex {
           + File.separator + folderName + File.separator + fileName + bibFileType);
 
       FileOutputStream fileOutputStream  = new FileOutputStream(bibFile);
-      OutputStreamWriter outputStreamWriter  = new OutputStreamWriter(fileOutputStream );
+      OutputStreamWriter outputStreamWriter  = new OutputStreamWriter(fileOutputStream);
       Writer fileWriter = new BufferedWriter(outputStreamWriter);
       fileWriter.write(bibContent);
       fileWriter.close();
