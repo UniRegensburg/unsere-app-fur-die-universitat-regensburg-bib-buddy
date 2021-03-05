@@ -211,7 +211,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
       requestStoragePermission();
     } else {
-      //if the user has already allowed access to device external storage
+      // if the user has already allowed access to device external storage
       exportBibTex.createBibFile();
       exportBibTex.writeBibFile(retrieveBibContent());
 
@@ -291,7 +291,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     String allNotesCurrentBook;
     String bibShelfContent = "";
 
-    //for each book in the current shelf
+    // for each book in the current shelf
     for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
       Book currentBook;
       Long currentBookId = bookIdsCurrentShelf.get(i);
@@ -302,7 +302,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       authorsCurrentBook = bookDao.getAllAuthorsForBook(currentBookId);
 
-      //remove whitespaces from book's title
+      // remove whitespaces from book's title
       String bookTitle = currentBook.getTitle().replaceAll("\\s+", "");
 
       bibShelfContent = bibShelfContent + exportBibTex.getBibFormatBook(bookTitle,
