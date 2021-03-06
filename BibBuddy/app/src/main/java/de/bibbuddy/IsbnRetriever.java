@@ -40,14 +40,14 @@ public class IsbnRetriever implements Runnable {
   private Book createRecord(Document xmlMetadata) {
     return new Book(xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent(), // isbn
         xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent(), // title
-        "", // subtitle
+        xmlMetadata.getElementsByTagName("isbd:P1006").item(0).getTextContent(), // subtitle
         Integer
             .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent()),
         // pubYear
         xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent(),
         // publisher
         "", // volume
-        "", // edition
+        xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent(), // edition
         ""); // addInfos
   }
 
