@@ -14,8 +14,8 @@ public class SearchModel {
 
   private final ShelfDao shelfDao;
   private final BookDao bookDao;
-  private final AuthorDao authorDao;
   private final NoteDao noteDao;
+
   private List<SearchItem> searchResultList;
 
   /**
@@ -27,45 +27,65 @@ public class SearchModel {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.shelfDao = new ShelfDao(databaseHelper);
     this.bookDao = new BookDao(databaseHelper);
-    this.authorDao = new AuthorDao(databaseHelper);
     this.noteDao = new NoteDao(databaseHelper);
+
     this.searchResultList = new ArrayList<>();
   }
 
   /**
    * Gets the searchResultList based on the user input.
    *
+   * @param searchInput input of the search
+   * @param sortCriteria sortCriteria for the searchResultList
+   * @param filterCriteria filterCriteria for the searchResultList
    * @return Returns the searchResultList
    */
-  public List<SearchItem> getSearchResultList(String searchInput, SearchSortCriteria sortCriteria) {
+  public List<SearchItem> getSearchResultList(String searchInput, SearchSortCriteria sortCriteria,
+                                              boolean[] filterCriteria) {
     searchResultList.clear();
 
-    // TODO filter
+    if (filterCriteria[0]) { // filter shelf
+      searchShelves(searchInput);
+    }
 
+    if (filterCriteria[1]) { // filter book
+      searchBooks(searchInput);
+    }
+
+    if (filterCriteria[2]) { // filter note
+      searchNotes(searchInput);
+    }
+
+    sortSearchResultList(sortCriteria);
+
+    return searchResultList;
+  }
+
+  private void searchShelves(String searchInput) {
     List<Shelf> shelfList = shelfDao.findShelvesByName(searchInput);
     for (Shelf shelf : shelfList) {
       searchResultList.add(
           new SearchItem(shelf.getName(), R.drawable.books, shelf.getId(), shelf.getModDate(),
                          SearchItemType.SEARCH_SHELF));
     }
+  }
 
+  private void searchBooks(String searchInput) {
     List<Book> bookList = bookDao.findBooksByTitle(searchInput);
     for (Book book : bookList) {
       searchResultList.add(
           new SearchItem(book.getTitle(), R.drawable.ic_book, book.getId(), book.getModDate(),
                          SearchItemType.SEARCH_BOOK));
     }
+  }
 
+  private void searchNotes(String searchInput) {
     List<Note> noteList = noteDao.findNotesByName(searchInput);
     for (Note note : noteList) {
       searchResultList.add(
           new SearchItem(note.getName(), R.drawable.document, note.getId(), note.getModDate(),
                          SearchItemType.SEARCH_TEXT_NOTE));
     }
-
-    sortSearchResultList(sortCriteria);
-
-    return searchResultList;
   }
 
   private void sortSearchResultList(SearchSortCriteria sortCriteria) {
@@ -138,4 +158,5 @@ public class SearchModel {
 
     return searchResultList;
   }
+
 }

@@ -35,10 +35,12 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   private Context context;
   private SearchModel searchModel;
   private SearchRecyclerViewAdapter adapter;
-  private RecyclerView searchRecyclerView;
+
   private List<SearchItem> searchResultList;
   private EditText searchInput;
+
   private SearchSortCriteria sortCriteria;
+  private boolean[] filterCriteria;
 
   @Nullable
   @Override
@@ -67,7 +69,9 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     setupSearchButton();
 
     setHasOptionsMenu(true);
+
     sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
+    filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
 
     return view;
   }
@@ -102,8 +106,6 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
 
   private void setupRecyclerView() {
-    searchRecyclerView = view.findViewById(R.id.search_recycler_view);
-
     searchModel = new SearchModel(context);
     searchResultList = new ArrayList<>();
 
@@ -113,6 +115,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     }
 
     adapter = new SearchRecyclerViewAdapter(searchResultList, this);
+
+    RecyclerView searchRecyclerView = view.findViewById(R.id.search_recycler_view);
     searchRecyclerView.setAdapter(adapter);
 
     updateEmptyView(searchResultList);
@@ -160,10 +164,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     }
 
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
-
-    // TODO get filter categories from view
-
-    searchResultList = searchModel.getSearchResultList(searchInputStr, sortCriteria);
+    searchResultList =
+        searchModel.getSearchResultList(searchInputStr, sortCriteria, filterCriteria);
 
     adapter.setSearchResultList(searchResultList);
     adapter.notifyDataSetChanged();
@@ -234,8 +236,33 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   }
 
   private void handleSearchFilter() {
-    Toast.makeText(context, R.string.filter, Toast.LENGTH_SHORT).show();
-    // TODO filter search results
+    AlertDialog.Builder selectFilterCriteria = new AlertDialog.Builder(context);
+    selectFilterCriteria.setTitle(R.string.filter_to);
+
+    String[] filterChoices = {
+        getString(R.string.filter_shelf),
+        getString(R.string.filter_book),
+        getString(R.string.filter_note)
+    };
+
+    selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
+                                             new DialogInterface.OnMultiChoiceClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
+          filterCriteria[choice] = isChecked;
+          }
+        });
+
+    selectFilterCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int choice) {
+        if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
+          searchItems();
+        }
+      }
+    });
+
+    selectFilterCriteria.show();
   }
 
   private void handleHelp() {
@@ -323,6 +350,5 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         .addToBackStack(null)
         .commit();
   }
-
 
 }
