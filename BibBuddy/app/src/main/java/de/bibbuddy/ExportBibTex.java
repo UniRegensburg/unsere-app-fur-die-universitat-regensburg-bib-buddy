@@ -22,7 +22,7 @@ public class ExportBibTex {
   private final String folderName;
   private final String fileName;
 
-  private final String bibFileType = ".txt";
+  private final String bibFileType = ".bib";
 
   /**
    * The ExportBibTex is responsible for the creating, writing
