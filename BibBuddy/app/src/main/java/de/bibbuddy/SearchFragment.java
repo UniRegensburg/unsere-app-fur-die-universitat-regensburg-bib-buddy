@@ -35,8 +35,10 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   private Context context;
   private SearchModel searchModel;
   private SearchRecyclerViewAdapter adapter;
+
   private List<SearchItem> searchResultList;
   private EditText searchInput;
+
   private SearchSortCriteria sortCriteria;
   private boolean[] filterCriteria;
 
@@ -67,6 +69,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     setupSearchButton();
 
     setHasOptionsMenu(true);
+
     sortCriteria = SearchSortCriteria.MOD_DATE_LATEST;
     filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
 
@@ -347,6 +350,5 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         .addToBackStack(null)
         .commit();
   }
-
 
 }

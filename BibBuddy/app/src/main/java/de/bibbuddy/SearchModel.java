@@ -15,6 +15,7 @@ public class SearchModel {
   private final ShelfDao shelfDao;
   private final BookDao bookDao;
   private final NoteDao noteDao;
+
   private List<SearchItem> searchResultList;
 
   /**
@@ -27,12 +28,16 @@ public class SearchModel {
     this.shelfDao = new ShelfDao(databaseHelper);
     this.bookDao = new BookDao(databaseHelper);
     this.noteDao = new NoteDao(databaseHelper);
+
     this.searchResultList = new ArrayList<>();
   }
 
   /**
    * Gets the searchResultList based on the user input.
    *
+   * @param searchInput input of the search
+   * @param sortCriteria sortCriteria for the searchResultList
+   * @param filterCriteria filterCriteria for the searchResultList
    * @return Returns the searchResultList
    */
   public List<SearchItem> getSearchResultList(String searchInput, SearchSortCriteria sortCriteria,
@@ -153,4 +158,5 @@ public class SearchModel {
 
     return searchResultList;
   }
+
 }
