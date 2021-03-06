@@ -144,4 +144,5 @@ public class BookRecyclerViewAdapter
       return textNoteCount;
     }
   }
+
 }

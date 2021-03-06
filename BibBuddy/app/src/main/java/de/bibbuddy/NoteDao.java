@@ -306,4 +306,5 @@ public class NoteDao implements InterfaceNoteDao {
 
     return bookId;
   }
+
 }

@@ -47,4 +47,5 @@ public class SearchItem extends LibraryItem {
   public String getModDateStr() {
     return modDateStr;
   }
+
 }

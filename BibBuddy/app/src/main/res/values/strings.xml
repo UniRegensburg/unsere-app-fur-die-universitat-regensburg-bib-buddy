@@ -28,7 +28,6 @@
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
-    <string name="export">Regal exportieren (BibTeX)</string>
     <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
 
@@ -163,10 +162,12 @@
         Exportierte Datei ist gespeichert unter:
     </string>
 
-    <!-- Export Library Data Path Storage -->
+    <!-- Export Menu Items -->
     <string name="export_library">Bibliothek exportieren (BibTeX)</string>
+    <string name="export_shelf">Regal(e) exportieren (BibTeX)</string>
+    <string name="export_note">Notiz(en) exportieren (BibTeX)</string>
 
-    <!-- Export: Empty Booklist -->
+    <!-- Export: Empty Shelf -->
     <string name="empty_shelf">Das Regal ist leer.</string>
     <string name="empty_shelf_description">
         Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.
@@ -176,6 +177,12 @@
     <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
     <string name="empty_library_description">
         Bitte füge mindestens ein Regal und ein Buch hinzu, um den Export zu ermöglichen.
+    </string>
+
+    <!-- Export: Empty Note List -->
+    <string name="empty_note_list">Keine Notizen.</string>
+    <string name="empty_note_list_description">
+        Bitte füge mindestens eine Notiz hinzu, um den Export zu ermöglichen.
     </string>
 
     <!-- Help Fragment -->

@@ -273,4 +273,5 @@ public class AuthorDao implements InterfaceAuthorDao {
   private boolean existsAuthorBookLink(Long authorId) {
     return countAuthorBookLinks(authorId) > 0;
   }
+
 }

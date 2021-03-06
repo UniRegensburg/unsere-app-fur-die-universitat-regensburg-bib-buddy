@@ -44,10 +44,9 @@ public class LibraryFragment extends Fragment
   private NoteDao noteDao;
 
   private ExportBibTex exportBibTex;
-  private final String folderName = "Download";
+
   private final String fileName = "library_export_BibBuddy";
-  private final String fileTypeBibToast = ".bib";
-  private static final int STORAGE_PERMISSION_CODE = 1;
+
 
   @Nullable
   @Override
@@ -74,7 +73,7 @@ public class LibraryFragment extends Fragment
     selectedShelfItems = new ArrayList<ShelfItem>();
     bookDao = libraryModel.getBookDao();
     noteDao = libraryModel.getNoteDao();
-    exportBibTex = new ExportBibTex(folderName, fileName);
+    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
   }
@@ -142,12 +141,12 @@ public class LibraryFragment extends Fragment
     } else {
       // if the user has already allowed access to device external storage
       exportBibTex.createBibFile();
-      exportBibTex.writeBibFile(retrieveBibContentShelf());
+      exportBibTex.writeBibFile(exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
 
       Toast.makeText(getContext(),
           getString(R.string.exported_file_stored_in) + '\n'
-              + File.separator + folderName + File.separator + fileName
-              + fileTypeBibToast, Toast.LENGTH_LONG).show();
+              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+              + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -157,7 +156,7 @@ public class LibraryFragment extends Fragment
       showRequestPermissionDialog();
     } else {
       requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          STORAGE_PERMISSION_CODE);
+          StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
 
@@ -169,7 +168,7 @@ public class LibraryFragment extends Fragment
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-            STORAGE_PERMISSION_CODE));
+            StorageKeys.STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
 
@@ -188,46 +187,28 @@ public class LibraryFragment extends Fragment
    *                     or PackageManager.PERMISSION_DENIED.
    */
   @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         String[] permissions, int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
 
-    switch (requestCode) {
+    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
 
-      case STORAGE_PERMISSION_CODE:
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          exportBibTex.createBibFile();
-          exportBibTex.writeBibFile(retrieveBibContentShelf());
+      if (grantResults.length > 0
+          && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-          Toast.makeText(getContext(),
-              getString(R.string.exported_file_stored_in) + '\n'
-                  + File.separator + folderName + File.separator + fileName
-                  + fileTypeBibToast, Toast.LENGTH_LONG).show();
+        exportBibTex.createBibFile();
+        exportBibTex.writeBibFile(exportBibTex
+            .getBibDataLibrary(libraryModel, bookDao, noteDao));
 
-        } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied,
-              Toast.LENGTH_SHORT).show();
-        }
-        break;
+        Toast.makeText(getContext(),
+            getString(R.string.exported_file_stored_in) + '\n'
+                + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+                + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
 
-      default:
-        break;
+      } else {
+        Toast.makeText(getContext(), R.string.storage_permission_denied,
+            Toast.LENGTH_SHORT).show();
+      }
     }
-  }
-
-  private String retrieveBibContentShelf() {
-    List<ShelfItem> shelfItem = new ArrayList<>();
-    shelfItem = libraryModel.getCurrentLibraryList();
-    String bibLibraryContent = "";
-
-    // for each shelf in the library
-    for (int i = 0; i < shelfItem.size(); i++) {
-      Long currentShelfId = shelfItem.get(i).getId();
-      bibLibraryContent = bibLibraryContent
-          + exportBibTex.getBibFormatBook(currentShelfId, bookDao, noteDao);
-    }
-
-    return bibLibraryContent;
   }
 
   private void handleManualLibrary() {

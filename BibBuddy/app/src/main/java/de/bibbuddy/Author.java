@@ -99,4 +99,5 @@ public class Author {
   public void setModDate(Long modDate) {
     this.modDate = modDate;
   }
+
 }
