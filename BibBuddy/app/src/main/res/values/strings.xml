@@ -88,12 +88,28 @@
     <string name="book_form_edition">Auflage (optional)</string>
     <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
 
+
+    <string name="add_author_btn">Autoren bearbeiten</string>
+    <string name="add_author_tooltip">Autor hinzufügen</string>
+    <string name="delete_author_btn">Autor löschen</string>
+    <string name="delete_author_tooltip">Autor entfernen</string>
+
     <!-- Author -->
     <string name="author">Autor</string>
     <string name="authors">Autoren</string>
     <string name="author_first_name">Vorname</string>
     <string name="author_last_name">Nachname</string>
     <string name="author_title">Titel (optional)</string>
+
+    <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
+        Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
+        eingeben können. Wurde der Autor erfolgreich angelegt, wird er in der Liste angezeigt.
+        Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
+        <b>Hilfe</b>.</string>
+
+    <string name="change_author">Autordaten ändern</string>
+    <string name="add_author">Autor hinzufügen</string>
+    <string name="added_author">Autor wurde hinzufügt</string>
 
 
     <!-- Barcode Scanner -->

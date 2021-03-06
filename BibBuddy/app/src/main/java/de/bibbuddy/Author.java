@@ -52,6 +52,12 @@ public class Author {
     this.title = title;
   }
 
+  public boolean isEmpty() {
+    return firstName == null
+        && lastName == null
+        && title == null;
+  }
+
   public Long getId() {
     return id;
   }
