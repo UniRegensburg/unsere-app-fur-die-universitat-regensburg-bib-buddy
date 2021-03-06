@@ -114,4 +114,5 @@ public class LibraryRenameShelfFragment extends DialogFragment {
   public interface RenameShelfLibraryListener { // create an interface
     void onShelfRenamed(String name); // create callback function
   }
+
 }

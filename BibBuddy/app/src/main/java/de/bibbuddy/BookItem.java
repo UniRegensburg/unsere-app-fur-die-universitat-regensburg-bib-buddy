@@ -43,4 +43,5 @@ public class BookItem extends LibraryItem {
   public int getNoteCount() {
     return noteCount;
   }
+
 }

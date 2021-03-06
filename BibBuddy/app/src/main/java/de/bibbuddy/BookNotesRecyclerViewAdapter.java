@@ -111,4 +111,5 @@ public class BookNotesRecyclerViewAdapter extends
       return imageView;
     }
   }
+
 }

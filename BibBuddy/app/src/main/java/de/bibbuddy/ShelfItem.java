@@ -36,4 +36,5 @@ public class ShelfItem extends LibraryItem {
   public int getNoteCount() {
     return noteCount;
   }
+
 }

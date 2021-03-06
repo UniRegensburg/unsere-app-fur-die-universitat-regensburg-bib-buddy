@@ -98,7 +98,9 @@ public class BookNotesView extends Fragment
 
     bookDao = bookNotesViewModel.getBookDao();
     noteDao = bookNotesViewModel.getNoteDao();
-    fileName = bookDao.findById(bookId).getTitle()
+
+    fileName = (bookDao.findById(bookId).getTitle()
+        + bookDao.findById(bookId).getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(folderName, fileName);
 

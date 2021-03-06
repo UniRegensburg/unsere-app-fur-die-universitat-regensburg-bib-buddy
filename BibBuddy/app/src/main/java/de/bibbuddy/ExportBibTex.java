@@ -60,6 +60,7 @@ public class ExportBibTex {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
   }
 
   /**

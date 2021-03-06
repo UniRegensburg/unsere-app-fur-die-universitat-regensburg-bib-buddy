@@ -136,4 +136,5 @@ public class DataValidation {
 
     return isNumber && Integer.parseInt(numberStr) >= 0 && numberStr.length() < 5;
   }
+
 }
