@@ -142,6 +142,7 @@ public class ExportBibTex {
    */
   public String getBibDataFromBook(Long bookId, BookDao bookDao, NoteDao noteDao) {
     Book book = bookDao.findById(bookId);
+
     return "@book{" + getBibKey(book)
         + "isbn={" + book.getIsbn() + "}," + '\n'
         + getBibAuthorNames(bookId, bookDao)
@@ -199,6 +200,7 @@ public class ExportBibTex {
       }
 
     }
+
     return "author={" + authorNames + "}," + '\n';
   }
 
