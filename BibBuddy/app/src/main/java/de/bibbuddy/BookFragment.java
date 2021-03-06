@@ -47,10 +47,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private BookDao bookDao;
   private NoteDao noteDao;
   private ExportBibTex exportBibTex;
-  private final String folderName = "Download";
-  private final String fileTypeBibToast = ".bib";
 
-  private static final int STORAGE_PERMISSION_CODE = 1;
 
   @Nullable
   @Override
@@ -82,7 +79,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     bookDao = bookModel.getBookDao();
     noteDao = bookModel.getNoteDao();
 
-    exportBibTex = new ExportBibTex(folderName, shelfName);
+    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
 
     RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
@@ -218,8 +215,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       Toast.makeText(getContext(),
           getString(R.string.exported_file_stored_in) + '\n'
-              + File.separator + folderName + File.separator + shelfName
-              + fileTypeBibToast, Toast.LENGTH_LONG).show();
+              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+              + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -229,7 +226,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       showRequestPermissionDialog();
     } else {
       requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          STORAGE_PERMISSION_CODE);
+          StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
 
@@ -241,7 +238,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-            STORAGE_PERMISSION_CODE));
+            StorageKeys.STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
 
@@ -263,7 +260,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                          @NonNull int[] grantResults) {
 
-    if (requestCode == STORAGE_PERMISSION_CODE) {
+    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
 
       if (grantResults.length > 0
           && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -272,8 +269,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
         Toast.makeText(getContext(),
             getString(R.string.exported_file_stored_in) + '\n'
-                + File.separator + folderName + File.separator + shelfName
-                + fileTypeBibToast, Toast.LENGTH_LONG).show();
+                + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+                + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
 
       } else {
         Toast.makeText(getContext(), R.string.storage_permission_denied,

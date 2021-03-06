@@ -180,7 +180,7 @@
     </string>
 
     <!-- Export: Empty Note List -->
-    <string name="empty_note_list">Keine Notizen</string>
+    <string name="empty_note_list">Keine Notizen.</string>
     <string name="empty_note_list_description">
         Bitte füge mindestens eine Notiz hinzu, um den Export zu ermöglichen.
     </string>

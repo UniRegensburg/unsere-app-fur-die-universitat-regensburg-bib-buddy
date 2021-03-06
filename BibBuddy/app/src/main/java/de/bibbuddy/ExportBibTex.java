@@ -22,7 +22,6 @@ public class ExportBibTex {
   private final String folderName;
   private final String fileName;
 
-  private final String bibFileType = ".bib";
 
   /**
    * The ExportBibTex is responsible for the creating, writing
@@ -42,7 +41,8 @@ public class ExportBibTex {
    */
   public void createBibFile() {
     String rootPathStr = Environment.getExternalStorageDirectory() + File.separator
-        + folderName + File.separator + fileName + bibFileType;
+        + folderName + File.separator + fileName
+        + StorageKeys.BIB_FILE_TYPE;
 
     try {
       File file = new File(rootPathStr);
@@ -208,9 +208,11 @@ public class ExportBibTex {
    * @param bibContent the content of the BibTex file as String
    */
   public void writeBibFile(String bibContent) {
+
     try {
       File bibFile = new File(Environment.getExternalStorageDirectory()
-          + File.separator + folderName + File.separator + fileName + bibFileType);
+          + File.separator + folderName + File.separator + fileName
+          + StorageKeys.BIB_FILE_TYPE);
 
       FileOutputStream fileOutputStream  = new FileOutputStream(bibFile);
       OutputStreamWriter outputStreamWriter  = new OutputStreamWriter(fileOutputStream);
@@ -220,6 +222,7 @@ public class ExportBibTex {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
   }
 
 }

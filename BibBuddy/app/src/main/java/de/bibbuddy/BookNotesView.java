@@ -51,10 +51,7 @@ public class BookNotesView extends Fragment
 
   private ExportBibTex exportBibTex;
   private String fileName;
-  private final String folderName = "Download";
-  private final String fileTypeBibToast = ".bib";
 
-  private static final int STORAGE_PERMISSION_CODE = 1;
 
   @Nullable
   @Override
@@ -102,7 +99,7 @@ public class BookNotesView extends Fragment
     fileName = (bookDao.findById(bookId).getTitle()
         + bookDao.findById(bookId).getPubYear())
         .replaceAll("\\s+", "");
-    exportBibTex = new ExportBibTex(folderName, fileName);
+    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
   }
@@ -213,8 +210,8 @@ public class BookNotesView extends Fragment
 
       Toast.makeText(getContext(),
           getString(R.string.exported_file_stored_in) + '\n'
-              + File.separator + folderName + File.separator + fileName
-              + fileTypeBibToast, Toast.LENGTH_LONG).show();
+              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+              + fileName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -224,7 +221,7 @@ public class BookNotesView extends Fragment
       showRequestPermissionDialog();
     } else {
       requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          STORAGE_PERMISSION_CODE);
+          StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
 
@@ -236,7 +233,8 @@ public class BookNotesView extends Fragment
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-            STORAGE_PERMISSION_CODE));
+            StorageKeys.STORAGE_PERMISSION_CODE));
+
     reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
 
@@ -258,7 +256,7 @@ public class BookNotesView extends Fragment
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                          @NonNull int[] grantResults) {
 
-    if (requestCode == STORAGE_PERMISSION_CODE) {
+    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
 
       if (grantResults.length > 0
           && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -267,13 +265,15 @@ public class BookNotesView extends Fragment
 
         Toast.makeText(getContext(),
             getString(R.string.exported_file_stored_in) + '\n'
-                + File.separator + folderName + File.separator + fileName
-                + fileTypeBibToast, Toast.LENGTH_LONG).show();
+                + File.separator + StorageKeys.DOWNLOAD_FOLDER
+                + File.separator + fileName
+                + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
 
       } else {
         Toast.makeText(getContext(), R.string.storage_permission_denied,
             Toast.LENGTH_SHORT).show();
       }
+
     }
   }
 

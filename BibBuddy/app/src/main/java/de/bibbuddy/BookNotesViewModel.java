@@ -26,7 +26,9 @@ public class BookNotesViewModel {
   public BookNotesViewModel(Context context) {
     this.context = context;
     this.noteModel = new NoteModel(context);
+
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
+
     this.bookDao = new BookDao(databaseHelper);
     this.noteDao = new NoteDao(databaseHelper);
   }
