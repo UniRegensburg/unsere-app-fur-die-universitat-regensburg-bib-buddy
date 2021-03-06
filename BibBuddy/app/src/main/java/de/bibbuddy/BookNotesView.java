@@ -186,7 +186,7 @@ public class BookNotesView extends Fragment
     if (bookNotesViewModel.getCurrentNoteList().isEmpty()) {
       AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
       alertDialogEmptyLib.setTitle(R.string.empty_note_list);
-      alertDialogEmptyLib.setMessage(R.string.empty_library_description);
+      alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
           new DialogInterface.OnClickListener() {
