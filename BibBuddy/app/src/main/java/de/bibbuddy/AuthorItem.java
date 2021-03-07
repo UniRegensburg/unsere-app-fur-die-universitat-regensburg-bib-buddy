@@ -7,48 +7,34 @@ package de.bibbuddy;
  * @author Sarah Kurek
  */
 public class AuthorItem {
-  private final String firstName;
-  private final String lastName;
-  private final Long id;
-  private final Long modDate;
   private final int image;
-  private final String title;
+  private final Author author;
 
 
   /**
    * Constructor of a AuthorItem.
    *
-   * @param firstName  first name of the Author
-   * @param lastName   last name of the Author
-   * @param id          id of the AuthorItem
-   * @param modDate     modification date of the AuthorItem
-   * @param title       title of the Auhor
+   * @param author The Author
    */
-  public AuthorItem(String firstName, String lastName, Long id,
-                    Long modDate, String title) {
-
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.id = id;
-    this.modDate = modDate;
+  public AuthorItem(Author author) {
     this.image = R.drawable.ic_person;
-    this.title = title;
+    this.author = author;
   }
 
   public String getFirstName() {
-    return firstName;
+    return author.getFirstName();
   }
 
   public String getLastName() {
-    return lastName;
+    return author.getLastName();
   }
 
   public Long getId() {
-    return id;
+    return author.getId();
   }
 
   public Long getModDate() {
-    return modDate;
+    return author.getModDate();
   }
 
   public int getImage() {
@@ -56,6 +42,11 @@ public class AuthorItem {
   }
 
   public String getTitle() {
-    return title;
+    return author.getTitle();
   }
+
+  public Author getAuthor() {
+    return author;
+  }
+
 }

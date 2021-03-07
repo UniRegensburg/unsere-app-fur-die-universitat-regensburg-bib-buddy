@@ -1,12 +1,17 @@
 package de.bibbuddy;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,40 +63,114 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     recyclerView.setAdapter(adapter);
 
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
-    selectedAuthorItems = new ArrayList<AuthorItem>();
-    updateEmptyView(adapter.GetAuthorItemList());
+    selectedAuthorItems = new ArrayList<>();
+    updateEmptyView();
 
-    redColor = getResources().getColor(R.color.alert_red);
-    greenColor = getResources().getColor(R.color.green);
+    redColor = getResources().getColor(R.color.alert_red, null);
+    greenColor = getResources().getColor(R.color.green, null);
     setHasOptionsMenu(true);
     createAddAuthorListener();
 
     return view;
   }
 
-  // TODO create Options menu with delete and change author and help
-
-  private void updateEmptyView(List<AuthorItem> authorList) {
+  private void updateEmptyView() {
     TextView emptyView = view.findViewById(R.id.list_view_author_empty);
-    if (authorList.isEmpty()) {
+    if (adapter.getItemCount() == 0) {
       emptyView.setVisibility(View.VISIBLE);
     } else {
       emptyView.setVisibility(View.GONE);
     }
   }
 
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_author_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.menu_delete_author:
+        deleteAuthors();
+        break;
+
+      case R.id.menu_help_author:
+        authorManualFragment();
+        break;
+
+      default:
+        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void deleteAuthors() {
+    AlertDialog.Builder alertDeleteAuthor = new AlertDialog.Builder(context);
+
+    alertDeleteAuthor.setCancelable(false);
+    alertDeleteAuthor.setTitle(R.string.delete_author);
+    alertDeleteAuthor.setMessage(R.string.delete_author_message);
+
+    alertDeleteAuthor.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
+
+    alertDeleteAuthor.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        assert(!selectedAuthorItems.isEmpty());
+
+        Author author = selectedAuthorItems.get(0).getAuthor();
+        unselectAuthorItems();
+
+        authorList.remove(author);
+        adapter.notifyDataSetChanged();
+
+        Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
+        updateEmptyView();
+      }
+    });
+
+    alertDeleteAuthor.show();
+  }
+
+  private void authorManualFragment() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.author_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+            LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  private void unselectAuthorItems() {
+    RecyclerView authorListView = getView().findViewById(R.id.author_recycler_view);
+    for (int i = 0; i < authorListView.getChildCount(); i++) {
+      authorListView.getChildAt(i).setSelected(false);
+    }
+
+    selectedAuthorItems.clear();
+  }
+
 
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
-    //MenuItem deleteAuthor= menu.findItem(R.id.menu_delete_author);
+    MenuItem deleteAuthors = menu.findItem(R.id.menu_delete_author);
 
-    if (selectedAuthorItems == null || selectedAuthorItems.isEmpty()) {
-      //deleteAuthor.setVisible(false);
-    } else if (selectedAuthorItems.size() == 1) {
-      //deleteAuthor.setVisible(true);
-    } else {
-      //deleteAuthor.setVisible(true);
-    }
+    deleteAuthors.setVisible(selectedAuthorItems != null && !selectedAuthorItems.isEmpty());
   }
 
   private void createAddAuthorListener() {
@@ -128,9 +207,9 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   private void closeFragment() {
     listener.onAuthorListChanged();
 
-    FragmentManager fm = getParentFragmentManager();
-    if (fm.getBackStackEntryCount() > 0) {
-      fm.popBackStack();
+    FragmentManager manager = getParentFragmentManager();
+    if (manager.getBackStackEntryCount() > 0) {
+      manager.popBackStack();
     } else {
       requireActivity().onBackPressed();
     }

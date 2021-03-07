@@ -77,8 +77,8 @@ public class BookFormFragment extends Fragment {
       setupAddAuthorBtnListener(view);
     }
 
-    redColor = getResources().getColor(R.color.alert_red);
-    greenColor = getResources().getColor(R.color.green);
+    redColor = getResources().getColor(R.color.alert_red, null);
+    greenColor = getResources().getColor(R.color.green, null);
 
     setupButtons(view);
 
@@ -127,9 +127,9 @@ public class BookFormFragment extends Fragment {
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
 
-    FragmentManager fm = getParentFragmentManager();
-    if (fm.getBackStackEntryCount() > 0) {
-      fm.popBackStack();
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
     } else {
       requireActivity().onBackPressed();
     }
@@ -166,7 +166,6 @@ public class BookFormFragment extends Fragment {
       @Override
       public void onClick(View v) {
         switchToAuthorFragment();
-
       }
     });
   }

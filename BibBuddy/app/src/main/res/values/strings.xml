@@ -111,6 +111,37 @@
     <string name="add_author">Autor hinzufügen</string>
     <string name="added_author">Autor wurde hinzufügt</string>
 
+    <string name="delete_author">Autor(en) löschen</string>
+    <string name="deleted_author">Autor(en) wurde(n) gelöscht</string>
+    <string name="delete_author_message">Alle ausgewählten Autoren werden gelöscht.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+
+    <string name="author_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zu den Autoren</u></h1>
+        <p>Sie befinden sich in der Authorensansicht. Hier können Sie neue Autoren anlegen,
+        bestehende anpassen oder löschen</p>
+
+        <h2>Anlegen eines neuen Autors/h2>
+        <p>Einen neueen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
+        dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
+        einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
+        gespeichert.
+
+        <h2>Autordaten ändern</h2>
+        <p>Um die Daten eines Autors zu ädern, klicken Sie diesen an und sie gelangen zum
+        Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
+        Zurück-Button werden die daten automatisch gespeicheert.<br><br>
+
+        <h2>Autor(en) löschen</h2>
+        <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie
+        dann oben rechts auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass
+        Sie die ausgewählten Autoren endgültig löschen wollen.<br><br>
+        <u><b>Achtung!</b></u> Die Daten können nicht wieder hergestellt werden. <br><br>
+
+        ]]>
+    </string>
+
 
     <!-- Barcode Scanner -->
     <string name="isbn_scan">ISBN scannen</string>

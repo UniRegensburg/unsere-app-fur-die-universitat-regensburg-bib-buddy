@@ -19,15 +19,6 @@ public class AuthorRecyclerViewAdapter
   private final List<Author> authorList;
   private List<AuthorItem> authorItemList;
 
-  private void UpdateAuthorItemList() {
-    authorItemList = new ArrayList<>();
-
-    for (Author author : authorList) {
-      authorItemList.add(new AuthorItem(author.getFirstName(), author.getLastName(), author.getId(),
-          author.getModDate(), author.getTitle()));
-    }
-  }
-
   /**
    * AuthorRecyclerViewAdapter provides a binding from the authorList to the view
    * that is displayed within the RecyclerView of the AuthorFragment.
@@ -39,13 +30,21 @@ public class AuthorRecyclerViewAdapter
     this.listener = listener;
     this.context = context;
     this.authorList = authorList;
-    UpdateAuthorItemList();
+    updateAuthorItemList();
+  }
+
+  private void updateAuthorItemList() {
+    authorItemList = new ArrayList<>();
+
+    for (Author author : authorList) {
+      authorItemList.add(new AuthorItem(author));
+    }
   }
 
   @NonNull
   @Override
   public AuthorRecyclerViewAdapter.AuthorViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                                   int viewType) {
+                                                                       int viewType) {
     return new AuthorRecyclerViewAdapter.AuthorViewHolder(
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_view_item_author, parent, false));
@@ -100,10 +99,6 @@ public class AuthorRecyclerViewAdapter
     return authorItemList.size();
   }
 
-  public List<AuthorItem> GetAuthorItemList() {
-    return authorItemList;
-  }
-
   public interface AuthorListener {
     void onItemClicked(int position);
 
@@ -147,7 +142,7 @@ public class AuthorRecyclerViewAdapter
   private class AuthorAdapterDataObserver extends RecyclerView.AdapterDataObserver {
     @Override
     public void onChanged() {
-      UpdateAuthorItemList();
+      updateAuthorItemList();
     }
   }
 

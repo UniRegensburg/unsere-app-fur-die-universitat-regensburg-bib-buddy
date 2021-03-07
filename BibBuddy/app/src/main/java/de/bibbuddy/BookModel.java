@@ -98,25 +98,6 @@ public class BookModel {
     return bookList;
   }
 
-  /**
-   * Gets the authorList of the current bookId.
-   *
-   * @param bookId Id of the given book
-   * @return Returns the authorList of the current book
-   */
-  public List<AuthorItem> getAuthorItemList(Long bookId) {
-    authorItemList = new ArrayList<>();
-    List<Author> authorDbList = bookDao.getAllAuthorsForBook(bookId);
-
-    for (Author author : authorDbList) {
-
-      authorItemList.add(new AuthorItem(author.getFirstName(), author.getLastName(), author.getId(),
-          author.getModDate(), author.getTitle()));
-    }
-
-    return authorItemList;
-  }
-
   public List<Author> getAuthorList(Long bookId) {
     return bookDao.getAllAuthorsForBook(bookId);
   }

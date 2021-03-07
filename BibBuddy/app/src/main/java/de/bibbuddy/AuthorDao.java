@@ -17,7 +17,7 @@ public class AuthorDao implements InterfaceAuthorDao {
 
   private final DatabaseHelper dbHelper;
 
-  private static boolean IsNullOrEmpty(String text) {
+  private static boolean isNullOrEmpty(String text) {
     return text == null || text.isEmpty();
   }
 
@@ -34,7 +34,7 @@ public class AuthorDao implements InterfaceAuthorDao {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
-      if (!IsNullOrEmpty(author.getTitle())) {
+      if (!isNullOrEmpty(author.getTitle())) {
         contentValues.put(DatabaseHelper.TITLE, author.getTitle());
       }
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
@@ -66,7 +66,8 @@ public class AuthorDao implements InterfaceAuthorDao {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
-      contentValues.put(DatabaseHelper.TITLE, IsNullOrEmpty(author.getTitle()) ? null : author.getTitle());
+      contentValues.put(DatabaseHelper.TITLE, isNullOrEmpty(
+          author.getTitle()) ? null : author.getTitle());
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
       db.update(DatabaseHelper.TABLE_NAME_AUTHOR, contentValues,
@@ -109,8 +110,6 @@ public class AuthorDao implements InterfaceAuthorDao {
    * @return If found, the author (with its database ID), else null.
    */
   public Author findByTitleAndFullName(Author authorToFind) {
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
     List<String> params = new ArrayList<>();
     StringBuilder sb = new StringBuilder();
 
@@ -121,7 +120,7 @@ public class AuthorDao implements InterfaceAuthorDao {
     params.add(authorToFind.getLastName());
 
     sb.append(" AND " + DatabaseHelper.TITLE);
-    if (IsNullOrEmpty(authorToFind.getTitle())) {
+    if (isNullOrEmpty(authorToFind.getTitle())) {
       sb.append(" IS NULL");
     } else {
       sb.append(" = ?");
@@ -129,6 +128,7 @@ public class AuthorDao implements InterfaceAuthorDao {
     }
 
     String selection = sb.toString();
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
         new String[] { DatabaseHelper._ID,

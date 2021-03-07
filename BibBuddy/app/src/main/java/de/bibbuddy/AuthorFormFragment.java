@@ -14,6 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+/**
+ * The AuthorFormFragment is responsible for adding autjor to a book.
+ *
+ * @author Sarah Kurek
+ */
 public class AuthorFormFragment extends Fragment {
   private final AuthorFormFragment.ChangeAuthorListener listener;
   private final Author author;
@@ -22,6 +27,12 @@ public class AuthorFormFragment extends Fragment {
   private int redColor;
   private int greenColor;
 
+  /**
+   * Constructor that sets the author to empty when it is newly created.
+   *
+   * @param author   author object
+   * @param listener change listener
+   */
   public AuthorFormFragment(Author author, AuthorFormFragment.ChangeAuthorListener listener) {
     this.author = author;
     this.listener = listener;
@@ -45,14 +56,12 @@ public class AuthorFormFragment extends Fragment {
     setupInput(view);
     setInputText(view);
 
-    redColor = getResources().getColor(R.color.alert_red);
-    greenColor = getResources().getColor(R.color.green);
+    redColor = getResources().getColor(R.color.alert_red, null);
+    greenColor = getResources().getColor(R.color.green, null);
     setupAddAuthorBtnListener(view);
 
     return view;
   }
-
-  // TODO create Options menu with help
 
   private void setupInput(View view) {
     view.findViewById(R.id.author_form_title_input).requestFocus();
@@ -121,9 +130,9 @@ public class AuthorFormFragment extends Fragment {
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
 
-    FragmentManager fm = getParentFragmentManager();
-    if (fm.getBackStackEntryCount() > 0) {
-      fm.popBackStack();
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
     } else {
       requireActivity().onBackPressed();
     }
