@@ -112,20 +112,20 @@ public class Author {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(Object obj) {
+    if (this == obj) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
-    Author author = (Author) o;
-    return Objects.equals(id, author.id) &&
-        Objects.equals(firstName, author.firstName) &&
-        Objects.equals(lastName, author.lastName) &&
-        Objects.equals(title, author.title) &&
-        Objects.equals(createDate, author.createDate) &&
-        Objects.equals(modDate, author.modDate);
+    Author author = (Author) obj;
+    return Objects.equals(id, author.id)
+        && Objects.equals(firstName, author.firstName)
+        && Objects.equals(lastName, author.lastName)
+        && Objects.equals(title, author.title)
+        && Objects.equals(createDate, author.createDate)
+        && Objects.equals(modDate, author.modDate);
   }
 
   @Override

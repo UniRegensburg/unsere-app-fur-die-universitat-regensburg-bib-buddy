@@ -63,10 +63,10 @@
     <string name="add_book_tooltip">Neues Buch hinzufügen</string>
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
         öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
-            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch erfolgreich
-        angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem Buch
-        erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
+            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch
+        erfolgreich angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem
+        Buch erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie
+        auf <b>Hilfe</b>.</string>
 
     <string name="delete_book">Bücher löschen</string>
     <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
@@ -123,15 +123,15 @@
         bestehende anpassen oder löschen</p>
 
         <h2>Anlegen eines neuen Autors/h2>
-        <p>Einen neueen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
+        <p>Einen neuen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
         dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
         einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
         gespeichert.
 
         <h2>Autordaten ändern</h2>
-        <p>Um die Daten eines Autors zu ädern, klicken Sie diesen an und sie gelangen zum
+        <p>Um die Daten eines Autors zu ändern, klicken Sie diesen an und sie gelangen zum
         Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
-        Zurück-Button werden die daten automatisch gespeicheert.<br><br>
+        Zurück-Button werden die Daten automatisch gespeicheert.<br><br>
 
         <h2>Autor(en) löschen</h2>
         <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie

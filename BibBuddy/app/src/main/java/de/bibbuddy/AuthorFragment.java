@@ -124,7 +124,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     alertDeleteAuthor.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        assert(!selectedAuthorItems.isEmpty());
+        assert (!selectedAuthorItems.isEmpty());
 
         Author author = selectedAuthorItems.get(0).getAuthor();
         unselectAuthorItems();
