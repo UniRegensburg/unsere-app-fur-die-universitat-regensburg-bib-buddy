@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -444,7 +443,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     BookItem bookItem = bookModel.getSelectedBookItem(position);
     ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
 
-    BookNotesView fragment = new BookNotesView();
+    BookNotesViewFragment fragment = new BookNotesViewFragment();
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment)
         .setReorderingAllowed(true)
