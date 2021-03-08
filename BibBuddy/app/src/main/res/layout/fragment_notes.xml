@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_marginTop="65dp">
 
     <RelativeLayout
@@ -13,7 +13,7 @@
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:background="@color/alert_red"
-        android:elevation="600dp"
+        android:elevation="12dp"
         android:visibility="gone">
 
         <ImageView
