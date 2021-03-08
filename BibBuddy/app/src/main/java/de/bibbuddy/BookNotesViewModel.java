@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import java.util.List;
 
 /**
@@ -14,11 +13,8 @@ public class BookNotesViewModel {
   private final Context context;
   private static NoteModel noteModel;
   private List<NoteItem> noteList;
-  private MediaPlayer mediaPlayer;
   private final BookDao bookDao;
   private final NoteDao noteDao;
-
-  private List<NoteItem> noteList;
 
   /**
    * BookNotesViewModel contains methods for managing the
