@@ -25,9 +25,18 @@ import java.util.List;
 public class NotesFragment extends Fragment {
 
   static List<NoteItem> notes;
-  private NoteRecyclerViewAdapter adapter;
-  private RecyclerView recyclerView;
   private static NoteModel noteModel;
+  private static RecyclerView recyclerView;
+  private NotesRecyclerViewAdapter adapter;
+
+  public static void deleteNote(Long id) {
+    noteModel.deleteNote(id);
+  }
+
+  public static byte[] getNoteMedia(Long noteId) {
+    Note note = noteModel.getNoteById(noteId);
+    return noteModel.getNoteMedia(note.getNoteFileId());
+  }
 
   @Nullable
   @Override
@@ -36,7 +45,6 @@ public class NotesFragment extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
         FragmentManager fm = getParentFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
           fm.popBackStack();
@@ -45,9 +53,8 @@ public class NotesFragment extends Fragment {
         }
       }
     });
-
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
-    recyclerView = view.findViewById(R.id.recyclerView);
+    recyclerView = view.findViewById(R.id.notesRecyclerView);
     noteModel = new NoteModel(getContext());
     notes = noteModel.getCompleteNoteList();
     setHasOptionsMenu(true);
@@ -62,17 +69,12 @@ public class NotesFragment extends Fragment {
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_help_note_list:
-        handleManualNotesList();
-        break;
-
-      default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    if (item.getItemId() == R.id.menu_help_note_list) {
+      handleManualNotesList();
+    } else {
+      Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -87,7 +89,7 @@ public class NotesFragment extends Fragment {
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
             LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
@@ -95,19 +97,15 @@ public class NotesFragment extends Fragment {
   }
 
   private void setupRecyclerView() {
-    adapter = new NoteRecyclerViewAdapter(notes, (MainActivity) getActivity());
+    adapter = new NotesRecyclerViewAdapter(notes, (MainActivity) requireActivity());
     recyclerView.setAdapter(adapter);
   }
 
   private void enableSwipeToDelete() {
     SwipeToDeleteCallback swipeToDeleteCallback =
-        new SwipeToDeleteCallback(getContext(), adapter, (MainActivity) getActivity());
+        new SwipeToDeleteCallback(getContext(), adapter, (MainActivity) requireActivity());
     ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
     itemTouchhelper.attachToRecyclerView(recyclerView);
-  }
-
-  public static void deleteNote(Long id) {
-    noteModel.deleteNote(id);
   }
 
 }
