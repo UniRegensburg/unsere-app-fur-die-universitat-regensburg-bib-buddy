@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,16 +8,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Callback for swipe to delete.
@@ -25,10 +25,9 @@ import com.google.android.material.snackbar.Snackbar;
  */
 public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
-  private final Paint clearPaint;
   private final ColorDrawable background;
   private final int backgroundColor;
-  private final NoteRecyclerViewAdapter adapter;
+  private final NotesRecyclerViewAdapter adapter;
   private final Context context;
   private final NoteDao noteDao;
   private final Drawable icon;
@@ -36,7 +35,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
   public boolean removed = false;
   private Canvas canvas;
 
-  SwipeToDeleteCallback(Context context, NoteRecyclerViewAdapter adapter,
+  SwipeToDeleteCallback(Context context, NotesRecyclerViewAdapter adapter,
                         MainActivity activity) {
     this.context = context;
     this.adapter = adapter;
@@ -45,10 +44,13 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     this.noteDao = new NoteDao(databaseHelper);
     background = new ColorDrawable();
     backgroundColor = context.getColor(R.color.alert_red);
-    clearPaint = new Paint();
+    Paint clearPaint = new Paint();
     clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-    Drawable d = context.getDrawable(R.drawable.delete);
-    Bitmap bm = ((BitmapDrawable) d).getBitmap();
+    Drawable d = ContextCompat.getDrawable(context, R.drawable.delete);
+    Bitmap bm = null;
+    if (d != null) {
+      bm = ((BitmapDrawable) d).getBitmap();
+    }
     icon = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bm, 40, 40, true));
   }
 
@@ -76,7 +78,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     if (isCancelled) {
       clearCanvas(c, itemView.getRight() + dx, (float) itemView.getTop(),
           (float) itemView.getRight(), (float) itemView.getBottom());
-      super.onChildDraw(c, recyclerView, viewHolder, dx, dy, actionState, isCurrentlyActive);
+      super.onChildDraw(c, recyclerView, viewHolder, dx, dy, actionState, false);
       return;
     }
 
@@ -110,55 +112,35 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
   @Override
   public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-    NoteRecyclerViewAdapter.MyViewHolder myViewHolder =
-        new NoteRecyclerViewAdapter.MyViewHolder(viewHolder.itemView);
     final int position = viewHolder.getAdapterPosition();
     final NoteItem note = adapter.getData().get(position);
-    View itemView = viewHolder.itemView;
     removed = true;
-    setupSnackbar(note, itemView, position);
+    setupSnackbar(note, position);
   }
 
-  private void setupSnackbar(NoteItem note, View itemView, int position) {
-    Snackbar snackbar = Snackbar
-        .make(activity.findViewById(R.id.fragment_notes), R.string.delete_notification,
-            Snackbar.LENGTH_LONG)
-        .setAction(R.string.undo, new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-            adapter.notifyDataSetChanged();
-            removed = false;
-          }
-        });
+  private void setupSnackbar(NoteItem note, int position) {
+    AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(activity);
 
-    TextView snackbarActionTextView =
-        (TextView) snackbar.getView().findViewById(R.id.snackbar_action);
-    snackbarActionTextView.setTextSize(15);
-    snackbarActionTextView.setTypeface(snackbarActionTextView.getTypeface(), Typeface.BOLD);
+    alertDeleteNote.setCancelable(false);
+    alertDeleteNote.setTitle(R.string.delete_note);
+    alertDeleteNote.setMessage(R.string.delete_note_message);
+    RecyclerView recyclerView = activity.findViewById(R.id.notesRecyclerView);
+    alertDeleteNote.setNegativeButton(R.string.back, (dialog, which) -> {
 
-    snackbar.setAnchorView(itemView);
-    View view = snackbar.getView();
-    view.setTranslationY(itemView.getHeight());
-    view.setX(itemView.getLeft() - 35);
-
-    snackbar.show();
-    snackbar.addCallback(new Snackbar.Callback() {
-
-      @Override
-      public void onDismissed(Snackbar snackbar, int event) {
-        if (removed) {
-          adapter.removeItem(position);
-          adapter.notifyDataSetChanged();
-          noteDao.delete(note.getId());
-        }
+      for (int i = 0; i < recyclerView.getChildCount(); i++) {
+        recyclerView.getChildAt(i).setSelected(false);
       }
-
-      @Override
-      public void onShown(Snackbar snackbar) {
-
-      }
-
+      adapter.notifyDataSetChanged();
     });
+
+    alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
+      Toast.makeText(activity.getBaseContext(), String.valueOf(R.string.deleted_notes),
+          Toast.LENGTH_SHORT).show();
+      adapter.removeItem(position);
+      adapter.notifyDataSetChanged();
+      noteDao.delete(note.getId());
+    });
+    alertDeleteNote.show();
   }
 
 }
