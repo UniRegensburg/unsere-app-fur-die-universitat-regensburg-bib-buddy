@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import org.jsoup.Jsoup;
 
 /**
@@ -21,8 +22,22 @@ public class NoteModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
-  public void addNote(String name, int type, String text) {
-    Note note = new Note(name, type, text);
+  /**
+   * This method creates a new note object and passes it to the noteDao to add it to the database
+   * as well.
+   *
+   * @param name  name of the note object
+   * @param type  type of the note object
+   * @param text  text of the note object
+   * @param bytes byteArray that is representing the saved object binary
+   */
+  public void addNote(String name, int type, String text, byte[] bytes) {
+    Note note;
+    if (bytes != null) {
+      note = new Note(name, type, text, bytes);
+    } else {
+      note = new Note(name, type, text);
+    }
     noteDao.create(note);
   }
 
@@ -49,20 +64,34 @@ public class NoteModel {
    */
   public List<NoteItem> getCompleteNoteList() {
     List<Note> noteList = noteDao.findAll();
-    List<NoteItem> noteItemList = createItemList(noteList);
-    return noteItemList;
+    return createItemList(noteList);
+  }
+
+  /**
+   * This method gets the list of all existing notes of the voice-type (int=1).
+   *
+   * @return returns the list of voice type note objects.
+   */
+  public List<Note> getVoiceNoteList() {
+    List<Note> noteList = noteDao.findAll();
+    for (int i = 0; i < noteList.size(); i++) {
+      if (noteList.get(i).getType() != 1) {
+        noteList.remove(noteList.get(i));
+      }
+    }
+    return noteList;
   }
 
   private String getDate(Long date) {
     Date d = new Date(date);
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+        Locale.getDefault());
 
     String string = simpleDateFormat.format(d);
     String day = string.substring(8, 10);
     String month = string.substring(5, 7);
     String year = string.substring(0, 4);
     String time = string.substring(11, 16);
-
     string = day + "." + month + "." + year + " " + time + " Uhr";
 
     return string;
@@ -76,8 +105,7 @@ public class NoteModel {
    */
   public List<NoteItem> getNoteListForBook(Long bookId) {
     List<Note> noteList = noteDao.getAllNotesForBook(bookId);
-    List<NoteItem> noteItemList = createItemList(noteList);
-    return noteItemList;
+    return createItemList(noteList);
   }
 
   private List<NoteItem> createItemList(List<Note> noteList) {
@@ -85,12 +113,11 @@ public class NoteModel {
     for (Note note : noteList) {
       Long noteId = note.getId();
       String modDate = getDate(note.getModDate());
-      String name = "";
+      String name = note.getName();
       if (note.getType() == 0) {
-        name = note.getName();
         name = Jsoup.parse(name).text();
         if (name.length() > 40) {
-          name = name.substring(0, 35) + " ...";
+          name = name.substring(0, 35) + R.string.points;
         }
         noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId));
       } else if (note.getType() == 1) {
@@ -104,6 +131,10 @@ public class NoteModel {
 
   public String getNoteText(Long noteId) {
     return noteDao.findTextById(noteId);
+  }
+
+  public byte[] getNoteMedia(Long noteFileId) {
+    return noteDao.getNoteFileMedia(noteFileId);
   }
 
   public void linkNoteWithBook(Long bookId, Long noteId) {
