@@ -143,7 +143,7 @@ public class BookNotesViewFragment extends Fragment
       bookNotesViewModel.deleteNotes(selectedNoteItems);
       adapter.notifyDataSetChanged();
       updateEmptyView(bookNotesViewModel.getCurrentNoteList());
-      Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, R.string.deleted_notes, Toast.LENGTH_SHORT).show();
     });
 
     alertDeleteBookNote.show();
