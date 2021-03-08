@@ -24,7 +24,7 @@ public class BookNotesViewModel {
    */
   public BookNotesViewModel(Context context) {
     this.context = context;
-    this.noteModel = new NoteModel(context);
+    noteModel = new NoteModel(context);
 
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
 
