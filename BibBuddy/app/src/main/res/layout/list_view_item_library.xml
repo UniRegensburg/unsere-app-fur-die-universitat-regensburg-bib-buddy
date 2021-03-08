@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    card_view:cardBackgroundColor="@color/library_item_selector"
     card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="2dp"
-    card_view:cardBackgroundColor="@color/library_item_selector">
+    card_view:cardElevation="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -61,9 +61,9 @@
             android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@+id/library_icon"
             android:text="Medium Text"
             android:textColor="@color/black"

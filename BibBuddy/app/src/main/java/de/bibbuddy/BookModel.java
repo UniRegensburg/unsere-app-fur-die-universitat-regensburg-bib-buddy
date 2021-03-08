@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 
 public class BookModel {
@@ -31,6 +31,14 @@ public class BookModel {
     this.bookDao = new BookDao(databaseHelper);
     this.authorDao = new AuthorDao(databaseHelper);
     this.noteDao = new NoteDao(databaseHelper);
+  }
+
+  public BookDao getBookDao() {
+    return bookDao;
+  }
+
+  public NoteDao getNoteDao() {
+    return noteDao;
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
@@ -154,4 +162,5 @@ public class BookModel {
   public Book getBookById(Long id) {
     return bookDao.findById(id);
   }
+
 }

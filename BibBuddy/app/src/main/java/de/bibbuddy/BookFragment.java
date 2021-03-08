@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,10 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +45,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private BookRecyclerViewAdapter adapter;
   private List<BookItem> selectedBookItems;
 
-  private static final int STORAGE_PERMISSION_CODE = 1;
-  private String bibExportContent = "";
+  private BookDao bookDao;
+  private NoteDao noteDao;
+  private ExportBibTex exportBibTex;
+
 
   @Nullable
   @Override
@@ -79,7 +75,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
     bookModel = new BookModel(getContext(), shelfId);
-    List<BookItem> bookList = bookModel.getBookList(shelfId);
+    List<BookItem> bookList;
+    bookList = bookModel.getBookList(shelfId);
+    bookDao = bookModel.getBookDao();
+    noteDao = bookModel.getNoteDao();
+
+    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
 
     RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
@@ -89,7 +90,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     createAddBookListener();
     updateEmptyView(bookList);
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
-    selectedBookItems = new ArrayList<BookItem>();
+    selectedBookItems = new ArrayList<>();
 
     return view;
   }
@@ -112,8 +113,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         handleDeleteBook();
         break;
 
-      case R.id.menu_export_book_list:
-        checkEmptyBookList();
+      case R.id.menu_export_shelf:
+        checkEmptyShelf();
         break;
 
       case R.id.menu_help_book:
@@ -127,220 +128,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     return super.onOptionsItemSelected(item);
   }
 
-  private void checkEmptyBookList() {
-    DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-    BookDao bd = new BookDao(dbHelper);
-    if (bd.getAllBooksForShelf(shelfId).isEmpty()) {
-      AlertDialog.Builder ee = new AlertDialog.Builder(getContext());
-      ee.setTitle(R.string.empty_shelf);
-      ee.setMessage(R.string.empty_shelf_description);
-      ee.setPositiveButton(R.string.ok,
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-          });
-      ee.create().show();
-    } else {
-      checkStoragePermission();
-    }
-  }
-
-  private void checkStoragePermission() {
-    if (ContextCompat.checkSelfPermission(getContext(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-      requestStoragePermission();
-    } else {
-      /*
-      if the user has already allowed access to
-      device external storage
-      */
-      createBibFile("Download", shelfName);
-      retrieveBibContent();
-      writeBibFile("Download", shelfName, bibExportContent);
-    }
-  }
-
-  private void requestStoragePermission() {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      showRequestPermissionDialog();
-    } else {
-      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          STORAGE_PERMISSION_CODE);
-    }
-  }
-
-  private void showRequestPermissionDialog() {
-    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
-    reqAlertDialog.setTitle(R.string.storage_permission_needed);
-    reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
-    reqAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-            STORAGE_PERMISSION_CODE));
-    reqAlertDialog.setNegativeButton(R.string.storage_permission_cancel_btn,
-        (dialog, which) -> dialog.dismiss());
-    reqAlertDialog.create().show();
-  }
-
-  /**
-   * Callback method, that checks the result from requesting permissions.
-   *
-   * @param requestCode unique integer value for the requested permission
-   *                    This value is given by the programmer.
-   * @param permissions array of requested name(s)
-   *                    of the permission(s)
-   * @param grantResults grant results for the corresponding permissions
-   *                     which is either PackageManager.PERMISSION_GRANTED
-   *                     or PackageManager.PERMISSION_DENIED.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode,
-                                         String[] permissions, int[] grantResults) {
-
-    switch (requestCode) {
-
-      case STORAGE_PERMISSION_CODE:
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          createBibFile("Download", shelfName);
-          retrieveBibContent();
-          writeBibFile("Download", shelfName, bibExportContent);
-        } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied,
-              Toast.LENGTH_SHORT).show();
-        }
-        break;
-
-      default:
-    }
-  }
-
-  private void createBibFile(String folderName, String fileName) {
-    try {
-      String rootPath = Environment.getExternalStorageDirectory() + "/" + folderName + "/";
-      File root = new File(rootPath);
-
-      if (!root.exists()) {
-        root.mkdirs();
-      }
-
-      File file = new File(rootPath + fileName + ".bib");
-      if (file.exists()) {
-        file.delete();
-      }
-      file.createNewFile();
-
-      FileOutputStream out = new FileOutputStream(file);
-      out.flush();
-      out.close();
-
-      Toast.makeText(getContext(), getString(R.string.exported_file_stored_in) + '\n'
-          + "/" + folderName + "/" + fileName + ".bib", Toast.LENGTH_LONG).show();
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void retrieveBibContent() {
-
-    DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-    BookDao bd = new BookDao(dbHelper);
-    NoteDao nd = new NoteDao(dbHelper);
-
-    List<Long> bookIdsCurrShelf = bd.getAllBookIdsForShelf(shelfId);
-    List<Author> authorsCurrBook = new ArrayList<>();
-    List<Long> notesCurrBook = new ArrayList<>();
-    String allNotesCurrBook;
-    String authorNamesCurrBook;
-
-    //for each book in the current shelf
-    for (int i = 0; i < bookIdsCurrShelf.size(); i++) {
-
-      Book currBook;
-      Long currBookId = bookIdsCurrShelf.get(i);
-      currBook = bd.findById(currBookId);
-      allNotesCurrBook = "";
-      authorNamesCurrBook = "";
-      authorsCurrBook = bd.getAllAuthorsForBook(currBookId);
-      notesCurrBook = nd.getAllNoteIdsForBook(currBookId);
-      
-      /*
-      get the notes for the current book
-      and save the bib content in one string
-      */
-      if (notesCurrBook.isEmpty()) {
-        allNotesCurrBook = "";
-      } else {
-        for (int k = 0; k < notesCurrBook.size(); k++) {
-          String noteTextCurrBook = nd.findTextById(notesCurrBook.get(k));
-          allNotesCurrBook +=  "annote={" + noteTextCurrBook + "}," + '\n';
-        }
-      }
-
-      /*
-      get author's first and last name and include
-      the needed book data in a bib format
-      */
-      if (authorsCurrBook.size() > 1) {
-        for (int u = 0; u < authorsCurrBook.size(); u++) {
-          authorNamesCurrBook = authorNamesCurrBook
-              + authorsCurrBook.get(u).getFirstName()
-              + " " + authorsCurrBook.get(u).getLastName();
-          if (u < authorsCurrBook.size()) {
-            authorNamesCurrBook = authorNamesCurrBook + " and ";
-          }
-        }
-      } else {
-        try {
-          authorNamesCurrBook = authorsCurrBook.get(0).getFirstName()
-              + " " + authorsCurrBook.get(0).getLastName();
-        } catch (Exception e) {
-          authorNamesCurrBook = "";
-        }
-      }
-
-      String bookTitle = currBook.getTitle().replaceAll("\\s+", "");
-
-      bibExportContent = bibExportContent
-          + "@book{" + bookTitle + currBook.getPubYear() + "," + '\n'
-          + "isbn={" + currBook.getIsbn() + "}," + '\n'
-          + "author={" + authorNamesCurrBook + "}," + '\n'
-          + "title={" + currBook.getTitle() + "}," + '\n'
-          + "publisher={" + currBook.getPublisher() + "}," + '\n'
-          + "edition={" + currBook.getEdition() + "}," + '\n'
-          + allNotesCurrBook
-          + "year=" + currBook.getPubYear() + '\n' + "}" + '\n' + '\n';
-    }
-  }
-
-  private void writeBibFile(String folderName, String fileName, String content) {
-
-    try {
-      File dir = new File(Environment.getExternalStorageDirectory()
-          + "/" + folderName + "/");
-
-      if (!dir.exists()) {
-        dir.mkdirs();
-      }
-
-      File bibFile = new File(Environment.getExternalStorageDirectory()
-          + "/" + folderName + "/" + fileName + ".bib");
-
-      FileOutputStream fos = new FileOutputStream(bibFile);
-      OutputStreamWriter osw = new OutputStreamWriter(fos);
-      Writer fileWriter = new BufferedWriter(osw);
-
-      fileWriter.write(content);
-      fileWriter.close();
-
-    } catch (IOException e) {
-      Log.e("Exception", R.string.file_write_failed + e.toString());
-    }
-  }
-      
   private void handleChangeBookData() {
     if (selectedBookItems.isEmpty()) {
       return;
@@ -397,6 +184,100 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     });
 
     alertDeleteBook.show();
+  }
+
+  private void checkEmptyShelf() {
+    if (bookDao.getAllBooksForShelf(shelfId).isEmpty()) {
+      AlertDialog.Builder alertDialogEmptyShelf = new AlertDialog.Builder(getContext());
+      alertDialogEmptyShelf.setTitle(R.string.empty_shelf);
+      alertDialogEmptyShelf.setMessage(R.string.empty_shelf_description);
+
+      alertDialogEmptyShelf.setPositiveButton(R.string.ok,
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+          });
+
+      alertDialogEmptyShelf.create().show();
+    } else {
+      checkStoragePermission();
+    }
+  }
+
+  private void checkStoragePermission() {
+    if (ContextCompat.checkSelfPermission(getContext(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      requestStoragePermission();
+    } else {
+      // if the user has already allowed access to device external storage
+      exportBibTex.createBibFile();
+      exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+
+      Toast.makeText(getContext(),
+          getString(R.string.exported_file_stored_in) + '\n'
+              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+              + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+    }
+  }
+
+  private void requestStoragePermission() {
+    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      showRequestPermissionDialog();
+    } else {
+      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          StorageKeys.STORAGE_PERMISSION_CODE);
+    }
+  }
+
+  private void showRequestPermissionDialog() {
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
+    reqAlertDialog.setTitle(R.string.storage_permission_needed);
+    reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
+
+    reqAlertDialog.setPositiveButton(R.string.ok,
+        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            StorageKeys.STORAGE_PERMISSION_CODE));
+    reqAlertDialog.setNegativeButton(R.string.cancel,
+        (dialog, which) -> dialog.dismiss());
+
+    reqAlertDialog.create().show();
+  }
+
+  /**
+   * Callback method, that checks the result from requesting permissions.
+   *
+   * @param requestCode unique integer value for the requested permission
+   *                    This value is given by the programmer.
+   * @param permissions array of requested name(s)
+   *                    of the permission(s)
+   * @param grantResults grant results for the corresponding permissions
+   *                     which is either PackageManager.PERMISSION_GRANTED
+   *                     or PackageManager.PERMISSION_DENIED.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+
+    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
+
+      if (grantResults.length > 0
+          && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        exportBibTex.createBibFile();
+        exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+
+        Toast.makeText(getContext(),
+            getString(R.string.exported_file_stored_in) + '\n'
+                + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+                + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+
+      } else {
+        Toast.makeText(getContext(), R.string.storage_permission_denied,
+            Toast.LENGTH_SHORT).show();
+      }
+    }
   }
 
   private void handleManualBook() {
@@ -575,4 +456,5 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       selectedBookItems.add(bookItem);
     }
   }
+
 }

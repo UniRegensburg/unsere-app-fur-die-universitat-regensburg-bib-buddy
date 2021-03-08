@@ -1,7 +1,10 @@
 package de.bibbuddy;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,16 +21,19 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * BookNotesView is responsible for the noteList of a certain book.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Silvia Ivanova
  */
 public class BookNotesViewFragment extends Fragment
     implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
@@ -42,6 +48,11 @@ public class BookNotesViewFragment extends Fragment
   private List<NoteItem> noteList;
   private List<NoteItem> selectedNoteItems;
   private RelativeLayout hiddenDeletePanel;
+  private BookDao bookDao;
+  private NoteDao noteDao;
+
+  private ExportBibTex exportBibTex;
+  private String fileName;
 
   @Nullable
   @Override
@@ -84,6 +95,14 @@ public class BookNotesViewFragment extends Fragment
     updateEmptyView(noteList);
     ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     selectedNoteItems = new ArrayList<>();
+
+    bookDao = bookNotesViewModel.getBookDao();
+    noteDao = bookNotesViewModel.getNoteDao();
+
+    fileName = (bookDao.findById(bookId).getTitle()
+        + bookDao.findById(bookId).getPubYear())
+        .replaceAll("\\s+", "");
+    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
   }
@@ -134,6 +153,105 @@ public class BookNotesViewFragment extends Fragment
     RecyclerView bookNotesListView = requireView().findViewById(R.id.book_notes_view_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
+    }
+  }
+
+
+  private void checkEmptyNoteList() {
+    if (bookNotesViewModel.getCurrentNoteList().isEmpty()) {
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
+      alertDialogEmptyLib.setTitle(R.string.empty_note_list);
+      alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
+
+      alertDialogEmptyLib.setPositiveButton(R.string.ok,
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+          });
+
+      alertDialogEmptyLib.create().show();
+
+    } else {
+      checkStoragePermission();
+    }
+  }
+
+  private void checkStoragePermission() {
+    if (ContextCompat.checkSelfPermission(getContext(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      requestStoragePermission();
+    } else {
+      // if the user has already allowed access to device external storage
+      exportBibTex.createBibFile();
+      exportBibTex.writeBibFile(exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
+
+      Toast.makeText(getContext(),
+          getString(R.string.exported_file_stored_in) + '\n'
+              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+              + fileName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+    }
+  }
+
+  private void requestStoragePermission() {
+    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      showRequestPermissionDialog();
+    } else {
+      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+          StorageKeys.STORAGE_PERMISSION_CODE);
+    }
+  }
+
+  private void showRequestPermissionDialog() {
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
+    reqAlertDialog.setTitle(R.string.storage_permission_needed);
+    reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
+
+    reqAlertDialog.setPositiveButton(R.string.ok,
+        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            StorageKeys.STORAGE_PERMISSION_CODE));
+
+    reqAlertDialog.setNegativeButton(R.string.cancel,
+        (dialog, which) -> dialog.dismiss());
+
+    reqAlertDialog.create().show();
+  }
+
+  /**
+   * Callback method, that checks the result from requesting permissions.
+   *
+   * @param requestCode unique integer value for the requested permission
+   *                    This value is given by the programmer.
+   * @param permissions array of requested name(s)
+   *                    of the permission(s)
+   * @param grantResults grant results for the corresponding permissions
+   *                     which is either PackageManager.PERMISSION_GRANTED
+   *                     or PackageManager.PERMISSION_DENIED.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+
+    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
+
+      if (grantResults.length > 0
+          && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        exportBibTex.createBibFile();
+        exportBibTex.writeBibFile(exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
+
+        Toast.makeText(getContext(),
+            getString(R.string.exported_file_stored_in) + '\n'
+                + File.separator + StorageKeys.DOWNLOAD_FOLDER
+                + File.separator + fileName
+                + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+
+      } else {
+        Toast.makeText(getContext(), R.string.storage_permission_denied,
+            Toast.LENGTH_SHORT).show();
+      }
+
     }
   }
 

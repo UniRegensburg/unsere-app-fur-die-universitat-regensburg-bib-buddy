@@ -5,8 +5,8 @@ public class Author {
   private String firstName;
   private String lastName;
   private String title;
-  private Integer createDate;
-  private Integer modDate;
+  private Long createDate;
+  private Long modDate;
 
 
   /**
@@ -21,8 +21,8 @@ public class Author {
    * @param createDate date on which author was added to the database
    * @param modDate    date on which author was last modified in the database
    */
-  public Author(Long id, String firstName, String lastName, String title, Integer createDate,
-                Integer modDate) {
+  public Author(Long id, String firstName, String lastName, String title, Long createDate,
+                Long modDate) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -84,19 +84,20 @@ public class Author {
     this.title = title;
   }
 
-  public Integer getCreateDate() {
+  public Long getCreateDate() {
     return createDate;
   }
 
-  public void setCreateDate(Integer createDate) {
+  public void setCreateDate(Long createDate) {
     this.createDate = createDate;
   }
 
-  public Integer getModDate() {
+  public Long getModDate() {
     return modDate;
   }
 
-  public void setModDate(Integer modDate) {
+  public void setModDate(Long modDate) {
     this.modDate = modDate;
   }
+
 }

@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
           }
           updateFragment(R.id.fragment_container_view, notesFragment, notesFragmentTag);
           break;
+
         default:
           break;
       }
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
       case "settings":
         headerText.setText(getString(R.string.navigation_settings));
         break;
+
       default:
         headerText.setText(getString(R.string.app_name));
     }

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class AuthorDao implements InterfaceAuthorDao {
 
   @Override
   public boolean create(Author author) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
+    Long currentTime = new Date().getTime();
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     try {
@@ -53,7 +54,7 @@ public class AuthorDao implements InterfaceAuthorDao {
    * @return true if author is updated successfully
    */
   public boolean update(Author author) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
+    Long currentTime = new Date().getTime();
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     try {
@@ -90,15 +91,7 @@ public class AuthorDao implements InterfaceAuthorDao {
 
     Author author = null;
     if (cursor.moveToFirst()) {
-
-      author = new Author(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // First name
-          cursor.getString(2), // Last name
-          cursor.getString(3), // Title
-          Integer.parseInt(cursor.getString(4)), // Create date
-          Integer.parseInt(cursor.getString(5)) // Mod date
-      );
+      author = createAuthorData(cursor);
       cursor.close();
     }
     return author;
@@ -141,13 +134,7 @@ public class AuthorDao implements InterfaceAuthorDao {
         return null;
       }
 
-      return new Author(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // First name
-          cursor.getString(2), // Last name
-          cursor.getString(3), // Title
-          null, null
-      );
+      return createAuthorData(cursor);
     } finally {
       cursor.close();
     }
@@ -166,14 +153,7 @@ public class AuthorDao implements InterfaceAuthorDao {
     // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
-        Author author = new Author();
-
-        author.setId(Long.parseLong(cursor.getString(0))); // Id
-        author.setFirstName(cursor.getString(1)); // First name
-        author.setLastName(cursor.getString(2)); // Last name
-        author.setTitle(cursor.getString(3)); // Title
-        author.setCreateDate(Integer.parseInt(cursor.getString(4))); // Create date
-        author.setModDate(Integer.parseInt(cursor.getString(5))); // Mod date
+        Author author = createAuthorData(cursor);
 
         // Adding author to list
         authorList.add(author);
@@ -216,6 +196,16 @@ public class AuthorDao implements InterfaceAuthorDao {
     }
 
     db.close();
+  }
+
+  private Author createAuthorData(Cursor cursor) {
+    return new Author(Long.parseLong(cursor.getString(0)), // Id
+                      cursor.getString(1), // First name
+                      cursor.getString(2), // Last name
+                      cursor.getString(3), // Title
+                      Long.parseLong(cursor.getString(4)), // Create date
+                      Long.parseLong(cursor.getString(5)) // Mod date
+    );
   }
 
   /**
@@ -283,4 +273,5 @@ public class AuthorDao implements InterfaceAuthorDao {
   private boolean existsAuthorBookLink(Long authorId) {
     return countAuthorBookLinks(authorId) > 0;
   }
+
 }

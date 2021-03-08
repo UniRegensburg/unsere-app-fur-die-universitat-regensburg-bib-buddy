@@ -24,12 +24,12 @@
     <string name="back">zurück</string>
     <string name="add">+</string>
     <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht
         erlaubt.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
-    <string name="export">Regal exportieren (BibTeX)</string>
     <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
     <string name="error">Fehler</string>
@@ -156,15 +156,33 @@
     <string name="storage_permission_alert_msg">
         Wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="storage_permission_cancel_btn">Abbrechen</string>
     <string name="storage_permission_denied">Zugriff verweigert</string>
     <string name="file_write_failed">File write failed:</string>
+
+    <!-- Export Shelf Data Path Storage -->
     <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
 
-    <!-- Export: Empty Booklist -->
+    <!-- Export Menu Items -->
+    <string name="export_library">Bibliothek exportieren (BibTeX)</string>
+    <string name="export_shelf">Regal(e) exportieren (BibTeX)</string>
+    <string name="export_note">Notiz(en) exportieren (BibTeX)</string>
+
+    <!-- Export: Empty Shelf -->
     <string name="empty_shelf">Das Regal ist leer.</string>
     <string name="empty_shelf_description">
         Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.</string>
+
+    <!-- Export: Empty Library -->
+    <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
+    <string name="empty_library_description">
+        Bitte füge mindestens ein Regal und ein Buch hinzu, um den Export zu ermöglichen.
+    </string>
+
+    <!-- Export: Empty Note List -->
+    <string name="empty_note_list">Keine Notizen.</string>
+    <string name="empty_note_list_description">
+        Bitte füge mindestens eine Notiz hinzu, um den Export zu ermöglichen.
+    </string>
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
@@ -349,6 +367,46 @@
         exportiert.</p>
         ]]>
     </string>
+    <string name="search_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zur Suche</u></h1>
+        <p>Sie befinden sich in der Suche. Hier können Sie nach Regalen, Büchern und Notizen suchen.
+        </p>
+
+        <h2>Sortieren</h2>
+        <p>Sie können ihre Suchergebnisse nach  \"Name\" oder  \"Änderungsdatum\" sortieren.
+        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p>
+
+        <h2>Filtern</h2>
+        <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
+        Klicken Sie dazu die entsprechenden Optionen im Menü an.</p>
+
+        ]]>
+    </string>
+
+    <!-- Search Fragment -->
+    <string name="search">Suchen …</string>
+    <string name="search_hint">Suche Regal, Buch oder Notiz</string>
+    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben.
+        Reine Whitespaces sind nicht erlaubt.</string>
+    <string name="search_empty">Keine Suchergebnisse vorhanden</string>
+
+    <!-- Sort -->
+    <string name="sort">Sortieren</string>
+    <string name="search_sort_to">Sortieren nach</string>
+
+    <string name="sort_name_ascending">Name aufsteigend</string>
+    <string name="sort_name_descending">Name absteigend</string>
+    <string name="sort_mod_date_oldest">Datum ältestes</string>
+    <string name="sort_mod_date_latest">Datum neuestes</string>
+
+    <!-- Filter -->
+    <string name="filter">Filtern</string>
+    <string name="filter_to">Filtern nach</string>
+
+    <string name="filter_shelf">Regale</string>
+    <string name="filter_book">Bücher</string>
+    <string name="filter_note">Notizen</string>
 
     <!-- Voice Note Editor -->
     <string name="temporary_audio_file">temporaryAudioFile</string>
@@ -361,5 +419,6 @@
     <string name="circle_play">circle_play</string>
     <string name="play_note">Play Note</string>
     <string name="stop_note">Stop Note</string>
+
 
 </resources>
