@@ -58,10 +58,10 @@ public class NotesFragmentTest {
           NotesFragment.notes.add(noteTextItem);
         });
 
-    onView(ViewMatchers.withId(R.id.recyclerView))
+    onView(ViewMatchers.withId(R.id.notesRecyclerView))
         .perform(RecyclerViewActions.scrollTo(hasDescendant(withText(exampleText))));
     RecyclerView recyclerView =
-        Objects.requireNonNull(nF.getView()).findViewById(R.id.recyclerView);
+        Objects.requireNonNull(nF.getView()).findViewById(R.id.notesRecyclerView);
     itemView = recyclerView.getChildAt(0);
     idText = itemView.getId();
   }
