@@ -1,12 +1,14 @@
 <resources>
+
+    <!-- App -->
     <string name="app_name">Bib Buddy</string>
     <string name="app_description">Eine offene Atmosphäre für deine Gedanken und Ideen bei der
         Recherche. Unser Service macht deine Literatur-Arbeit so intuitiv wie nie!</string>
 
-    <!-- Image Descriptions -->
-    <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
+    <!-- General Image Descriptions -->
+    <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a
+        smiley face.</string>
     <string name="description_settings">A black gear icon, visualizing settings.</string>
-
     <string name="description_text_note">Text Note Icon</string>
     <string name="description_add_note">Add note button</string>
 
@@ -16,7 +18,7 @@
     <string name="navigation_library">Bibliothek</string>
     <string name="navigation_notes">Notizen</string>
 
-    <!-- Common -->
+    <!-- General -->
     <string name="empty_list">Keine Einträge vorhanden</string>
     <string name="navigation_settings">Einstellungen</string>
     <string name="back">zurück</string>
@@ -30,6 +32,11 @@
     <string name="export">Regal exportieren (BibTeX)</string>
     <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
+    <string name="error">Fehler</string>
+    <string name="points"> …</string>
+    <string name="export_clicked">Export wurde geklickt</string>
+    <string name="delete_panel_notes">Delete Panel Notes</string>
+    <string name="todo_buchtitel">TODO Buchtitel</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
@@ -42,16 +49,14 @@
     <string name="rename_shelf">Regal umbenennen</string>
     <string name="delete_shelf">Regal(e) löschen</string>
     <string name="delete_shelf_message">Alle ausgewählten Regale werden gelöscht inklusive der
-        Bücher und Notizen.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
-    <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>. Danach
-        geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern und zu
-        diesen Notizen schreiben. Für weitere Informationen öffnen Sie das Menü rechts oben und
-        klicken Sie auf <b>Hilfe</b>. </string>
+        Bücher und Notizen. \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>.
+        Danach geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern
+        und zu diesen Notizen schreiben. Für weitere Informationen öffnen Sie das Menü rechts oben
+        und klicken Sie auf <b>Hilfe</b>. </string>
     <string name="add_shelf_tooltip">Neues Regal anlegen</string>
     <string name="deleted_shelf">Regal(e) wurde(n) gelöscht</string>
     <string name="renamed_shelf">Regal wurde umbenannt</string>
-
 
     <!-- Book -->
     <string name="book">Buch</string>
@@ -62,21 +67,21 @@
     <string name="book_icon">Buch Icon</string>
     <string name="add_book_tooltip">Neues Buch hinzufügen</string>
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
-        öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
-            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch erfolgreich
-        angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem Buch
-        erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
-
+        öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>Barcode
+        des Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch
+        erfolgreich angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem
+        Buch erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie
+        auf <b>Hilfe</b>.</string>
     <string name="delete_book">Bücher löschen</string>
     <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
     <string name="delete_book_message">Alle ausgewählten Bücher werden gelöscht inklusive der
-        Notizen.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
-
+        Notizen. \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
     <string name="add_book_scan_text">Barcode scannen</string>
     <string name="add_book_online_text">Im Online-Katalog suchen</string>
     <string name="add_book_manually_text">Manuell hinzufügen</string>
+    <string name="delete_book_notes_panel">Delete Book Notes Panel</string>
+    <string name="note_pen_icon">Note Pen Icon</string>
+    <string name="image_book">Image Book</string>
 
     <!-- Book Form -->
     <string name="book_form_isbn">ISBN</string>
@@ -95,16 +100,13 @@
     <string name="author_last_name">Nachname</string>
     <string name="author_title">Titel (optional)</string>
 
-
     <!-- Barcode Scanner -->
     <string name="isbn_scan">ISBN scannen</string>
     <string name="barcode_value">ISBN Nummer: </string>
 
-
     <!-- Note -->
     <string name="note">Notiz</string>
     <string name="note_icon">Notizen Icon</string>
-
     <string name="add_note">Notiz hinzufügen</string>
     <string name="add_note_tooltip">Neues Notiz erstellen</string>
     <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den <b>+-Button</b>
@@ -114,7 +116,6 @@
         die Notiz gespeichert. Sie ist dann unter dem jeweiligen Buch und in der gesamten Notizliste
         zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
-
     <string name="delete_note">Notizen löschen</string>
     <string name="deleted_notes">Notiz(en) wurde(n) gelöscht</string>
     <string name="delete_note_message">Alle ausgewählten Notizen werden gelöscht.
@@ -158,21 +159,16 @@
     <string name="storage_permission_cancel_btn">Abbrechen</string>
     <string name="storage_permission_denied">Zugriff verweigert</string>
     <string name="file_write_failed">File write failed:</string>
-    <string name="exported_file_stored_in">
-        Exportierte Datei ist gespeichert unter:
-    </string>
+    <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
 
     <!-- Export: Empty Booklist -->
     <string name="empty_shelf">Das Regal ist leer.</string>
     <string name="empty_shelf_description">
-        Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.
-    </string>
+        Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.</string>
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
-
     <string name="help">Hilfe</string>
-
     <string name="library_help_text">
         <![CDATA[
         <h1><u>Hilfe zur Bibliothek</u></h1>
@@ -282,7 +278,7 @@
         <p>Wählen Sie ein Notiz aus, indem Sie diese gedrückt halten. Klicken Sie dann oben rechts
         auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass Sie das Buch
         endgültig löschen wollen. <br><br>
-        <u><b>Achtung!</b></u> Die Notiz wird endgültig gelöscht und kann nicht wieder hergestellt
+        <b>Achtung!</b></u> Die Notiz wird endgültig gelöscht und kann nicht wieder hergestellt
         werden.<br><br>
         Wenn Sie mehrere Notizen gleichzeitg löschen wollen, wählen Sie mehrere Notizen aus und
         klicken Sie dann auf <b>Löschen</b> im Menü.</p>
@@ -354,10 +350,16 @@
         ]]>
     </string>
 
+    <!-- Voice Note Editor -->
+    <string name="temporary_audio_file">temporaryAudioFile</string>
+    <string name="audio_file_suffix">mpeg4</string>
+    <string name="voice_note_name">Sprachnotiz vom</string>
 
-
-
-    ""
-
+    <!-- Voice Note Editor Image Descriptions -->
+    <string name="record_microphone">record_microphone</string>
+    <string name="circle_stop">circle_stop</string>
+    <string name="circle_play">circle_play</string>
+    <string name="play_note">Play Note</string>
+    <string name="stop_note">Stop Note</string>
 
 </resources>
