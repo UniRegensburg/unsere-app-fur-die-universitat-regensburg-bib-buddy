@@ -11,6 +11,7 @@ public class Note {
   private String name;
   private Integer type;
   private String text;
+  private byte[] bytes;
   private Long createDate;
   private Long modDate;
   private Long noteFileId;
@@ -33,6 +34,20 @@ public class Note {
     this.name = name;
     this.type = type;
     this.text = text;
+  }
+
+  /**
+   * Constructor to set up a new note with only name, type and text.
+   *
+   * @param name name of the note object
+   * @param type type of the note object (text, voice or picture)
+   * @param bytes byte-stream of a media file to be saved
+   */
+  public Note(String name, Integer type, String text, byte[] bytes) {
+    this.name = name;
+    this.type = type;
+    this.text = text;
+    this.bytes = bytes;
   }
 
   /**
@@ -113,4 +128,9 @@ public class Note {
   public void setNoteFileId(Long noteFileId) {
     this.noteFileId = noteFileId;
   }
+
+  public byte[] getNoteMedia() {
+    return bytes;
+  }
+
 }
