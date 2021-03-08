@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="150dp"
-    android:translationY="80dp">
+    android:layout_marginTop="65dp">
 
     <RelativeLayout
         android:id="@+id/hidden_delete_panel"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
         android:background="@color/alert_red"
-        android:translationY="495dp"
-        android:translationZ="12dp"
+        android:elevation="600dp"
         android:visibility="gone">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/panel_delete"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:background="@null"
+            android:contentDescription="@string/delete_panel_notes"
             android:scaleType="fitCenter"
             android:src="@drawable/delete"
-            android:tint="@color/true_white" />
+            app:tint="@color/true_white" />
 
     </RelativeLayout>
 
@@ -41,7 +42,7 @@
             android:adjustViewBounds="true">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/notesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
