@@ -40,8 +40,8 @@
             android:layout_height="105dp"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="10dp"
-            android:contentDescription="@string/image_book"
-            android:src="@drawable/ic_book" />
+            android:src="@drawable/ic_book"
+            android:contentDescription="@string/image_book" />
 
         <ImageView
             android:id="@+id/note_pen_icon"
@@ -49,8 +49,8 @@
             android:layout_height="20dp"
             android:layout_below="@+id/text_view_book"
             android:layout_toEndOf="@+id/image_book"
-            android:contentDescription="@string/note_pen_icon"
-            android:src="@drawable/pen" />
+            android:src="@drawable/pen"
+            android:contentDescription="@string/note_pen_icon" />
 
         <TextView
             android:id="@+id/text_view_book"
@@ -90,12 +90,13 @@
             android:id="@+id/panel_delete_book_notes"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@null"
-            android:contentDescription="@string/delete_book_notes_panel"
             android:scaleType="fitCenter"
             android:src="@drawable/delete"
-            app:tint="@color/true_white" />
+            app:tint="@color/true_white"
+            android:contentDescription="@string/delete_book_notes_panel" />
 
     </RelativeLayout>
 

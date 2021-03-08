@@ -36,7 +36,7 @@
     <string name="points"> …</string>
     <string name="export_clicked">Export wurde geklickt</string>
     <string name="delete_panel_notes">Delete Panel Notes</string>
-    <string name="todo_buchtitel">TODO Buchtitel</string>
+    <string name="bookTitle">Buchtitel</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
