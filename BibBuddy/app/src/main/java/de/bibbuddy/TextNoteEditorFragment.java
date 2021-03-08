@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -43,81 +41,7 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        saveNote();
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
-      }
-    });
-
     setHasOptionsMenu(true);
-
-  }
-
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_texteditor_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_help_texteditor:
-        handleManualTexteditor();
-        break;
-
-      default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  private void handleManualTexteditor() {
-    HelpFragment helpFragment = new HelpFragment();
-    String htmlAsString = getString(R.string.texteditor_help_text);
-
-    Bundle bundle = new Bundle();
-
-    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
-    helpFragment.setArguments(bundle);
-
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
-  }
-
-
-  private void saveNote() {
-    String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
-    String rawText = Jsoup.parse(text).text();
-    String name = "";
-    BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
-    try {
-      name = bufferedReader.readLine();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    if (rawText.length() != 0) {
-      assert getArguments() != null;
-      if (getArguments().size() == 2) {
-        noteModel.updateNote(note, name, text);
-      } else {
-        noteModel.addNote(name, 0, text);
-        noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
-      }
-    }
   }
 
   @Nullable
@@ -147,6 +71,61 @@ public class TextNoteEditorFragment extends Fragment {
     }
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
     return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_texteditor_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_help_texteditor) {
+      handleManualTexteditor();
+    } else {
+      Toast.makeText(getContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleManualTexteditor() {
+    HelpFragment helpFragment = new HelpFragment();
+    String htmlAsString = getString(R.string.texteditor_help_text);
+
+    Bundle bundle = new Bundle();
+
+    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+    helpFragment.setArguments(bundle);
+
+    requireActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, helpFragment,
+            LibraryKeys.FRAGMENT_HELP_VIEW)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  private void saveNote() {
+    String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+    String rawText = Jsoup.parse(text).text();
+    String name = "";
+    BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
+    try {
+      name = bufferedReader.readLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    if (rawText.length() != 0) {
+      assert getArguments() != null;
+      if (getArguments().size() == 2) {
+        noteModel.updateNote(note, name, text);
+      } else {
+        noteModel.addNote(name, 0, text, null);
+        noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
+      }
+    }
   }
 
   /**
@@ -324,6 +303,12 @@ public class TextNoteEditorFragment extends Fragment {
     if (align.isSelected()) {
       highlightSelectedItem(align);
     }
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    saveNote();
   }
 
 }
