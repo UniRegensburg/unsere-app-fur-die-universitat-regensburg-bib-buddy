@@ -143,6 +143,7 @@ public class BookNotesViewFragment extends Fragment
       bookNotesViewModel.deleteNotes(selectedNoteItems);
       adapter.notifyDataSetChanged();
       updateEmptyView(bookNotesViewModel.getCurrentNoteList());
+      hidePanel();
       Toast.makeText(context, R.string.deleted_notes, Toast.LENGTH_SHORT).show();
     });
 
@@ -194,11 +195,11 @@ public class BookNotesViewFragment extends Fragment
   }
 
   private void requestStoragePermission() {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+    if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
       showRequestPermissionDialog();
     } else {
-      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+      ActivityCompat.requestPermissions(requireActivity(),new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
           StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
@@ -209,7 +210,7 @@ public class BookNotesViewFragment extends Fragment
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+        (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(),
             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
             StorageKeys.STORAGE_PERMISSION_CODE));
 
@@ -389,9 +390,7 @@ public class BookNotesViewFragment extends Fragment
   }
 
   private void setupDeleteListener() {
-    hiddenDeletePanel.setOnClickListener(v -> {
-      handleDeleteNote();
-    });
+    hiddenDeletePanel.setOnClickListener(v -> handleDeleteNote());
   }
 
 
