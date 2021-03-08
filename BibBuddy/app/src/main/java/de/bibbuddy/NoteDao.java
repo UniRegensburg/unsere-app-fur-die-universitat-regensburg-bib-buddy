@@ -27,33 +27,40 @@ public class NoteDao implements InterfaceNoteDao {
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       try {
         ContentValues noteFile = new ContentValues();
-        noteFile.put(DatabaseHelper.FILE, "");
+        byte[] bytes = note.getNoteMedia();
+        if (bytes != null) {
+          noteFile.put(DatabaseHelper.FILE, bytes);
+        } else {
+          noteFile.put(DatabaseHelper.FILE, "");
+        }
         db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFile);
         Cursor c =
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
                 null, null, null, null);
         c.moveToLast();
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.NAME, note.getName());
-        contentValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
-        contentValues.put(DatabaseHelper.TEXT, note.getText());
-        contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
-        contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-        contentValues.put(DatabaseHelper.NOTE_FILE_ID, c.getLong(0));
+        ContentValues noteValues = new ContentValues();
+        noteValues.put(DatabaseHelper.NAME, note.getName());
+        noteValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
+        noteValues.put(DatabaseHelper.TEXT, note.getText());
+        noteValues.put(DatabaseHelper.CREATE_DATE, currentTime);
+        noteValues.put(DatabaseHelper.MOD_DATE, currentTime);
+        noteValues.put(DatabaseHelper.NOTE_FILE_ID, c.getLong(0));
 
-        c.close();
-        db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, contentValues);
+
+        db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, noteValues);
 
         Cursor cursor =
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
                 null, null, null);
         cursor.moveToLast();
         long id = cursor.getLong(0);
-        cursor.close();
         note.setId(id);
         note.setCreateDate(currentTime);
         note.setModDate(currentTime);
+        note.setNoteFileId(c.getLong(0));
+        c.close();
+        cursor.close();
       } catch (SQLiteException ex) {
         return false;
       } finally {
@@ -132,7 +139,7 @@ public class NoteDao implements InterfaceNoteDao {
         new String[] {String.valueOf(id)});
 
     db.delete(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, DatabaseHelper.NOTE_ID + " = ?",
-              new String[] {String.valueOf(id)});
+        new String[] {String.valueOf(id)});
 
     db.close();
   }
@@ -189,7 +196,7 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    List<Long> noteIds = new ArrayList<Long>();
+    List<Long> noteIds = new ArrayList<>();
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
         + DatabaseHelper.BOOK_ID + "=" + bookId;
     Cursor cursor = db.rawQuery(selectQuery, null);
@@ -199,12 +206,8 @@ public class NoteDao implements InterfaceNoteDao {
       } while (cursor.moveToNext());
       cursor.close();
     }
-
     return noteIds;
   }
-
-
-  // get all Notes for a book with a list of noteIds
 
   /**
    * This method gets a list of all notes that are connected to a specific book.
@@ -243,7 +246,31 @@ public class NoteDao implements InterfaceNoteDao {
 
       cursor.close();
     }
-
     return noteText;
   }
+
+  /**
+   * This method gets the byteArray saved as blob in the noteFileTable that is linked
+   * to the note.
+   *
+   * @param noteFileId id of the linked noteFile object
+   * @return returns the byte array that is saved in the blobColumn of the noteFile object
+   */
+  public byte[] getNoteFileMedia(Long noteFileId) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, new String[] {DatabaseHelper._ID,
+        DatabaseHelper.FILE},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(noteFileId)},
+        null, null, null, null);
+
+    byte[] bytes = null;
+    if (cursor != null) {
+      cursor.moveToFirst();
+      bytes = cursor.getBlob(1);
+      cursor.close();
+    }
+    return bytes;
+  }
+
 }
