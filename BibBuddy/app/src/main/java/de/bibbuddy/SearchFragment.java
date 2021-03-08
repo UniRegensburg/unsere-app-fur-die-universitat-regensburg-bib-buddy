@@ -321,7 +321,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   }
 
   private void openBook(SearchItem searchItem) {
-    BookNotesView fragment = new BookNotesView();
+    BookNotesViewFragment fragment = new BookNotesViewFragment();
     fragment.setArguments(createShelfBundle(searchItem));
 
     getActivity().getSupportFragmentManager().beginTransaction()
