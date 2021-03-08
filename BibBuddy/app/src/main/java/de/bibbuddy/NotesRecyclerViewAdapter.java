@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +41,7 @@ public class NotesRecyclerViewAdapter
   private final List<NoteItem> data;
   private final ArrayList<MediaPlayer> mediaPlayers;
   private final ArrayList<ImageButton> playButtons;
+  private final ArrayList<ImageButton> stopButtons;
   private final ArrayList<LineBarVisualizer> visualizers;
   private ViewGroup parent;
   private RelativeLayout hiddenDeletePanel;
@@ -59,6 +59,7 @@ public class NotesRecyclerViewAdapter
     this.activity = activity;
     this.mediaPlayers = new ArrayList<>();
     this.playButtons = new ArrayList<>();
+    this.stopButtons = new ArrayList<>();
     this.visualizers = new ArrayList<>();
     data.sort((o1, o2) -> {
       if (o1.getModDate() == null || o2.getModDate() == null) {
@@ -71,14 +72,11 @@ public class NotesRecyclerViewAdapter
 
   @NonNull
   @Override
-  public NotesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View itemView;
+  public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     this.parent = parent;
-    Context context = parent.getContext();
-    itemView =
-        LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
-
-    return new NotesViewHolder(itemView);
+    return new NotesViewHolder(
+        LayoutInflater.from(activity)
+            .inflate(R.layout.list_view_item_note, parent, false));
   }
 
   /**
@@ -123,6 +121,7 @@ public class NotesRecyclerViewAdapter
       playButtons.add(playButton);
       playButton.setVisibility(View.VISIBLE);
       ImageButton stopButton = holder.getStopNoteButton();
+      stopButtons.add(stopButton);
       stopButton.setVisibility(View.VISIBLE);
 
       MediaPlayer mediaPlayer = new MediaPlayer();
@@ -144,28 +143,26 @@ public class NotesRecyclerViewAdapter
       paused = false;
       setSelection(playButton, false, R.drawable.icon_play);
       visualizer.setVisibility(View.INVISIBLE);
+      stopButton.setClickable(false);
     });
 
     playButton.setOnClickListener(v -> {
+      ImageButton button = (ImageButton) v;
       if (v.isSelected()) {
-        ImageButton button = (ImageButton) v;
-        button.setImageResource(R.drawable.icon_play);
+        setSelection(button, false, R.drawable.icon_play);
         mediaPlayer.pause();
         if (paused) {
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
           mediaPlayer.seekTo(mediaPlayerPosition);
+          useVisualizer(mediaPlayer, visualizer);
           mediaPlayer.start();
         }
         paused = !paused;
       } else {
-        for (int i = 0; i < mediaPlayers.size(); i++) {
-          mediaPlayers.get(i).stop();
-          setSelection(playButtons.get(i), false, R.drawable.icon_play);
-          visualizers.get(i).setVisibility(View.INVISIBLE);
-        }
+        resetPlayers();
+        stopButton.setClickable(true);
         byte[] bytes = NotesFragment.getNoteMedia(noteItem.getId());
-        playAudio(mediaPlayer, visualizer, bytes);
-        setSelection((ImageButton) v, true, R.drawable.icon_pause);
+        playAudio(mediaPlayer, button, visualizer, bytes);
         paused = false;
       }
     });
@@ -174,7 +171,17 @@ public class NotesRecyclerViewAdapter
       mediaPlayer.stop();
       visualizer.setVisibility(View.INVISIBLE);
       paused = false;
+      resetPlayers();
     });
+  }
+
+  private void resetPlayers() {
+    for (int i = 0; i < mediaPlayers.size(); i++) {
+      mediaPlayers.get(i).stop();
+      setSelection(playButtons.get(i), false, R.drawable.icon_play);
+      stopButtons.get(i).setClickable(false);
+      visualizers.get(i).setVisibility(View.INVISIBLE);
+    }
   }
 
   private void useVisualizer(MediaPlayer mediaPlayer, LineBarVisualizer visualizer) {
@@ -190,7 +197,8 @@ public class NotesRecyclerViewAdapter
     button.setImageResource(drawable);
   }
 
-  private void playAudio(MediaPlayer mediaPlayer, LineBarVisualizer visualizer, byte[] bytes) {
+  private void playAudio(MediaPlayer mediaPlayer, ImageButton button, LineBarVisualizer visualizer,
+                         byte[] bytes) {
     try {
       File tempAudio =
           File.createTempFile(String.valueOf(R.string.temporary_audio_file), String.valueOf(
@@ -205,6 +213,7 @@ public class NotesRecyclerViewAdapter
       mediaPlayer.prepareAsync();
       mediaPlayer.setOnPreparedListener(mp -> {
         useVisualizer(mp, visualizer);
+        setSelection(button, true, R.drawable.icon_pause);
         mp.start();
       });
     } catch (IOException ex) {
@@ -221,9 +230,7 @@ public class NotesRecyclerViewAdapter
   }
 
   private void setupDeleteListener() {
-    hiddenDeletePanel.setOnClickListener(v -> {
-      handleDeleteNote();
-    });
+    hiddenDeletePanel.setOnClickListener(v -> handleDeleteNote());
   }
 
   private void hidePanel() {

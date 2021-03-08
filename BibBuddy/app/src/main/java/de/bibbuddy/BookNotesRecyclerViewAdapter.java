@@ -36,6 +36,7 @@ public class BookNotesRecyclerViewAdapter
   private Context context;
   private ArrayList<MediaPlayer> mediaPlayers;
   private ArrayList<ImageButton> playButtons;
+  private ArrayList<ImageButton> stopButtons;
   private ArrayList<LineBarVisualizer> visualizers;
   private boolean paused;
   private int mediaPlayerPosition;
@@ -54,6 +55,7 @@ public class BookNotesRecyclerViewAdapter
     this.context = context;
     this.mediaPlayers = new ArrayList<>();
     this.playButtons = new ArrayList<>();
+    this.stopButtons = new ArrayList<>();
     this.visualizers = new ArrayList<>();
     noteList.sort((o1, o2) -> {
       if (o1.getModDate() == null || o2.getModDate() == null) {
@@ -77,7 +79,7 @@ public class BookNotesRecyclerViewAdapter
   @Override
   public NotesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
     return new NotesViewHolder(
-        LayoutInflater.from(parent.getContext())
+        LayoutInflater.from(context)
             .inflate(R.layout.list_view_item_note, parent, false));
   }
 
@@ -112,6 +114,7 @@ public class BookNotesRecyclerViewAdapter
       playButtons.add(playButton);
       playButton.setVisibility(View.VISIBLE);
       ImageButton stopButton = holder.getStopNoteButton();
+      stopButtons.add(stopButton);
       stopButton.setVisibility(View.VISIBLE);
 
       MediaPlayer mediaPlayer = new MediaPlayer();
@@ -128,17 +131,19 @@ public class BookNotesRecyclerViewAdapter
     visualizer.setColor(ContextCompat.getColor(context, R.color.design_default_color_secondary));
     visualizer.setDensity(30);
     visualizer.setPlayer(mediaPlayer.getAudioSessionId());
+
     mediaPlayer.setOnCompletionListener(mp -> {
       mp.reset();
       paused = false;
       setSelection(playButton, false, R.drawable.icon_play);
       visualizer.setVisibility(View.INVISIBLE);
+      stopButton.setClickable(false);
     });
 
     playButton.setOnClickListener(v -> {
+      ImageButton button = (ImageButton) v;
       if (v.isSelected()) {
-        ImageButton button = (ImageButton) v;
-        button.setImageResource(R.drawable.icon_play);
+        setSelection(button, false, R.drawable.icon_play);
         mediaPlayer.pause();
         if (paused) {
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
@@ -148,14 +153,10 @@ public class BookNotesRecyclerViewAdapter
         }
         paused = !paused;
       } else {
-        for (int i = 0; i < mediaPlayers.size(); i++) {
-          mediaPlayers.get(i).stop();
-          setSelection(playButtons.get(i), false, R.drawable.icon_play);
-          visualizers.get(i).setVisibility(View.INVISIBLE);
-        }
+        resetPlayers();
+        stopButton.setClickable(true);
         byte[] bytes = BookNotesViewModel.getNoteMedia(noteItem.getId());
-        playAudio(mediaPlayer, visualizer, bytes);
-        setSelection((ImageButton) v, true, R.drawable.icon_pause);
+        playAudio(mediaPlayer, button, visualizer, bytes);
         paused = false;
       }
     });
@@ -164,10 +165,20 @@ public class BookNotesRecyclerViewAdapter
       mediaPlayer.stop();
       visualizer.setVisibility(View.INVISIBLE);
       paused = false;
+      resetPlayers();
     });
   }
 
-  private void useVisualizer(MediaPlayer mediaPlayer, LineBarVisualizer visualizer){
+  private void resetPlayers() {
+    for (int i = 0; i < mediaPlayers.size(); i++) {
+      mediaPlayers.get(i).stop();
+      setSelection(playButtons.get(i), false, R.drawable.icon_play);
+      stopButtons.get(i).setClickable(false);
+      visualizers.get(i).setVisibility(View.INVISIBLE);
+    }
+  }
+
+  private void useVisualizer(MediaPlayer mediaPlayer, LineBarVisualizer visualizer) {
     int audioSessionId = mediaPlayer.getAudioSessionId();
     if (audioSessionId != -1) {
       visualizer.setVisibility(View.VISIBLE);
@@ -180,7 +191,8 @@ public class BookNotesRecyclerViewAdapter
     button.setImageResource(drawable);
   }
 
-  private void playAudio(MediaPlayer mediaPlayer, LineBarVisualizer visualizer, byte[] bytes) {
+  private void playAudio(MediaPlayer mediaPlayer, ImageButton button, LineBarVisualizer visualizer,
+                         byte[] bytes) {
     try {
       File tempAudio =
           File.createTempFile(String.valueOf(R.string.temporary_audio_file), String.valueOf(
@@ -191,12 +203,13 @@ public class BookNotesRecyclerViewAdapter
         Files.write(path, bytes);
       }
       mediaPlayer.reset();
-      mediaPlayer.setDataSource(tempAudio.getPath());
-      mediaPlayer.prepareAsync();
       mediaPlayer.setOnPreparedListener(mp -> {
         useVisualizer(mp, visualizer);
+        setSelection(button, true, R.drawable.icon_pause);
         mp.start();
       });
+      mediaPlayer.setDataSource(tempAudio.getPath());
+      mediaPlayer.prepareAsync();
     } catch (IOException ex) {
       ex.printStackTrace();
     }
