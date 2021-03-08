@@ -302,7 +302,7 @@ public class NotesRecyclerViewAdapter
     });
 
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
-      Toast.makeText(activity, String.valueOf(R.string.deleted_notes),
+      Toast.makeText(activity, R.string.deleted_notes,
           Toast.LENGTH_SHORT).show();
       int itemNumber = parent.getChildCount();
       ArrayList<Integer> idCounter = new ArrayList<>();
