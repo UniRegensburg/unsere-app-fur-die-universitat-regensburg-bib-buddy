@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import java.util.List;
 
 /**
@@ -12,13 +13,19 @@ public class BookNotesViewModel {
 
 
   private final Context context;
-  private final NoteModel noteModel;
+  private static NoteModel noteModel;
   private List<NoteItem> noteList;
+  private MediaPlayer mediaPlayer;
 
 
   public BookNotesViewModel(Context context) {
     this.context = context;
     this.noteModel = new NoteModel(context);
+  }
+
+  public static byte[] getNoteMedia(Long noteId) {
+    Note note = noteModel.getNoteById(noteId);
+    return noteModel.getNoteMedia(note.getNoteFileId());
   }
 
   public NoteModel getNoteModel() {
@@ -64,6 +71,8 @@ public class BookNotesViewModel {
   public NoteItem getSelectedNoteItem(int position) {
     return noteList.get(position);
   }
+
+
 
 }
 
