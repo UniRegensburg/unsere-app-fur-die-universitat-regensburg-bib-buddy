@@ -8,16 +8,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The BookFormFragment is responsible for adding a book manually to a shelf.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Sarah Kurek
  */
 public class BookFormFragment extends Fragment {
   private final ChangeBookListener listener;
@@ -25,6 +27,7 @@ public class BookFormFragment extends Fragment {
   private boolean validInput;
   private Long shelfId;
   private String shelfName;
+  private Long bookId;
   private int redColor;
   private int greenColor;
   private Book book = new Book();
@@ -37,6 +40,13 @@ public class BookFormFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        closeFragment();
+      }
+    });
+
     // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
@@ -46,14 +56,17 @@ public class BookFormFragment extends Fragment {
     if (bundle != null) {
       shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
       shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-      long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
+      bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
       if (bookId == 0) { // add new book
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
       } else { // edit existing book
         BookModel model = new BookModel(getContext(), shelfId);
         book = model.getBookById(bookId);
-        authorList.addAll(model.getAuthorList(bookId));
+
+        if (authorList.isEmpty()) {
+          authorList.addAll(model.getAuthorList(bookId));
+        }
 
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
         Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
@@ -61,10 +74,11 @@ public class BookFormFragment extends Fragment {
       }
 
       setInputText(view);
+      setupAddAuthorBtnListener(view);
     }
 
-    redColor = getResources().getColor(R.color.alert_red);
-    greenColor = getResources().getColor(R.color.green);
+    redColor = getResources().getColor(R.color.alert_red, null);
+    greenColor = getResources().getColor(R.color.green, null);
 
     setupButtons(view);
 
@@ -96,20 +110,6 @@ public class BookFormFragment extends Fragment {
 
     EditText addInfoField = view.findViewById(R.id.book_form_add_infos_input);
     addInfoField.setText(book.getAddInfo());
-
-    if (authorList.isEmpty()) {
-      return;
-    }
-
-    Author author = authorList.get(0);
-    EditText authorTitleInput = view.findViewById(R.id.book_form_author_title_input);
-    authorTitleInput.setText(author.getTitle());
-
-    EditText authorFirstNameInput = view.findViewById(R.id.book_form_author_first_name_input);
-    authorFirstNameInput.setText(author.getFirstName());
-
-    EditText authorLastNameInput = view.findViewById(R.id.book_form_author_last_name_input);
-    authorLastNameInput.setText(author.getLastName());
   }
 
   private void setupInput(View view) {
@@ -127,22 +127,12 @@ public class BookFormFragment extends Fragment {
         (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
 
-    BookFragment fragment = new BookFragment();
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
-
-    fragment.setArguments(createBookBundle());
-  }
-
-  private Bundle createBookBundle() {
-    Bundle bundle = new Bundle();
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-
-    return bundle;
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   private void setupButtons(View view) {
@@ -169,6 +159,32 @@ public class BookFormFragment extends Fragment {
     });
   }
 
+  private void setupAddAuthorBtnListener(View view) {
+    Button addAuthorBtn = view.findViewById(R.id.book_form_add_author_btn);
+
+    addAuthorBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        switchToAuthorFragment();
+      }
+    });
+  }
+
+  private void switchToAuthorFragment() { // TODO
+    AuthorFragment authorFragment = new AuthorFragment(authorList,
+        new AuthorFragment.ChangeAuthorListListener() {
+          @Override
+          public void onAuthorListChanged() {
+            // TODO maybe not necessary
+          }
+        });
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, authorFragment, LibraryKeys.FRAGMENT_AUTHOR)
+        .addToBackStack(null)
+        .commit();
+  }
+
   private void handleUserInput() {
     validInput = true;
 
@@ -180,8 +196,6 @@ public class BookFormFragment extends Fragment {
     handleVolume();
     handleEdition();
     handleAddInfos();
-
-    handleAuthors();
 
     if (!validInput) {
       return;
@@ -290,39 +304,6 @@ public class BookFormFragment extends Fragment {
     }
   }
 
-  private void handleAuthors() {
-    // TODO add more edit texts via plus button to add more than one author
-    Author author = (authorList.isEmpty() ? new Author() : authorList.get(0));
-
-    boolean authorValid = false;
-    EditText authorTitleInput = getView().findViewById(R.id.book_form_author_title_input);
-    authorTitleInput.setBackgroundColor(greenColor);
-    String authorTitle = authorTitleInput.getText().toString();
-    author.setTitle(authorTitle);
-
-    EditText authorFirstNameInput = getView().findViewById(R.id.book_form_author_first_name_input);
-    authorFirstNameInput.setBackgroundColor(greenColor);
-    String authorFirstName = authorFirstNameInput.getText().toString();
-
-    if (!DataValidation.isStringEmpty(authorFirstName)) {
-      author.setFirstName(authorFirstName);
-      authorValid = true;
-    }
-
-
-    EditText authorLastNameInput = getView().findViewById(R.id.book_form_author_last_name_input);
-    authorLastNameInput.setBackgroundColor(greenColor);
-    String authorLastName = authorLastNameInput.getText().toString();
-
-    if (!DataValidation.isStringEmpty(authorLastName)) {
-      author.setLastName(authorLastName);
-      authorValid = true;
-    }
-
-    if (authorValid && author.getId() == null) {
-      authorList.add(author);
-    }
-  }
 
   public interface ChangeBookListener {
     default void onBookAdded(Book book, List<Author> authorList) {

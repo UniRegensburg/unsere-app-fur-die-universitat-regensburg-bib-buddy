@@ -131,7 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       "CREATE TABLE " + TABLE_NAME_BOOK
           + "( "
           + _ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
-          + ISBN + " VARCHAR NOT NULL, "
+          + ISBN + " VARCHAR, "
           + TITLE + " VARCHAR, "
           + SUBTITLE + " VARCHAR, "
           + PUB_YEAR + " INTEGER(4), "
