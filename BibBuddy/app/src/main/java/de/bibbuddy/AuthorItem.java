@@ -12,7 +12,7 @@ public class AuthorItem {
 
 
   /**
-   * Constructor of a AuthorItem.
+   * Constructor of an AuthorItem.
    *
    * @param author The Author
    */

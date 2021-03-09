@@ -184,7 +184,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         getString(R.string.sort_name_descending),
         getString(R.string.sort_mod_date_oldest),
         getString(R.string.sort_mod_date_latest)
-      };
+    };
 
     selectSearchCriteria
         .setSingleChoiceItems(sortChoices, checkedItem, new DialogInterface.OnClickListener() {
@@ -243,7 +243,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         getString(R.string.filter_shelf),
         getString(R.string.filter_book),
         getString(R.string.filter_note)
-      };
+    };
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
                                              new DialogInterface.OnMultiChoiceClickListener() {

@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
- * The AuthorFormFragment is responsible for adding autjor to a book.
+ * The AuthorFormFragment is responsible for adding author to a book.
  *
  * @author Sarah Kurek
  */
