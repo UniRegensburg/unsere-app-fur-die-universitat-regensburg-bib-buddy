@@ -419,6 +419,7 @@
     <string name="circle_play">circle_play</string>
     <string name="play_note">Play Note</string>
     <string name="stop_note">Stop Note</string>
+    <string name="default_played_time">00:00</string>
 
 
 </resources>
