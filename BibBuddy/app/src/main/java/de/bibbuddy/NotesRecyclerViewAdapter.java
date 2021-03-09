@@ -1,14 +1,14 @@
 package de.bibbuddy;
 
 import android.app.AlertDialog;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-import com.chibde.visualizer.LineBarVisualizer;
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,14 +39,14 @@ public class NotesRecyclerViewAdapter
 
   private final MainActivity activity;
   private final List<NoteItem> data;
+  private ViewGroup parent;
+
   private final ArrayList<MediaPlayer> mediaPlayers;
   private final ArrayList<ImageButton> playButtons;
   private final ArrayList<ImageButton> stopButtons;
-  private final ArrayList<LineBarVisualizer> visualizers;
-  private ViewGroup parent;
-  private RelativeLayout hiddenDeletePanel;
-  private boolean paused;
+  private final ArrayList<SeekBarListener> seekBarListeners;
   private int mediaPlayerPosition;
+  private boolean paused;
 
   /**
    * Adapter constructor to connect a NoteList with the activity.
@@ -57,10 +57,10 @@ public class NotesRecyclerViewAdapter
   public NotesRecyclerViewAdapter(List<NoteItem> data, MainActivity activity) {
     this.data = data;
     this.activity = activity;
+    this.seekBarListeners = new ArrayList<>();
     this.mediaPlayers = new ArrayList<>();
     this.playButtons = new ArrayList<>();
     this.stopButtons = new ArrayList<>();
-    this.visualizers = new ArrayList<>();
     data.sort((o1, o2) -> {
       if (o1.getModDate() == null || o2.getModDate() == null) {
         return 0;
@@ -103,47 +103,66 @@ public class NotesRecyclerViewAdapter
        */
     });
 
-    setupMediaButtons(holder, noteItem);
-
     holder.itemView.setOnLongClickListener(v -> {
       v.setSelected(!v.isSelected());
-      slideUpOrDown();
       return true;
     });
 
-    hiddenDeletePanel = parent.getRootView().findViewById(R.id.hidden_delete_panel);
-    setupDeleteListener();
+    setupAudioElements(holder, noteItem);
   }
 
-  private void setupMediaButtons(NotesViewHolder holder, NoteItem noteItem) {
+  private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
     if (noteItem.getImage() == R.drawable.microphone) {
+
       ImageButton playButton = holder.getPlayNoteButton();
       playButtons.add(playButton);
       playButton.setVisibility(View.VISIBLE);
+
       ImageButton stopButton = holder.getStopNoteButton();
       stopButtons.add(stopButton);
       stopButton.setVisibility(View.VISIBLE);
 
       MediaPlayer mediaPlayer = new MediaPlayer();
       mediaPlayers.add(mediaPlayer);
-      LineBarVisualizer visualizer = holder.getVisualizer();
-      visualizers.add(visualizer);
-      setupMediaPlayerListeners(mediaPlayer, playButton, stopButton, visualizer, noteItem);
+
+      RelativeLayout voiceNoteLayout = holder.getVoiceNoteLayout();
+      voiceNoteLayout.setVisibility(View.VISIBLE);
+
+      SeekBarCompat progressBar = holder.getProgressBar();
+      TextView playedTime = holder.getPlayedTime();
+      TextView totalTime = holder.getTotalTime();
+
+      SeekBarListener seekBarListener =
+          new SeekBarListener(activity, mediaPlayer, progressBar, playedTime);
+      seekBarListeners.add(seekBarListener);
+
+      setTotalTime(noteItem, totalTime, seekBarListener);
+
+      progressBar.setOnSeekBarChangeListener(seekBarListener);
+
+      setupMediaPlayerListeners(mediaPlayer, playButton, stopButton, noteItem, seekBarListener);
     }
   }
 
+  private void setTotalTime(NoteItem noteItem, TextView totalTime, SeekBarListener seekBarListener) {
+    File file = createAudioFile(noteItem);
+    Uri uri = Uri.parse(file.getPath());
+    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+    mmr.setDataSource(activity.getApplicationContext(),uri);
+    String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+    int millSecond = Integer.parseInt(durationStr);
+    totalTime.setText(seekBarListener.showTime(millSecond));
+  }
+
   private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, ImageButton playButton,
-                                         ImageButton stopButton, LineBarVisualizer visualizer,
-                                         NoteItem noteItem) {
-    visualizer.setColor(ContextCompat.getColor(activity, R.color.design_default_color_secondary));
-    visualizer.setDensity(30);
-    visualizer.setPlayer(mediaPlayer.getAudioSessionId());
+                                         ImageButton stopButton,
+                                         NoteItem noteItem, SeekBarListener seekBarListener) {
     mediaPlayer.setOnCompletionListener(mp -> {
       mp.reset();
       paused = false;
       setSelection(playButton, false, R.drawable.icon_play);
-      visualizer.setVisibility(View.INVISIBLE);
       stopButton.setClickable(false);
+      seekBarListener.reset();
     });
 
     playButton.setOnClickListener(v -> {
@@ -151,28 +170,29 @@ public class NotesRecyclerViewAdapter
       if (v.isSelected()) {
         setSelection(button, false, R.drawable.icon_play);
         mediaPlayer.pause();
+        paused = !paused;
+      } else {
         if (paused) {
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
           mediaPlayer.seekTo(mediaPlayerPosition);
-          useVisualizer(mediaPlayer, visualizer);
           mediaPlayer.start();
+          setSelection(playButton, true, R.drawable.icon_pause);
+        } else {
+          resetPlayers();
+          stopButton.setClickable(true);
+          playAudio(mediaPlayer, button, noteItem, seekBarListener);
+          paused = false;
         }
-        paused = !paused;
-      } else {
-        resetPlayers();
-        stopButton.setClickable(true);
-        byte[] bytes = NotesFragment.getNoteMedia(noteItem.getId());
-        playAudio(mediaPlayer, button, visualizer, bytes);
-        paused = false;
       }
     });
 
     stopButton.setOnClickListener(v -> {
+      seekBarListener.reset();
       mediaPlayer.stop();
-      visualizer.setVisibility(View.INVISIBLE);
       paused = false;
       resetPlayers();
     });
+
   }
 
   private void resetPlayers() {
@@ -180,15 +200,7 @@ public class NotesRecyclerViewAdapter
       mediaPlayers.get(i).stop();
       setSelection(playButtons.get(i), false, R.drawable.icon_play);
       stopButtons.get(i).setClickable(false);
-      visualizers.get(i).setVisibility(View.INVISIBLE);
-    }
-  }
-
-  private void useVisualizer(MediaPlayer mediaPlayer, LineBarVisualizer visualizer) {
-    int audioSessionId = mediaPlayer.getAudioSessionId();
-    if (audioSessionId != -1) {
-      visualizer.setVisibility(View.VISIBLE);
-      visualizer.setPlayer(mediaPlayer.getAudioSessionId());
+      seekBarListeners.get(i).reset();
     }
   }
 
@@ -197,28 +209,38 @@ public class NotesRecyclerViewAdapter
     button.setImageResource(drawable);
   }
 
-  private void playAudio(MediaPlayer mediaPlayer, ImageButton button, LineBarVisualizer visualizer,
-                         byte[] bytes) {
+  private void playAudio(MediaPlayer mediaPlayer, ImageButton button,
+                         NoteItem noteItem, SeekBarListener seekBarListener) {
+    File tempAudio = createAudioFile(noteItem);
     try {
-      File tempAudio =
-          File.createTempFile(String.valueOf(R.string.temporary_audio_file), String.valueOf(
-              R.string.audio_file_suffix), activity.getCacheDir());
+      mediaPlayer.reset();
+      mediaPlayer.setDataSource(tempAudio.getPath());
+      mediaPlayer.prepareAsync();
+      mediaPlayer.setOnPreparedListener(mp -> {
+        setSelection(button, true, R.drawable.icon_pause);
+        mp.start();
+        seekBarListener.barUpdate();
+      });
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  private File createAudioFile(NoteItem noteItem) {
+    byte[] bytes = NotesFragment.getNoteMedia(noteItem.getId());
+    File tempAudio = null;
+    try {
+      tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file), String.valueOf(
+          R.string.audio_file_suffix), activity.getCacheDir());
       tempAudio.deleteOnExit();
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         Path path = Paths.get(tempAudio.getPath());
         Files.write(path, bytes);
       }
-      mediaPlayer.reset();
-      mediaPlayer.setDataSource(tempAudio.getPath());
-      mediaPlayer.prepareAsync();
-      mediaPlayer.setOnPreparedListener(mp -> {
-        useVisualizer(mp, visualizer);
-        setSelection(button, true, R.drawable.icon_pause);
-        mp.start();
-      });
-    } catch (IOException ex) {
-      ex.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    return tempAudio;
   }
 
   private Bundle createNoteBundle(NoteItem item) {
@@ -228,18 +250,6 @@ public class NotesRecyclerViewAdapter
 
     return bundle;
   }
-
-  private void setupDeleteListener() {
-    hiddenDeletePanel.setOnClickListener(v -> handleDeleteNote());
-  }
-
-  private void hidePanel() {
-    Animation bottomDown = AnimationUtils.loadAnimation(activity,
-        R.anim.bottom_down);
-    hiddenDeletePanel.startAnimation(bottomDown);
-    hiddenDeletePanel.setVisibility(View.GONE);
-  }
-
 
   private void removeBackendDataAndViewItems(ArrayList<Integer> idCounter) {
     for (int i = 0; i < idCounter.size(); i++) {
@@ -278,21 +288,7 @@ public class NotesRecyclerViewAdapter
     notifyItemRemoved(position);
   }
 
-  /**
-   * Method to perform an upside-down animation for the deletePanel.
-   */
-  public void slideUpOrDown() {
-    if (anyItemSelected() && !isPanelShown()) {
-      Animation bottomUp = AnimationUtils.loadAnimation(activity,
-          R.anim.bottom_up);
-      hiddenDeletePanel.startAnimation(bottomUp);
-      hiddenDeletePanel.setVisibility(View.VISIBLE);
-    } else if (!anyItemSelected() && isPanelShown()) {
-      hidePanel();
-    }
-  }
-
-  private void handleDeleteNote() {
+  public void handleDeleteNote() {
     AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(activity);
 
     alertDeleteNote.setCancelable(false);
@@ -305,7 +301,6 @@ public class NotesRecyclerViewAdapter
         recyclerView.getChildAt(i).setSelected(false);
       }
       notifyDataSetChanged();
-      hidePanel();
     });
 
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
@@ -319,24 +314,8 @@ public class NotesRecyclerViewAdapter
         }
       }
       removeBackendDataAndViewItems(idCounter);
-      hidePanel();
     });
     alertDeleteNote.show();
-  }
-
-  private boolean anyItemSelected() {
-    RecyclerView recyclerView = activity.findViewById(R.id.notesRecyclerView);
-    int itemNumber = recyclerView.getChildCount();
-    for (int i = 0; i < itemNumber; i++) {
-      if (recyclerView.getChildAt(i).isSelected()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private boolean isPanelShown() {
-    return hiddenDeletePanel.getVisibility() == View.VISIBLE;
   }
 
   /**
@@ -349,7 +328,10 @@ public class NotesRecyclerViewAdapter
     private final ImageView type;
     private final ImageButton play;
     private final ImageButton stop;
-    private final LineBarVisualizer visualizer;
+    private final RelativeLayout voiceNoteLayout;
+    private final SeekBarCompat progressBar;
+    private final TextView playedTime;
+    private final TextView totalTime;
 
     /**
      * Custom ViewHolder constructor to setup its basic view.
@@ -361,9 +343,12 @@ public class NotesRecyclerViewAdapter
       modDate = itemView.findViewById(R.id.noteModDate);
       name = itemView.findViewById(R.id.noteName);
       type = itemView.findViewById(R.id.noteType);
+      voiceNoteLayout = itemView.findViewById(R.id.voice_note_layout);
       play = itemView.findViewById(R.id.play_note);
       stop = itemView.findViewById(R.id.stop_note);
-      visualizer = itemView.findViewById(R.id.notesVisualizer);
+      progressBar = itemView.findViewById(R.id.progressBar);
+      playedTime = itemView.findViewById(R.id.playedTime);
+      totalTime = itemView.findViewById(R.id.totalTime);
     }
 
     public TextView getModDateView() {
@@ -386,9 +371,20 @@ public class NotesRecyclerViewAdapter
       return stop;
     }
 
-    public LineBarVisualizer getVisualizer() {
-      return visualizer;
+    public RelativeLayout getVoiceNoteLayout() {return voiceNoteLayout;}
+
+    public SeekBarCompat getProgressBar() {
+      return progressBar;
     }
+
+    public TextView getPlayedTime() {
+      return playedTime;
+    }
+
+    public TextView getTotalTime() {
+      return totalTime;
+    }
+
   }
 
 }
