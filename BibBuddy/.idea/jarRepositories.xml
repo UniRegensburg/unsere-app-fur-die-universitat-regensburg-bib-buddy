@@ -36,5 +36,10 @@
       <option name="name" value="maven2" />
       <option name="url" value="https://github.com/FireZenk/maven-repo/raw/master/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven2" />
+      <option name="name" value="maven2" />
+      <option name="url" value="http://dl.bintray.com/ahmedrizwan/maven" />
+    </remote-repository>
   </component>
 </project>
