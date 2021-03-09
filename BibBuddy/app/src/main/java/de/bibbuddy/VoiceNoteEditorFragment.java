@@ -233,7 +233,9 @@ public class VoiceNoteEditorFragment extends Fragment {
     super.onPause();
     stopRecording();
     stopPlaying();
-    mediaPlayer.release();
+    if(mediaPlayer != null) {
+      mediaPlayer.release();
+    }
   }
 
 }
