@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * BookNotesRecyclerViewAdapter provides a binding from the noteList to the view
@@ -135,7 +138,7 @@ public class BookNotesRecyclerViewAdapter
           new SeekBarListener(context, mediaPlayer, progressBar, playedTime);
       seekBarListeners.add(seekBarListener);
 
-      setTotalTime(noteItem, totalTime, seekBarListener);
+      setTotalTime(noteItem, totalTime);
 
       progressBar.setOnSeekBarChangeListener(seekBarListener);
 
@@ -143,15 +146,16 @@ public class BookNotesRecyclerViewAdapter
     }
   }
 
-  private void setTotalTime(NoteItem noteItem, TextView totalTime,
-                            SeekBarListener seekBarListener) {
+  private void setTotalTime(NoteItem noteItem, TextView totalTime) {
     File file = createAudioFile(noteItem);
     Uri uri = Uri.parse(file.getPath());
     MediaMetadataRetriever mmr = new MediaMetadataRetriever();
     mmr.setDataSource(context.getApplicationContext(), uri);
     String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-    int millSecond = Integer.parseInt(durationStr);
-    totalTime.setText(seekBarListener.showTime(millSecond));
+    int millSeconds = Integer.parseInt(durationStr);
+    String time = new SimpleDateFormat("mm:ss", Locale.getDefault())
+        .format(new Date(millSeconds));
+    totalTime.setText(time);
   }
 
   private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, ImageButton playButton,
@@ -167,22 +171,20 @@ public class BookNotesRecyclerViewAdapter
 
     playButton.setOnClickListener(v -> {
       ImageButton button = (ImageButton) v;
-      System.out.println(v.isSelected());
       if (v.isSelected()) {
-        button.setImageResource(R.drawable.icon_play);
+        setSelection(button, false, R.drawable.icon_play);
         mediaPlayer.pause();
         if (paused) {
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
           mediaPlayer.seekTo(mediaPlayerPosition);
           mediaPlayer.start();
-          button.setImageResource(R.drawable.icon_pause);
+          setSelection(playButton, true, R.drawable.icon_pause);
         }
         paused = !paused;
       } else {
         resetPlayers();
         stopButton.setClickable(true);
         playAudio(mediaPlayer, button, noteItem, seekBarListener);
-        paused = false;
       }
     });
 
@@ -197,12 +199,12 @@ public class BookNotesRecyclerViewAdapter
 
   private void resetPlayers() {
     for (int i = 0; i < mediaPlayers.size(); i++) {
-      mediaPlayers.get(i).stop();
       mediaPlayers.get(i).reset();
       setSelection(playButtons.get(i), false, R.drawable.icon_play);
       stopButtons.get(i).setClickable(false);
       seekBarListeners.get(i).reset();
     }
+    paused = false;
   }
 
   private void setSelection(ImageButton button, boolean bool, int drawable) {

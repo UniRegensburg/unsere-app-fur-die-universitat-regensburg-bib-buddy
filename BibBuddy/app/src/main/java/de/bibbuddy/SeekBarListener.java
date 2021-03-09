@@ -61,8 +61,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
    * @return returns a string value representing given millis in a "00:00" format
    */
   public String showTime(int millis) {
-    return (new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millis))
-        .substring(0, 5));
+    return (new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millis)));
   }
 
   /**

@@ -24,9 +24,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * NoteRecyclerViewAdapter provides a binding from the noteList to the view
@@ -39,12 +42,11 @@ public class NotesRecyclerViewAdapter
 
   private final MainActivity activity;
   private final List<NoteItem> data;
-  private ViewGroup parent;
-
   private final ArrayList<MediaPlayer> mediaPlayers;
   private final ArrayList<ImageButton> playButtons;
   private final ArrayList<ImageButton> stopButtons;
   private final ArrayList<SeekBarListener> seekBarListeners;
+  private ViewGroup parent;
   private int mediaPlayerPosition;
   private boolean paused;
 
@@ -136,7 +138,7 @@ public class NotesRecyclerViewAdapter
           new SeekBarListener(activity, mediaPlayer, progressBar, playedTime);
       seekBarListeners.add(seekBarListener);
 
-      setTotalTime(noteItem, totalTime, seekBarListener);
+      setTotalTime(noteItem, totalTime);
 
       progressBar.setOnSeekBarChangeListener(seekBarListener);
 
@@ -144,14 +146,16 @@ public class NotesRecyclerViewAdapter
     }
   }
 
-  private void setTotalTime(NoteItem noteItem, TextView totalTime, SeekBarListener seekBarListener) {
+  private void setTotalTime(NoteItem noteItem, TextView totalTime) {
     File file = createAudioFile(noteItem);
     Uri uri = Uri.parse(file.getPath());
     MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-    mmr.setDataSource(activity.getApplicationContext(),uri);
+    mmr.setDataSource(activity.getApplicationContext(), uri);
     String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-    int millSecond = Integer.parseInt(durationStr);
-    totalTime.setText(seekBarListener.showTime(millSecond));
+    int millSeconds = Integer.parseInt(durationStr);
+    String time = new SimpleDateFormat("mm:ss", Locale.getDefault())
+        .format(new Date(millSeconds));
+    totalTime.setText(time);
   }
 
   private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, ImageButton playButton,
@@ -170,19 +174,17 @@ public class NotesRecyclerViewAdapter
       if (v.isSelected()) {
         setSelection(button, false, R.drawable.icon_play);
         mediaPlayer.pause();
-        paused = !paused;
-      } else {
         if (paused) {
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
           mediaPlayer.seekTo(mediaPlayerPosition);
           mediaPlayer.start();
           setSelection(playButton, true, R.drawable.icon_pause);
-        } else {
-          resetPlayers();
-          stopButton.setClickable(true);
-          playAudio(mediaPlayer, button, noteItem, seekBarListener);
-          paused = false;
         }
+        paused = !paused;
+      } else {
+        resetPlayers();
+        stopButton.setClickable(true);
+        playAudio(mediaPlayer, button, noteItem, seekBarListener);
       }
     });
 
@@ -197,11 +199,12 @@ public class NotesRecyclerViewAdapter
 
   private void resetPlayers() {
     for (int i = 0; i < mediaPlayers.size(); i++) {
-      mediaPlayers.get(i).stop();
+      mediaPlayers.get(i).reset();
       setSelection(playButtons.get(i), false, R.drawable.icon_play);
       stopButtons.get(i).setClickable(false);
       seekBarListeners.get(i).reset();
     }
+    paused = false;
   }
 
   private void setSelection(ImageButton button, boolean bool, int drawable) {
@@ -288,6 +291,10 @@ public class NotesRecyclerViewAdapter
     notifyItemRemoved(position);
   }
 
+  /**
+   * This method shows on using delete-options an alertDialog, that deleting notes is not revertable
+   * and deletes them on using the positive button or cancels the action on using the negative one.
+   */
   public void handleDeleteNote() {
     AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(activity);
 
@@ -371,7 +378,9 @@ public class NotesRecyclerViewAdapter
       return stop;
     }
 
-    public RelativeLayout getVoiceNoteLayout() {return voiceNoteLayout;}
+    public RelativeLayout getVoiceNoteLayout() {
+      return voiceNoteLayout;
+    }
 
     public SeekBarCompat getProgressBar() {
       return progressBar;
