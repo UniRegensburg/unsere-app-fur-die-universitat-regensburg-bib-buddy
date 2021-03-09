@@ -54,6 +54,7 @@ public class NotesFragment extends Fragment {
       }
     });
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
+
     recyclerView = view.findViewById(R.id.notesRecyclerView);
     noteModel = new NoteModel(getContext());
     notes = noteModel.getCompleteNoteList();
@@ -71,7 +72,9 @@ public class NotesFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.menu_help_note_list) {
+    if(item.getItemId() == R.id.menu_delete_note_list){
+      adapter.handleDeleteNote();
+    } else if (item.getItemId() == R.id.menu_help_note_list) {
       handleManualNotesList();
     } else {
       Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();

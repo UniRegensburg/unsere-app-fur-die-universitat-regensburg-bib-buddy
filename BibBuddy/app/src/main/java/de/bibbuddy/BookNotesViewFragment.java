@@ -12,10 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
@@ -45,11 +42,10 @@ public class BookNotesViewFragment extends Fragment
   private Long bookId;
   private Long shelfId;
   private String shelfName;
-  private List<NoteItem> noteList;
-  private List<NoteItem> selectedNoteItems;
-  private RelativeLayout hiddenDeletePanel;
   private BookDao bookDao;
   private NoteDao noteDao;
+  private List<NoteItem> noteList;
+  private List<NoteItem> selectedNoteItems;
 
   private ExportBibTex exportBibTex;
   private String fileName;
@@ -88,8 +84,6 @@ public class BookNotesViewFragment extends Fragment
 
     bookTitleView.setText(bookTitle);
 
-    hiddenDeletePanel = view.findViewById(R.id.hidden_delete_panel_book_notes);
-    setupDeleteListener();
     setHasOptionsMenu(true);
     setupAddButton();
     updateEmptyView(noteList);
@@ -116,7 +110,9 @@ public class BookNotesViewFragment extends Fragment
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
-    if (itemId == R.id.menu_export_note) {
+    if (item.getItemId() == R.id.menu_delete_note) {
+      handleDeleteNote();
+    } else if (itemId == R.id.menu_export_note) {
       // TODO Silvia Export
       // handleExportLibrary();
       Toast.makeText(getContext(), String.valueOf(R.string.export_clicked), Toast.LENGTH_SHORT)
@@ -143,7 +139,6 @@ public class BookNotesViewFragment extends Fragment
       bookNotesViewModel.deleteNotes(selectedNoteItems);
       adapter.notifyDataSetChanged();
       updateEmptyView(bookNotesViewModel.getCurrentNoteList());
-      hidePanel();
       Toast.makeText(context, R.string.deleted_notes, Toast.LENGTH_SHORT).show();
     });
 
@@ -199,7 +194,8 @@ public class BookNotesViewFragment extends Fragment
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
       showRequestPermissionDialog();
     } else {
-      ActivityCompat.requestPermissions(requireActivity(),new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+      ActivityCompat.requestPermissions(requireActivity(),
+          new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
           StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
@@ -223,10 +219,10 @@ public class BookNotesViewFragment extends Fragment
   /**
    * Callback method, that checks the result from requesting permissions.
    *
-   * @param requestCode unique integer value for the requested permission
-   *                    This value is given by the programmer.
-   * @param permissions array of requested name(s)
-   *                    of the permission(s)
+   * @param requestCode  unique integer value for the requested permission
+   *                     This value is given by the programmer.
+   * @param permissions  array of requested name(s)
+   *                     of the permission(s)
    * @param grantResults grant results for the corresponding permissions
    *                     which is either PackageManager.PERMISSION_GRANTED
    *                     or PackageManager.PERMISSION_DENIED.
@@ -372,49 +368,6 @@ public class BookNotesViewFragment extends Fragment
       v.setSelected(true);
       selectedNoteItems.add(noteItem);
     }
-    slideUpOrDown();
-  }
-
-  /**
-   * Method to perform an upside-down animation for the deletePanel.
-   */
-  public void slideUpOrDown() {
-    if (anyItemSelected() && !isPanelShown()) {
-      Animation bottomUp = AnimationUtils.loadAnimation(context,
-          R.anim.bottom_up);
-      hiddenDeletePanel.startAnimation(bottomUp);
-      hiddenDeletePanel.setVisibility(View.VISIBLE);
-    } else if (!anyItemSelected() && isPanelShown()) {
-      hidePanel();
-    }
-  }
-
-  private void setupDeleteListener() {
-    hiddenDeletePanel.setOnClickListener(v -> handleDeleteNote());
-  }
-
-
-  private void hidePanel() {
-    Animation bottomDown = AnimationUtils.loadAnimation(context,
-        R.anim.bottom_down);
-    hiddenDeletePanel.startAnimation(bottomDown);
-    hiddenDeletePanel.setVisibility(View.GONE);
-  }
-
-  private boolean anyItemSelected() {
-    RecyclerView bookNotesRecyclerView =
-        view.findViewById(R.id.book_notes_view_recycler_view);
-    int itemNumber = bookNotesRecyclerView.getChildCount();
-    for (int i = 0; i < itemNumber; i++) {
-      if (bookNotesRecyclerView.getChildAt(i).isSelected()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private boolean isPanelShown() {
-    return hiddenDeletePanel.getVisibility() == View.VISIBLE;
   }
 
 }
