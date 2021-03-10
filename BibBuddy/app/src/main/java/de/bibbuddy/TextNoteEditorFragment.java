@@ -83,7 +83,7 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_help_texteditor) {
-      handleManualTexteditor();
+      handleManualTextEditor();
     } else {
       Toast.makeText(getContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
     }
@@ -91,7 +91,7 @@ public class TextNoteEditorFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleManualTexteditor() {
+  private void handleManualTextEditor() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.texteditor_help_text);
 
@@ -118,7 +118,7 @@ public class TextNoteEditorFragment extends Fragment {
       e.printStackTrace();
     }
     if (rawText.length() != 0) {
-      if (getArguments().size() == 2) {
+      if (getArguments() != null && getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
         noteModel.addNote(name, 0, text, null);
