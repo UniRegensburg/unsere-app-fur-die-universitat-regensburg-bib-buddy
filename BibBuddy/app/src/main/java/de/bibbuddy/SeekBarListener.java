@@ -40,7 +40,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   public void onProgressChanged(SeekBar seekBar, int progress,
                                 boolean fromUser) {
     // TODO Auto-generated method stub
-
+    mediaPlayer.seekTo(progress);
   }
 
   @Override
@@ -68,7 +68,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
    * This method starts a runnable to permanently update the seekBar to match the position of the
    * media played.
    */
-  public void barUpdate() {
+  public void updateProgress() {
     Handler handler = new Handler();
     checkProgress = true;
     Runnable r = new Runnable() {
