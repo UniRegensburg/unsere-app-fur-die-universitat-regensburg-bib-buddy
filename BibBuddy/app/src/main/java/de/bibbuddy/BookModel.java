@@ -17,6 +17,7 @@ public class BookModel {
   private final Long shelfId;
 
   private List<BookItem> bookList;
+  private List<AuthorItem> authorItemList;
 
   /**
    * Constructor for a BookModel.
@@ -91,7 +92,7 @@ public class BookModel {
       List<Author> authorList = bookDao.getAllAuthorsForBook(book.getId());
       int noteCount = bookDao.countAllNotesForBook(book.getId());
       bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(),
-                                convertAuthorListToString(authorList), noteCount));
+          convertAuthorListToString(authorList), noteCount));
     }
 
     return bookList;
@@ -159,8 +160,16 @@ public class BookModel {
     return bookList.get(position);
   }
 
+  public AuthorItem getSelectedAuthorItem(int position) {
+    return authorItemList.get(position);
+  }
+
   public Book getBookById(Long id) {
     return bookDao.findById(id);
+  }
+
+  public Author getAuthorById(Long id) {
+    return authorDao.findById(id);
   }
 
 }

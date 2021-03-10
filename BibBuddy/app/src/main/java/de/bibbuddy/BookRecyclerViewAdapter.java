@@ -118,7 +118,7 @@ public class BookRecyclerViewAdapter
     public BookViewHolder(@NonNull View itemView) {
       super(itemView);
       textTitleView = itemView.findViewById(R.id.book_title);
-      imageBookView = itemView.findViewById(R.id.book_icon);
+      imageBookView = itemView.findViewById(R.id.person_icon);
       textBookAuthors = itemView.findViewById(R.id.book_authors);
       textBookYear = itemView.findViewById(R.id.book_year);
       textNoteCount = itemView.findViewById(R.id.note_count);

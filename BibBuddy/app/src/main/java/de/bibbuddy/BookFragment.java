@@ -58,7 +58,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
         FragmentManager fm = getParentFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
           fm.popBackStack();

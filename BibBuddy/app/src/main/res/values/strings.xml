@@ -84,7 +84,7 @@
     <string name="image_book">Image Book</string>
 
     <!-- Book Form -->
-    <string name="book_form_isbn">ISBN</string>
+    <string name="book_form_isbn">ISBN (optional)</string>
     <string name="book_form_title">Titel</string>
     <string name="book_form_subtitle">Untertitel (optional)</string>
     <string name="book_form_pub_year">Jahr der Veröffentlichung (optional)</string>
@@ -93,13 +93,59 @@
     <string name="book_form_edition">Auflage (optional)</string>
     <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
 
+
+    <string name="add_author_btn">Autoren bearbeiten</string>
+    <string name="add_author_tooltip">Autor hinzufügen</string>
+    <string name="delete_author_btn">Autor löschen</string>
+    <string name="delete_author_tooltip">Autor entfernen</string>
+
     <!-- Author -->
     <string name="author">Autor</string>
     <string name="authors">Autoren</string>
     <string name="author_first_name">Vorname</string>
     <string name="author_last_name">Nachname</string>
     <string name="author_title">Titel (optional)</string>
+    <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
+        Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
+        eingeben können. Wurde der Autor erfolgreich angelegt, wird er in der Liste angezeigt.
+        Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
+        <b>Hilfe</b>.</string>
 
+    <string name="change_author">Autordaten ändern</string>
+    <string name="add_author">Autor hinzufügen</string>
+    <string name="added_author">Autor wurde hinzufügt</string>
+
+    <string name="delete_author">Autor(en) löschen</string>
+    <string name="deleted_author">Autor(en) wurde(n) gelöscht</string>
+    <string name="delete_author_message">Alle ausgewählten Autoren werden gelöscht.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+
+    <string name="author_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zu den Autoren</u></h1>
+        <p>Sie befinden sich in der Authorensansicht. Hier können Sie neue Autoren anlegen,
+        bestehende anpassen oder löschen</p>
+
+        <h2>Anlegen eines neuen Autors/h2>
+        <p>Einen neuen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
+        dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
+        einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
+        gespeichert.
+
+        <h2>Autordaten ändern</h2>
+        <p>Um die Daten eines Autors zu ändern, klicken Sie diesen an und sie gelangen zum
+        Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
+        Zurück-Button werden die Daten automatisch gespeicheert.<br><br>
+
+        <h2>Autor(en) löschen</h2>
+        <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie
+        dann oben rechts auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass
+        Sie die ausgewählten Autoren endgültig löschen wollen.<br><br>
+        <u><b>Achtung!</b></u> Die Daten können nicht wieder hergestellt werden. <br><br>
+
+        ]]>
+    </string>
+    
     <!-- Barcode Scanner -->
     <string name="isbn_scan">ISBN scannen</string>
     <string name="barcode_value">ISBN Nummer: </string>
