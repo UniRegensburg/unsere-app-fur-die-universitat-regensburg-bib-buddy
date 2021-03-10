@@ -10,11 +10,11 @@ import java.util.List;
  */
 public class BookNotesViewModel {
 
-  private final Context context;
   private static NoteModel noteModel;
-  private List<NoteItem> noteList;
+  private final Context context;
   private final BookDao bookDao;
   private final NoteDao noteDao;
+  private List<NoteItem> noteList;
 
   /**
    * BookNotesViewModel contains methods for managing the
@@ -87,7 +87,6 @@ public class BookNotesViewModel {
   public NoteItem getSelectedNoteItem(int position) {
     return noteList.get(position);
   }
-
 
 
 }
