@@ -72,7 +72,7 @@ public class NotesFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if(item.getItemId() == R.id.menu_delete_note_list){
+    if (item.getItemId() == R.id.menu_delete_note_list) {
       adapter.handleDeleteNote();
     } else if (item.getItemId() == R.id.menu_help_note_list) {
       handleManualNotesList();
