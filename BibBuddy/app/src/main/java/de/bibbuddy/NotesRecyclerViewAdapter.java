@@ -43,6 +43,7 @@ public class NotesRecyclerViewAdapter
 
   private final MainActivity activity;
   private final List<NoteItem> data;
+  private final NoteModel noteModel;
 
   private final ArrayList<MediaPlayer> mediaPlayers;
   private final ArrayList<ImageButton> playButtons;
@@ -61,9 +62,10 @@ public class NotesRecyclerViewAdapter
    * @param data     List of notes as data content for the adapter
    * @param activity Base activity
    */
-  public NotesRecyclerViewAdapter(List<NoteItem> data, MainActivity activity) {
+  public NotesRecyclerViewAdapter(List<NoteItem> data, MainActivity activity, NoteModel noteModel) {
     this.data = data;
     this.activity = activity;
+    this.noteModel = noteModel;
 
     this.mediaPlayers = new ArrayList<>();
     this.playButtons = new ArrayList<>();
@@ -125,6 +127,23 @@ public class NotesRecyclerViewAdapter
     }
   }
 
+  private void setUpBasicCardView(NotesViewHolder holder, int position) {
+    NoteItem noteItem = data.get(position);
+    holder.getModDateView().setText(noteItem.getModDate());
+    holder.getNameView().setText(noteItem.getName());
+    holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity,
+        noteItem.getImage()));
+  }
+
+  private Bundle createNoteBundle(NoteItem item) {
+    Bundle bundle = new Bundle();
+    System.out.println(item.getId());
+    bundle.putLong(LibraryKeys.BOOK_ID, item.getBookId());
+    bundle.putLong(LibraryKeys.NOTE_ID, item.getId());
+
+    return bundle;
+  }
+
   private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
     ImageButton playButton = holder.getPlayNoteButton();
     playButtons.add(playButton);
@@ -151,7 +170,7 @@ public class NotesRecyclerViewAdapter
         new SeekBarListener(activity, mediaPlayer, progressBar, playedTime);
     seekBarListeners.add(seekBarListener);
 
-    setTotalTime(noteItem, totalTime);
+    setTotalTimes(noteItem, totalTime);
 
     progressBar.setOnSeekBarChangeListener(seekBarListener);
 
@@ -159,7 +178,7 @@ public class NotesRecyclerViewAdapter
         seekBarListener);
   }
 
-  private void setTotalTime(NoteItem noteItem, TextView totalTime) {
+  private void setTotalTimes(NoteItem noteItem, TextView totalTime) {
     File file = createAudioFile(noteItem);
     Uri uri = Uri.parse(file.getPath());
     MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -243,7 +262,7 @@ public class NotesRecyclerViewAdapter
   }
 
   private File createAudioFile(NoteItem noteItem) {
-    byte[] bytes = NotesFragment.getNoteMedia(noteItem.getId());
+    byte[] bytes = noteModel.getNoteMedia(noteItem.getId());
     File tempAudio = null;
     try {
       tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file), String.valueOf(
@@ -260,49 +279,6 @@ public class NotesRecyclerViewAdapter
     return tempAudio;
   }
 
-  private Bundle createNoteBundle(NoteItem item) {
-    Bundle bundle = new Bundle();
-    bundle.putLong(LibraryKeys.BOOK_ID, item.getBookId());
-    bundle.putLong(LibraryKeys.NOTE_ID, item.getId());
-
-    return bundle;
-  }
-
-  private void removeBackendDataAndViewItems(ArrayList<Integer> idCounter) {
-    int removed = 0;
-    for (int i = 0; i < idCounter.size(); i++) {
-      NotesFragment.deleteNote(data.get(i).getId());
-      if (removed == 0) {
-        removeItem(idCounter.get(i));
-      } else {
-        removeItem(idCounter.get(i) - removed);
-      }
-      removed++;
-    }
-  }
-
-  private void setUpBasicCardView(NotesViewHolder holder, int position) {
-    NoteItem noteItem = data.get(position);
-    holder.getModDateView().setText(noteItem.getModDate());
-    holder.getNameView().setText(noteItem.getName());
-    holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity,
-        noteItem.getImage()));
-  }
-
-  @Override
-  public int getItemCount() {
-    return data.size();
-  }
-
-  public List<NoteItem> getData() {
-    return data;
-  }
-
-  public void removeItem(int position) {
-    data.remove(position);
-    notifyItemRemoved(position);
-  }
-
   /**
    * This method shows on using delete-options an alertDialog, that deleting notes is not revertable
    * and deletes them on using the positive button or cancels the action on using the negative one.
@@ -315,15 +291,13 @@ public class NotesRecyclerViewAdapter
     alertDeleteNote.setMessage(R.string.delete_note_message);
 
     alertDeleteNote.setNegativeButton(R.string.back, (dialog, which) -> {
-      RecyclerView recyclerView = activity.findViewById(R.id.notesRecyclerView);
       for (int i = 0; i < data.size(); i++) {
-        recyclerView.getChildAt(i).setSelected(false);
+        parent.getChildAt(i).setSelected(false);
       }
       notifyDataSetChanged();
     });
 
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
-      Toast.makeText(activity, R.string.deleted_notes, Toast.LENGTH_SHORT).show();
       int itemNumber = parent.getChildCount();
       ArrayList<Integer> idCounter = new ArrayList<>();
       for (int i = 0; i < itemNumber; i++) {
@@ -332,8 +306,40 @@ public class NotesRecyclerViewAdapter
         }
       }
       removeBackendDataAndViewItems(idCounter);
+      Toast.makeText(activity, R.string.deleted_notes, Toast.LENGTH_LONG).show();
     });
+
     alertDeleteNote.show();
+  }
+
+  private void removeBackendDataAndViewItems(ArrayList<Integer> idCounter) {
+    for (int i = 0; i < idCounter.size(); i++) {
+      noteModel.deleteNote(data.get(i).getId());
+    }
+    int removed = 0;
+    for (int i = 0; i < idCounter.size(); i++) {
+      if (removed == 0) {
+        removeItem(idCounter.get(i));
+      } else {
+        removeItem(idCounter.get(i) - removed);
+      }
+      removed++;
+    }
+    notifyDataSetChanged();
+  }
+
+  public void removeItem(int position) {
+    data.remove(position);
+    notifyItemRemoved(position);
+  }
+
+  @Override
+  public int getItemCount() {
+    return data.size();
+  }
+
+  public List<NoteItem> getData() {
+    return data;
   }
 
   /**
