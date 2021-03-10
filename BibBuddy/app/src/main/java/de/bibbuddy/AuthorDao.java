@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * AuthorDao includes all sql queries related to Author.
  *
- * @author Sarah Kurek, Claudia Schönherr
+ * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
  */
 public class AuthorDao implements InterfaceAuthorDao {
 
@@ -134,7 +134,9 @@ public class AuthorDao implements InterfaceAuthorDao {
         new String[] { DatabaseHelper._ID,
             DatabaseHelper.FIRST_NAME,
             DatabaseHelper.LAST_NAME,
-            DatabaseHelper.TITLE },
+            DatabaseHelper.TITLE, 
+            DatabaseHelper.MOD_DATE,
+            DatabaseHelper.CREATE_DATE},
             selection,
         params.toArray(new String[params.size()]),
         null, null, null, null);
