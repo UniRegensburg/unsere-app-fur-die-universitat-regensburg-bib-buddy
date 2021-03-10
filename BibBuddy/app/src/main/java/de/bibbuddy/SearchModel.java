@@ -15,7 +15,7 @@ public class SearchModel {
   private final BookDao bookDao;
   private final NoteDao noteDao;
 
-  private List<SearchItem> searchResultList;
+  private final List<SearchItem> searchResultList;
 
   /**
    * Constructor for a SearchModel.
@@ -136,6 +136,10 @@ public class SearchModel {
     sortSearchResultList(sortCriteria);
 
     return searchResultList;
+  }
+
+  public Long getShelfIdByBook(Long id) {
+    return bookDao.findShelfIdByBook(id);
   }
 
 }

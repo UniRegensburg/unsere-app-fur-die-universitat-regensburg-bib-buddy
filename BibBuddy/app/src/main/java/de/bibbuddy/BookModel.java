@@ -197,10 +197,10 @@ public class BookModel {
   }
 
   /**
-   * Gets the sorted search result list by sortCriteria.
+   * Gets the sorted bookList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted shelves
+   * @return Returns the sorted bookList
    */
   public List<BookItem> getSortedBookList(SortCriteria sortCriteria) {
     sortBookList(sortCriteria);
@@ -212,6 +212,7 @@ public class BookModel {
    * Gets the sorted bookList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
+   * @param bookList bookList that should be sorted
    * @return Returns the sorted bookList
    */
   public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {

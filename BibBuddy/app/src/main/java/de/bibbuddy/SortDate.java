@@ -7,15 +7,15 @@ import java.util.Comparator;
  *
  * @author Claudia Schönherr
  */
-public class SortDate implements Comparator<LibraryItem> {
+public class SortDate implements Comparator<SortableItem> {
 
   @Override
-  public int compare(LibraryItem libraryItem, LibraryItem libraryItemToCompare) {
-    if (libraryItem.getModDate() == null || libraryItemToCompare.getModDate() == null) {
+  public int compare(SortableItem lhs, SortableItem rhs) {
+    if (lhs.getModDate() == null || rhs.getModDate() == null) {
       return 0;
     }
 
-    return libraryItem.getModDate().compareTo(libraryItemToCompare.getModDate());
+    return lhs.getModDate().compareTo(rhs.getModDate());
   }
 
 }

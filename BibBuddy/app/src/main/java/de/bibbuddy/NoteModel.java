@@ -1,9 +1,7 @@
 package de.bibbuddy;
 
 import android.content.Context;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.jsoup.Jsoup;
 
@@ -53,21 +51,6 @@ public class NoteModel {
     return noteItemList;
   }
 
-  private String getDate(Long date) {
-    Date d = new Date(date);
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
-    String string = simpleDateFormat.format(d);
-    String day = string.substring(8, 10);
-    String month = string.substring(5, 7);
-    String year = string.substring(0, 4);
-    String time = string.substring(11, 16);
-
-    string = day + "." + month + "." + year + " " + time + " Uhr";
-
-    return string;
-  }
-
   /**
    * Method to fetch all notes, that are connected to a specific book, from the database.
    *
@@ -84,7 +67,7 @@ public class NoteModel {
     List<NoteItem> noteItemList = new ArrayList<>();
     for (Note note : noteList) {
       Long noteId = note.getId();
-      String modDate = getDate(note.getModDate());
+      Long modDate = note.getModDate();
       String name = "";
       if (note.getType() == 0) {
         name = note.getName();
@@ -110,4 +93,62 @@ public class NoteModel {
     noteDao.linkNoteWithBook(bookId, noteId);
   }
 
+  /**
+   * Gets the sorted noteList by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @param noteList noteList that should be sorted
+   * @return Returns the sorted noteList
+   */
+  public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
+    switch (sortCriteria) {
+      case NAME_ASCENDING:
+        noteList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        noteList.sort(new SortName().reversed());
+        break;
+
+      case MOD_DATE_OLDEST:
+        noteList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_LATEST:
+        noteList.sort(new SortDate().reversed());
+        break;
+
+      default:
+        break;
+    }
+
+    return noteList;
+  }
+
+  /**
+   * Gets the sorted noteList by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @param bookId id of the book
+   * @return Returns the sorted noteList
+   */
+  public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
+    List<Note> noteListDb = noteDao.getAllNotesForBook(bookId);
+    List<NoteItem> noteList = createItemList(noteListDb);
+
+    return sortNoteList(sortCriteria, noteList);
+  }
+
+  /**
+   * Gets the sorted noteList by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted noteList
+   */
+  public List<NoteItem> getAllSortedNoteList(SortCriteria sortCriteria) {
+    List<Note> allNoteList = noteDao.findAll();
+    List<NoteItem> noteList = createItemList(allNoteList);
+
+    return sortNoteList(sortCriteria, noteList);
+  }
 }

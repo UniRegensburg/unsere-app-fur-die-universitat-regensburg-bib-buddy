@@ -7,15 +7,15 @@ import java.util.Comparator;
  *
  * @author Claudia Schönherr
  */
-public class SortName implements Comparator<LibraryItem> {
+public class SortName implements Comparator<SortableItem> {
 
   @Override
-  public int compare(LibraryItem libraryItem, LibraryItem libraryItemToCompare) {
-    if (libraryItem.getName() == null || libraryItemToCompare.getName() == null) {
+  public int compare(SortableItem lhs, SortableItem rhs) {
+    if (lhs.getName() == null || rhs.getName() == null) {
       return 0;
     }
 
-    return libraryItem.getName().compareToIgnoreCase(libraryItemToCompare.getName());
+    return lhs.getName().compareToIgnoreCase(rhs.getName());
   }
 
 }

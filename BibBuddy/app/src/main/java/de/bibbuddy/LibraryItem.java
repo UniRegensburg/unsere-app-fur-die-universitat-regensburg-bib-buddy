@@ -6,7 +6,7 @@ package de.bibbuddy;
  *
  * @author Claudia Schönherr
  */
-public class LibraryItem {
+public class LibraryItem implements SortableItem {
 
   private final int image;
   private final Long id;
@@ -53,6 +53,7 @@ public class LibraryItem {
     this.modDateStr = DateConverter.convertDateToString(modDate);
   }
 
+  @Override
   public String getName() {
     return name;
   }
@@ -73,6 +74,7 @@ public class LibraryItem {
     return parentId;
   }
 
+  @Override
   public Long getModDate() {
     return modDate;
   }

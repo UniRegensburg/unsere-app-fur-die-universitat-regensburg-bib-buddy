@@ -179,13 +179,13 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
   private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-                                           new SortDialog.SortDialogListener() {
-        @Override
-        public void onSortedSelected(SortCriteria newSortCriteria) {
-          sortCriteria = newSortCriteria;
-          sortResultList();
-        }
-      });
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortResultList();
+          }
+        });
 
     sortDialog.show();
   }
@@ -207,9 +207,9 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     };
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-                                             new DialogInterface.OnMultiChoiceClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
+        new DialogInterface.OnMultiChoiceClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
             filterCriteria[choice] = isChecked;
           }
         });
@@ -292,9 +292,20 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         .commit();
   }
 
+  private Bundle createBookBundle(SearchItem searchItem) {
+    Bundle bundle = new Bundle();
+
+    Long searchItemId = searchItem.getId();
+    bundle.putLong(LibraryKeys.SHELF_ID, searchModel.getShelfIdByBook(searchItemId));
+    bundle.putString(LibraryKeys.BOOK_TITLE, searchItem.getName());
+    bundle.putLong(LibraryKeys.BOOK_ID, searchItemId);
+
+    return bundle;
+  }
+
   private void openBook(SearchItem searchItem) {
     BookNotesView fragment = new BookNotesView();
-    fragment.setArguments(createShelfBundle(searchItem));
+    fragment.setArguments(createBookBundle(searchItem));
 
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment)

@@ -204,6 +204,25 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     alertDeleteBook.show();
   }
 
+  private void handleSortBook() {
+    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortBookList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortBookList() {
+    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria);
+    adapter.setBookList(bookList);
+    adapter.notifyDataSetChanged();
+  }
+
   private void checkEmptyShelf() {
     if (bookDao.getAllBooksForShelf(shelfId).isEmpty()) {
       AlertDialog.Builder alertDialogEmptyShelf = new AlertDialog.Builder(getContext());
@@ -296,25 +315,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
             Toast.LENGTH_SHORT).show();
       }
     }
-  }
-
-  private void handleSortBook() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            sortBookList();
-          }
-        });
-
-    sortDialog.show();
-  }
-
-  private void sortBookList() {
-    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria);
-    adapter.setBookList(bookList);
-    adapter.notifyDataSetChanged();
   }
 
   private void handleManualBook() {

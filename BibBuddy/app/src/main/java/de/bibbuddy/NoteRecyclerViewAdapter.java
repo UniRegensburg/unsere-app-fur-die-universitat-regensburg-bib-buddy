@@ -28,7 +28,7 @@ public class NoteRecyclerViewAdapter
     extends RecyclerView.Adapter<NoteRecyclerViewAdapter.MyViewHolder> {
 
   private final MainActivity activity;
-  private final List<NoteItem> data;
+  private List<NoteItem> data;
   private ImageButton panelDelete;
   private RelativeLayout hiddenDeletePanel;
   private ViewGroup parent;
@@ -132,7 +132,7 @@ public class NoteRecyclerViewAdapter
 
   private void setupCardView(MyViewHolder holder, int position) {
     NoteItem noteItem = data.get(position);
-    holder.getModDateView().setText(noteItem.getModDate());
+    holder.getModDateView().setText(noteItem.getModDateStr());
     holder.getNameView().setText(noteItem.getName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
         noteItem.getImage()));
@@ -185,6 +185,10 @@ public class NoteRecyclerViewAdapter
 
   private boolean isPanelShown() {
     return hiddenDeletePanel.getVisibility() == View.VISIBLE;
+  }
+
+  public void setNoteList(List<NoteItem> noteList) {
+    data = noteList;
   }
 
   /**
