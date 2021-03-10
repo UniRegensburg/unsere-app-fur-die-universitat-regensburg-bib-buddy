@@ -2,6 +2,11 @@ package de.bibbuddy;
 
 import java.util.Comparator;
 
+/**
+ * The SortDate class is responsible for sorting the list by name.
+ *
+ * @author Claudia Schönherr
+ */
 public class SortDate implements Comparator<LibraryItem> {
 
   @Override

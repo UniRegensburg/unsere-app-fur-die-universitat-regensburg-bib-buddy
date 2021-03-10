@@ -86,7 +86,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.menu_search_sort:
-        handleSearchSort();
+        handleSortSearch();
         break;
 
       case R.id.menu_search_filter:
@@ -177,7 +177,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     updateEmptyView(searchResultList);
   }
 
-  private void handleSearchSort() {
+  private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
                                            new SortDialog.SortDialogListener() {
         @Override

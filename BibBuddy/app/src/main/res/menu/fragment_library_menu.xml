@@ -10,6 +10,10 @@
         android:title="@string/rename" />
 
     <item
+        android:id="@+id/menu_sort_shelf"
+        android:title="@string/sort" />
+
+    <item
         android:id="@+id/menu_export_library"
         android:title="@string/export_library" />
 

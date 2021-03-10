@@ -74,8 +74,9 @@ public class BookModel {
     bookDao.create(book, authorList, shelfId);
     String authors = convertAuthorListToString(authorList);
 
-    bookList
-        .add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
+    book = bookDao.findById(bookDao.findLatestId());
+
+    bookList.add(new BookItem(book, shelfId, authors, 0));
   }
 
   /**
@@ -91,8 +92,8 @@ public class BookModel {
     for (Book book : bookDbList) {
       List<Author> authorList = bookDao.getAllAuthorsForBook(book.getId());
       int noteCount = bookDao.countAllNotesForBook(book.getId());
-      bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(),
-          convertAuthorListToString(authorList), noteCount));
+
+      bookList.add(new BookItem(book, shelfId, convertAuthorListToString(authorList), noteCount));
     }
 
     return bookList;
@@ -170,6 +171,54 @@ public class BookModel {
 
   public Author getAuthorById(Long id) {
     return authorDao.findById(id);
+  }
+
+  private void sortBookList(SortCriteria sortCriteria) {
+    switch (sortCriteria) {
+      case NAME_ASCENDING:
+        bookList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        bookList.sort(new SortName().reversed());
+        break;
+
+      case MOD_DATE_OLDEST:
+        bookList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_LATEST:
+        bookList.sort(new SortDate().reversed());
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Gets the sorted search result list by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted shelves
+   */
+  public List<BookItem> getSortedBookList(SortCriteria sortCriteria) {
+    sortBookList(sortCriteria);
+
+    return bookList;
+  }
+
+  /**
+   * Gets the sorted bookList by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted bookList
+   */
+  public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {
+    this.bookList = bookList;
+    sortBookList(sortCriteria);
+
+    return bookList;
   }
 
 }

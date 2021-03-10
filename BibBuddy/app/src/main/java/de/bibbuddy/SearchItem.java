@@ -7,17 +7,8 @@ package de.bibbuddy;
  * @author Claudia Schönherr
  */
 public class SearchItem extends LibraryItem {
-  private Long modDate;
-  private String modDateStr;
-  private SearchItemType itemType; // shelf, book, textNote
 
-  public SearchItem(String name, int image, Long id) {
-    super(name, image, id);
-  }
-
-  public SearchItem(String name, int image, Long id, Long parentId) {
-    super(name, image, id, parentId);
-  }
+  private final SearchItemType itemType;
 
   /**
    * Constructor of a SearchItem.
@@ -29,27 +20,13 @@ public class SearchItem extends LibraryItem {
    * @param itemType type of the SearchItem
    */
   public SearchItem(String name, int image, Long id, Long modDate, SearchItemType itemType) {
-    super(name, image, id);
+    super(name, image, id, null, modDate);
 
-    this.modDate = modDate;
-    this.modDateStr = DateConverter.convertDateToString(modDate);
     this.itemType = itemType;
-
-    // List<SearchItem> list = new ArrayList<>();
-    // sortList(SortCriteria.MOD_DATE_LATEST, list);
-    // SearchItem.super.sortList(SortCriteria.MOD_DATE_LATEST, new List<SearchItem>);
-  }
-
-  public Long getModDate() {
-    return modDate;
   }
 
   public SearchItemType getItemType() {
     return itemType;
-  }
-
-  public String getModDateStr() {
-    return modDateStr;
   }
 
 }

@@ -4,6 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+/**
+ * The SortDialog class is the UI for sorting items.
+ *
+ * @author Claudia Schönherr
+ */
 public class SortDialog extends AlertDialog.Builder {
 
   private final SortDialogListener listener;

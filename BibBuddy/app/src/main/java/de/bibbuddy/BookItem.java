@@ -7,27 +7,23 @@ package de.bibbuddy;
  * @author Claudia Schönherr
  */
 public class BookItem extends LibraryItem {
-  private int year;
-  private String authors;
-  private int noteCount;
-
-  public BookItem(String title, Long id) {
-    super(title, R.drawable.ic_book, id);
-  }
+  private final int year;
+  private final String authors;
+  private final int noteCount;
 
   /**
    * Constructor for a BookItem.
    *
-   * @param title     title of the book
-   * @param id        id of the book
+   * @param book      book from database
    * @param shelfId   shelfId of the book
-   * @param year      published year of the book
    * @param authors   authors of the book
    * @param noteCount total number of notes in the book
    */
-  public BookItem(String title, Long id, Long shelfId, int year, String authors, int noteCount) {
-    super(title, R.drawable.ic_book, id, shelfId);
-    this.year = year;
+  public BookItem(Book book, Long shelfId, String authors, int noteCount) {
+    super(book.getTitle(), R.drawable.ic_book, book.getId(), shelfId,
+          book.getModDate());
+
+    this.year = book.getPubYear();
     this.authors = authors;
     this.noteCount = noteCount;
   }
