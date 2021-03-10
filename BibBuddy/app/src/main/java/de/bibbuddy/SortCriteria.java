@@ -5,7 +5,7 @@ package de.bibbuddy;
  *
  * @author Claudia Schönherr
  */
-public enum SearchSortCriteria {
+public enum SortCriteria {
   NAME_ASCENDING,
   NAME_DESCENDING,
   MOD_DATE_OLDEST,
@@ -17,7 +17,7 @@ public enum SearchSortCriteria {
    * @param sortCriteria the selected sortingCriteria
    * @return Returns the int of the enum.
    */
-  public static int getCriteriaNum(SearchSortCriteria sortCriteria) {
+  public static int getCriteriaNum(SortCriteria sortCriteria) {
     if (sortCriteria == NAME_ASCENDING) {
       return 0;
     } else if (sortCriteria == NAME_DESCENDING) {

@@ -34,6 +34,10 @@ public class SearchItem extends LibraryItem {
     this.modDate = modDate;
     this.modDateStr = DateConverter.convertDateToString(modDate);
     this.itemType = itemType;
+
+    // List<SearchItem> list = new ArrayList<>();
+    // sortList(SortCriteria.MOD_DATE_LATEST, list);
+    // SearchItem.super.sortList(SortCriteria.MOD_DATE_LATEST, new List<SearchItem>);
   }
 
   public Long getModDate() {

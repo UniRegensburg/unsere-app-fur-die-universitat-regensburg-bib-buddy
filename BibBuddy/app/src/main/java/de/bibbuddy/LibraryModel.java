@@ -179,4 +179,39 @@ public class LibraryModel {
     }
   }
 
+  private void sortLibraryList(SortCriteria sortCriteria) {
+    switch (sortCriteria) {
+      case NAME_ASCENDING:
+        libraryList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        libraryList.sort(new SortName().reversed());
+        break;
+
+      case MOD_DATE_OLDEST:
+        libraryList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_LATEST:
+        libraryList.sort(new SortDate().reversed());
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Gets the sorted search result list by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted shelves
+   */
+  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria) {
+    sortLibraryList(sortCriteria);
+
+    return libraryList;
+  }
+
 }
