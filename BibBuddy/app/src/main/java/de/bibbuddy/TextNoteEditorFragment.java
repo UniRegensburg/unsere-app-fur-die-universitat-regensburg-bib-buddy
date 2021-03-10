@@ -118,7 +118,6 @@ public class TextNoteEditorFragment extends Fragment {
       e.printStackTrace();
     }
     if (rawText.length() != 0) {
-      assert getArguments() != null;
       if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
