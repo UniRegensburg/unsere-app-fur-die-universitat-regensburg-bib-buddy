@@ -100,7 +100,7 @@ public class NotesFragment extends Fragment {
   }
 
   private void setupRecyclerView() {
-    adapter = new NotesRecyclerViewAdapter(notes, (MainActivity) requireActivity());
+    adapter = new NotesRecyclerViewAdapter(notes, (MainActivity) requireActivity(), noteModel);
     recyclerView.setAdapter(adapter);
   }
 
