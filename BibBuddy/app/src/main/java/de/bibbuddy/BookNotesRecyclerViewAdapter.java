@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -36,14 +37,16 @@ import java.util.Locale;
 public class BookNotesRecyclerViewAdapter
     extends RecyclerView.Adapter<BookNotesRecyclerViewAdapter.NotesViewHolder> {
 
-  private List<NoteItem> noteList;
-  private BookNotesViewListener listener;
-  private Context context;
+  private final List<NoteItem> noteList;
+  private final BookNotesViewListener listener;
+  private final Context context;
 
-  private ArrayList<MediaPlayer> mediaPlayers;
-  private ArrayList<ImageButton> playButtons;
-  private ArrayList<ImageButton> stopButtons;
-  private ArrayList<SeekBarListener> seekBarListeners;
+  private final ArrayList<MediaPlayer> mediaPlayers;
+  private final ArrayList<ImageButton> playButtons;
+  private final ArrayList<ImageButton> stopButtons;
+  private final ArrayList<ProgressBar> progressBars;
+  private final ArrayList<SeekBarListener> seekBarListeners;
+
   private int mediaPlayerPosition;
   private boolean paused;
 
@@ -59,10 +62,13 @@ public class BookNotesRecyclerViewAdapter
     this.noteList = noteList;
     this.listener = listener;
     this.context = context;
-    this.seekBarListeners = new ArrayList<>();
+
     this.mediaPlayers = new ArrayList<>();
     this.playButtons = new ArrayList<>();
     this.stopButtons = new ArrayList<>();
+    this.progressBars = new ArrayList<>();
+    this.seekBarListeners = new ArrayList<>();
+
     noteList.sort((o1, o2) -> {
       if (o1.getModDate() == null || o2.getModDate() == null) {
         return 0;
@@ -70,15 +76,6 @@ public class BookNotesRecyclerViewAdapter
       return o1.getModDate().compareTo(o2.getModDate());
     });
     Collections.reverse(noteList);
-  }
-
-  /**
-   * Custom ViewHolder constructor to setup its basic view.
-   *
-   * @param itemView View of the RecyclerView-item.
-   */
-  public BookNotesRecyclerViewAdapter(@NonNull View itemView) {
-    super();
   }
 
   @NonNull
@@ -94,115 +91,120 @@ public class BookNotesRecyclerViewAdapter
     // Get element from your dataset at this position and replace the contents of the view
     // with that element
     NoteItem noteItem = noteList.get(position);
+
     holder.getModDateView().setText(noteItem.getModDate());
     holder.getNameView().setText(noteItem.getName());
     holder.getTypeView().setImageResource(noteItem.getImage());
+    holder.itemView.setSelected(false);
 
     holder.itemView.setOnClickListener(v -> listener.onItemClicked(position));
 
     holder.itemView.setOnLongClickListener(v -> {
-      if (position == RecyclerView.NO_POSITION) {
-
-        return false;
+      if (position != RecyclerView.NO_POSITION) {
+        return true;
       }
       listener.onLongItemClicked(position, noteItem, v);
 
-      return true;
+      return false;
     });
 
-    setupAudioElements(holder, noteItem);
+    if (noteItem.getImage() == R.drawable.microphone) {
+      setupAudioElements(holder, noteItem);
+    }
   }
 
   private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
-    if (noteItem.getImage() == R.drawable.microphone) {
+    ImageButton playButton = holder.getPlayNoteButton();
+    playButtons.add(playButton);
+    playButton.setVisibility(View.VISIBLE);
 
-      ImageButton playButton = holder.getPlayNoteButton();
-      playButtons.add(playButton);
-      playButton.setVisibility(View.VISIBLE);
+    ImageButton stopButton = holder.getStopNoteButton();
+    stopButtons.add(stopButton);
+    stopButton.setVisibility(View.VISIBLE);
 
-      ImageButton stopButton = holder.getStopNoteButton();
-      stopButtons.add(stopButton);
-      stopButton.setVisibility(View.VISIBLE);
+    MediaPlayer mediaPlayer = new MediaPlayer();
+    mediaPlayers.add(mediaPlayer);
 
-      MediaPlayer mediaPlayer = new MediaPlayer();
-      mediaPlayers.add(mediaPlayer);
+    RelativeLayout voiceNoteLayout = holder.getVoiceNoteLayout();
+    voiceNoteLayout.setVisibility(View.VISIBLE);
 
-      RelativeLayout voiceNoteLayout = holder.getVoiceNoteLayout();
-      voiceNoteLayout.setVisibility(View.VISIBLE);
+    SeekBarCompat progressBar = holder.getProgressBar();
+    progressBars.add(progressBar);
+    progressBar.setEnabled(false);
 
-      SeekBarCompat progressBar = holder.getProgressBar();
-      TextView playedTime = holder.getPlayedTime();
-      TextView totalTime = holder.getTotalTime();
+    TextView playedTime = holder.getPlayedTime();
+    TextView totalTime = holder.getTotalTime();
 
-      SeekBarListener seekBarListener =
-          new SeekBarListener(context, mediaPlayer, progressBar, playedTime);
-      seekBarListeners.add(seekBarListener);
+    SeekBarListener seekBarListener =
+        new SeekBarListener(context, mediaPlayer, progressBar, playedTime);
+    seekBarListeners.add(seekBarListener);
 
-      setTotalTime(noteItem, totalTime);
+    setTotalTime(noteItem, totalTime);
 
-      progressBar.setOnSeekBarChangeListener(seekBarListener);
+    progressBar.setOnSeekBarChangeListener(seekBarListener);
 
-      setupMediaPlayerListeners(mediaPlayer, playButton, stopButton, noteItem, seekBarListener);
-    }
+    setupMediaPlayerListeners(mediaPlayer, progressBar, playButton, stopButton, noteItem,
+        seekBarListener);
   }
 
   private void setTotalTime(NoteItem noteItem, TextView totalTime) {
     File file = createAudioFile(noteItem);
     Uri uri = Uri.parse(file.getPath());
     MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-    mmr.setDataSource(context.getApplicationContext(), uri);
+    mmr.setDataSource(context, uri);
     String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-    int millSeconds = Integer.parseInt(durationStr);
+    int millis = Integer.parseInt(durationStr);
     String time = new SimpleDateFormat("mm:ss", Locale.getDefault())
-        .format(new Date(millSeconds));
+        .format(new Date(millis));
     totalTime.setText(time);
   }
 
-  private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, ImageButton playButton,
+  private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, SeekBarCompat progressBar,
+                                         ImageButton playButton,
                                          ImageButton stopButton,
                                          NoteItem noteItem, SeekBarListener seekBarListener) {
     mediaPlayer.setOnCompletionListener(mp -> {
       mp.reset();
-      paused = false;
-      setSelection(playButton, false, R.drawable.icon_play);
-      stopButton.setClickable(false);
       seekBarListener.reset();
+      stopButton.setClickable(false);
+      setSelection(playButton, false, R.drawable.icon_play);
+      paused = false;
     });
 
     playButton.setOnClickListener(v -> {
       ImageButton button = (ImageButton) v;
       if (v.isSelected()) {
-        setSelection(button, false, R.drawable.icon_play);
-        mediaPlayer.pause();
         if (paused) {
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
           mediaPlayer.seekTo(mediaPlayerPosition);
           mediaPlayer.start();
-          setSelection(playButton, true, R.drawable.icon_pause);
+          button.setImageResource(R.drawable.icon_pause);
+        } else {
+          mediaPlayer.pause();
+          button.setImageResource(R.drawable.icon_play);
         }
         paused = !paused;
       } else {
         resetPlayers();
+        startAudio(mediaPlayer, button, noteItem, seekBarListener);
         stopButton.setClickable(true);
-        playAudio(mediaPlayer, button, noteItem, seekBarListener);
       }
+      progressBar.setEnabled(true);
     });
 
     stopButton.setOnClickListener(v -> {
-      seekBarListener.reset();
-      mediaPlayer.stop();
-      paused = false;
       resetPlayers();
+      paused = false;
     });
-
   }
 
   private void resetPlayers() {
     for (int i = 0; i < mediaPlayers.size(); i++) {
       mediaPlayers.get(i).reset();
-      setSelection(playButtons.get(i), false, R.drawable.icon_play);
-      stopButtons.get(i).setClickable(false);
+      progressBars.get(i).setEnabled(false);
       seekBarListeners.get(i).reset();
+      stopButtons.get(i).setClickable(false);
+      setSelection(playButtons.get(i), false, R.drawable.icon_play);
     }
     paused = false;
   }
@@ -212,17 +214,16 @@ public class BookNotesRecyclerViewAdapter
     button.setImageResource(drawable);
   }
 
-  private void playAudio(MediaPlayer mediaPlayer, ImageButton button,
-                         NoteItem noteItem, SeekBarListener seekBarListener) {
+  private void startAudio(MediaPlayer mediaPlayer, ImageButton button,
+                          NoteItem noteItem, SeekBarListener seekBarListener) {
     File tempAudio = createAudioFile(noteItem);
     try {
-      mediaPlayer.reset();
       mediaPlayer.setDataSource(tempAudio.getPath());
       mediaPlayer.prepareAsync();
       mediaPlayer.setOnPreparedListener(mp -> {
         setSelection(button, true, R.drawable.icon_pause);
         mp.start();
-        seekBarListener.barUpdate();
+        seekBarListener.updateProgress();
       });
     } catch (IOException ex) {
       ex.printStackTrace();
@@ -243,6 +244,7 @@ public class BookNotesRecyclerViewAdapter
     } catch (IOException e) {
       e.printStackTrace();
     }
+
     return tempAudio;
   }
 
