@@ -119,11 +119,14 @@ public class NoteModel {
         if (name.length() > 40) {
           name = name.substring(0, 35) + R.string.points;
         }
-        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId));
+        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId,
+            noteDao.findBookIdByNoteId(noteId)));
       } else if (note.getType() == 1) {
-        noteItemList.add(new NoteAudioItem(modDate, name, noteId));
+        noteItemList.add(new NoteAudioItem(modDate, name, noteId,
+            noteDao.findBookIdByNoteId(noteId)));
       } else {
-        noteItemList.add(new NoteImageItem(modDate, name, noteId));
+        noteItemList.add(new NoteImageItem(modDate, name, noteId,
+            noteDao.findBookIdByNoteId(noteId)));
       }
     }
     return noteItemList;
