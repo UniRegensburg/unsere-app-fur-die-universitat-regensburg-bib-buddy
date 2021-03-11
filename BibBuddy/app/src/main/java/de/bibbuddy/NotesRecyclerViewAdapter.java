@@ -42,15 +42,13 @@ public class NotesRecyclerViewAdapter
     extends RecyclerView.Adapter<NotesRecyclerViewAdapter.NotesViewHolder> {
 
   private final MainActivity activity;
-  private final List<NoteItem> data;
   private final NoteModel noteModel;
-
   private final ArrayList<MediaPlayer> mediaPlayers;
   private final ArrayList<ImageButton> playButtons;
   private final ArrayList<ImageButton> stopButtons;
   private final ArrayList<ProgressBar> progressBars;
   private final ArrayList<SeekBarListener> seekBarListeners;
-
+  private final List<NoteItem> data;
   private ViewGroup parent;
 
   private int mediaPlayerPosition;
