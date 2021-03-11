@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The UriUtils is a Helper class for handling of imported files.
@@ -39,7 +38,7 @@ public class UriUtils {
    * @param uri        Uniform Resource Identifier (URI)
    * @return           the full path of URI as String
    */
-  @Nullable
+
   @SuppressLint("API29")
   public static String getFullUriPath(final Context context, final Uri uri) {
 
@@ -86,7 +85,6 @@ public class UriUtils {
     return pickedFilename;
   }
 
-  @Nullable
   private static String handleUriPathDocuments(Context context, Uri uri) {
 
     if (isExternalStorageDocument(uri)) {
@@ -134,7 +132,6 @@ public class UriUtils {
         context, uri);
   }
 
-  @Nullable
   private static String getPathFromExternalStorage(Uri uri) {
 
     final String[] pathUriData = DocumentsContract
@@ -171,7 +168,6 @@ public class UriUtils {
     return null;
   }
 
-  @Nullable
   private static String getPathFromDownloadDocument(Context context, Uri uri) {
 
     try (Cursor cursor = context.getContentResolver()
@@ -236,7 +232,6 @@ public class UriUtils {
     return file.exists();
   }
 
-  @Nullable
   private static String handleUriPrefixes(Context context, Uri uri, String id) {
     String[] contentUriPrefixes = new String[]{
         UriUtilsKeys.PUBLIC_DOWNLOADS,
@@ -267,7 +262,6 @@ public class UriUtils {
 
   }
 
-  @Nullable
   private static String getDataColumn(@NonNull Context context, Uri uri, String selection,
                                       String[] selectionArgs) {
     Cursor cursor = null;
@@ -293,7 +287,6 @@ public class UriUtils {
     return null;
   }
 
-  @Nullable
   private static String getExternalStoragePath(@NonNull Cursor cursor) {
     String fileName = cursor.getString(0);
     String path = Environment.getExternalStorageDirectory().toString()
