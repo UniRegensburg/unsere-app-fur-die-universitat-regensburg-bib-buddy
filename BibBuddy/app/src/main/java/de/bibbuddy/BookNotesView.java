@@ -40,8 +40,6 @@ public class BookNotesView extends Fragment
   private BookNotesViewModel bookNotesViewModel;
   private BookNotesRecyclerViewAdapter adapter;
   private Long bookId;
-  private Long shelfId;
-  private String shelfName;
   private List<NoteItem> noteList;
   private List<NoteItem> selectedNoteItems;
 
@@ -75,19 +73,13 @@ public class BookNotesView extends Fragment
     Bundle bundle = this.getArguments();
     bookId = bundle.getLong(LibraryKeys.BOOK_ID);
 
-    shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-    shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
-
-    view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
+    view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
 
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
     setupRecyclerView(bookId);
-
-    TextView bookTitleView = view.findViewById(R.id.text_view_book);
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-    bookTitleView.setText(bookTitle);
 
 
     setHasOptionsMenu(true);
@@ -193,7 +185,7 @@ public class BookNotesView extends Fragment
   }
 
   private void unselectNoteItems() {
-    RecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_view_recycler_view);
+    RecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
     }
@@ -285,10 +277,10 @@ public class BookNotesView extends Fragment
   /**
    * Callback method, that checks the result from requesting permissions.
    *
-   * @param requestCode unique integer value for the requested permission
-   *                    This value is given by the programmer.
-   * @param permissions array of requested name(s)
-   *                    of the permission(s)
+   * @param requestCode  unique integer value for the requested permission
+   *                     This value is given by the programmer.
+   * @param permissions  array of requested name(s)
+   *                     of the permission(s)
    * @param grantResults grant results for the corresponding permissions
    *                     which is either PackageManager.PERMISSION_GRANTED
    *                     or PackageManager.PERMISSION_DENIED.
@@ -381,15 +373,6 @@ public class BookNotesView extends Fragment
     updateEmptyView(noteList);
   }
 
-  private Bundle createBookBundle() {
-    Bundle bundle = new Bundle();
-
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-
-    return bundle;
-  }
-
   private Bundle createNoteBundle(NoteItem item) {
     Bundle bundle = new Bundle();
     Long currentNoteId = item.getId();
@@ -404,7 +387,7 @@ public class BookNotesView extends Fragment
     noteList = bookNotesViewModel.getNoteList(bookId);
 
     RecyclerView bookNotesRecyclerViewAdapter =
-        view.findViewById(R.id.book_notes_view_recycler_view);
+        view.findViewById(R.id.book_notes_recycler_view);
     adapter = new BookNotesRecyclerViewAdapter(noteList, this, context);
     bookNotesRecyclerViewAdapter.setAdapter(adapter);
 

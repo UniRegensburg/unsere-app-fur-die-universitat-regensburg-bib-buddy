@@ -9,7 +9,18 @@ public class Author {
   private String title;
   private Long createDate;
   private Long modDate;
+  private Author cache;
 
+  private static Long copyLong(Long number) {
+    if (number == null) {
+      return null;
+    }
+
+    return Long.valueOf(number);
+  }
+
+  public Author() {
+  }
 
   /**
    * The Author class maps the data of the database from the table Author.
@@ -23,17 +34,14 @@ public class Author {
    * @param createDate date on which author was added to the database
    * @param modDate    date on which author was last modified in the database
    */
-  public Author(Long id, String firstName, String lastName, String title, Long createDate,
-                Long modDate) {
+  public Author(Long id, String firstName, String lastName, String title,
+                Long createDate, Long modDate) {
+    this(firstName, lastName);
+
     this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
     this.title = title;
     this.createDate = createDate;
     this.modDate = modDate;
-  }
-
-  public Author() {
   }
 
   public Author(String firstName, String lastName) {
@@ -95,20 +103,25 @@ public class Author {
     this.title = title;
   }
 
-  public Long getCreateDate() {
-    return createDate;
-  }
-
-  public void setCreateDate(Long createDate) {
-    this.createDate = createDate;
-  }
-
   public Long getModDate() {
     return modDate;
   }
 
   public void setModDate(Long modDate) {
     this.modDate = modDate;
+  }
+
+  public Author clone() {
+
+    return new Author(copyLong(id), firstName, lastName, title, copyLong(createDate), copyLong(modDate));
+  }
+
+  public Author getCache() {
+    return cache;
+  }
+
+  public void setCache() {
+    cache = clone();
   }
 
   @Override
