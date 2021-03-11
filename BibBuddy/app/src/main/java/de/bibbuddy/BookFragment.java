@@ -274,22 +274,26 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     Book book;
     for (int i = 0; i < nonRedundantBibItems.size(); i++) {
-      importBibTex.removeBibTexSeparators(nonRedundantBibItems.get(i));
+
+      importBibTex.parseBibItem(nonRedundantBibItems.get(i));
       book = importBibTex.importBook();
-      addBookImport(book, importBibTex.parseAuthorNames());
+      addImportedBook(book, importBibTex.parseAuthorNames());
       importBibTex.importBibNote(noteDao, book);
+
     }
 
   }
 
+  private void addImportedBook(Book book, List<Author> authorList) {
 
-  private void addBookImport(Book book, List<Author> authorList) {
+    if (bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
+      bookModel.addBook(book, authorList);
 
-    bookModel.addBook(book, authorList);
-    Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+    } else {
+      bookModel.addImportedBook(book, authorList);
+    }
+
     adapter.setBookList(bookModel.getCurrentBookList());
-
-    
     adapter.notifyDataSetChanged();
     updateEmptyView(bookModel.getCurrentBookList());
   }

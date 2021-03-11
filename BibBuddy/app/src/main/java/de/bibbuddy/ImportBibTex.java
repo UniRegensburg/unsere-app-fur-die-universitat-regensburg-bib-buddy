@@ -132,9 +132,8 @@ public class ImportBibTex {
    *
    * @param bibItem      the BibTeX item as String
    */
-  public void removeBibTexSeparators(String bibItem) {
+  public void parseBibItem(String bibItem) {
     List<String> bibItemsList = checkNextBibTag(bibItem);
-
 
     for (String currentBibTag : bibTags) {
       String parsedBibValue = "";
@@ -143,8 +142,8 @@ public class ImportBibTex {
         String currentBibItem = bibItemsList.get(i);
 
         if (currentBibItem.startsWith(currentBibTag)) {
-          parsedBibValue = replaceLast(currentBibItem, BibTexKeys.COMMA_SEPARATOR);
-          parsedBibValue = replaceLast(parsedBibValue, "\n");
+          parsedBibValue = replaceLast(replaceLast(currentBibItem,
+              BibTexKeys.COMMA_SEPARATOR), "\n");
           parsedBibValue = parsedBibValue.replace(currentBibTag, "");
           bibItemsList.set(i, parsedBibValue);
         }
@@ -251,6 +250,7 @@ public class ImportBibTex {
       noteDao.create(note);
       noteDao.linkNoteWithBook(book.getId(), note.getId());
     }
+
   }
 
   /** Sets the parsed BibTeX values for a book.
@@ -258,7 +258,6 @@ public class ImportBibTex {
    * @return a new Book object
    */
   public Book importBook() {
-
 
     return new Book(getParsedIsbn(), bibTagValue.get(BibTexKeys.BOOK_TITLE),
         bibTagValue.get(BibTexKeys.SUBTITLE),  getParsedYear(),
