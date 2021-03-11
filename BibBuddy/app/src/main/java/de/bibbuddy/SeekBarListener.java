@@ -40,7 +40,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   public void onProgressChanged(SeekBar seekBar, int progress,
                                 boolean fromUser) {
     // TODO Auto-generated method stub
-    if(fromUser) {
+    if (fromUser) {
       mediaPlayer.seekTo(progress);
     }
   }
