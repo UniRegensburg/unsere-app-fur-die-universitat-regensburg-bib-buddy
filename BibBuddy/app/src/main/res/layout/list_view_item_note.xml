@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:layout_margin="8dp"
-    card_view:cardBackgroundColor="@color/library_item_selector"
+    card_view:cardBackgroundColor="@color/item_selector"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="5dp">
 
@@ -100,11 +99,7 @@
             android:layout_width="170dp"
             android:layout_height="35dp"
             android:layout_centerInParent="true"
-            android:translationX="30dp"
-            app:progressBackgroundColor="@null"
-            app:progressColor="@color/teal_700"
-            app:thumbAlpha="1.0"
-            app:thumbColor="@color/tiffany" />
+            android:translationX="30dp" />
 
     </RelativeLayout>
 
