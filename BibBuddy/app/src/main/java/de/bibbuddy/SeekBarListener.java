@@ -32,7 +32,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
     this.playedTime = playedTime;
     this.progressBar.setThumbColor(context.getColor(R.color.tiffany));
     this.progressBar.setProgressColor(context.getColor(R.color.teal_700));
-    this.progressBar.setProgressBackgroundColor(context.getColor(R.color.gray_background));
+    this.progressBar.setProgressBackgroundColor(context.getColor(R.color.black));
     this.progressBar.setThumbAlpha(128);
   }
 
