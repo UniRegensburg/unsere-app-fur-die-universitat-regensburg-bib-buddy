@@ -2,7 +2,6 @@ package de.bibbuddy;
 
 import android.content.Context;
 import android.net.Uri;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -76,7 +76,7 @@ public class ImportBibTex {
       String line;
       while ((line = reader.readLine()) != null) {
         removeEqualSignFromBibTag(line);
-        stringBuilder.append(line).append('\n');
+        stringBuilder.append(line.trim()).append('\n');
         stringBuilder.setLength(stringBuilder.length() - 1);
       }
 
@@ -130,28 +130,31 @@ public class ImportBibTex {
    * Cleans the BibTeX content through removing the unnecessary
    * separators for a given BibTeX-element.
    *
-   * @param bibItemsList      List with BibTeX elements as Strings
-   * @param bibTag            current BibTeX tag
+   * @param bibItem      the BibTeX item as String
    */
-  public void removeBibTexSeparators(@NonNull List<String> bibItemsList, String bibTag) {
+  public void removeBibTexSeparators(String bibItem) {
+    List<String> bibItemsList = checkNextBibTag(bibItem);
 
-    String parsedBibValue = "";
 
-    for (int i = 0; i < bibItemsList.size(); i++) {
-      String currentBibItem = bibItemsList.get(i);
+    for (String currentBibTag : bibTags) {
+      String parsedBibValue = "";
 
-      if (currentBibItem.contains(bibTag)) {
-        parsedBibValue = replaceLast(currentBibItem, BibTexKeys.COMMA_SEPARATOR);
-        parsedBibValue = replaceLast(parsedBibValue, "\n");
-        parsedBibValue = parsedBibValue.replace(bibTag, "");
-        bibItemsList.set(i, parsedBibValue);
+      for (int i = 0; i < bibItemsList.size(); i++) {
+        String currentBibItem = bibItemsList.get(i);
+
+        if (currentBibItem.startsWith(currentBibTag)) {
+          parsedBibValue = replaceLast(currentBibItem, BibTexKeys.COMMA_SEPARATOR);
+          parsedBibValue = replaceLast(parsedBibValue, "\n");
+          parsedBibValue = parsedBibValue.replace(currentBibTag, "");
+          bibItemsList.set(i, parsedBibValue);
+        }
+
       }
 
+      bibTagValue.put(currentBibTag, parsedBibValue);
     }
 
-    bibTagValue.put(bibTag, parsedBibValue);
   }
-
 
   /** Checks for the position of the next BibTeX tag.
    * The BibTeX tags (without "@book") do not have fixed order, so this
@@ -173,10 +176,11 @@ public class ImportBibTex {
           nextBibTagIndex.add(bibItem.indexOf(bibTag));
         }
       }
+
     }
 
     nextBibTagIndex.add(bibItem.length());
-    Arrays.sort(nextBibTagIndex.toArray());
+    Collections.sort(nextBibTagIndex);
 
     int currentBibTagPosition = 0;
     for (int i = 0; i < nextBibTagIndex.size(); i++) {
@@ -205,7 +209,7 @@ public class ImportBibTex {
 
     List<Author> authors = new ArrayList<>();
 
-    //for multiple authors
+    //if multiple authors
     if (authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
       String[] names = authorNames.split(BibTexKeys.AND_MULTIPLE_AUTHORS);
 
@@ -217,7 +221,7 @@ public class ImportBibTex {
       }
 
     }
-    //for one author
+    //if one author
     if (!authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)
         && authorNames.contains(",")) {
 
@@ -255,10 +259,11 @@ public class ImportBibTex {
    */
   public Book importBook() {
 
-    return new Book(bibTagValue.get(BibTexKeys.ISBN), bibTagValue.get(BibTexKeys.BOOK_TITLE),
-        "",  getParsedYear(), bibTagValue.get(BibTexKeys.PUBLISHER),
-        bibTagValue.get(BibTexKeys.VOLUME), bibTagValue.get(BibTexKeys.EDITION), "");
 
+    return new Book(getParsedIsbn(), bibTagValue.get(BibTexKeys.BOOK_TITLE),
+        bibTagValue.get(BibTexKeys.SUBTITLE),  getParsedYear(),
+        bibTagValue.get(BibTexKeys.PUBLISHER), bibTagValue.get(BibTexKeys.VOLUME),
+        bibTagValue.get(BibTexKeys.EDITION), "");
   }
 
   private int getParsedYear() {
@@ -269,6 +274,22 @@ public class ImportBibTex {
     }
 
     return 0;
+  }
+
+  private String getParsedIsbn() {
+    String isbn = bibTagValue.get(BibTexKeys.ISBN);
+
+    if (isbn.contains("-")) {
+      isbn = isbn.replaceAll("-", "");
+
+      if (DataValidation.isValidIsbn10or13(isbn)) {
+        return isbn;
+      } else {
+        return null;
+      }
+
+    }
+    return isbn;
   }
 
   @NonNull

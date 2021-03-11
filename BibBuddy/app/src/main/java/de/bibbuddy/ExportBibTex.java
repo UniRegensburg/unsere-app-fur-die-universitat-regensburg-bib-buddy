@@ -143,16 +143,29 @@ public class ExportBibTex {
   public String getBibDataFromBook(Long bookId, BookDao bookDao, NoteDao noteDao) {
     Book book = bookDao.findById(bookId);
 
-    return "@book{" + getBibKey(book)
-        + "isbn={" + book.getIsbn() + "}," + '\n'
-        + getBibAuthorNames(bookId, bookDao)
-        + "title={" + book.getTitle() + "}," + '\n'
-        + "subtitle={" + book.getSubtitle() + "}," + '\n'
-        + "volume={" + book.getVolume() + "}," + '\n'
-        + "publisher={" + book.getPublisher() + "}," + '\n'
-        + "edition={" + book.getEdition() + "}," + '\n'
-        + getBibNotesFromBook(book, noteDao)
-        + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
+    return  BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
+
+            + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + getBibAuthorNames(bookId, bookDao)
+
+            + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + getBibNotesFromBook(book, noteDao)
+
+            + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
+            + '\n' + '\n';
   }
 
   private String getBibKey(Book book) {

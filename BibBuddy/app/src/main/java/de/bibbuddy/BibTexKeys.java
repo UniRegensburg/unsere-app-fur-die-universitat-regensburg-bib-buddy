@@ -11,6 +11,7 @@ public class BibTexKeys {
   public static final String ISBN = "isbn=";
   public static final String AUTHOR = "author=";
   public static final String BOOK_TITLE = "title=";
+  public static final String SUBTITLE = "subtitle=";
   public static final String VOLUME = "volume=";
   public static final String PUBLISHER = "publisher=";
   public static final String EDITION = "edition=";

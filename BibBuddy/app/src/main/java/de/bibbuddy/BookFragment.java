@@ -63,8 +63,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       Manifest.permission.WRITE_EXTERNAL_STORAGE,
       Manifest.permission.READ_EXTERNAL_STORAGE };
 
-  private String [] bibTags = { BibTexKeys.ISBN, BibTexKeys.AUTHOR,
-      BibTexKeys.BOOK_TITLE, BibTexKeys.VOLUME, BibTexKeys.PUBLISHER,
+  private String [] bibTags = { BibTexKeys.ISBN, BibTexKeys.AUTHOR, BibTexKeys.BOOK_TITLE,
+      BibTexKeys.SUBTITLE, BibTexKeys.VOLUME, BibTexKeys.PUBLISHER,
       BibTexKeys.EDITION, BibTexKeys.ANNOTE, BibTexKeys.YEAR };
 
   private HashMap<String, String> bibTagValue;
@@ -249,29 +249,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
             Intent data = result.getData();
 
             if (data != null) {
+
               Uri uri = data.getData();
               if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
-                String bibText = null;
 
-                try {
-                  bibText = importBibTex.readTextFromUri(uri);
-                } catch (IOException e) {
-                  e.printStackTrace();
-                }
+                handleImport(uri);
 
-                List<String> removedBibDuplicatesList
-                    = importBibTex.getNonRedundantBibItems(bibText);
-                Book book = null;
-                for (int i = 0; i < removedBibDuplicatesList.size(); i++) {
-                  for (String bibTag : bibTags) {
-                    importBibTex.removeBibTexSeparators(
-                        importBibTex.checkNextBibTag(removedBibDuplicatesList.get(i)), bibTag);
-                  }
-
-                  book = importBibTex.importBook();
-                  addBook(book, importBibTex.parseAuthorNames());
-                }
-                importBibTex.importBibNote(noteDao, book);
                 Toast.makeText(context, getString(R.string.imported_file_name_is) + '\n'
                     + UriUtils.getUriFileName(getActivity(), uri), Toast.LENGTH_LONG).show();
 
@@ -282,6 +265,46 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           }
         }
       });
+
+  private void handleImport(Uri uri) {
+    String bibText = readBibFile(uri);
+
+    List<String> nonRedundantBibItems
+        = importBibTex.getNonRedundantBibItems(bibText);
+
+    Book book;
+    for (int i = 0; i < nonRedundantBibItems.size(); i++) {
+      importBibTex.removeBibTexSeparators(nonRedundantBibItems.get(i));
+      book = importBibTex.importBook();
+      addBookImport(book, importBibTex.parseAuthorNames());
+      importBibTex.importBibNote(noteDao, book);
+    }
+
+  }
+
+
+  private void addBookImport(Book book, List<Author> authorList) {
+
+    bookModel.addBook(book, authorList);
+    Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+    adapter.setBookList(bookModel.getCurrentBookList());
+
+    
+    adapter.notifyDataSetChanged();
+    updateEmptyView(bookModel.getCurrentBookList());
+  }
+
+
+  private String readBibFile(Uri uri) {
+    try {
+      return importBibTex.readTextFromUri(uri);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
 
   private void filePicker()  {
     filePickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
