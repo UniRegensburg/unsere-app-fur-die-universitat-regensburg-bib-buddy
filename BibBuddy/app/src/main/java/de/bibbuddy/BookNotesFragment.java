@@ -70,7 +70,12 @@ public class BookNotesFragment extends Fragment {
       shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
       bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
     }
-    view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
+    view = inflater.inflate(R.layout.fragment_book_notes, container, false);
+
+    bookNotesViewModel = new BookNotesViewModel(getContext());
+    bookDao = bookNotesViewModel.getBookDao();
+    noteDao = bookNotesViewModel.getNoteDao();
+    noteModel = bookNotesViewModel.getNoteModel();
 
     setupRecyclerView(bookId);
 
@@ -82,10 +87,6 @@ public class BookNotesFragment extends Fragment {
     setupAddButton();
     updateEmptyView(noteList);
     ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
-
-    bookDao = bookNotesViewModel.getBookDao();
-    noteDao = bookNotesViewModel.getNoteDao();
-    noteModel = bookNotesViewModel.getNoteModel();
 
     fileName = (bookDao.findById(bookId).getTitle()
         + bookDao.findById(bookId).getPubYear())
@@ -268,16 +269,14 @@ public class BookNotesFragment extends Fragment {
     });
 
     addButtonView.setOnClickListener(v -> pm.show());
-
   }
 
   private void setupRecyclerView(Long bookId) {
-    bookNotesViewModel = new BookNotesViewModel(requireContext());
     noteList = bookNotesViewModel.getNoteList(bookId);
 
     RecyclerView bookNotesRecyclerView =
         view.findViewById(R.id.book_notes_view_recycler_view);
-    adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) getActivity(), noteModel);
+    adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) requireActivity(), noteModel);
     bookNotesRecyclerView.setAdapter(adapter);
 
     updateEmptyView(noteList);
