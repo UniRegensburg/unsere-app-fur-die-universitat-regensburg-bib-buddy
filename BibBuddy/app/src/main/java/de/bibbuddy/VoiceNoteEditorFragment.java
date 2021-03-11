@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.chibde.visualizer.LineBarVisualizer;
+import com.skyfishjy.library.RippleBackground;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +24,9 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The VoiceNoteEditorFragment is responsible for the note in the voice editor.
@@ -35,6 +39,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   private Long bookId;
 
   private LineBarVisualizer visualizer;
+  private RippleBackground pulse;
   private ImageButton recordButton;
   private ImageButton playButton;
   private ImageButton stopButton;
@@ -42,12 +47,8 @@ public class VoiceNoteEditorFragment extends Fragment {
   private MediaRecorder recorder;
   private MediaPlayer mediaPlayer;
   private File tempAudio;
-  private View.OnClickListener recordClickListener;
   private MediaPlayer.OnCompletionListener completionListener;
-  private View.OnClickListener playClickListener;
-  private View.OnClickListener stopClickListener;
 
-  private boolean isPlaying = false;
   private boolean isRecording = false;
 
   @Override
@@ -62,31 +63,23 @@ public class VoiceNoteEditorFragment extends Fragment {
                                Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_voice_note_editor, container,
         false);
+
+    noteModel = new NoteModel(getContext());
+
+    recordButton = view.findViewById(R.id.record);
     playButton = view.findViewById(R.id.play);
     stopButton = view.findViewById(R.id.stop);
+    pulse = view.findViewById(R.id.pulsator);
     visualizer = view.findViewById(R.id.visualizer);
+
     visualizer
         .setColor(ContextCompat.getColor(requireContext(), R.color.design_default_color_secondary));
     visualizer.setDensity(70);
-    recordButton = view.findViewById(R.id.record);
-    noteModel = new NoteModel(getContext());
+
     if (getArguments() != null) {
       bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
     }
-    recordClickListener = v -> {
-      isRecording = !isRecording;
-      onRecord(isRecording);
-    };
-    completionListener =
-        mediaPlayer -> stopPlaying();
-    playClickListener = v -> {
-      isPlaying = !isPlaying;
-      onPlay(isPlaying);
-    };
-    stopClickListener = v -> {
-      stopRecording();
-      stopPlaying();
-    };
+
     if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO)
         == PackageManager.PERMISSION_GRANTED) {
       setupOnClickListeners();
@@ -107,6 +100,20 @@ public class VoiceNoteEditorFragment extends Fragment {
     return view;
   }
 
+  private void switchSelection(View v, ImageButton button, int res, int resSel) {
+    v.setSelected(!v.isSelected());
+    if (v.isSelected()) {
+      button.setImageResource(resSel);
+    } else {
+      button.setImageResource(res);
+    }
+  }
+
+  private void resetButton(ImageButton button, int res) {
+    button.setSelected(false);
+    button.setImageResource(res);
+  }
+
   private void saveNote() {
     String name = getString(R.string.voice_note_name);
     Long currentTime = new Date().getTime();
@@ -125,6 +132,39 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void setupOnClickListeners() {
+    View.OnClickListener recordClickListener = v -> {
+      resetButton(playButton, R.drawable.play);
+      resetButton(recordButton, R.drawable.record_microphone);
+      switchSelection(v, recordButton, R.drawable.record_microphone,
+          R.drawable.record_microphone_selected);
+      isRecording = !isRecording;
+      onRecord(isRecording);
+    };
+
+    completionListener = mp -> {
+      stopPlaying();
+      stopRecording();
+    };
+
+    View.OnClickListener playClickListener = v -> {
+      resetButton(recordButton, R.drawable.record_microphone);
+      if (tempAudio != null) {
+        switchSelection(v, playButton, R.drawable.play, R.drawable.pause);
+        onPlay();
+      }
+    };
+
+    View.OnClickListener stopClickListener = v -> {
+      resetButton(playButton, R.drawable.play);
+      resetButton(recordButton, R.drawable.record_microphone);
+      stopButton.setImageResource(R.drawable.stop_selected);
+      ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
+      backgroundExecutor
+          .schedule(() -> stopButton.setImageResource(R.drawable.stop), 1, TimeUnit.SECONDS);
+      stopRecording();
+      stopPlaying();
+    };
+
     recordButton.setOnClickListener(recordClickListener);
     playButton.setOnClickListener(playClickListener);
     stopButton.setOnClickListener(stopClickListener);
@@ -138,15 +178,12 @@ public class VoiceNoteEditorFragment extends Fragment {
     }
   }
 
-  private void onPlay(boolean start) {
-    if (start) {
-      if (recorder != null) {
-        recorder.release();
-        reset();
-      }
-      startPlaying();
+  private void onPlay() {
+    stopRecording();
+    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+      mediaPlayer.pause();
     } else {
-      stopPlaying();
+      startPlaying();
     }
   }
 
@@ -170,6 +207,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void startRecording() {
+    pulse.startRippleAnimation();
     recorder = new MediaRecorder();
     try {
       tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file),
@@ -194,6 +232,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void stopRecording() {
+    pulse.stopRippleAnimation();
     if (recorder != null) {
       recorder.release();
       saveNote();
@@ -211,7 +250,6 @@ public class VoiceNoteEditorFragment extends Fragment {
 
   private void reset() {
     isRecording = false;
-    isPlaying = false;
   }
 
   private String getDate(Long date) {
@@ -233,7 +271,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     super.onPause();
     stopRecording();
     stopPlaying();
-    if(mediaPlayer != null) {
+    if (mediaPlayer != null) {
       mediaPlayer.release();
     }
   }
