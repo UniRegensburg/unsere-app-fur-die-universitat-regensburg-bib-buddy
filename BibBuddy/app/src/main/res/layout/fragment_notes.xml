@@ -7,28 +7,6 @@
     android:layout_height="match_parent"
     android:layout_marginTop="65dp">
 
-    <RelativeLayout
-        android:id="@+id/hidden_delete_panel"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/alert_red"
-        android:elevation="12dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/panel_delete"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
-            android:background="@null"
-            android:contentDescription="@string/delete_panel_notes"
-            android:scaleType="fitCenter"
-            android:src="@drawable/delete"
-            app:tint="@color/true_white" />
-
-    </RelativeLayout>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="https://schemas.android.com/tools"
         android:id="@+id/coordinatorLayout"
         android:layout_width="wrap_content"
