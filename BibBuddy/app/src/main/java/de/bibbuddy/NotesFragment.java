@@ -58,6 +58,7 @@ public class NotesFragment extends Fragment {
     recyclerView = view.findViewById(R.id.notesRecyclerView);
     noteModel = new NoteModel(getContext());
     notes = noteModel.getCompleteNoteList();
+
     setHasOptionsMenu(true);
     setupRecyclerView();
     enableSwipeToDelete();
