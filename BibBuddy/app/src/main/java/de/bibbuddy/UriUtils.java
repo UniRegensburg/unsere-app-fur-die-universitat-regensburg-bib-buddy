@@ -259,7 +259,6 @@ public class UriUtils {
   }
 
   private static String getFileChildName(@NonNull Cursor cursor) {
-
     cursor.getColumnIndex(OpenableColumns.SIZE);
     cursor.moveToFirst();
 
