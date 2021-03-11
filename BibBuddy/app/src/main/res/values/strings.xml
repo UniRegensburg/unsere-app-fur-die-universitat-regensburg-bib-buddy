@@ -232,6 +232,20 @@
         Bitte füge mindestens eine Notiz hinzu, um den Export zu ermöglichen.
     </string>
 
+    <!-- Import Menu Items -->
+    <string name="import_in_shelf">In Regal importieren (BibTeX)</string>
+
+    <!-- Import: Bib File Selection -->
+    <string name="import_non_bib_file">Keine BibTeX Datei.</string>
+    <string name="import_non_bib_file_description">
+        Bitte wähle eine BibTeX Datei, um den Import zu ermöglichen.
+    </string>
+
+    <!-- Import of Shelf Data Path Storage -->
+    <string name="imported_file_name_is">
+        Importiere Datei:
+    </string>
+
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
 
