@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * AuthorDao includes all sql queries related to Author.
  *
- * @author Sarah Kurek, Claudia Schönherr
+ * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
  */
 public class AuthorDao implements InterfaceAuthorDao {
 
