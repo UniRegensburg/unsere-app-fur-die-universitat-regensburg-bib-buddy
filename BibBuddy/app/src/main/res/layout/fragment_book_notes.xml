@@ -77,28 +77,6 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/hidden_delete_panel_book_notes"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/alert_red"
-        android:elevation="6dp"
-        android:translationY="205dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/panel_delete_book_notes"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true"
-            android:background="@null"
-            android:contentDescription="@string/delete_book_notes_panel"
-            android:scaleType="fitCenter"
-            android:src="@drawable/delete"
-            app:tint="@color/true_white" />
-
-    </RelativeLayout>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="https://schemas.android.com/tools"
         android:id="@+id/coordinatorLayoutBookNotes"
         android:layout_width="wrap_content"
