@@ -10,12 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import com.chibde.visualizer.LineBarVisualizer;
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import com.skyfishjy.library.RippleBackground;
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,9 @@ public class VoiceNoteEditorFragment extends Fragment {
   private NoteModel noteModel;
   private Long bookId;
 
-  private LineBarVisualizer visualizer;
+  private RelativeLayout voiceNotePlayer;
+  private TextView playedTime;
+  private TextView totalTime;
   private RippleBackground pulse;
   private ImageButton recordButton;
   private ImageButton playButton;
@@ -48,6 +51,9 @@ public class VoiceNoteEditorFragment extends Fragment {
   private MediaPlayer mediaPlayer;
   private File tempAudio;
   private MediaPlayer.OnCompletionListener completionListener;
+  private SeekBarCompat seekBar;
+  private SeekBarListener seekBarListener;
+  private int mediaPlayerPosition;
 
   private boolean isRecording = false;
 
@@ -66,15 +72,16 @@ public class VoiceNoteEditorFragment extends Fragment {
 
     noteModel = new NoteModel(getContext());
 
+    voiceNotePlayer = view.findViewById(R.id.voice_note_editor_player);
+    seekBar = voiceNotePlayer.findViewById(R.id.seekBar_voice_note_editor);
+    playedTime = voiceNotePlayer.findViewById(R.id.played_time_voice_note_editor);
+    totalTime = voiceNotePlayer.findViewById(R.id.total_time_voice_note_editor);
+
     recordButton = view.findViewById(R.id.record);
     playButton = view.findViewById(R.id.play);
     stopButton = view.findViewById(R.id.stop);
     pulse = view.findViewById(R.id.pulsator);
-    visualizer = view.findViewById(R.id.visualizer);
 
-    visualizer
-        .setColor(ContextCompat.getColor(requireContext(), R.color.design_default_color_secondary));
-    visualizer.setDensity(70);
 
     if (getArguments() != null) {
       bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
@@ -97,6 +104,7 @@ public class VoiceNoteEditorFragment extends Fragment {
         }
       }
     }
+
     return view;
   }
 
@@ -142,6 +150,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     };
 
     completionListener = mp -> {
+      resetButton(playButton, R.drawable.play);
       stopPlaying();
       stopRecording();
     };
@@ -171,6 +180,11 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void onRecord(boolean start) {
+    stopPlaying();
+    if (tempAudio != null) {
+      tempAudio = null;
+    }
+    voiceNotePlayer.setVisibility(View.GONE);
     if (start) {
       startRecording();
     } else {
@@ -180,10 +194,18 @@ public class VoiceNoteEditorFragment extends Fragment {
 
   private void onPlay() {
     stopRecording();
-    if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+    if (!playButton.isSelected()) {
       mediaPlayer.pause();
+      mediaPlayerPosition = mediaPlayer.getCurrentPosition();
     } else {
-      startPlaying();
+      if (mediaPlayer != null) {
+        if (mediaPlayer.getCurrentPosition() == 0) {
+          mediaPlayer.seekTo(mediaPlayerPosition);
+        }
+        mediaPlayer.start();
+      } else {
+        startPlaying();
+      }
     }
   }
 
@@ -195,15 +217,22 @@ public class VoiceNoteEditorFragment extends Fragment {
         mediaPlayer.setOnCompletionListener(completionListener);
         mediaPlayer.prepare();
         mediaPlayer.start();
-        int audioSessionId = mediaPlayer.getAudioSessionId();
-        if (audioSessionId != -1) {
-          visualizer.setVisibility(View.VISIBLE);
-          visualizer.setPlayer(mediaPlayer.getAudioSessionId());
-        }
+        setupVoiceNotePlayer();
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private void setupVoiceNotePlayer() {
+    seekBarListener =
+        new SeekBarListener(getActivity(), mediaPlayer, seekBar, playedTime);
+    int millis = mediaPlayer.getDuration();
+    String duration = new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millis));
+    totalTime.setText(duration);
+    seekBar.setOnSeekBarChangeListener(seekBarListener);
+    voiceNotePlayer.setVisibility(View.VISIBLE);
+    seekBarListener.updateProgress();
   }
 
   private void startRecording() {
@@ -236,20 +265,17 @@ public class VoiceNoteEditorFragment extends Fragment {
     if (recorder != null) {
       recorder.release();
       saveNote();
-      reset();
+      isRecording = false;
     }
   }
 
   private void stopPlaying() {
     if (mediaPlayer != null) {
-      mediaPlayer.release();
-      reset();
-      visualizer.setVisibility(View.INVISIBLE);
+      seekBarListener.reset();
+      mediaPlayer = null;
+      mediaPlayerPosition = 0;
+      isRecording = false;
     }
-  }
-
-  private void reset() {
-    isRecording = false;
   }
 
   private String getDate(Long date) {
@@ -271,9 +297,6 @@ public class VoiceNoteEditorFragment extends Fragment {
     super.onPause();
     stopRecording();
     stopPlaying();
-    if (mediaPlayer != null) {
-      mediaPlayer.release();
-    }
   }
 
 }
