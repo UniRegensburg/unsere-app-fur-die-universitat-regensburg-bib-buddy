@@ -346,6 +346,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
             getString(R.string.exported_file_stored_in) + '\n'
                 + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
                 + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+
       } else {
         // if the Import is selected
         filePicker();
@@ -369,7 +370,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-            new String[] {storageManifestPermissions[0], storageManifestPermissions[1]},
+            new String[] { storageManifestPermissions[0], storageManifestPermissions[1] },
             StorageKeys.STORAGE_PERMISSION_CODE));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
@@ -390,6 +391,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
                 getString(R.string.exported_file_stored_in) + '\n'
                     + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
                     + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+
           } else {
             filePicker();
           }

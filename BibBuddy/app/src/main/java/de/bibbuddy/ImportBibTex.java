@@ -127,8 +127,9 @@ public class ImportBibTex {
   }
 
   /**
-   * Cleans the BibTeX content through removing the unnecessary
-   * separators for a given BibTeX-element.
+   * Parses the given BibTeX item to raw text value and stores
+   * the values in a HashMap with BibTag as key and the
+   * corresponding parsed text data as value.
    *
    * @param bibItem      the BibTeX item as String
    */
@@ -232,12 +233,12 @@ public class ImportBibTex {
     return authors;
   }
 
-  /** Adds the parsed BibTeX value for one/ more notes into the
+  /** Adds the parsed BibTeX value for a note into the
    * Database and links the created note with a book.
    *
    * @param noteDao  object of the NoteDao class
    *                 responsible for adding note into the Database
-   * @param book     the book of the added note
+   * @param book     the corresponding book of the imported note
    */
   public void importBibNote(NoteDao noteDao, Book book) {
     if (bibTagValue.containsKey(BibTexKeys.ANNOTE)

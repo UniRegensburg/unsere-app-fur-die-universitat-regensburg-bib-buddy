@@ -166,6 +166,7 @@ public class ExportBibTex {
 
             + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
             + '\n' + '\n';
+    
   }
 
   private String getBibKey(Book book) {

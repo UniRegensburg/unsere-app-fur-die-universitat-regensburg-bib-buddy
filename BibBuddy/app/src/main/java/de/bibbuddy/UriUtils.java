@@ -173,9 +173,11 @@ public class UriUtils {
     try (Cursor cursor = context.getContentResolver()
         .query(uri, new String[] {MediaStore.MediaColumns.DISPLAY_NAME},
             null, null, null)) {
+
       if (cursor != null && cursor.moveToFirst()) {
         return getExternalStoragePath(cursor);
       }
+
     }
 
     final String documentId = DocumentsContract.getDocumentId(uri);
