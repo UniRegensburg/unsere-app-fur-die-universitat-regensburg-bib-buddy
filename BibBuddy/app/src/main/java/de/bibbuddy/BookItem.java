@@ -27,7 +27,7 @@ public class BookItem extends LibraryItem {
     this.authors = authors;
     this.noteCount = noteCount;
   }
-
+  
   public int getYear() {
     return year;
   }

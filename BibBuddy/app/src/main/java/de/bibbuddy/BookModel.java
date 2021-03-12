@@ -80,6 +80,24 @@ public class BookModel {
   }
 
   /**
+   * Adds an imported book to the bookList and database.
+   * Sets the note counter to 1 because a BibTeX item can only
+   * import one note.
+   *
+   * @param book       book data for the database and bookList
+   * @param authorList authorList of the new book
+   */
+  public void addImportedBook(Book book, List<Author> authorList) {
+    bookDao.create(book, authorList, shelfId);
+    String authors = convertAuthorListToString(authorList);
+
+    book = bookDao.findById(bookDao.findLatestId());
+
+    bookList
+        .add(new BookItem(book, shelfId, authors, 1));
+  }
+
+  /**
    * Gets the bookList of the current shelfId.
    *
    * @param shelfId shelfId of the given shelf

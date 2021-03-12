@@ -143,16 +143,30 @@ public class ExportBibTex {
   public String getBibDataFromBook(Long bookId, BookDao bookDao, NoteDao noteDao) {
     Book book = bookDao.findById(bookId);
 
-    return "@book{" + getBibKey(book)
-        + "isbn={" + book.getIsbn() + "}," + '\n'
-        + getBibAuthorNames(bookId, bookDao)
-        + "title={" + book.getTitle() + "}," + '\n'
-        + "subtitle={" + book.getSubtitle() + "}," + '\n'
-        + "volume={" + book.getVolume() + "}," + '\n'
-        + "publisher={" + book.getPublisher() + "}," + '\n'
-        + "edition={" + book.getEdition() + "}," + '\n'
-        + getBibNotesFromBook(book, noteDao)
-        + "year=" + book.getPubYear() + '\n' + "}" + '\n' + '\n';
+    return  BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
+
+            + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + getBibAuthorNames(bookId, bookDao)
+
+            + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
+            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+
+            + getBibNotesFromBook(book, noteDao)
+
+            + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
+            + '\n' + '\n';
+
   }
 
   private String getBibKey(Book book) {
@@ -180,25 +194,17 @@ public class ExportBibTex {
     List<Author> authorsList = bookDao.getAllAuthorsForBook(book.getId());
     StringBuilder authorNames = new StringBuilder();
 
-    if (authorsList.size() > 1) {
+    for (int i = 0; i < authorsList.size(); i++) {
+      authorNames.append(authorsList.get(i).getLastName()).append(", ")
+          .append(authorsList.get(i).getFirstName());
 
-      for (int i = 0; i < authorsList.size(); i++) {
-        authorNames.append(authorsList.get(i).getFirstName()).append(" ")
-            .append(authorsList.get(i).getLastName());
-        if (i < authorsList.size()) {
-          authorNames.append(" and ");
-        }
+      if (i < authorsList.size() - 1) {
+        authorNames.append(" and ");
       }
+    }
 
-    } else {
-
-      try {
-        authorNames = new StringBuilder(authorsList.get(0).getFirstName()
-            + " " + authorsList.get(0).getLastName());
-      } catch (Exception e) {
-        authorNames = new StringBuilder();
-      }
-
+    if (authorsList.isEmpty()) {
+      authorNames = new StringBuilder();
     }
 
     return "author={" + authorNames + "}," + '\n';
@@ -221,6 +227,7 @@ public class ExportBibTex {
       Writer fileWriter = new BufferedWriter(outputStreamWriter);
       fileWriter.write(bibContent);
       fileWriter.close();
+
     } catch (IOException e) {
       e.printStackTrace();
     }
