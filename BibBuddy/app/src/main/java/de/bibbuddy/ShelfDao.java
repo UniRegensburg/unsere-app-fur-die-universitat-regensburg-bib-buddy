@@ -51,8 +51,9 @@ public class ShelfDao implements InterfaceShelfDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_SHELF,
-                             new String[] {DatabaseHelper.NAME, DatabaseHelper.CREATE_DATE,
-                                 DatabaseHelper.MOD_DATE, DatabaseHelper.SHELF_ID},
+                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.SHELF_ID},
                              DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
                              null, null, null, String.valueOf(1));
 

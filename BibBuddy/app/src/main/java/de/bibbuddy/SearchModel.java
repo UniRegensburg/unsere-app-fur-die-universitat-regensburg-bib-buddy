@@ -2,7 +2,6 @@ package de.bibbuddy;
 
 import android.content.Context;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class SearchModel {
   private final BookDao bookDao;
   private final NoteDao noteDao;
 
-  private List<SearchItem> searchResultList;
+  private final List<SearchItem> searchResultList;
 
   /**
    * Constructor for a SearchModel.
@@ -35,12 +34,12 @@ public class SearchModel {
   /**
    * Gets the searchResultList based on the user input.
    *
-   * @param searchInput input of the search
-   * @param sortCriteria sortCriteria for the searchResultList
+   * @param searchInput    input of the search
+   * @param sortCriteria   sortCriteria for the searchResultList
    * @param filterCriteria filterCriteria for the searchResultList
    * @return Returns the searchResultList
    */
-  public List<SearchItem> getSearchResultList(String searchInput, SearchSortCriteria sortCriteria,
+  public List<SearchItem> getSearchResultList(String searchInput, SortCriteria sortCriteria,
                                               boolean[] filterCriteria) {
     searchResultList.clear();
 
@@ -88,22 +87,24 @@ public class SearchModel {
     }
   }
 
-  private void sortSearchResultList(SearchSortCriteria sortCriteria) {
-    switch (sortCriteria) {
-      case NAME_ASCENDING:
-        sortSearchResultListByName(false);
-        break;
 
-      case NAME_DESCENDING:
-        sortSearchResultListByName(true);
+  private void sortSearchResultList(SortCriteria sortCriteria) {
+    switch (sortCriteria) {
+
+      case MOD_DATE_LATEST:
+        searchResultList.sort(new SortDate());
         break;
 
       case MOD_DATE_OLDEST:
-        sortSearchResultListByModDate(false);
+        searchResultList.sort(new SortDate().reversed());
         break;
 
-      case MOD_DATE_LATEST:
-        sortSearchResultListByModDate(true);
+      case NAME_ASCENDING:
+        searchResultList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        searchResultList.sort(new SortName().reversed());
         break;
 
       default:
@@ -111,27 +112,6 @@ public class SearchModel {
     }
   }
 
-  private void sortSearchResultListByName(boolean isSortNameDescending) {
-    searchResultList.sort((searchItem, searchItemToCompare) -> { // sort name ascending
-      return searchItem.getName().compareToIgnoreCase(searchItemToCompare.getName());
-    });
-
-    if (isSortNameDescending) {
-      Collections.reverse(searchResultList);  // sort name descending
-    }
-  }
-
-
-  private void sortSearchResultListByModDate(boolean isSortModDateLatest) {
-    searchResultList.sort((searchItem, searchItemToCompare) -> {
-      // oldest modDate is at the beginning
-      return searchItem.getModDate().compareTo(searchItemToCompare.getModDate());
-    });
-
-    if (isSortModDateLatest) {
-      Collections.reverse(searchResultList); // latest modDate is at the beginning
-    }
-  }
 
   /**
    * Gets the selected search item at the current position.
@@ -153,10 +133,14 @@ public class SearchModel {
    * @param sortCriteria sortCriteria of the list
    * @return Returns the sorted search results
    */
-  public List<SearchItem> getSortedSearchResultList(SearchSortCriteria sortCriteria) {
+  public List<SearchItem> getSortedSearchResultList(SortCriteria sortCriteria) {
     sortSearchResultList(sortCriteria);
 
     return searchResultList;
+  }
+
+  public Long getShelfIdByBook(Long id) {
+    return bookDao.findShelfIdByBook(id);
   }
 
 }
