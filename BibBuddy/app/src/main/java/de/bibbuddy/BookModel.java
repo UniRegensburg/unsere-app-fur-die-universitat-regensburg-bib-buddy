@@ -91,7 +91,7 @@ public class BookModel {
     String authors = convertAuthorListToString(authorList);
 
     bookList
-        .add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 1));
+        .add(new BookItem(book, shelfId, authors, 1));
   }
 
   /**
