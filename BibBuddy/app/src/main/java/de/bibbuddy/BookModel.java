@@ -91,6 +91,8 @@ public class BookModel {
     bookDao.create(book, authorList, shelfId);
     String authors = convertAuthorListToString(authorList);
 
+    book = bookDao.findById(bookDao.findLatestId());
+
     bookList
         .add(new BookItem(book, shelfId, authors, 1));
   }
