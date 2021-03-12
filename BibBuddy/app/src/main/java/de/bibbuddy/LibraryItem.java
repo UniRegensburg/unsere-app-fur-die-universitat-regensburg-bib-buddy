@@ -6,12 +6,15 @@ package de.bibbuddy;
  *
  * @author Claudia Schönherr
  */
-public class LibraryItem {
+public class LibraryItem implements SortableItem {
 
-  private String name;
   private final int image;
   private final Long id;
   private final Long parentId;
+  private String name;
+
+  private Long modDate;
+  private String modDateStr;
 
   public LibraryItem(String name, int image, Long id) {
     this(name, image, id, null);
@@ -32,6 +35,25 @@ public class LibraryItem {
     this.parentId = parentId;
   }
 
+  /**
+   * Constructor of a LibraryItem.
+   *
+   * @param name    name of the LibraryItem
+   * @param image   image of the LibraryItem
+   * @param id      id of the LibraryItem
+   * @param modDate modification date of the LibraryItem
+   */
+  public LibraryItem(String name, int image, Long id, Long parentId, Long modDate) {
+    this.name = name;
+    this.image = image;
+    this.id = id;
+    this.parentId = parentId;
+
+    this.modDate = modDate;
+    this.modDateStr = DateConverter.convertDateToString(modDate);
+  }
+
+  @Override
   public String getName() {
     return name;
   }
@@ -50,6 +72,15 @@ public class LibraryItem {
 
   public Long getParentId() {
     return parentId;
+  }
+
+  @Override
+  public Long getModDate() {
+    return modDate;
+  }
+
+  public String getModDateStr() {
+    return modDateStr;
   }
 
 }

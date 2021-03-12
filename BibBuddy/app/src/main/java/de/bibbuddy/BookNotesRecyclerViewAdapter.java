@@ -19,9 +19,10 @@ import java.util.List;
 public class BookNotesRecyclerViewAdapter extends
     RecyclerView.Adapter<BookNotesRecyclerViewAdapter.BookNotesViewHolder> {
 
-  private final List<NoteItem> noteList;
   private final BookNotesViewListener listener;
   private final Context context;
+
+  private List<NoteItem> noteList;
 
   /**
    * Constructor for BookNotesRecyclerViewAdapter.
@@ -77,6 +78,10 @@ public class BookNotesRecyclerViewAdapter extends
   @Override
   public int getItemCount() {
     return noteList.size();
+  }
+
+  public void setBookNoteList(List<NoteItem> noteList) {
+    this.noteList = noteList;
   }
 
   public interface BookNotesViewListener {

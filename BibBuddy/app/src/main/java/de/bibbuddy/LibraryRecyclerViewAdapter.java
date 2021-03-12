@@ -104,15 +104,17 @@ public class LibraryRecyclerViewAdapter
 
   @Override
   public int getItemCount() {
-    // RecyclerView calls this method to get the size of the data set.
-    // RecyclerView uses this to determine when there are no more items that can be displayed.
     return libraryList.size();
   }
 
-  public interface LibraryListener { // create an interface
-    void onItemClicked(int position); // create callback function
+  public void setLibraryList(List<ShelfItem> libraryList) {
+    this.libraryList = libraryList;
+  }
 
-    void onLongItemClicked(int position, ShelfItem shelfItem, View v);
+  public interface LibraryListener {
+    void onItemClicked(int position);
+
+    void onLongItemClicked(int position, ShelfItem shelfItem, View view);
   }
 
 
