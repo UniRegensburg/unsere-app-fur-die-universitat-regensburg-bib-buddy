@@ -171,7 +171,7 @@ public class LibraryFragment extends Fragment
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
              new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
              StorageKeys.STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.cancel,

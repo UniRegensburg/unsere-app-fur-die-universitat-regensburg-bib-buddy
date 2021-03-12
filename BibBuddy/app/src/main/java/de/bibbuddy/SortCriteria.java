@@ -6,10 +6,10 @@ package de.bibbuddy;
  * @author Claudia Schönherr
  */
 public enum SortCriteria {
-  NAME_ASCENDING,
-  NAME_DESCENDING,
+  MOD_DATE_LATEST,
   MOD_DATE_OLDEST,
-  MOD_DATE_LATEST;
+  NAME_ASCENDING,
+  NAME_DESCENDING;
 
   /**
    * Gets the int value of the sortingCriteria.
@@ -18,14 +18,15 @@ public enum SortCriteria {
    * @return Returns the int of the enum.
    */
   public static int getCriteriaNum(SortCriteria sortCriteria) {
-    if (sortCriteria == NAME_ASCENDING) {
+    if (sortCriteria == MOD_DATE_LATEST) {
       return 0;
-    } else if (sortCriteria == NAME_DESCENDING) {
-      return 1;
     } else if (sortCriteria == MOD_DATE_OLDEST) {
+      return 1;
+    } else if (sortCriteria == NAME_ASCENDING) {
       return 2;
     } else {
-      return 3; // MOD_DATE_LATEST
+      return 3; // NAME_DESCENDING
     }
   }
+
 }

@@ -175,20 +175,21 @@ public class BookModel {
 
   private void sortBookList(SortCriteria sortCriteria) {
     switch (sortCriteria) {
+
+      case MOD_DATE_LATEST:
+        bookList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        bookList.sort(new SortDate().reversed());
+        break;
+
       case NAME_ASCENDING:
         bookList.sort(new SortName());
         break;
 
       case NAME_DESCENDING:
         bookList.sort(new SortName().reversed());
-        break;
-
-      case MOD_DATE_OLDEST:
-        bookList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_LATEST:
-        bookList.sort(new SortDate().reversed());
         break;
 
       default:
@@ -209,7 +210,7 @@ public class BookModel {
   }
 
   /**
-   * Gets the sorted bookList by sortCriteria.
+   * Gets the sorted bookList by sortCriteria with the given bookList.
    *
    * @param sortCriteria sortCriteria of the list
    * @param bookList bookList that should be sorted

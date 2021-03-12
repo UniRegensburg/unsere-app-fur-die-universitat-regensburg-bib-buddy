@@ -39,10 +39,10 @@ public class SortDialog extends AlertDialog.Builder {
     int checkedItem = SortCriteria.getCriteriaNum(sortCriteria);
 
     String[] sortChoices = {
-        context.getString(R.string.sort_name_ascending),
-        context.getString(R.string.sort_name_descending),
+        context.getString(R.string.sort_mod_date_latest),
         context.getString(R.string.sort_mod_date_oldest),
-        context.getString(R.string.sort_mod_date_latest)
+        context.getString(R.string.sort_name_ascending),
+        context.getString(R.string.sort_name_descending)
     };
 
     setSingleChoiceItems(sortChoices, checkedItem, new DialogInterface.OnClickListener() {
@@ -63,19 +63,20 @@ public class SortDialog extends AlertDialog.Builder {
   private void handleSelectedSortChoice(int choice) {
     switch (choice) {
       case 0:
-        sortCriteria = SortCriteria.NAME_ASCENDING;
+        sortCriteria = SortCriteria.MOD_DATE_LATEST;
         break;
 
       case 1:
-        sortCriteria = SortCriteria.NAME_DESCENDING;
-        break;
-
-      case 2:
         sortCriteria = SortCriteria.MOD_DATE_OLDEST;
         break;
 
+      case 2:
+        sortCriteria = SortCriteria.NAME_ASCENDING;
+
+        break;
+
       case 3:
-        sortCriteria = SortCriteria.MOD_DATE_LATEST;
+        sortCriteria = SortCriteria.NAME_DESCENDING;
         break;
 
       default:

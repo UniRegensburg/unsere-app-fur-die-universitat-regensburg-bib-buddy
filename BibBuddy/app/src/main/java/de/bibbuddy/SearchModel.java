@@ -90,20 +90,21 @@ public class SearchModel {
 
   private void sortSearchResultList(SortCriteria sortCriteria) {
     switch (sortCriteria) {
+
+      case MOD_DATE_LATEST:
+        searchResultList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        searchResultList.sort(new SortDate().reversed());
+        break;
+
       case NAME_ASCENDING:
         searchResultList.sort(new SortName());
         break;
 
       case NAME_DESCENDING:
         searchResultList.sort(new SortName().reversed());
-        break;
-
-      case MOD_DATE_OLDEST:
-        searchResultList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_LATEST:
-        searchResultList.sort(new SortDate().reversed());
         break;
 
       default:

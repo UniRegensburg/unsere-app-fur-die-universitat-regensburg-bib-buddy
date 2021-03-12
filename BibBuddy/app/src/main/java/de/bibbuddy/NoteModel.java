@@ -102,20 +102,21 @@ public class NoteModel {
    */
   public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
     switch (sortCriteria) {
+
+      case MOD_DATE_LATEST:
+        noteList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        noteList.sort(new SortDate().reversed());
+        break;
+
       case NAME_ASCENDING:
         noteList.sort(new SortName());
         break;
 
       case NAME_DESCENDING:
         noteList.sort(new SortName().reversed());
-        break;
-
-      case MOD_DATE_OLDEST:
-        noteList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_LATEST:
-        noteList.sort(new SortDate().reversed());
         break;
 
       default:

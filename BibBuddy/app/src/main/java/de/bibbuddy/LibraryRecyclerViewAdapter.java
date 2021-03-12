@@ -114,7 +114,7 @@ public class LibraryRecyclerViewAdapter
   public interface LibraryListener {
     void onItemClicked(int position);
 
-    void onLongItemClicked(int position, ShelfItem shelfItem, View v);
+    void onLongItemClicked(int position, ShelfItem shelfItem, View view);
   }
 
 

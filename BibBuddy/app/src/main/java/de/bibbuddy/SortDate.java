@@ -15,7 +15,7 @@ public class SortDate implements Comparator<SortableItem> {
       return 0;
     }
 
-    return lhs.getModDate().compareTo(rhs.getModDate());
+    return rhs.getModDate().compareTo(lhs.getModDate());
   }
 
 }
