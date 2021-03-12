@@ -166,7 +166,7 @@ public class ExportBibTex {
 
             + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
             + '\n' + '\n';
-    
+
   }
 
   private String getBibKey(Book book) {
@@ -194,25 +194,17 @@ public class ExportBibTex {
     List<Author> authorsList = bookDao.getAllAuthorsForBook(book.getId());
     StringBuilder authorNames = new StringBuilder();
 
-    if (authorsList.size() > 1) {
+    for (int i = 0; i < authorsList.size(); i++) {
+      authorNames.append(authorsList.get(i).getLastName()).append(", ")
+          .append(authorsList.get(i).getFirstName());
 
-      for (int i = 0; i < authorsList.size(); i++) {
-        authorNames.append(authorsList.get(i).getFirstName()).append(" ")
-            .append(authorsList.get(i).getLastName());
-        if (i < authorsList.size()) {
-          authorNames.append(" and ");
-        }
+      if (i < authorsList.size() - 1) {
+        authorNames.append(" and ");
       }
+    }
 
-    } else {
-
-      try {
-        authorNames = new StringBuilder(authorsList.get(0).getFirstName()
-            + " " + authorsList.get(0).getLastName());
-      } catch (Exception e) {
-        authorNames = new StringBuilder();
-      }
-
+    if (authorsList.isEmpty()) {
+      authorNames = new StringBuilder();
     }
 
     return "author={" + authorNames + "}," + '\n';
@@ -235,6 +227,7 @@ public class ExportBibTex {
       Writer fileWriter = new BufferedWriter(outputStreamWriter);
       fileWriter.write(bibContent);
       fileWriter.close();
+
     } catch (IOException e) {
       e.printStackTrace();
     }

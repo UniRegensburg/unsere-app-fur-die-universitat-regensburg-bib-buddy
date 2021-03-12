@@ -25,23 +25,22 @@ import java.util.stream.Collectors;
  */
 public class ImportBibTex {
 
-  private final String [] bibTags;
   private final Context context;
+
+  private final String [] bibTags = { BibTexKeys.ISBN, BibTexKeys.AUTHOR, BibTexKeys.BOOK_TITLE,
+      BibTexKeys.SUBTITLE, BibTexKeys.VOLUME, BibTexKeys.PUBLISHER,
+      BibTexKeys.EDITION, BibTexKeys.ANNOTE, BibTexKeys.YEAR };
+
   private final HashMap<String, String> bibTagValue;
 
   /**
    * Constructor for the Import of BibTeX file.
    *
    * @param context      current context
-   * @param bibTags      Array of BibTeX tags as String (e.g. "author=", "title=")
-   * @param bibTagValue  a HashMap to store the parsed BibTeX data
-   *                     Key is BibTeX tag.
-   *                     Value is the parsed text content for the corresponding BibTex tag.
    */
-  public ImportBibTex(Context context, String [] bibTags, HashMap<String, String> bibTagValue) {
+  public ImportBibTex(Context context) {
     this.context = context;
-    this.bibTags = bibTags;
-    this.bibTagValue = bibTagValue;
+    bibTagValue = new HashMap<>();
   }
 
   /**
@@ -50,8 +49,13 @@ public class ImportBibTex {
    * @param filePath      path of the file
    */
   public boolean isBibFile(@NonNull String filePath) {
-    String extension = filePath.substring(filePath.lastIndexOf("."));
-    return extension.equals(StorageKeys.BIB_FILE_TYPE);
+
+    if (filePath.lastIndexOf(".") > 0) {
+      String extension = filePath.substring(filePath.lastIndexOf("."));
+      return extension.equals(StorageKeys.BIB_FILE_TYPE);
+    }
+
+    return false;
   }
 
   /**
@@ -84,7 +88,16 @@ public class ImportBibTex {
           new String[] {BibTexKeys.CLOSING_CURLY_BRACKET, BibTexKeys.OPENING_CURLY_BRACKET});
     }
 
-    return stringBuilder.toString();
+    if (stringBuilder.toString().isEmpty()) {
+      return null;
+    }
+
+    if (stringBuilder.toString().startsWith(BibTexKeys.BIB_AT_TAG)
+        && stringBuilder.toString().contains(BibTexKeys.BOOK_TAG)) {
+      return stringBuilder.toString();
+    }
+
+    return null;
   }
 
   /** Splits the String content of URI file and removes redundant
@@ -203,34 +216,54 @@ public class ImportBibTex {
    * @return         List of parsed author(s) name(s) and family
    *                 name(s).
    */
+
   public List<Author> parseAuthorNames() {
 
-    String authorNames = (String) bibTagValue.get(BibTexKeys.AUTHOR);
-
+    String authorNames = bibTagValue.get(BibTexKeys.AUTHOR);
     List<Author> authors = new ArrayList<>();
 
-    //if multiple authors
+    // if multiple authors
     if (authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
       String[] names = authorNames.split(BibTexKeys.AND_MULTIPLE_AUTHORS);
 
       for (String name : names) {
-        if (name.contains(", ")) {
-          String[] currAuthorsNames = name.split(", ");
-          authors.add(new Author(currAuthorsNames[1], currAuthorsNames[0], ""));
-        }
+        getAuthorNames(name, authors);
       }
 
     }
-    //if one author
-    if (!authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)
-        && authorNames.contains(",")) {
 
-      String[] authorName = authorNames.split(", ");
-      authors.add(new Author(authorName[1], authorName[0], ""));
-
+    // if one author
+    if (!authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
+      getAuthorNames(authorNames, authors);
     }
 
     return authors;
+  }
+
+  private void getAuthorNames(String authorNames, List<Author> authors) {
+
+    // if the names are comma separated
+    if (authorNames.contains(", ")) {
+      String[] authorName = authorNames.split(", ");
+      authors.add(new Author(authorName[0], authorName[1], ""));
+    }
+
+    // if the names are whitespace separated
+    if (authorNames.contains(" ") && !authorNames.contains(", ")) {
+      String[] currentAuthorsNames = authorNames.split(" ", 2);
+      authors.add(new Author(currentAuthorsNames[1], currentAuthorsNames[0], ""));
+    }
+
+  }
+
+  /** Checks if there is a note in the current BibTeX
+   * segment.
+   *
+   * @return      true if the note exists
+   *              false if the note does not exist
+   */
+  public boolean existsBibNote() {
+    return bibTagValue.get(BibTexKeys.ANNOTE).isEmpty();
   }
 
   /** Adds the parsed BibTeX value for a note into the
@@ -242,7 +275,7 @@ public class ImportBibTex {
    */
   public void importBibNote(NoteDao noteDao, Book book) {
     if (bibTagValue.containsKey(BibTexKeys.ANNOTE)
-        && !bibTagValue.get(BibTexKeys.ANNOTE).equals("")) {
+        && !bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
 
       Note note = new Note(bibTagValue.get(BibTexKeys.BOOK_TITLE)
           + " " + bibTagValue.get(BibTexKeys.AUTHOR), 0,

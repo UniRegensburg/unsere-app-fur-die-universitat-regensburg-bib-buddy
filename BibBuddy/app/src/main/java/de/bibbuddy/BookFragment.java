@@ -63,14 +63,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       Manifest.permission.WRITE_EXTERNAL_STORAGE,
       Manifest.permission.READ_EXTERNAL_STORAGE };
 
-  private String [] bibTags = { BibTexKeys.ISBN, BibTexKeys.AUTHOR, BibTexKeys.BOOK_TITLE,
-      BibTexKeys.SUBTITLE, BibTexKeys.VOLUME, BibTexKeys.PUBLISHER,
-      BibTexKeys.EDITION, BibTexKeys.ANNOTE, BibTexKeys.YEAR };
-
-  private HashMap<String, String> bibTagValue;
-
-  private Intent filePickerIntent;
-
   private boolean isImport = false; // it is either import or export
 
 
@@ -108,8 +100,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
 
-    bibTagValue = new HashMap<>();
-    importBibTex = new ImportBibTex(context, bibTags, bibTagValue);
+    importBibTex = new ImportBibTex(context);
 
     RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
@@ -255,9 +246,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
                 handleImport(uri);
 
-                Toast.makeText(context, getString(R.string.imported_file_name_is) + '\n'
-                    + UriUtils.getUriFileName(getActivity(), uri), Toast.LENGTH_LONG).show();
-
               } else {
                 showDialogNonBibFile();
               }
@@ -269,26 +257,35 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private void handleImport(Uri uri) {
     String bibText = readBibFile(uri);
 
-    List<String> nonRedundantBibItems
-        = importBibTex.getNonRedundantBibItems(bibText);
+    if (bibText != null) {
+      List<String> nonRedundantBibItems
+          = importBibTex.getNonRedundantBibItems(bibText);
 
-    Book book;
-    for (int i = 0; i < nonRedundantBibItems.size(); i++) {
+      Book book;
+      for (int i = 0; i < nonRedundantBibItems.size(); i++) {
 
-      if (nonRedundantBibItems.get(i).startsWith(BibTexKeys.BOOK_TAG)) {
-        importBibTex.parseBibItem(nonRedundantBibItems.get(i));
-        book = importBibTex.importBook();
-        addImportedBook(book, importBibTex.parseAuthorNames());
-        importBibTex.importBibNote(noteDao, book);
+        if (nonRedundantBibItems.get(i).startsWith(BibTexKeys.BOOK_TAG)) {
+          importBibTex.parseBibItem(nonRedundantBibItems.get(i));
+          book = importBibTex.importBook();
+          addImportedBook(book, importBibTex.parseAuthorNames());
+          importBibTex.importBibNote(noteDao, book);
+        }
+
       }
 
+      Toast.makeText(context, getString(R.string.imported_file_name_is) + '\n'
+          + UriUtils.getUriFileName(getActivity(), uri), Toast.LENGTH_LONG).show();
+
+    } else {
+      Toast.makeText(context, getString(R.string.not_valid_bib_file),
+          Toast.LENGTH_LONG).show();
     }
 
   }
 
   private void addImportedBook(Book book, List<Author> authorList) {
 
-    if (bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
+    if (importBibTex.existsBibNote()) {
       bookModel.addBook(book, authorList);
 
     } else {
@@ -303,7 +300,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private String readBibFile(Uri uri) {
     try {
-      return importBibTex.readTextFromUri(uri);
+
+      if (importBibTex.readTextFromUri(uri) != null) {
+        return importBibTex.readTextFromUri(uri);
+      } else {
+        return null;
+      }
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -313,7 +315,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void filePicker()  {
-    filePickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+    Intent filePickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
     filePickerIntent.setType("*/*");
     filePickerActivityResultLauncher.launch(filePickerIntent);
   }
@@ -335,9 +337,11 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void checkStoragePermission() {
     // if the permissions are granted
-    if (ContextCompat.checkSelfPermission(getContext(), storageManifestPermissions[0])
+    if (ContextCompat.checkSelfPermission(getContext(),
+        storageManifestPermissions[0]) // Manifest.permission.WRITE_EXTERNAL_STORAGE
         +  ContextCompat.checkSelfPermission(getContext(),
-        storageManifestPermissions[1]) == PackageManager.PERMISSION_GRANTED) {
+        storageManifestPermissions[1])  // Manifest.permission.READ_EXTERNAL_STORAGE
+        == PackageManager.PERMISSION_GRANTED) {
 
       // if the Export is selected
       if (!isImport) {
@@ -354,13 +358,18 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         filePicker();
       }
       // if the permissions are not granted
-    } else if (shouldShowRequestPermissionRationale(storageManifestPermissions[0])
-        || shouldShowRequestPermissionRationale(storageManifestPermissions[1])) {
+    } else if (shouldShowRequestPermissionRationale(
+        storageManifestPermissions[0]) // Manifest.permission.WRITE_EXTERNAL_STORAGE
+        || shouldShowRequestPermissionRationale(
+            storageManifestPermissions[1])) { // Manifest.permission.READ_EXTERNAL_STORAGE
       showRequestPermissionDialog();
 
     } else {
-      requestPermissionLauncher.launch(storageManifestPermissions[0]);
-      requestPermissionLauncher.launch(storageManifestPermissions[1]);
+
+      requestPermissionLauncher.launch(
+          storageManifestPermissions[0]); // Manifest.permission.WRITE_EXTERNAL_STORAGE
+      requestPermissionLauncher.launch(
+          storageManifestPermissions[1]); // Manifest.permission.READ_EXTERNAL_STORAGE
     }
   }
 
@@ -371,8 +380,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-            new String[] { storageManifestPermissions[0], storageManifestPermissions[1] },
+        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(), new String[] {
+            storageManifestPermissions[0], // Manifest.permission.WRITE_EXTERNAL_STORAGE
+            storageManifestPermissions[1] }, // Manifest.permission.READ_EXTERNAL_STORAGE
             StorageKeys.STORAGE_PERMISSION_CODE));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
@@ -388,6 +398,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
             exportBibTex.createBibFile();
             exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+
 
             Toast.makeText(getContext(),
                 getString(R.string.exported_file_stored_in) + '\n'

@@ -45,7 +45,7 @@ public class UriUtils {
     if (DocumentsContract.isDocumentUri(context, uri)) { // Document Provider
       return handleUriPathDocuments(context, uri);
 
-    } else if (UriUtilsKeys.CONTENT.equalsIgnoreCase(uri.getScheme())) { //Google Drive Provider
+    } else if (UriUtilsKeys.CONTENT.equalsIgnoreCase(uri.getScheme())) { // Google Drive Provider
       return handleUriPathGoogleDrive(context, uri);
 
     } else if (UriUtilsKeys.FILE.equalsIgnoreCase(uri.getScheme())) { // File
@@ -71,7 +71,7 @@ public class UriUtils {
       try (Cursor cursor = activity.getContentResolver().query(uri,
           null, null, null, null)) {
 
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
           pickedFilename = cursor.getString(cursor
               .getColumnIndex(OpenableColumns.DISPLAY_NAME));
         }
@@ -161,7 +161,7 @@ public class UriUtils {
 
     fileExists(fullUriPath);
 
-    if (!fullUriPath.equals("")) {
+    if (!fullUriPath.isEmpty()) {
       return fullUriPath;
     }
 
@@ -174,7 +174,7 @@ public class UriUtils {
         .query(uri, new String[] {MediaStore.MediaColumns.DISPLAY_NAME},
             null, null, null)) {
 
-      if (cursor != null && cursor.moveToFirst()) {
+      if (cursor.moveToFirst()) {
         return getExternalStoragePath(cursor);
       }
 
@@ -274,7 +274,7 @@ public class UriUtils {
 
       cursor = context.getContentResolver().query(uri, projection,
           selection, selectionArgs, null);
-      if (cursor != null && cursor.moveToFirst()) {
+      if (cursor.moveToFirst()) {
         return cursor.getString(cursor.getColumnIndexOrThrow(dataColumn));
       }
 

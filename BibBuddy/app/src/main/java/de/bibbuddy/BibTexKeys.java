@@ -7,6 +7,7 @@ package de.bibbuddy;
  */
 public class BibTexKeys {
 
+  public static final String BIB_AT_TAG = "@";
   public static final String BOOK_TAG = "@book";
   public static final String ISBN = "isbn=";
   public static final String AUTHOR = "author=";
