@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+import org.jsoup.Jsoup;
 
 /**
  * The SearchRecyclerViewAdapter provides a binding from the libraryList to the view
@@ -52,7 +53,12 @@ public class SearchRecyclerViewAdapter
     // with that element
     SearchItem searchItem = searchResultList.get(position);
 
-    holder.getTextView().setText(searchItem.getName());
+    String name = Jsoup.parse(searchItem.getName()).text();
+    if (name.length() > 40) {
+      name = name.substring(0, 35) + " ...";
+    }
+
+    holder.getTextView().setText(name);
     holder.getImageView().setImageResource(searchItem.getImage());
     holder.getModDateView().setText(searchItem.getModDateStr());
 

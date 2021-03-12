@@ -65,6 +65,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private boolean isImport = false; // it is either import or export
 
+  private SortCriteria sortCriteria;
+
 
   @Nullable
   @Override
@@ -87,9 +89,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     view = inflater.inflate(R.layout.fragment_book, container, false);
     context = view.getContext();
 
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+
     bookModel = new BookModel(getContext(), shelfId);
 
     List<BookItem> bookList;
@@ -99,20 +104,33 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     noteDao = bookModel.getNoteDao();
 
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
-
     importBibTex = new ImportBibTex(context);
 
     RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
 
+    setupRecyclerView();
+
+
     setHasOptionsMenu(true);
     createAddBookListener();
-    updateEmptyView(bookList);
+
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
     selectedBookItems = new ArrayList<>();
 
     return view;
+  }
+
+  private void setupRecyclerView() {
+    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria,
+                                                          bookModel.getBookList(shelfId));
+
+    RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
+    adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
+    recyclerView.setAdapter(adapter);
+
+    updateEmptyView(bookList);
   }
 
   @Override
@@ -131,6 +149,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       case R.id.menu_delete_book:
         handleDeleteBook();
+        break;
+
+      case R.id.menu_sort_shelf:
+        handleSortBook();
         break;
 
       case R.id.menu_export_shelf:
@@ -177,9 +199,16 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   @Override
   public void onBookChanged(Book book, List<Author> authorList) {
     bookModel.updateBook(book, authorList);
+    updateBookList(bookModel.getBookList(shelfId));
+  }
 
-    adapter.setBookList(bookModel.getBookList(shelfId));
+  private void updateBookList(List<BookItem> bookList) {
+    bookList = bookModel.getSortedBookList(sortCriteria, bookList);
+
+    adapter.setBookList(bookList);
     adapter.notifyDataSetChanged();
+
+    updateEmptyView(bookList);
   }
 
   private void handleDeleteBook() {
@@ -200,16 +229,32 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       public void onClick(DialogInterface dialog, int which) {
         bookModel.deleteBooks(selectedBookItems, shelfId);
 
-        adapter.setBookList(bookModel.getCurrentBookList());
-        adapter.notifyDataSetChanged();
-
-        updateEmptyView(bookModel.getCurrentBookList());
+        updateBookList(bookModel.getCurrentBookList());
         Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
         unselectBookItems();
       }
     });
 
     alertDeleteBook.show();
+  }
+
+  private void handleSortBook() {
+    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortBookList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortBookList() {
+    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria);
+    adapter.setBookList(bookList);
+    adapter.notifyDataSetChanged();
   }
 
   private void checkEmptyShelf() {
@@ -541,9 +586,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private void addBook(Book book, List<Author> authorList) {
     bookModel.addBook(book, authorList);
     Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
-    adapter.setBookList(bookModel.getCurrentBookList());
-    adapter.notifyDataSetChanged();
-    updateEmptyView(bookModel.getCurrentBookList());
+    updateBookList(bookModel.getCurrentBookList());
   }
 
   private void handleAddBookBarcodeFragment() {

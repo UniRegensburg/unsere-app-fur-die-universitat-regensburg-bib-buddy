@@ -35,7 +35,6 @@ import java.util.List;
 public class BookNotesView extends Fragment
     implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
 
-
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
@@ -51,6 +50,8 @@ public class BookNotesView extends Fragment
 
   private ExportBibTex exportBibTex;
   private String fileName;
+
+  private SortCriteria sortCriteria;
 
 
   @Nullable
@@ -80,6 +81,8 @@ public class BookNotesView extends Fragment
     view = inflater.inflate(R.layout.fragment_book_notes_view, container, false);
     context = view.getContext();
 
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+
     setupRecyclerView(bookId);
 
     TextView bookTitleView = view.findViewById(R.id.text_view_book);
@@ -89,7 +92,9 @@ public class BookNotesView extends Fragment
 
     setHasOptionsMenu(true);
     setupAddButton();
-    updateEmptyView(noteList);
+
+    updateBookNoteList(noteList);
+
     ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
     selectedNoteItems = new ArrayList<NoteItem>();
 
@@ -118,6 +123,10 @@ public class BookNotesView extends Fragment
     switch (item.getItemId()) {
       case R.id.menu_delete_note:
         handleDeleteNote();
+        break;
+
+      case R.id.menu_book_note_sort:
+        handleSortNote();
         break;
 
       case R.id.menu_export_note:
@@ -178,6 +187,24 @@ public class BookNotesView extends Fragment
     selectedNoteItems.clear();
   }
 
+  private void handleSortNote() {
+    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortNoteList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortNoteList() {
+    List<NoteItem> noteList = bookNotesViewModel.getSortedNoteList(sortCriteria, bookId);
+    adapter.setBookNoteList(noteList);
+    adapter.notifyDataSetChanged();
+  }
 
   private void checkEmptyNoteList() {
     if (bookNotesViewModel.getCurrentNoteList().isEmpty()) {
@@ -332,6 +359,12 @@ public class BookNotesView extends Fragment
       }
     });
 
+  }
+
+  private void updateBookNoteList(List<NoteItem> noteList) {
+    sortNoteList();
+
+    updateEmptyView(noteList);
   }
 
   private Bundle createBookBundle() {
