@@ -245,7 +245,7 @@ public class ImportBibTex {
     // if the names are comma separated
     if (authorNames.contains(", ")) {
       String[] authorName = authorNames.split(", ");
-      authors.add(new Author(authorName[0], authorName[1], ""));
+      authors.add(new Author(authorName[1], authorName[0], ""));
     }
 
     // if the names are whitespace separated
