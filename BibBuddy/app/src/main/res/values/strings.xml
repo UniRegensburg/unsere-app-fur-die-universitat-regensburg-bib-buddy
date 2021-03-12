@@ -240,7 +240,9 @@
     <string name="import_non_bib_file_description">
         Bitte wähle eine BibTeX Datei, um den Import zu ermöglichen.
     </string>
-    <string name="not_valid_bib_file">Die BibTeX Datei ist leer oder enthält keine Bücher.</string>
+    <string name="not_valid_bib_file">
+        Die BibTeX Datei ist leer oder enthält keine Bücher.
+    </string>
 
     <!-- Import of Shelf Data Path Storage -->
     <string name="imported_file_name_is">
