@@ -296,19 +296,22 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void saveNote() {
-    String name = getString(R.string.voice_note_name);
-    Long currentTime = new Date().getTime();
-    name = name + " " + getDate(currentTime);
-    int size = (int) tempAudio.length();
-    byte[] bytes = new byte[size];
-    try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        bytes = Files.readAllBytes(Paths.get(tempAudio.getPath()));
+    if(tempAudio != null) {
+      String name = getString(R.string.voice_note_name);
+      Long currentTime = new Date().getTime();
+      name = name + " " + getDate(currentTime);
+      int size = (int) tempAudio.length();
+      byte[] bytes = new byte[size];
+      try {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          bytes = Files.readAllBytes(Paths.get(tempAudio.getPath()));
+        }
+        noteModel.addNote(name, 1, "", bytes);
+        noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
+      } catch (IOException e) {
+        e.printStackTrace();
       }
-      noteModel.addNote(name, 1, "", bytes);
-      noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
-    } catch (IOException e) {
-      e.printStackTrace();
     }
   }
 
