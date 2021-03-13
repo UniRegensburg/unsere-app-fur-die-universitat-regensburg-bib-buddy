@@ -96,6 +96,10 @@ public class BookNotesView extends Fragment
     updateBookNoteList(noteList);
 
     ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
+    ((MainActivity) getActivity()).setVisibleImportShareButton(View.INVISIBLE, View.VISIBLE);
+
+    setFunctionsToolbar();
+
     selectedNoteItems = new ArrayList<NoteItem>();
 
     bookDao = bookNotesViewModel.getBookDao();
@@ -109,6 +113,16 @@ public class BookNotesView extends Fragment
     return view;
   }
 
+  private void setFunctionsToolbar() {
+
+    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        checkEmptyNoteList();
+      }
+    });
+
+  }
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {

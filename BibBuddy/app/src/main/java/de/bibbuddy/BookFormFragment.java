@@ -64,7 +64,9 @@ public class BookFormFragment extends Fragment {
           authorList.addAll(model.getAuthorList(bookId));
         }
 
+        ((MainActivity) getActivity()).setVisibleImportShareButton(View.INVISIBLE, View.INVISIBLE);
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
+        
         Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
         addBookBtn.setText(R.string.change);
       }

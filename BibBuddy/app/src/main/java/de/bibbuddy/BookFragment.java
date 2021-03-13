@@ -117,6 +117,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     createAddBookListener();
 
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
+    ((MainActivity) getActivity()).setVisibleImportShareButton(View.VISIBLE, View.VISIBLE);
+
+    setFunctionsToolbar();
+
     selectedBookItems = new ArrayList<>();
 
     return view;
@@ -131,6 +135,25 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     recyclerView.setAdapter(adapter);
 
     updateEmptyView(bookList);
+  }
+
+  private void setFunctionsToolbar() {
+    ((MainActivity) getActivity()).importBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        isImport = true;
+        checkStoragePermission();
+      }
+    });
+
+    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        isImport = false;
+        checkEmptyShelf();
+      }
+    });
+
   }
 
   @Override

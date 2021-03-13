@@ -38,6 +38,8 @@ public class LibraryRenameShelfFragment extends DialogFragment {
     setupButtons(view, bundle);
     setupEditText(view, bundle.getString(LibraryKeys.SHELF_NAME));
 
+    ((MainActivity) getActivity()).setVisibleImportShareButton(View.INVISIBLE, View.INVISIBLE);
+
     return view;
   }
 
