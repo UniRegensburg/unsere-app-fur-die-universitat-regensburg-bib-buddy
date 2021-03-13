@@ -161,7 +161,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     alertDeleteBook.setCancelable(false);
     alertDeleteBook.setTitle(R.string.delete_book);
-    alertDeleteBook.setMessage(R.string.delete_book_message);
+    alertDeleteBook.setMessage(Html.fromHtml(getActivity().getString(R.string.delete_book_message),
+        Html.FROM_HTML_MODE_COMPACT));
 
     alertDeleteBook.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override

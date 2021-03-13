@@ -48,8 +48,13 @@
     <string name="name_exists">Name existiert bereits in der Bibliothek</string>
     <string name="rename_shelf">Regal umbenennen</string>
     <string name="delete_shelf">Regal(e) löschen</string>
-    <string name="delete_shelf_message">Alle ausgewählten Regale werden gelöscht inklusive der
-        Bücher und Notizen. \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_shelf_message">
+        <![CDATA[
+        Alle ausgewählten Regale werden gelöscht inklusive der Bücher und Notizen.<br><br>
+
+        <b>ACHTUNG!</b> Diese Aktion kann nicht rückgängig gemacht werden.
+        ]]>
+    </string>
     <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>.
         Danach geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern
         und zu diesen Notizen schreiben. Für weitere Informationen öffnen Sie das Menü rechts oben
@@ -74,8 +79,12 @@
         auf <b>Hilfe</b>.</string>
     <string name="delete_book">Bücher löschen</string>
     <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
-    <string name="delete_book_message">Alle ausgewählten Bücher werden gelöscht inklusive der
-        Notizen. \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_book_message">
+        <![CDATA[
+        Alle ausgewählten Bücher werden gelöscht inklusive der Notizen.<br><br>
+        <b>ACHTUNG!</b> Diese Aktion kann nicht rückgängig gemacht werden.
+        ]]>
+    </string>
     <string name="add_book_scan_text">Barcode scannen</string>
     <string name="add_book_online_text">Im Online-Katalog suchen</string>
     <string name="add_book_manually_text">Manuell hinzufügen</string>
@@ -117,9 +126,12 @@
 
     <string name="delete_author">Autor(en) löschen</string>
     <string name="deleted_author">Autor(en) wurde(n) gelöscht</string>
-    <string name="delete_author_message">Alle ausgewählten Autoren werden gelöscht.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
-
+    <string name="delete_author_message">
+        <![CDATA[
+        Alle ausgewählten Autoren werden gelöscht.<br><br>
+        <b>ACHTUNG!</b> Diese Aktion kann nicht rückgängig gemacht werden.
+        ]]>
+    </string>
     <string name="author_help_text">
         <![CDATA[
         <h1><u>Hilfe zu den Autoren</u></h1>
@@ -164,8 +176,12 @@
         <b>Hilfe</b>.</string>
     <string name="delete_note">Notizen löschen</string>
     <string name="deleted_notes">Notiz(en) wurde(n) gelöscht</string>
-    <string name="delete_note_message">Alle ausgewählten Notizen werden gelöscht.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="delete_note_message">
+        <![CDATA[
+        Alle ausgewählten Notizen werden gelöscht.<br><br>
+        <b>ACHTUNG!</b> Diese Aktion kann nicht rückgängig gemacht werden.
+        ]]>
+    </string>
 
     <!-- Adding Notes Items -->
     <string name="create_text_note">Textnotiz</string>
@@ -249,7 +265,7 @@
         <h2>Regalnamen ändern</h2>
         <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
         das Menü und wählen Sie <b>Umbenennen</b> aus. Es erscheint ein Eingabefeld, in welchem Sie
-        den Namen ändern können, indem Sie die Änderung mit Klick auf den Button bestätigen.<br><br>
+        den Namen ändern können, indem Sie die Änderung mit Klick auf den Button bestätigen.<br>
         Wenn Sie auf <b>Zurück</b> gehen werden die Änderungen nicht gespeichert und Sie gelangen
         zurück zur Übersicht. <br>
 

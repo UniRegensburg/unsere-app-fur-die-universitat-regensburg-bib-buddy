@@ -115,7 +115,8 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
 
     alertDeleteAuthor.setCancelable(false);
     alertDeleteAuthor.setTitle(R.string.delete_author);
-    alertDeleteAuthor.setMessage(R.string.delete_author_message);
+    alertDeleteAuthor.setMessage(Html.fromHtml(getActivity()
+        .getString(R.string.delete_author_message), Html.FROM_HTML_MODE_COMPACT));
 
     alertDeleteAuthor.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override

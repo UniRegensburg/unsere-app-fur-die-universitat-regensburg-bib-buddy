@@ -247,8 +247,8 @@ public class LibraryFragment extends Fragment
 
     alertDeleteShelf.setCancelable(false);
     alertDeleteShelf.setTitle(R.string.delete_shelf);
-    alertDeleteShelf.setMessage(R.string.delete_shelf_message);
-
+    alertDeleteShelf.setMessage(Html.fromHtml(requireActivity()
+        .getString(R.string.delete_shelf_message), Html.FROM_HTML_MODE_COMPACT));
     alertDeleteShelf.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {

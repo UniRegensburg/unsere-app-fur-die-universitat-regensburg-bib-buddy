@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -286,7 +287,8 @@ public class NotesRecyclerViewAdapter
 
     alertDeleteNote.setCancelable(false);
     alertDeleteNote.setTitle(R.string.delete_note);
-    alertDeleteNote.setMessage(R.string.delete_note_message);
+    alertDeleteNote.setMessage(Html.fromHtml(activity.getString(R.string.delete_note_message),
+        Html.FROM_HTML_MODE_COMPACT));
 
     alertDeleteNote.setNegativeButton(R.string.back, (dialog, which) -> {
       for (int i = 0; i < data.size(); i++) {
