@@ -1,7 +1,9 @@
 package de.bibbuddy;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,14 +77,13 @@ public class TextNoteEditorFragment extends Fragment {
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_texteditor_menu, menu);
+    inflater.inflate(R.menu.fragment_text_editor_menu, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.menu_help_texteditor) {
+    if (item.getItemId() == R.id.menu_help_text_editor) {
       handleManualTextEditor();
     } else {
       Toast.makeText(getContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
@@ -92,19 +93,14 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void handleManualTextEditor() {
-    HelpFragment helpFragment = new HelpFragment();
-    String htmlAsString = getString(R.string.texteditor_help_text);
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.text_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
-    Bundle bundle = new Bundle();
-
-    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
-    helpFragment.setArguments(bundle);
-
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
+    alertDeleteNote.setCancelable(false);
+    alertDeleteNote.setTitle(R.string.help);
+    alertDeleteNote.setMessage(htmlAsString);
+    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    alertDeleteNote.show();
   }
 
   private void saveNote() {

@@ -354,37 +354,64 @@
         ]]>
     </string>
 
-    <string name="texteditor_help_text">
+    <string name="text_editor_help_text">
         <![CDATA[
-        <h1><u>Hilfe zum Texteditor</u></h1>
+        <h1><u>Texteditor</u></h1>
         <p>Sie befinden sich im Texteditor. Hier können Sie die ausgewählte Notiz bearbeiten bzw.
-        eine neue Notiz erstellen.</p>
+        eine neue Notiz erstellen.</p><br>
 
         <h2>Notiz schreiben</h2>
         <p>In das Textfeld können Sie Ihre Notiz eintippen. Die erste Zeile wird als Name der
-        Notiz gespeichert.</p>
+        Notiz gespeichert.</p><br>
 
         <h2>Text formatieren</h2>
         <p>Sie können den Textstil ändern, indem Sie oben rechts auf den Pfeil klicken. Es öffnet
-        sich ein Auswahlleiste mit Buttons zum formatieren Ihres Textes. <br><br>
+        sich ein Auswahlleiste mit Buttons zum formatieren Ihres Textes. <br>
 
         Sie können den Text fett <b>(B)</b>, kursiv <b>(I)</b>, unterstrichen <b>(U)</b> oder
         durchgestrichen <b>(S)</b> gestalten. Wenn Sie auf den Button drücken wird der nachfolgende
         Text entsprechend hervorgehoben. Um die Hervorhebung zu beenden, klicken Sie erneut auf den
         entsprechenden Button. Wenn Sie mehrere Hervorhebungstile gleichzeitig benötigen, klicken
-        Sie alle entsprechenden Buttons an.<br><br>
+        Sie alle entsprechenden Buttons an.<br>
 
         Mit dem <b>Zurück-Pfeil</b> links in der Leiste können Sie Ihre Änderungen rückgängig machen
-        und mit dem daneben befindlichen <b>Vorwärts-Pfeil</b> diese wieder herstellen.<br><br>
+        und mit dem daneben befindlichen <b>Vorwärts-Pfeil</b> diese wieder herstellen.<br>
 
         Die Leiste ist scrollbar, sodass man durch Wischen oder Klicken auf die Pfeile zu weiteren
         Items gelangt. Mit dem <b>Listen</b>-Button, kann man eine Aufzählung starten und mit den
-        Button in Form von <b>Anführungszeichen</b> ein Zitat schreiben.</p>
+        Button in Form von <b>Anführungszeichen</b> ein Zitat schreiben.</p><br>
 
         <h2>Notiz speichern</h2>
         <p>Sobald Sie auf den internen Zurück-Buttons Ihres Handys drücken, wird die Notiz
         automatisch gespeichert. Sie befindet sich dann in der Übersicht des jeweiligen Buches oder
         in der Gesamtübersicht der Notizen.</p>
+        ]]>
+    </string>
+
+    <string name="voice_editor_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zum Spracheditor</u></h1>
+        <p>Sie befinden sich im Spracheditor. Hier können Sie eine neue Sprachnotiz erstellen und
+        abspielen.</p><br>
+
+        <h2>Sprachnotiz aufnehmen</h2>
+        <p>Klicken Sie auf den Button mit dem Mikrofon und fangen Sie an zu sprechen.
+        Sie können die Aufnahme stoppen, indem sie den Aufnahme-Button, Stop-Button oder den
+        Play-Button anklicken.</p><br>
+
+        <h2>Sprachnotiz abspielen</h2>
+        <p>Sie können die Sprachnotiz anhören, indem sie den Playbutton anklicken.
+        Danach kann die Aufnahme mit selbigem Button mit einem Pause-Icon pausiert oder durch Klick
+        auf den Stop-Button gestoppt und auf Anfang zurückgesetzt werden.<br>
+
+        Außerdem erscheint nach der Aufnahme einer Notiz unter den Buttons auch eine Suchleiste
+        mit der durch Ziehen des Punktindikators zu einer beliebigen Stelle gesprungen werden
+        kann.</p><br>
+
+        <h2>Notiz speichern</h2>
+        <p>Sobald Sie auf den internen Zurück-Buttons Ihres Handys drücken, wird die aktuelle
+        Aufnahme automatisch gespeichert. Sie befindet sich dann in der Übersicht des jeweiligen
+        Buches oder in der Gesamtübersicht der Notizen.</p>
         ]]>
     </string>
 

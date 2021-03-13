@@ -1,17 +1,24 @@
 package de.bibbuddy;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -60,6 +67,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
   }
 
   @Nullable
@@ -105,6 +113,34 @@ public class VoiceNoteEditorFragment extends Fragment {
     }
 
     return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_voice_editor_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_help_voice_editor) {
+      handleManualTextEditor();
+    } else {
+      Toast.makeText(getContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  private void handleManualTextEditor() {
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
+
+    android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
+    alertDeleteNote.setCancelable(false);
+    alertDeleteNote.setTitle(R.string.help);
+    alertDeleteNote.setMessage(htmlAsString);
+    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    alertDeleteNote.show();
   }
 
   private void setupOnClickListeners() {
