@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -279,19 +281,14 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void handleManualBook() {
-    HelpFragment helpFragment = new HelpFragment();
-    String htmlAsString = getString(R.string.book_help_text);
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.book_help_text), Html.FROM_HTML_MODE_COMPACT);
 
-    Bundle bundle = new Bundle();
-
-    bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
-    helpFragment.setArguments(bundle);
-
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
+    alertDeleteNote.setCancelable(false);
+    alertDeleteNote.setTitle(R.string.help);
+    alertDeleteNote.setMessage(htmlAsString);
+    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    alertDeleteNote.show();
   }
 
   private Bundle createBookBundle(LibraryItem item) {

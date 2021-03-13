@@ -237,32 +237,32 @@
         <![CDATA[
         <h1><u>Hilfe zur Bibliothek</u></h1>
         <p>Sie befinden sich in der Bibliotheksansicht. Hier werden alle Ihre angelegten Regale
-        angezeigt, in die Sie Ihre Bücher und Notizen speichern können.</p>
+        angezeigt, in die Sie Ihre Bücher und Notizen speichern können.</p><br>
 
         <h2>Anlegen eines neuen Regal</h2>
         <p>Ein neues Regal können Sie mit Klicken auf den <b>+-Button</b> angelegen. Geben Sie
         anschließend den Name für das Regal ein und bestätigen Sie diesen per Klick auf den Button
-        <b>Hinzufügen</b>. <br>
+        <b>Hinzufügen</b>.<br>
         Danach erscheint das neu angelegte Regal in der Übersicht. Mit Klick auf <b>Zurück</b>
-        gelangen Sie zur Übersicht ohne das Regal zu speichern.</p>
+        gelangen Sie zur Übersicht ohne das Regal zu speichern.</p><br>
 
         <h2>Regalnamen ändern</h2>
         <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
         das Menü und wählen Sie <b>Umbenennen</b> aus. Es erscheint ein Eingabefeld, in welchem Sie
         den Namen ändern können, indem Sie die Änderung mit Klick auf den Button bestätigen.<br><br>
         Wenn Sie auf <b>Zurück</b> gehen werden die Änderungen nicht gespeichert und Sie gelangen
-        zurück zur Übersicht. <br><br>
+        zurück zur Übersicht. <br>
 
-        <b>Beachten</b> Sie, dass nur ein Regal ausgewählt sein darf, um dieses zu ändern.</p>
+        <b>Beachten</b> Sie, dass nur ein Regal ausgewählt sein darf, um dieses zu ändern.</p><br>
 
         <h2>Regal löschen</h2>
         <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
         das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass Sie das Regal
-        endgültig löschen wollen.<br><br>
+        endgültig löschen wollen.<br>
         <u><b>Achtung!</b></u> Das Regal wird samt seinen enthaltenen Büchern und
         Notizen gelöscht und kann nicht wieder hergestellt werden. <br><br>
         Wenn Sie mehrere Regale gleichzeitig löschen wollen, wählen Sie mehrere Regale aus und
-        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+        klicken Sie dann auf <b>Löschen</b> im Menü.</p><br>
 
         <h2>Backup von Daten</h2>
         <p>Sie können ein Backup Ihrer Daten in Form einer Datenbankdatei ertsellen, indem Sie oben
@@ -276,12 +276,12 @@
         <h1><u>Hilfe zu den Büchern</u></h1>
         <p>Sie befinden sich in der Ansicht des ausgewählten Regals. Hier werden alle Ihre
         angelegten Bücher dieses Regals angezeigt. Zu den Büchern können Sie Ihre Notizen anlegen.
-        </p>
+        </p><br>
 
         <h2>Anlegen eines neuen Buches</h2>
         <p>Ein neues Buch kann mit Klicken auf den <b>+-Button</b> angelegt werden. Anschließend
         erschient ein Auswahlmenü, wo Sie zwischen <b>Manuell Hinzufügen</b>, <b>Im Online-Katalog
-        suchen</b> oder <b>Barcode scannen</b> wählen können. <br><br>
+        suchen</b> oder <b>Barcode scannen</b> wählen können.<br>
 
         Beim manuellen Hinzufügen erscheint ein Eingabeformular, in welchem Sie die Buchdaten
         händisch eingeben können.<br>
@@ -291,7 +291,7 @@
         Haben Sie das Scannen des Barcodes ausgewählt, öffnet sich der Scanner. Halten Sie nun das
         Handy über den Barcode. Die Buchdaten werden automatisch erfasst und gespeichert.<br><br>
         Das neu anlegte Buch ist anschließend in der Übersicht unter dem entsprechenden Regal zu
-        finden.</p>
+        finden.</p><br>
 
         <h2>Buchdaten ändern</h2>
         <p>Wählen Sie ein Buch aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
@@ -299,16 +299,16 @@
         Buchdaten manuell ändern können. Bestätigen Sie die Änderung mit Klick auf den Button. Wenn
         Sie auf <b>Zurück</b> gehen gelangen Sie zurück zur Übersicht. Die Änderungen werden dann
         nicht gespeichert. Beachten Sie, dass nur ein Buch ausgewählt sein darf, um dieses
-        zu ändern.</p>
+        zu ändern.</p><br>
 
         <h2>Buch löschen</h2>
         <p>Wählen Sie ein Buch aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
         das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie anschließend, dass Sie das Buch
-        endgültig löschen wollen. <br><br>
+        endgültig löschen wollen. <br>
         <u><b>Achtung!</b></u> Das Buch wird samt seinen angelegten Notizen gelöscht und kann nicht
-        wieder hergestellt werden. <br><br>
+        wieder hergestellt werden. <br>
         Wenn Sie mehrere Bücher gleichzeitig löschen wollen, wählen Sie mehrere Bücher aus und
-        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+        klicken Sie dann auf <b>Löschen</b> im Menü.</p><br>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -321,31 +321,31 @@
         <![CDATA[
         <h1><u>Hilfe zu den Notizen</u></h1>
         <p>Sie befinden sich in der Ansicht des ausgewählten Buches. Hier werden alle Ihre
-        angelegten Notizen zu diesem Buch angezeigt.</p>
+        angelegten Notizen zu diesem Buch angezeigt.</p><br>
 
         <h2>Anlegen einer neuen Notiz</h2>
         <p>Eine neue Notiz kann mit Klicken auf den <b>+-Button</b> angelegt werden. Anschließend
         erschient ein Auswahlmenü, wo Sie zwischen <b>Textnotiz</b>, <b>Bild</b> oder <b>Audio</b>
-        wählen können. <br><br>
+        wählen können. <br>
         Wenn Sie Textnotiz auswählen, öffnet sich ein Texteditor. Hier können Sie die Notiz
         eintippen. Beim Klicken auf den internen Zurück-Button wird die Notiz automatisch
         gespeichert. Die erste Zeile wird dabei als Name der Notiz gesetzt. <br><br>
         Die neu anlegte Notiz ist anschließend in der Übersicht unter dem entsprechenden Buch zu
-        finden und in der Gesamtübersicht.</p>
+        finden und in der Gesamtübersicht.</p><br>
 
         <h2>Notiz bearbeiten/ändern</h2>
         <p>Um eine bestehende Notiz zu bearbeiten klicken Sie diese an. Es öffnet sich der
         Texteditor und Sie können den Namen der Notiz in der ersten Zeile sowie den nachfolgenden
-        Text ändern.</p>
+        Text ändern.</p><br>
 
         <h2>Notiz löschen</h2>
         <p>Wählen Sie ein Notiz aus, indem Sie diese gedrückt halten. Klicken Sie dann oben rechts
         auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass Sie das Buch
-        endgültig löschen wollen. <br><br>
+        endgültig löschen wollen. <br>
         <b>Achtung!</b></u> Die Notiz wird endgültig gelöscht und kann nicht wieder hergestellt
-        werden.<br><br>
+        werden.<br>
         Wenn Sie mehrere Notizen gleichzeitg löschen wollen, wählen Sie mehrere Notizen aus und
-        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+        klicken Sie dann auf <b>Löschen</b> im Menü.</p><br>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -366,7 +366,7 @@
 
         <h2>Text formatieren</h2>
         <p>Sie können den Textstil ändern, indem Sie oben rechts auf den Pfeil klicken. Es öffnet
-        sich ein Auswahlleiste mit Buttons zum formatieren Ihres Textes. <br>
+        sich ein Auswahlleiste mit Buttons zum formatieren Ihres Textes.<br>
 
         Sie können den Text fett <b>(B)</b>, kursiv <b>(I)</b>, unterstrichen <b>(U)</b> oder
         durchgestrichen <b>(S)</b> gestalten. Wenn Sie auf den Button drücken wird der nachfolgende
@@ -419,20 +419,20 @@
         <![CDATA[
         <h1><u>Hilfe zur gesamten Notizübersicht</u></h1>
         <p>Sie befinden sich in Notizübersicht. Hier werden alle Ihre angelegten Notizen angezeigt.
-        </p>
+        </p><br>
 
         <h2>Notiz bearbeiten</h2>
         <p>Um eine bestehende Notiz zu bearbeiten klicken Sie diese in der Liste an. Es öffnet sich
         der Texteditor und Sie können den Namen der Notiz in der ersten Zeile sowie den
         nachfolgenden Text ändern. Die Änderungen werden automatisch gespeichert, sobald Sie auf den
-        internen Zurück-Button Ihres Handys klicken.</p>
+        internen Zurück-Button Ihres Handys klicken.</p><br>
 
         <h2>Notiz löschen</h2>
         <p>Wenn Sie eine Notiz löschen wollen, halten Sie diese gedrückt und wischen Sie sie nach
         links. Sie können das Löschen rückgängig machen, indem Sie sofort im Anschluss auf
-        <b>Rückgängig</b> klicken.<br><br>
+        <b>Rückgängig</b> klicken.<br>
         <u><b>Achtung!</b></u> Sobald die Notiz endgültig gelöscht wurde, kann diese nicht wieder
-        hergestellt werden.</p>
+        hergestellt werden.</p><br>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -444,16 +444,15 @@
         <![CDATA[
         <h1><u>Hilfe zur Suche</u></h1>
         <p>Sie befinden sich in der Suche. Hier können Sie nach Regalen, Büchern und Notizen suchen.
-        </p>
+        </p><br>
 
         <h2>Sortieren</h2>
         <p>Sie können ihre Suchergebnisse nach  \"Name\" oder  \"Änderungsdatum\" sortieren.
-        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p>
+        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p><br>
 
         <h2>Filtern</h2>
         <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
         Klicken Sie dazu die entsprechenden Optionen im Menü an.</p>
-
         ]]>
     </string>
 
