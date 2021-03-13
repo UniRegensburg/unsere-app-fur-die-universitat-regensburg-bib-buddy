@@ -4,6 +4,10 @@
     <item
         android:id="@+id/menu_delete_note_list"
         android:title="@string/delete" />
+        
+    <item
+        android:id="@+id/menu_note_sort"
+        android:title="@string/sort" />
 
     <item
         android:id="@+id/menu_help_note_list"

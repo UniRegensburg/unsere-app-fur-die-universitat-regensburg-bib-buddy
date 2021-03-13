@@ -20,13 +20,12 @@
 
     <ImageButton
         android:id="@+id/search_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
         android:adjustViewBounds="true"
-        android:background="@color/search_selector"
-        android:padding="5dp"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/magnifyingglass"
         app:layout_constraintHorizontal_bias="1.0"

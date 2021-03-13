@@ -1,11 +1,9 @@
 package de.bibbuddy;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -53,7 +51,6 @@ public class AuthorFormFragment extends Fragment {
     // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_author_form, container, false);
 
-    setupInput(view);
     setInputText(view);
 
     redColor = getResources().getColor(R.color.alert_red, null);
@@ -61,13 +58,6 @@ public class AuthorFormFragment extends Fragment {
     setupAddAuthorBtnListener(view);
 
     return view;
-  }
-
-  private void setupInput(View view) {
-    view.findViewById(R.id.author_form_title_input).requestFocus();
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
   }
 
   private void setInputText(View view) {
@@ -126,10 +116,6 @@ public class AuthorFormFragment extends Fragment {
   }
 
   private void closeFragment() {
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
-
     FragmentManager fragmentManager = getParentFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
       fragmentManager.popBackStack();

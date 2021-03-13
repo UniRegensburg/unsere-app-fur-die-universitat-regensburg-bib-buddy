@@ -36,6 +36,8 @@ import java.util.List;
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener {
 
+  private final String fileName = "library_export_BibBuddy";
+
   private View view;
   private Context context;
   private LibraryModel libraryModel;
@@ -47,7 +49,7 @@ public class LibraryFragment extends Fragment
 
   private ExportBibTex exportBibTex;
 
-  private final String fileName = "library_export_BibBuddy";
+  private SortCriteria sortCriteria;
 
 
   @Nullable
@@ -66,6 +68,8 @@ public class LibraryFragment extends Fragment
     // Called to have the fragment instantiate its user interface view.
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
+
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
     setupRecyclerView();
     setupAddShelfBtn();
@@ -94,10 +98,11 @@ public class LibraryFragment extends Fragment
         break;
 
       case R.id.menu_rename_shelf:
-        if (selectedShelfItems.size() != 1) {
-          return true;
-        }
         handleRenameShelf();
+        break;
+
+      case R.id.menu_sort_shelf:
+        handleSortShelf();
         break;
 
       case R.id.menu_delete_shelf:
@@ -109,7 +114,7 @@ public class LibraryFragment extends Fragment
         break;
 
       default:
-        Toast.makeText(getContext(), "??? wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
     }
 
     return super.onOptionsItemSelected(item);
@@ -146,9 +151,9 @@ public class LibraryFragment extends Fragment
       exportBibTex.writeBibFile(exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
 
       Toast.makeText(getContext(),
-          getString(R.string.exported_file_stored_in) + '\n'
-              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
-              + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+                     getString(R.string.exported_file_stored_in) + '\n'
+                         + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+                         + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -158,7 +163,7 @@ public class LibraryFragment extends Fragment
       showRequestPermissionDialog();
     } else {
       requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          StorageKeys.STORAGE_PERMISSION_CODE);
+                         StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
 
@@ -169,8 +174,8 @@ public class LibraryFragment extends Fragment
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-            StorageKeys.STORAGE_PERMISSION_CODE));
+             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+             StorageKeys.STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
 
@@ -180,10 +185,10 @@ public class LibraryFragment extends Fragment
   /**
    * Callback method, that checks the result from requesting permissions.
    *
-   * @param requestCode unique integer value for the requested permission
-   *                    This value is given by the programmer.
-   * @param permissions array of requested name(s)
-   *                    of the permission(s)
+   * @param requestCode  unique integer value for the requested permission
+   *                     This value is given by the programmer.
+   * @param permissions  array of requested name(s)
+   *                     of the permission(s)
    * @param grantResults grant results for the corresponding permissions
    *                     which is either PackageManager.PERMISSION_GRANTED
    *                     or PackageManager.PERMISSION_DENIED.
@@ -199,16 +204,16 @@ public class LibraryFragment extends Fragment
 
         exportBibTex.createBibFile();
         exportBibTex.writeBibFile(exportBibTex
-            .getBibDataLibrary(libraryModel, bookDao, noteDao));
+                                      .getBibDataLibrary(libraryModel, bookDao, noteDao));
 
         Toast.makeText(getContext(),
             getString(R.string.exported_file_stored_in) + '\n'
-                + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
-                + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+                  + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+                  + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
 
       } else {
         Toast.makeText(getContext(), R.string.storage_permission_denied,
-            Toast.LENGTH_SHORT).show();
+                       Toast.LENGTH_SHORT).show();
       }
     }
   }
@@ -259,8 +264,7 @@ public class LibraryFragment extends Fragment
       @Override
       public void onClick(DialogInterface dialog, int which) {
         libraryModel.deleteShelves(selectedShelfItems);
-        adapter.notifyDataSetChanged();
-        updateEmptyView(libraryModel.getCurrentLibraryList());
+        updateLibraryListView(libraryModel.getCurrentLibraryList());
         Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
         unselectLibraryItems();
       }
@@ -302,9 +306,29 @@ public class LibraryFragment extends Fragment
     selectedShelfItems.clear();
   }
 
+  private void handleSortShelf() {
+    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortLibraryList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortLibraryList() {
+    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortCriteria);
+    adapter.setLibraryList(libraryList);
+    adapter.notifyDataSetChanged();
+  }
+
   private void setupRecyclerView() {
     libraryModel = new LibraryModel(getContext());
-    List<ShelfItem> libraryList = libraryModel.getLibraryList(null);
+    List<ShelfItem> libraryList = libraryModel
+        .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
 
     RecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
     adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
@@ -387,6 +411,7 @@ public class LibraryFragment extends Fragment
   }
 
   private void updateLibraryListView(List<ShelfItem> libraryList) {
+    libraryList = libraryModel.getSortedLibraryList(sortCriteria, libraryList);
     adapter.notifyDataSetChanged();
     updateEmptyView(libraryList);
   }

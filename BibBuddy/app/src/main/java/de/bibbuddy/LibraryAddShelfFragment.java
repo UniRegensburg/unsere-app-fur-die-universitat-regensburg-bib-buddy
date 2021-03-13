@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,16 +34,8 @@ public class LibraryAddShelfFragment extends DialogFragment {
 
     Bundle bundle = this.getArguments();
     setupButtons(view, bundle);
-    setupInput(view);
 
     return view;
-  }
-
-  private void setupInput(View view) {
-    view.findViewById(R.id.input_shelf_name).requestFocus();
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
   }
 
   /**
@@ -52,10 +43,6 @@ public class LibraryAddShelfFragment extends DialogFragment {
    */
   public void closeFragment() {
     onDestroyView();
-
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
   }
 
   private void setupButtons(View view, Bundle bundle) {

@@ -41,6 +41,8 @@ public class NotesFragment extends Fragment {
     return noteModel.getNoteMedia(note.getNoteFileId());
   }
 
+  private SortCriteria sortCriteria;
+
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,8 +59,9 @@ public class NotesFragment extends Fragment {
       }
     });
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
-
     recyclerView = view.findViewById(R.id.notesRecyclerView);
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+
     noteModel = new NoteModel(getContext());
     notes = noteModel.getCompleteNoteList();
 
@@ -78,6 +81,8 @@ public class NotesFragment extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_delete_note_list) {
       adapter.handleDeleteNote();
+    } else if (item.getItemId == R.id.menu_note_sort){
+      handleSortNote();
     } else if (item.getItemId() == R.id.menu_help_note_list) {
       handleManualNotesList();
     } else {
@@ -85,6 +90,25 @@ public class NotesFragment extends Fragment {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleSortNote() {
+    SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortNoteList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortNoteList() {
+    List<NoteItem> noteList = noteModel.getAllSortedNoteList(sortCriteria);
+    adapter.setNoteList(noteList);
+    adapter.notifyDataSetChanged();
   }
 
   private void handleManualNotesList() {

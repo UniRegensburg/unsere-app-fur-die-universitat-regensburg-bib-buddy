@@ -88,6 +88,9 @@ public class BookNotesViewModel {
     return noteList.get(position);
   }
 
+  public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
+    return noteModel.getSortedNoteList(sortCriteria, bookId);
+  }
 
 }
 

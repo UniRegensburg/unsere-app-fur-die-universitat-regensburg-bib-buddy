@@ -1,11 +1,9 @@
 package de.bibbuddy;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.activity.OnBackPressedCallback;
@@ -49,8 +47,6 @@ public class BookFormFragment extends Fragment {
 
     // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
-
-    setupInput(view);
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
@@ -112,21 +108,10 @@ public class BookFormFragment extends Fragment {
     addInfoField.setText(book.getAddInfo());
   }
 
-  private void setupInput(View view) {
-    view.findViewById(R.id.book_form_isbn_input).requestFocus();
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-  }
-
   /**
    * Closes the BookFormFragment.
    */
   public void closeFragment() {
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
-
     FragmentManager fragmentManager = getParentFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
       fragmentManager.popBackStack();

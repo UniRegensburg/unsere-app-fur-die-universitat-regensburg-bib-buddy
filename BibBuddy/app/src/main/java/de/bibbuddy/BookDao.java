@@ -461,4 +461,29 @@ public class BookDao implements InterfaceBookDao {
     return bookList;
   }
 
+  /**
+   * Method that finds the shelfId of a book in the database.
+   *
+   * @param id id of the book
+   * @return Returns the shelfId of the book
+   */
+  public Long findShelfIdByBook(Long id) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.SHELF_ID + " FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK
+            + " WHERE " + DatabaseHelper.BOOK_ID + " = ? LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(id)});
+
+    Long shelfId = 0L;
+    if (cursor.moveToFirst()) {
+      shelfId = Long.parseLong(cursor.getString(0));
+    }
+
+    cursor.close();
+
+    return shelfId;
+  }
+
 }

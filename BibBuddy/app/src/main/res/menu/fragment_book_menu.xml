@@ -10,8 +10,16 @@
         android:title="@string/change" />
 
     <item
+        android:id="@+id/menu_sort_shelf"
+        android:title="@string/sort" />
+
+    <item
         android:id="@+id/menu_export_shelf"
         android:title="@string/export_shelf" />
+
+    <item
+        android:id="@+id/menu_import_in_shelf"
+        android:title="@string/import_in_shelf" />
 
     <item
         android:id="@+id/menu_help_book"

@@ -134,7 +134,7 @@ public class AuthorDao implements InterfaceAuthorDao {
         new String[] { DatabaseHelper._ID,
             DatabaseHelper.FIRST_NAME,
             DatabaseHelper.LAST_NAME,
-            DatabaseHelper.TITLE, 
+            DatabaseHelper.TITLE,
             DatabaseHelper.MOD_DATE,
             DatabaseHelper.CREATE_DATE},
             selection,
