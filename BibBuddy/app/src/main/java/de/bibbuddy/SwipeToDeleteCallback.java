@@ -134,7 +134,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     });
 
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
-      Toast.makeText(activity.getBaseContext(), String.valueOf(R.string.deleted_notes),
+      Toast.makeText(activity.getBaseContext(), activity.getString(R.string.deleted_notes),
           Toast.LENGTH_SHORT).show();
       adapter.removeItem(position);
       adapter.notifyDataSetChanged();
