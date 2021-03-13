@@ -133,13 +133,15 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void handleManualVoiceEditor() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString =
+        Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
     alertDeleteNote.setCancelable(false);
     alertDeleteNote.setTitle(R.string.help);
     alertDeleteNote.setMessage(htmlAsString);
-    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {
+    });
     alertDeleteNote.show();
   }
 
@@ -288,7 +290,8 @@ public class VoiceNoteEditorFragment extends Fragment {
     seekBarListener =
         new SeekBarListener(getActivity(), mediaPlayer, seekBar, playedTime);
     int millis = mediaPlayer.getDuration();
-    String duration = new SimpleDateFormat("mm:ss", Locale.getDefault()).format(new Date(millis));
+    String duration = new SimpleDateFormat("mm:ss",
+        Locale.getDefault()).format(new Date(millis));
     totalTime.setText(duration);
     seekBar.setOnSeekBarChangeListener(seekBarListener);
     voiceNotePlayer.setVisibility(View.VISIBLE);
@@ -296,7 +299,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void saveNote() {
-    if(tempAudio != null) {
+    if (tempAudio != null) {
       String name = getString(R.string.voice_note_name);
       Long currentTime = new Date().getTime();
       name = name + " " + getDate(currentTime);
