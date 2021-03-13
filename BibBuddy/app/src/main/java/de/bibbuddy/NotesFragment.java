@@ -27,19 +27,10 @@ import java.util.List;
  */
 public class NotesFragment extends Fragment {
 
-  static List<NoteItem> notes;
+  static List<NoteItem> noteList;
   private static NoteModel noteModel;
   private static RecyclerView recyclerView;
   private NotesRecyclerViewAdapter adapter;
-
-  public static void deleteNote(Long id) {
-    noteModel.deleteNote(id);
-  }
-
-  public static byte[] getNoteMedia(Long noteId) {
-    Note note = noteModel.getNoteById(noteId);
-    return noteModel.getNoteMedia(note.getNoteFileId());
-  }
 
   private SortCriteria sortCriteria;
 
@@ -63,7 +54,7 @@ public class NotesFragment extends Fragment {
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
     noteModel = new NoteModel(getContext());
-    notes = noteModel.getCompleteNoteList();
+    noteList = noteModel.getCompleteNoteList();
 
     setHasOptionsMenu(true);
     setupRecyclerView();
@@ -73,7 +64,7 @@ public class NotesFragment extends Fragment {
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_note_list_menu, menu);
+    inflater.inflate(R.menu.fragment_notes_menu, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
 
@@ -81,7 +72,7 @@ public class NotesFragment extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_delete_note_list) {
       adapter.handleDeleteNote();
-    } else if (item.getItemId == R.id.menu_note_sort){
+    } else if (item.getItemId() == R.id.menu_note_sort) {
       handleSortNote();
     } else if (item.getItemId() == R.id.menu_help_note_list) {
       handleManualNotesList();
@@ -94,36 +85,38 @@ public class NotesFragment extends Fragment {
 
   private void handleSortNote() {
     SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            sortNoteList();
-          }
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          sortNoteList();
         });
 
     sortDialog.show();
   }
 
   private void sortNoteList() {
-    List<NoteItem> noteList = noteModel.getAllSortedNoteList(sortCriteria);
-    adapter.setNoteList(noteList);
-    adapter.notifyDataSetChanged();
+    if (noteList.size() != 0) {
+      long bookId = noteList.get(0).getBookId();
+      List<NoteItem> noteList = noteModel.getSortedNoteList(sortCriteria, bookId);
+      adapter.setBookNoteList(noteList);
+      adapter.notifyDataSetChanged();
+    }
   }
 
   private void handleManualNotesList() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.note_list_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString =
+        Html.fromHtml(getString(R.string.note_list_help_text), Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
-    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
+    });
     helpAlert.show();
   }
 
   private void setupRecyclerView() {
-    adapter = new NotesRecyclerViewAdapter(notes, (MainActivity) requireActivity(), noteModel);
+    adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) requireActivity(), noteModel);
     recyclerView.setAdapter(adapter);
   }
 

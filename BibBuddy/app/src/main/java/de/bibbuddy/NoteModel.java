@@ -1,7 +1,9 @@
 package de.bibbuddy;
 
 import android.content.Context;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import org.jsoup.Jsoup;
@@ -80,7 +82,7 @@ public class NoteModel {
     return noteList;
   }
 
-  private String getDate(Long date) {
+  public String getDate(Long date) {
     Date d = new Date(date);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
         Locale.getDefault());

@@ -46,6 +46,7 @@ public class BookNotesFragment extends Fragment {
 
   private ExportBibTex exportBibTex;
   private String fileName;
+  private SortCriteria sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
   @Nullable
   @Override
@@ -109,6 +110,8 @@ public class BookNotesFragment extends Fragment {
     int itemId = item.getItemId();
     if (item.getItemId() == R.id.menu_delete_note) {
       adapter.handleDeleteNote();
+    } else if (item.getItemId() == R.id.menu_book_note_sort) {
+      handleSortNote();
     } else if (itemId == R.id.menu_export_note) {
       // TODO Silvia Export
       // handleExportLibrary();
@@ -121,6 +124,28 @@ public class BookNotesFragment extends Fragment {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void handleSortNote() {
+    SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortNoteList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortNoteList() {
+    if (noteList.size() != 0) {
+      long bookId = noteList.get(0).getBookId();
+      List<NoteItem> noteList = noteModel.getSortedNoteList(sortCriteria, bookId);
+      adapter.setBookNoteList(noteList);
+      adapter.notifyDataSetChanged();
+    }
   }
 
   private void checkEmptyNoteList() {
@@ -219,13 +244,15 @@ public class BookNotesFragment extends Fragment {
   }
 
   private void handleManualBookNotes() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.book_note_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString =
+        Html.fromHtml(getString(R.string.book_note_help_text), Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
-    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
+    });
     helpAlert.show();
   }
 

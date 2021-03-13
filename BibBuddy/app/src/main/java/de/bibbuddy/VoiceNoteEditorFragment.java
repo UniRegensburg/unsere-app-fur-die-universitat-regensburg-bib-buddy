@@ -245,7 +245,6 @@ public class VoiceNoteEditorFragment extends Fragment {
       recorder.release();
       isRecording = false;
     }
-    saveNote();
   }
 
   private void onPlay() {

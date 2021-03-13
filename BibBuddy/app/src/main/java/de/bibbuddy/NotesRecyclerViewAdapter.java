@@ -49,7 +49,8 @@ public class NotesRecyclerViewAdapter
   private final ArrayList<ImageButton> stopButtons;
   private final ArrayList<ProgressBar> progressBars;
   private final ArrayList<SeekBarListener> seekBarListeners;
-  private final List<NoteItem> data;
+
+  private List<NoteItem> data;
   private ViewGroup parent;
 
   private int mediaPlayerPosition;
@@ -128,7 +129,7 @@ public class NotesRecyclerViewAdapter
 
   private void setUpBasicCardView(NotesViewHolder holder, int position) {
     NoteItem noteItem = data.get(position);
-    holder.getModDateView().setText(noteItem.getModDate());
+    holder.getModDateView().setText(noteModel.getDate(noteItem.getModDate()));
     holder.getNameView().setText(noteItem.getName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity,
         noteItem.getImage()));
@@ -331,6 +332,10 @@ public class NotesRecyclerViewAdapter
   public void removeItem(int position) {
     data.remove(position);
     notifyItemRemoved(position);
+  }
+
+  public void setBookNoteList(List<NoteItem> data) {
+    this.data = data;
   }
 
   @Override
