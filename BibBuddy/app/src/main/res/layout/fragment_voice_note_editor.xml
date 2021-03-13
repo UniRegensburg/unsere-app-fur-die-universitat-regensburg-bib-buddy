@@ -71,17 +71,18 @@
 
     <com.skyfishjy.library.RippleBackground
         android:id="@+id/pulsator"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:layout_centerInParent="true"
         android:alpha="1"
         android:scaleType="fitCenter"
-        app:rb_color="@color/flirt"
-        app:rb_duration="3000"
-        app:rb_radius="14dp"
-        app:rb_rippleAmount="10"
+        app:rb_type="fillRipple"
+        app:rb_color="@color/flirt_dark"
+        app:rb_duration="2200"
+        app:rb_radius="16dp"
+        app:rb_rippleAmount="8"
         app:rb_scale="6"
-        app:rb_strokeWidth="10dp">
+        app:rb_strokeWidth="5dp">
 
         <ImageButton
             android:id="@+id/record"

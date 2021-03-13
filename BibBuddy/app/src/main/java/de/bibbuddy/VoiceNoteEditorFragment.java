@@ -82,7 +82,6 @@ public class VoiceNoteEditorFragment extends Fragment {
     stopButton = view.findViewById(R.id.stop);
     pulse = view.findViewById(R.id.pulsator);
 
-
     if (getArguments() != null) {
       bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
     }
@@ -108,37 +107,6 @@ public class VoiceNoteEditorFragment extends Fragment {
     return view;
   }
 
-  private void switchSelection(View v, ImageButton button, int res, int resSel) {
-    v.setSelected(!v.isSelected());
-    if (v.isSelected()) {
-      button.setImageResource(resSel);
-    } else {
-      button.setImageResource(res);
-    }
-  }
-
-  private void resetButton(ImageButton button, int res) {
-    button.setSelected(false);
-    button.setImageResource(res);
-  }
-
-  private void saveNote() {
-    String name = getString(R.string.voice_note_name);
-    Long currentTime = new Date().getTime();
-    name = name + " " + getDate(currentTime);
-    int size = (int) tempAudio.length();
-    byte[] bytes = new byte[size];
-    try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        bytes = Files.readAllBytes(Paths.get(tempAudio.getPath()));
-      }
-      noteModel.addNote(name, 1, "", bytes);
-      noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   private void setupOnClickListeners() {
     View.OnClickListener recordClickListener = v -> {
       resetButton(playButton, R.drawable.play);
@@ -152,7 +120,6 @@ public class VoiceNoteEditorFragment extends Fragment {
     completionListener = mp -> {
       resetButton(playButton, R.drawable.play);
       stopPlaying();
-      stopRecording();
     };
 
     View.OnClickListener playClickListener = v -> {
@@ -179,8 +146,23 @@ public class VoiceNoteEditorFragment extends Fragment {
     stopButton.setOnClickListener(stopClickListener);
   }
 
+  private void resetButton(ImageButton button, int res) {
+    button.setSelected(false);
+    button.setImageResource(res);
+  }
+
+  private void switchSelection(View v, ImageButton button, int res, int resSel) {
+    v.setSelected(!v.isSelected());
+    if (v.isSelected()) {
+      button.setImageResource(resSel);
+    } else {
+      button.setImageResource(res);
+    }
+  }
+
   private void onRecord(boolean start) {
     stopPlaying();
+    pulse.startRippleAnimation();
     if (tempAudio != null) {
       tempAudio = null;
     }
@@ -190,6 +172,39 @@ public class VoiceNoteEditorFragment extends Fragment {
     } else {
       stopRecording();
     }
+  }
+
+  private void startRecording() {
+    recorder = new MediaRecorder();
+    try {
+      tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file),
+          String.valueOf(R.string.audio_file_suffix),
+          requireActivity().getCacheDir());
+      tempAudio.deleteOnExit();
+      recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+      recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+      recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+      int samplingRate = 44100;
+      recorder.setAudioSamplingRate(samplingRate);
+      int encodingBitRate = 96000;
+      recorder.setAudioEncodingBitRate(encodingBitRate);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        recorder.setOutputFile(tempAudio);
+      }
+      recorder.prepare();
+      recorder.start();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void stopRecording() {
+    pulse.stopRippleAnimation();
+    if (recorder != null) {
+      recorder.release();
+      isRecording = false;
+    }
+    saveNote();
   }
 
   private void onPlay() {
@@ -224,6 +239,15 @@ public class VoiceNoteEditorFragment extends Fragment {
     }
   }
 
+  private void stopPlaying() {
+    if (mediaPlayer != null) {
+      seekBarListener.reset();
+      mediaPlayer = null;
+      mediaPlayerPosition = 0;
+      isRecording = false;
+    }
+  }
+
   private void setupVoiceNotePlayer() {
     seekBarListener =
         new SeekBarListener(getActivity(), mediaPlayer, seekBar, playedTime);
@@ -235,46 +259,20 @@ public class VoiceNoteEditorFragment extends Fragment {
     seekBarListener.updateProgress();
   }
 
-  private void startRecording() {
-    pulse.startRippleAnimation();
-    recorder = new MediaRecorder();
+  private void saveNote() {
+    String name = getString(R.string.voice_note_name);
+    Long currentTime = new Date().getTime();
+    name = name + " " + getDate(currentTime);
+    int size = (int) tempAudio.length();
+    byte[] bytes = new byte[size];
     try {
-      tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file),
-          String.valueOf(R.string.audio_file_suffix),
-          requireActivity().getCacheDir());
-      tempAudio.deleteOnExit();
-      recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-      recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-      recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-      int samplingRate = 44100;
-      recorder.setAudioSamplingRate(samplingRate);
-      int encodingBitRate = 96000;
-      recorder.setAudioEncodingBitRate(encodingBitRate);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        recorder.setOutputFile(tempAudio);
+        bytes = Files.readAllBytes(Paths.get(tempAudio.getPath()));
       }
-      recorder.prepare();
-      recorder.start();
+      noteModel.addNote(name, 1, "", bytes);
+      noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
     } catch (IOException e) {
       e.printStackTrace();
-    }
-  }
-
-  private void stopRecording() {
-    pulse.stopRippleAnimation();
-    if (recorder != null) {
-      recorder.release();
-      saveNote();
-      isRecording = false;
-    }
-  }
-
-  private void stopPlaying() {
-    if (mediaPlayer != null) {
-      seekBarListener.reset();
-      mediaPlayer = null;
-      mediaPlayerPosition = 0;
-      isRecording = false;
     }
   }
 
@@ -297,6 +295,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     super.onPause();
     stopRecording();
     stopPlaying();
+    saveNote();
   }
 
 }
