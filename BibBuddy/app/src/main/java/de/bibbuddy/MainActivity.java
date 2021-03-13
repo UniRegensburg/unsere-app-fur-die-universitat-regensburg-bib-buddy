@@ -131,7 +131,12 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-
+  /**
+   * Shows/ hides the import and share buttons on the toolbar.
+   *
+   * @param visibilityImport  visibility of the import button
+   * @param visibilityShare   visibility of the share button
+   */
   public void setVisibleImportShareButton(int visibilityImport, int visibilityShare) {
     importBtn = findViewById(R.id.import_btn);
     importBtn.setVisibility(visibilityImport);
