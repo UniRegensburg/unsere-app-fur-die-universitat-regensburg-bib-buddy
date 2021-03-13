@@ -51,6 +51,8 @@ public class NotesRecyclerViewAdapter
   private final ArrayList<SeekBarListener> seekBarListeners;
 
   private List<NoteItem> data;
+  private long bookId;
+  private final List<NoteItem> selectedNoteItems = new ArrayList<>();
   private ViewGroup parent;
 
   private int mediaPlayerPosition;
@@ -118,6 +120,11 @@ public class NotesRecyclerViewAdapter
     });
 
     holder.itemView.setOnLongClickListener(v -> {
+      if (v.isSelected()) {
+        selectedNoteItems.remove(noteItem);
+      } else {
+        selectedNoteItems.add(noteItem);
+      }
       v.setSelected(!v.isSelected());
       return true;
     });
@@ -299,34 +306,16 @@ public class NotesRecyclerViewAdapter
     });
 
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
-      int itemNumber = parent.getChildCount();
-      ArrayList<Integer> idCounter = new ArrayList<>();
-      for (int i = 0; i < itemNumber; i++) {
-        if (parent.getChildAt(i).isSelected()) {
-          idCounter.add(i);
-        }
+      for(int i = 0; i < selectedNoteItems.size();i++){
+        noteModel.deleteNote(selectedNoteItems.get(i).getId());
       }
-      removeBackendDataAndViewItems(idCounter);
+      long bookId = data.get(0).getBookId();
+      data = noteModel.getNoteListForBook(bookId);
+      notifyDataSetChanged();
       Toast.makeText(activity, R.string.deleted_notes, Toast.LENGTH_LONG).show();
     });
 
     alertDeleteNote.show();
-  }
-
-  private void removeBackendDataAndViewItems(ArrayList<Integer> idCounter) {
-    for (int i = 0; i < idCounter.size(); i++) {
-      noteModel.deleteNote(data.get(i).getId());
-    }
-    int removed = 0;
-    for (int i = 0; i < idCounter.size(); i++) {
-      if (removed == 0) {
-        removeItem(idCounter.get(i));
-      } else {
-        removeItem(idCounter.get(i) - removed);
-      }
-      removed++;
-    }
-    notifyDataSetChanged();
   }
 
   public void removeItem(int position) {

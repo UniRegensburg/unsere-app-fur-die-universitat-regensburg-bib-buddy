@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -123,7 +124,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
     alertDeleteNote.setCancelable(false);
     alertDeleteNote.setTitle(R.string.delete_note);
-    alertDeleteNote.setMessage(R.string.delete_note_message);
+    alertDeleteNote.setMessage(Html.fromHtml(activity.getString(R.string.delete_note_message),
+        Html.FROM_HTML_MODE_COMPACT));
     RecyclerView recyclerView = activity.findViewById(R.id.notesRecyclerView);
     alertDeleteNote.setNegativeButton(R.string.back, (dialog, which) -> {
 
@@ -136,9 +138,9 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
       Toast.makeText(activity.getBaseContext(), activity.getString(R.string.deleted_notes),
           Toast.LENGTH_SHORT).show();
+      noteDao.delete(note.getId());
       adapter.removeItem(position);
       adapter.notifyDataSetChanged();
-      noteDao.delete(note.getId());
     });
     alertDeleteNote.show();
   }
