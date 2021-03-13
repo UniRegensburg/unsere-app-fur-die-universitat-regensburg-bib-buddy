@@ -124,7 +124,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_help_voice_editor) {
-      handleManualTextEditor();
+      handleManualVoiceEditor();
     } else {
       Toast.makeText(getContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
     }
@@ -132,7 +132,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleManualTextEditor() {
+  private void handleManualVoiceEditor() {
     Spanned htmlAsString = Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
