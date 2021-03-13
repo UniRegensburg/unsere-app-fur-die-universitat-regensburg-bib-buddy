@@ -126,7 +126,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     if (item.getItemId() == R.id.menu_help_voice_editor) {
       handleManualVoiceEditor();
     } else {
-      Toast.makeText(getContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
+      Toast.makeText(requireActivity(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -136,13 +136,13 @@ public class VoiceNoteEditorFragment extends Fragment {
     Spanned htmlAsString =
         Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
-    android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
-    alertDeleteNote.setCancelable(false);
-    alertDeleteNote.setTitle(R.string.help);
-    alertDeleteNote.setMessage(htmlAsString);
-    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {
+    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
+    helpAlert.setCancelable(false);
+    helpAlert.setTitle(R.string.help);
+    helpAlert.setMessage(htmlAsString);
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
     });
-    alertDeleteNote.show();
+    helpAlert.show();
   }
 
   private void setupOnClickListeners() {
@@ -165,6 +165,9 @@ public class VoiceNoteEditorFragment extends Fragment {
       if (tempAudio != null) {
         switchSelection(v, playButton, R.drawable.play, R.drawable.pause);
         onPlay();
+      } else {
+        Toast.makeText(requireActivity(), getString(R.string.error_no_playable_record),
+            Toast.LENGTH_SHORT).show();
       }
     };
 
@@ -264,14 +267,13 @@ public class VoiceNoteEditorFragment extends Fragment {
 
   private void startPlaying() {
     mediaPlayer = new MediaPlayer();
+
     try {
-      if (tempAudio != null) {
-        mediaPlayer.setDataSource(tempAudio.getPath());
-        mediaPlayer.setOnCompletionListener(completionListener);
-        mediaPlayer.prepare();
-        mediaPlayer.start();
-        setupVoiceNotePlayer();
-      }
+      mediaPlayer.setDataSource(tempAudio.getPath());
+      mediaPlayer.setOnCompletionListener(completionListener);
+      mediaPlayer.prepare();
+      mediaPlayer.start();
+      setupVoiceNotePlayer();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -288,7 +290,7 @@ public class VoiceNoteEditorFragment extends Fragment {
 
   private void setupVoiceNotePlayer() {
     seekBarListener =
-        new SeekBarListener(getActivity(), mediaPlayer, seekBar, playedTime);
+        new SeekBarListener(requireActivity(), mediaPlayer, seekBar, playedTime);
     int millis = mediaPlayer.getDuration();
     String duration = new SimpleDateFormat("mm:ss",
         Locale.getDefault()).format(new Date(millis));

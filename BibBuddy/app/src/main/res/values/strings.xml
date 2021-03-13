@@ -395,18 +395,18 @@
         abspielen.</p><br>
 
         <h2>Sprachnotiz aufnehmen</h2>
-        <p>Klicken Sie auf den Button mit dem Mikrofon und fangen Sie an zu sprechen.
-        Sie können die Aufnahme stoppen, indem sie den Aufnahme-Button, Stop-Button oder den
-        Play-Button anklicken.</p><br>
+        <p>Klicken Sie auf den <b>Aufnahme-Button</b> mit dem Mikrofon und fangen Sie an zu
+        sprechen. Sie können die Aufnahme stoppen, indem sie den Aufnahme-Button, Stop-Button oder
+        den Play-Button anklicken.</p><br>
 
         <h2>Sprachnotiz abspielen</h2>
-        <p>Sie können die Sprachnotiz anhören, indem sie den Playbutton anklicken.
+        <p>Sie können die Sprachnotiz anhören, indem sie den <b>Playbutton</b> anklicken.
         Danach kann die Aufnahme mit selbigem Button mit einem Pause-Icon pausiert oder durch Klick
         auf den Stop-Button gestoppt und auf Anfang zurückgesetzt werden.<br>
 
-        Außerdem erscheint nach der Aufnahme einer Notiz unter den Buttons auch eine Suchleiste
-        mit der durch Ziehen des Punktindikators zu einer beliebigen Stelle gesprungen werden
-        kann.</p><br>
+        Außerdem erscheint nach der Aufnahme einer Notiz unter den Buttons auch eine
+        <b>Suchleiste</b> mit der durch Ziehen des Punktindikators zu einer beliebigen Stelle
+        gesprungen werden kann.</p><br>
 
         <h2>Sprachnotiz speichern</h2>
         <p>Sobald Sie auf den internen Zurück-Buttons Ihres Handys drücken, wird die aktuelle
@@ -492,6 +492,7 @@
     <string name="play_note">Play Note</string>
     <string name="stop_note">Stop Note</string>
     <string name="default_played_time">00:00</string>
+    <string name="error_no_playable_record">Keine abspielbare Aufnahme vorhanden.</string>
 
 
 </resources>

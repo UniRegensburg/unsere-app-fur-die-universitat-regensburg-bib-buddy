@@ -90,12 +90,12 @@ public class NotesFragment extends Fragment {
   private void handleManualNotesList() {
     Spanned htmlAsString = Html.fromHtml(getString(R.string.note_list_help_text), Html.FROM_HTML_MODE_COMPACT);
 
-    android.app.AlertDialog.Builder alertDeleteNote = new AlertDialog.Builder(requireActivity());
-    alertDeleteNote.setCancelable(false);
-    alertDeleteNote.setTitle(R.string.help);
-    alertDeleteNote.setMessage(htmlAsString);
-    alertDeleteNote.setPositiveButton(R.string.ok, (dialog, which) -> {});
-    alertDeleteNote.show();
+    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
+    helpAlert.setCancelable(false);
+    helpAlert.setTitle(R.string.help);
+    helpAlert.setMessage(htmlAsString);
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    helpAlert.show();
   }
 
   private void setupRecyclerView() {
