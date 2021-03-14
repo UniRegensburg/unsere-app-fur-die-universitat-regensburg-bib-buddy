@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
    * @param visibilityImport  visibility of the import button
    * @param visibilityShare   visibility of the share button
    */
-  public void setVisibleImportShareButton(int visibilityImport, int visibilityShare) {
+  public void setVisibilityImportShareButton(int visibilityImport, int visibilityShare) {
     importBtn = findViewById(R.id.import_btn);
     importBtn.setVisibility(visibilityImport);
 

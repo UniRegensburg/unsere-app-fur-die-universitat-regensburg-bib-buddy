@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/headerText"
-        android:layout_width="260dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
         android:maxLines="1"
@@ -46,6 +46,7 @@
         android:id="@+id/share_btn"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_marginStart="25dp"
         android:background="@drawable/share_icon"
         android:focusable="true"
         android:clickable="true"

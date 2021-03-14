@@ -117,7 +117,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     createAddBookListener();
 
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
-    ((MainActivity) getActivity()).setVisibleImportShareButton(View.VISIBLE, View.VISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.VISIBLE, View.VISIBLE);
 
     setFunctionsToolbar();
 

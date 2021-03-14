@@ -59,7 +59,7 @@ public class NotesFragment extends Fragment {
     setupRecyclerView();
     enableSwipeToDelete();
 
-    ((MainActivity) getActivity()).setVisibleImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
 
     return view;
   }

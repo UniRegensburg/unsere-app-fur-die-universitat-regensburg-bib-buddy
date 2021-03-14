@@ -96,7 +96,7 @@ public class BookNotesView extends Fragment
     updateBookNoteList(noteList);
 
     ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
-    ((MainActivity) getActivity()).setVisibleImportShareButton(View.INVISIBLE, View.VISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
 
     setFunctionsToolbar();
 

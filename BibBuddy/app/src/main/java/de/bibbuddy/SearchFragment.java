@@ -73,7 +73,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
     filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
 
-    ((MainActivity) getActivity()).setVisibleImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
 
     return view;
   }
