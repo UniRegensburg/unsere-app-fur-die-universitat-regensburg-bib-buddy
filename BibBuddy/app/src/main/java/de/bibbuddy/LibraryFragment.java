@@ -72,14 +72,30 @@ public class LibraryFragment extends Fragment
     setupRecyclerView();
     setupAddShelfBtn();
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+
+    setFunctionsToolbar();
 
     setHasOptionsMenu(true);
+
     selectedShelfItems = new ArrayList<ShelfItem>();
     bookDao = libraryModel.getBookDao();
     noteDao = libraryModel.getNoteDao();
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
+
     return view;
+  }
+
+  private void setFunctionsToolbar() {
+
+    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        checkEmptyLibrary();
+      }
+    });
+
   }
 
   @Override
