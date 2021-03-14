@@ -90,6 +90,9 @@ public class BookNotesFragment extends Fragment {
     setupAddButton();
     updateEmptyView(noteList);
     ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+
+    setFunctionsToolbar();
 
     fileName = (bookDao.findById(bookId).getTitle()
         + bookDao.findById(bookId).getPubYear())
@@ -97,6 +100,17 @@ public class BookNotesFragment extends Fragment {
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
+  }
+
+  private void setFunctionsToolbar() {
+
+    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        checkEmptyNoteList();
+      }
+    });
+
   }
 
   @Override
