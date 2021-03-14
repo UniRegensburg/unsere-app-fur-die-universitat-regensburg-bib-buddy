@@ -27,7 +27,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * BookNotesView is responsible for the noteList of a certain book.
+ * BookNotesFragment is responsible for the noteList of a certain book.
  *
  * @author Sarah Kurek, Silvia Ivanova
  */
@@ -103,14 +103,7 @@ public class BookNotesFragment extends Fragment {
   }
 
   private void setFunctionsToolbar() {
-
-    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        checkEmptyNoteList();
-      }
-    });
-
+    ((MainActivity) getActivity()).shareBtn.setOnClickListener(view -> checkEmptyNoteList());
   }
 
   @Override
@@ -142,14 +135,10 @@ public class BookNotesFragment extends Fragment {
 
   private void handleSortNote() {
     SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            sortNoteList();
-          }
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          sortNoteList();
         });
-
     sortDialog.show();
   }
 
@@ -234,8 +223,8 @@ public class BookNotesFragment extends Fragment {
    *                     or PackageManager.PERMISSION_DENIED.
    */
   @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                         @NonNull int[] grantResults) {
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull
+      int[] grantResults)  {
 
     if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
 
