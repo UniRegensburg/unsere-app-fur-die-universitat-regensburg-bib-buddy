@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.util.List;
@@ -35,6 +36,7 @@ public class BookNotesFragment extends Fragment {
 
   private View view;
   private BookNotesViewModel bookNotesViewModel;
+  private RecyclerView recyclerView;
   private NotesRecyclerViewAdapter adapter;
   private Long bookId;
   private Long shelfId;
@@ -81,6 +83,7 @@ public class BookNotesFragment extends Fragment {
     noteModel = bookNotesViewModel.getNoteModel();
 
     setupRecyclerView(bookId);
+    enableSwipeToDelete();
 
     TextView bookTitleView = view.findViewById(R.id.text_view_book);
 
@@ -224,7 +227,7 @@ public class BookNotesFragment extends Fragment {
    */
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull
-      int[] grantResults)  {
+      int[] grantResults) {
 
     if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
 
@@ -300,13 +303,17 @@ public class BookNotesFragment extends Fragment {
 
   private void setupRecyclerView(Long bookId) {
     noteList = bookNotesViewModel.getNoteList(bookId);
-
-    RecyclerView bookNotesRecyclerView =
-        view.findViewById(R.id.book_notes_view_recycler_view);
+    recyclerView = view.findViewById(R.id.book_notes_view_recycler_view);
     adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) requireActivity(), noteModel);
-    bookNotesRecyclerView.setAdapter(adapter);
-
+    recyclerView.setAdapter(adapter);
     updateEmptyView(noteList);
+  }
+
+  private void enableSwipeToDelete() {
+    SwipeToDeleteCallback swipeToDeleteCallback =
+        new SwipeToDeleteCallback(getContext(), adapter, (MainActivity) requireActivity());
+    ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+    itemTouchhelper.attachToRecyclerView(recyclerView);
   }
 
   private void updateEmptyView(List<NoteItem> noteList) {
