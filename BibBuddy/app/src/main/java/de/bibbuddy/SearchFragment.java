@@ -241,9 +241,11 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   }
 
   private void handleHelp() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.search_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.search_help_text),
+        Html.FROM_HTML_MODE_COMPACT);
 
-    android.app.AlertDialog.Builder helpAlert = new android.app.AlertDialog.Builder(requireActivity());
+    android.app.AlertDialog.Builder helpAlert =
+        new android.app.AlertDialog.Builder(requireActivity());
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);

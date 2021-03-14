@@ -36,7 +36,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -487,7 +486,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       });
 
   private void handleManualBook() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.book_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.book_help_text),
+        Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
     helpAlert.setCancelable(false);

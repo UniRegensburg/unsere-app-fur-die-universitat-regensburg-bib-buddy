@@ -49,10 +49,9 @@ public class NotesRecyclerViewAdapter
   private final ArrayList<ImageButton> stopButtons;
   private final ArrayList<ProgressBar> progressBars;
   private final ArrayList<SeekBarListener> seekBarListeners;
-
+  private final List<NoteItem> selectedNoteItems = new ArrayList<>();
   private List<NoteItem> data;
   private long bookId;
-  private final List<NoteItem> selectedNoteItems = new ArrayList<>();
   private ViewGroup parent;
 
   private int mediaPlayerPosition;
@@ -306,7 +305,7 @@ public class NotesRecyclerViewAdapter
     });
 
     alertDeleteNote.setPositiveButton(R.string.delete, (dialog, which) -> {
-      for(int i = 0; i < selectedNoteItems.size();i++){
+      for (int i = 0; i < selectedNoteItems.size(); i++) {
         noteModel.deleteNote(selectedNoteItems.get(i).getId());
       }
       long bookId = data.get(0).getBookId();

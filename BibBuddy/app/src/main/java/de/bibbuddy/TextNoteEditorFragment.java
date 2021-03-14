@@ -94,7 +94,8 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void handleManualTextEditor() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.text_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.text_editor_help_text),
+        Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
     helpAlert.setCancelable(false);

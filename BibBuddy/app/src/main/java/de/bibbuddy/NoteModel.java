@@ -82,6 +82,12 @@ public class NoteModel {
     return noteList;
   }
 
+  /**
+   * This method creates a string representing the given date in a common readable format.
+   *
+   * @param date given date of type long representing millis since the start date in 1970.
+   * @return returns a string in "dd.mm.yyyy hh:mm:ss"-format.
+   */
   public String getDate(Long date) {
     Date d = new Date(date);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
@@ -148,7 +154,7 @@ public class NoteModel {
    * Gets the sorted noteList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param noteList noteList that should be sorted
+   * @param noteList     noteList that should be sorted
    * @return Returns the sorted noteList
    */
   public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
@@ -181,7 +187,7 @@ public class NoteModel {
    * Gets the sorted noteList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param bookId id of the book
+   * @param bookId       id of the book
    * @return Returns the sorted noteList
    */
   public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
@@ -203,5 +209,5 @@ public class NoteModel {
 
     return sortNoteList(sortCriteria, noteList);
   }
-  
+
 }

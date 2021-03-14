@@ -146,7 +146,8 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   private void authorManualFragment() {
-    Spanned htmlAsString = Html.fromHtml(getString(R.string.author_help_text), Html.FROM_HTML_MODE_COMPACT);
+    Spanned htmlAsString = Html.fromHtml(getString(R.string.author_help_text),
+        Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
     helpAlert.setCancelable(false);
