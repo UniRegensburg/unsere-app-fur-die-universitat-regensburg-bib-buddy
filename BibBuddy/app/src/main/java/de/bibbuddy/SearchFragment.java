@@ -75,6 +75,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
     filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
 
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+
     return view;
   }
 
@@ -205,8 +207,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     String[] filterChoices = {
         getString(R.string.filter_shelf),
         getString(R.string.filter_book),
-        getString(R.string.filter_note)
-    };
+        getString(R.string.filter_note) };
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
         new DialogInterface.OnMultiChoiceClickListener() {

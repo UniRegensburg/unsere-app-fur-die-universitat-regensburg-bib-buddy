@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
   private NotesFragment notesFragment;
+
+  public Button importBtn;
+  public Button shareBtn;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +129,20 @@ public class MainActivity extends AppCompatActivity {
       default:
         headerText.setText(getString(R.string.app_name));
     }
+  }
+
+  /**
+   * Shows/ hides the import and share buttons on the toolbar.
+   *
+   * @param visibilityImport  visibility of the import button
+   * @param visibilityShare   visibility of the share button
+   */
+  public void setVisibilityImportShareButton(int visibilityImport, int visibilityShare) {
+    importBtn = findViewById(R.id.import_btn);
+    importBtn.setVisibility(visibilityImport);
+
+    shareBtn = findViewById(R.id.share_btn);
+    shareBtn.setVisibility(visibilityShare);
   }
 
 }

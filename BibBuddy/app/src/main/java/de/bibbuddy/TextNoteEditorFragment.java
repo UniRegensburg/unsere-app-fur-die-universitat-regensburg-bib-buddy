@@ -43,6 +43,7 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
     setHasOptionsMenu(true);
   }
 

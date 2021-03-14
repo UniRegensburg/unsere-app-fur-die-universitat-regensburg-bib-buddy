@@ -18,6 +18,9 @@ public class SettingsFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+
     return view;
   }
 
