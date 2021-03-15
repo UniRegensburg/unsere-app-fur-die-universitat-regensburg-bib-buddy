@@ -39,8 +39,9 @@ public class DataValidation {
    * @return Returns true if the String is a valid ISBN13 String
    */
   public static boolean validateIsbn13(String isbnStr) {
+    // Isbn is optional and could be empty
     if (isStringEmpty(isbnStr)) {
-      return false;
+      return true;
     }
     //remove hyphens
     isbnStr = isbnStr.replaceAll("-", "");
@@ -79,8 +80,9 @@ public class DataValidation {
    * @return Returns true if the String is a valid ISBN10 String
    */
   public static boolean validateIsbn10(String isbnStr) {
+    // Isbn is optional and could be empty
     if (isStringEmpty(isbnStr)) {
-      return false;
+      return true;
     }
 
     //remove hyphens
@@ -136,4 +138,5 @@ public class DataValidation {
 
     return isNumber && Integer.parseInt(numberStr) >= 0 && numberStr.length() < 5;
   }
+
 }

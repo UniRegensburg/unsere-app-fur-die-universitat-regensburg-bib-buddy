@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 
 public class BookModel {
@@ -17,6 +17,7 @@ public class BookModel {
   private final Long shelfId;
 
   private List<BookItem> bookList;
+  private List<AuthorItem> authorItemList;
 
   /**
    * Constructor for a BookModel.
@@ -31,6 +32,14 @@ public class BookModel {
     this.bookDao = new BookDao(databaseHelper);
     this.authorDao = new AuthorDao(databaseHelper);
     this.noteDao = new NoteDao(databaseHelper);
+  }
+
+  public BookDao getBookDao() {
+    return bookDao;
+  }
+
+  public NoteDao getNoteDao() {
+    return noteDao;
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
@@ -65,8 +74,27 @@ public class BookModel {
     bookDao.create(book, authorList, shelfId);
     String authors = convertAuthorListToString(authorList);
 
+    book = bookDao.findById(bookDao.findLatestId());
+
+    bookList.add(new BookItem(book, shelfId, authors, 0));
+  }
+
+  /**
+   * Adds an imported book to the bookList and database.
+   * Sets the note counter to 1 because a BibTeX item can only
+   * import one note.
+   *
+   * @param book       book data for the database and bookList
+   * @param authorList authorList of the new book
+   */
+  public void addImportedBook(Book book, List<Author> authorList) {
+    bookDao.create(book, authorList, shelfId);
+    String authors = convertAuthorListToString(authorList);
+
+    book = bookDao.findById(bookDao.findLatestId());
+
     bookList
-        .add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(), authors, 0));
+        .add(new BookItem(book, shelfId, authors, 1));
   }
 
   /**
@@ -82,8 +110,8 @@ public class BookModel {
     for (Book book : bookDbList) {
       List<Author> authorList = bookDao.getAllAuthorsForBook(book.getId());
       int noteCount = bookDao.countAllNotesForBook(book.getId());
-      bookList.add(new BookItem(book.getTitle(), book.getId(), shelfId, book.getPubYear(),
-                                convertAuthorListToString(authorList), noteCount));
+
+      bookList.add(new BookItem(book, shelfId, convertAuthorListToString(authorList), noteCount));
     }
 
     return bookList;
@@ -151,7 +179,66 @@ public class BookModel {
     return bookList.get(position);
   }
 
+  public AuthorItem getSelectedAuthorItem(int position) {
+    return authorItemList.get(position);
+  }
+
   public Book getBookById(Long id) {
     return bookDao.findById(id);
   }
+
+  public Author getAuthorById(Long id) {
+    return authorDao.findById(id);
+  }
+
+  private void sortBookList(SortCriteria sortCriteria) {
+    switch (sortCriteria) {
+
+      case MOD_DATE_LATEST:
+        bookList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        bookList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        bookList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        bookList.sort(new SortName().reversed());
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Gets the sorted bookList by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted bookList
+   */
+  public List<BookItem> getSortedBookList(SortCriteria sortCriteria) {
+    sortBookList(sortCriteria);
+
+    return bookList;
+  }
+
+  /**
+   * Gets the sorted bookList by sortCriteria with the given bookList.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @param bookList bookList that should be sorted
+   * @return Returns the sorted bookList
+   */
+  public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {
+    this.bookList = bookList;
+    sortBookList(sortCriteria);
+
+    return bookList;
+  }
+
 }

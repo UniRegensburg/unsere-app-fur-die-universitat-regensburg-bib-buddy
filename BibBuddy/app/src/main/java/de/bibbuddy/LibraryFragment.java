@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,12 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,12 +34,21 @@ import java.util.List;
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener {
 
+  private final String fileName = "library_export_BibBuddy";
+
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems;
-  private static final int STORAGE_PERMISSION_CODE = 1;
+
+  private BookDao bookDao;
+  private NoteDao noteDao;
+
+  private ExportBibTex exportBibTex;
+
+  private SortCriteria sortCriteria;
+
 
   @Nullable
   @Override
@@ -56,8 +58,8 @@ public class LibraryFragment extends Fragment
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-          requireActivity().finish();
-          requireActivity().moveTaskToBack(true);
+        requireActivity().finish();
+        requireActivity().moveTaskToBack(true);
       }
     });
 
@@ -65,14 +67,35 @@ public class LibraryFragment extends Fragment
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
 
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+
     setupRecyclerView();
     setupAddShelfBtn();
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+
+    setFunctionsToolbar();
 
     setHasOptionsMenu(true);
+
     selectedShelfItems = new ArrayList<ShelfItem>();
+    bookDao = libraryModel.getBookDao();
+    noteDao = libraryModel.getNoteDao();
+    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
+
 
     return view;
+  }
+
+  private void setFunctionsToolbar() {
+
+    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        checkEmptyLibrary();
+      }
+    });
+
   }
 
   @Override
@@ -81,19 +104,19 @@ public class LibraryFragment extends Fragment
     super.onCreateOptionsMenu(menu, inflater);
   }
 
-
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.menu_backup_library:
-        
+      case R.id.menu_export_library:
+        checkEmptyLibrary();
         break;
 
       case R.id.menu_rename_shelf:
-        if (selectedShelfItems.size() != 1) {
-          return true;
-        }
         handleRenameShelf();
+        break;
+
+      case R.id.menu_sort_shelf:
+        handleSortShelf();
         break;
 
       case R.id.menu_delete_shelf:
@@ -105,10 +128,108 @@ public class LibraryFragment extends Fragment
         break;
 
       default:
-        Toast.makeText(getContext(), "??? wurde geklickt", Toast.LENGTH_SHORT).show();
+        break;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void checkEmptyLibrary() {
+    // if no shelf or no books
+    if (libraryModel.getCurrentLibraryList().isEmpty() || bookDao.findAllBooks().isEmpty()) {
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
+      alertDialogEmptyLib.setTitle(R.string.empty_library);
+      alertDialogEmptyLib.setMessage(R.string.empty_library_description);
+
+      alertDialogEmptyLib.setPositiveButton(R.string.ok,
+          new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+          });
+
+      alertDialogEmptyLib.create().show();
+
+    } else {
+      checkStoragePermission();
+    }
+  }
+
+  private void checkStoragePermission() {
+    if (ContextCompat.checkSelfPermission(getContext(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+      requestStoragePermission();
+    } else {
+      // if the user has already allowed access to device external storage
+      exportBibTex.createBibFile();
+      exportBibTex.writeBibFile(exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
+
+      Toast.makeText(getContext(),
+                     getString(R.string.exported_file_stored_in) + '\n'
+                         + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+                         + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+    }
+  }
+
+  private void requestStoragePermission() {
+    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      showRequestPermissionDialog();
+    } else {
+      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                         StorageKeys.STORAGE_PERMISSION_CODE);
+    }
+  }
+
+  private void showRequestPermissionDialog() {
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
+    reqAlertDialog.setTitle(R.string.storage_permission_needed);
+    reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
+
+    reqAlertDialog.setPositiveButton(R.string.ok,
+        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
+             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+             StorageKeys.STORAGE_PERMISSION_CODE));
+    reqAlertDialog.setNegativeButton(R.string.cancel,
+        (dialog, which) -> dialog.dismiss());
+
+    reqAlertDialog.create().show();
+  }
+
+  /**
+   * Callback method, that checks the result from requesting permissions.
+   *
+   * @param requestCode  unique integer value for the requested permission
+   *                     This value is given by the programmer.
+   * @param permissions  array of requested name(s)
+   *                     of the permission(s)
+   * @param grantResults grant results for the corresponding permissions
+   *                     which is either PackageManager.PERMISSION_GRANTED
+   *                     or PackageManager.PERMISSION_DENIED.
+   */
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                         @NonNull int[] grantResults) {
+
+    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
+
+      if (grantResults.length > 0
+          && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+        exportBibTex.createBibFile();
+        exportBibTex.writeBibFile(exportBibTex
+                                      .getBibDataLibrary(libraryModel, bookDao, noteDao));
+
+        Toast.makeText(getContext(),
+            getString(R.string.exported_file_stored_in) + '\n'
+                  + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+                  + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+
+      } else {
+        Toast.makeText(getContext(), R.string.storage_permission_denied,
+                       Toast.LENGTH_SHORT).show();
+      }
+    }
   }
 
   private void handleManualLibrary() {
@@ -122,7 +243,7 @@ public class LibraryFragment extends Fragment
 
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
+                 LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
         .commit();
   }
@@ -162,8 +283,7 @@ public class LibraryFragment extends Fragment
       @Override
       public void onClick(DialogInterface dialog, int which) {
         libraryModel.deleteShelves(selectedShelfItems);
-        adapter.notifyDataSetChanged();
-        updateEmptyView(libraryModel.getCurrentLibraryList());
+        updateLibraryListView(libraryModel.getCurrentLibraryList());
         Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
         unselectLibraryItems();
       }
@@ -205,9 +325,29 @@ public class LibraryFragment extends Fragment
     selectedShelfItems.clear();
   }
 
+  private void handleSortShelf() {
+    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+        new SortDialog.SortDialogListener() {
+          @Override
+          public void onSortedSelected(SortCriteria newSortCriteria) {
+            sortCriteria = newSortCriteria;
+            sortLibraryList();
+          }
+        });
+
+    sortDialog.show();
+  }
+
+  private void sortLibraryList() {
+    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortCriteria);
+    adapter.setLibraryList(libraryList);
+    adapter.notifyDataSetChanged();
+  }
+
   private void setupRecyclerView() {
     libraryModel = new LibraryModel(getContext());
-    List<ShelfItem> libraryList = libraryModel.getLibraryList(null);
+    List<ShelfItem> libraryList = libraryModel
+        .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
 
     RecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
     adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
@@ -290,6 +430,7 @@ public class LibraryFragment extends Fragment
   }
 
   private void updateLibraryListView(List<ShelfItem> libraryList) {
+    libraryList = libraryModel.getSortedLibraryList(sortCriteria, libraryList);
     adapter.notifyDataSetChanged();
     updateEmptyView(libraryList);
   }
@@ -338,4 +479,5 @@ public class LibraryFragment extends Fragment
       selectedShelfItems.add(shelfItem);
     }
   }
+
 }

@@ -43,6 +43,8 @@ public class HelpFragment extends Fragment {
     Bundle bundle = this.getArguments();
     manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
         null, null);

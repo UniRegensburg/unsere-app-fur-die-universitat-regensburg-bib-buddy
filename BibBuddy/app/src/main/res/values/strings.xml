@@ -22,12 +22,12 @@
     <string name="back">zurück</string>
     <string name="add">+</string>
     <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
     <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht
         erlaubt.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
-    <string name="export">Regal exportieren (BibTeX)</string>
     <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
 
@@ -63,10 +63,10 @@
     <string name="add_book_tooltip">Neues Buch hinzufügen</string>
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
         öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
-            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch erfolgreich
-        angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem Buch
-        erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
+            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch
+        erfolgreich angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem
+        Buch erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie
+        auf <b>Hilfe</b>.</string>
 
     <string name="delete_book">Bücher löschen</string>
     <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
@@ -79,7 +79,7 @@
     <string name="add_book_manually_text">Manuell hinzufügen</string>
 
     <!-- Book Form -->
-    <string name="book_form_isbn">ISBN</string>
+    <string name="book_form_isbn">ISBN (optional)</string>
     <string name="book_form_title">Titel</string>
     <string name="book_form_subtitle">Untertitel (optional)</string>
     <string name="book_form_pub_year">Jahr der Veröffentlichung (optional)</string>
@@ -88,12 +88,59 @@
     <string name="book_form_edition">Auflage (optional)</string>
     <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
 
+
+    <string name="add_author_btn">Autoren bearbeiten</string>
+    <string name="add_author_tooltip">Autor hinzufügen</string>
+    <string name="delete_author_btn">Autor löschen</string>
+    <string name="delete_author_tooltip">Autor entfernen</string>
+
     <!-- Author -->
     <string name="author">Autor</string>
     <string name="authors">Autoren</string>
     <string name="author_first_name">Vorname</string>
     <string name="author_last_name">Nachname</string>
     <string name="author_title">Titel (optional)</string>
+
+    <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
+        Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
+        eingeben können. Wurde der Autor erfolgreich angelegt, wird er in der Liste angezeigt.
+        Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
+        <b>Hilfe</b>.</string>
+
+    <string name="change_author">Autordaten ändern</string>
+    <string name="add_author">Autor hinzufügen</string>
+    <string name="added_author">Autor wurde hinzufügt</string>
+
+    <string name="delete_author">Autor(en) löschen</string>
+    <string name="deleted_author">Autor(en) wurde(n) gelöscht</string>
+    <string name="delete_author_message">Alle ausgewählten Autoren werden gelöscht.
+        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+
+    <string name="author_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zu den Autoren</u></h1>
+        <p>Sie befinden sich in der Authorensansicht. Hier können Sie neue Autoren anlegen,
+        bestehende anpassen oder löschen</p>
+
+        <h2>Anlegen eines neuen Autors/h2>
+        <p>Einen neuen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
+        dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
+        einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
+        gespeichert.
+
+        <h2>Autordaten ändern</h2>
+        <p>Um die Daten eines Autors zu ändern, klicken Sie diesen an und sie gelangen zum
+        Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
+        Zurück-Button werden die Daten automatisch gespeicheert.<br><br>
+
+        <h2>Autor(en) löschen</h2>
+        <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie
+        dann oben rechts auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass
+        Sie die ausgewählten Autoren endgültig löschen wollen.<br><br>
+        <u><b>Achtung!</b></u> Die Daten können nicht wieder hergestellt werden. <br><br>
+
+        ]]>
+    </string>
 
 
     <!-- Barcode Scanner -->
@@ -155,17 +202,51 @@
     <string name="storage_permission_alert_msg">
         Wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="storage_permission_cancel_btn">Abbrechen</string>
     <string name="storage_permission_denied">Zugriff verweigert</string>
-    <string name="file_write_failed">File write failed:</string>
+
+    <!-- Export Shelf Data Path Storage -->
     <string name="exported_file_stored_in">
         Exportierte Datei ist gespeichert unter:
     </string>
 
-    <!-- Export: Empty Booklist -->
+    <!-- Export Menu Items -->
+    <string name="export_library">Bibliothek exportieren (BibTeX)</string>
+    <string name="export_shelf">Regal(e) exportieren (BibTeX)</string>
+    <string name="export_note">Notiz(en) exportieren (BibTeX)</string>
+
+    <!-- Export: Empty Shelf -->
     <string name="empty_shelf">Das Regal ist leer.</string>
     <string name="empty_shelf_description">
         Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.
+    </string>
+
+    <!-- Export: Empty Library -->
+    <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
+    <string name="empty_library_description">
+        Bitte füge mindestens ein Regal und ein Buch hinzu, um den Export zu ermöglichen.
+    </string>
+
+    <!-- Export: Empty Note List -->
+    <string name="empty_note_list">Keine Notizen.</string>
+    <string name="empty_note_list_description">
+        Bitte füge mindestens eine Notiz hinzu, um den Export zu ermöglichen.
+    </string>
+
+    <!-- Import Menu Items -->
+    <string name="import_in_shelf">In Regal importieren (BibTeX)</string>
+
+    <!-- Import: Bib File Selection -->
+    <string name="import_non_bib_file">Keine BibTeX Datei.</string>
+    <string name="import_non_bib_file_description">
+        Bitte wähle eine BibTeX Datei, um den Import zu ermöglichen.
+    </string>
+    <string name="not_valid_bib_file">
+        Die BibTeX Datei ist leer oder enthält keine Bücher.
+    </string>
+
+    <!-- Import of Shelf Data Path Storage -->
+    <string name="imported_file_name_is">
+        Importiere Datei:
     </string>
 
     <!-- Help Fragment -->
@@ -354,10 +435,45 @@
         ]]>
     </string>
 
+    <string name="search_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zur Suche</u></h1>
+        <p>Sie befinden sich in der Suche. Hier können Sie nach Regalen, Büchern und Notizen suchen.
+        </p>
 
+        <h2>Sortieren</h2>
+        <p>Sie können ihre Suchergebnisse nach  \"Name\" oder  \"Änderungsdatum\" sortieren.
+        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p>
 
+        <h2>Filtern</h2>
+        <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
+        Klicken Sie dazu die entsprechenden Optionen im Menü an.</p>
 
-    ""
+        ]]>
+    </string>
 
+    <!-- Search Fragment -->
+    <string name="search">Suchen …</string>
+    <string name="search_hint">Suche Regal, Buch oder Notiz</string>
+    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben.
+        Reine Whitespaces sind nicht erlaubt.</string>
+    <string name="search_empty">Keine Suchergebnisse vorhanden</string>
+
+    <!-- Sort -->
+    <string name="sort">Sortieren</string>
+    <string name="search_sort_to">Sortieren nach</string>
+
+    <string name="sort_name_ascending">Name aufsteigend</string>
+    <string name="sort_name_descending">Name absteigend</string>
+    <string name="sort_mod_date_oldest">Datum ältestes</string>
+    <string name="sort_mod_date_latest">Datum neuestes</string>
+
+    <!-- Filter -->
+    <string name="filter">Filtern</string>
+    <string name="filter_to">Filtern nach</string>
+
+    <string name="filter_shelf">Regale</string>
+    <string name="filter_book">Bücher</string>
+    <string name="filter_note">Notizen</string>
 
 </resources>

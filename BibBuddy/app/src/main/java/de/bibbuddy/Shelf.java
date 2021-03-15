@@ -8,8 +8,8 @@ package de.bibbuddy;
 public class Shelf {
   private Long id;
   private String name;
-  private Integer createDate;
-  private Integer modDate;
+  private Long createDate;
+  private Long modDate;
   private Long shelfId;
 
   /**
@@ -21,7 +21,7 @@ public class Shelf {
    * @param modDate date on which shelf was last modified in the database
    * @param shelfId id of parent shelf
    */
-  public Shelf(Long id, String name, Integer createDate, Integer modDate, Long shelfId) {
+  public Shelf(Long id, String name, Long createDate, Long modDate, Long shelfId) {
     this.id = id;
     this.name = name;
     this.createDate = createDate;
@@ -60,19 +60,19 @@ public class Shelf {
     this.name = name;
   }
 
-  public Integer getCreateDate() {
+  public Long getCreateDate() {
     return createDate;
   }
 
-  public void setCreateDate(Integer createDate) {
+  public void setCreateDate(Long createDate) {
     this.createDate = createDate;
   }
 
-  public Integer getModDate() {
+  public Long getModDate() {
     return modDate;
   }
 
-  public void setModDate(Integer modDate) {
+  public void setModDate(Long modDate) {
     this.modDate = modDate;
   }
 
@@ -83,4 +83,5 @@ public class Shelf {
   public void setShelfId(Long shelfId) {
     this.shelfId = shelfId;
   }
+
 }

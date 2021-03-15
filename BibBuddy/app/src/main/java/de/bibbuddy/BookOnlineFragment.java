@@ -64,6 +64,8 @@ public class BookOnlineFragment extends Fragment {
       }
     });
 
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+
     return view;
   }
 
@@ -128,4 +130,5 @@ public class BookOnlineFragment extends Fragment {
       System.out.println(e);
     }
   }
+
 }

@@ -7,11 +7,12 @@ package de.bibbuddy;
  * @author Sarah Kurek
  */
 public class NoteAudioItem extends NoteItem {
-  public NoteAudioItem(String modDate, String name, Long id) {
+  public NoteAudioItem(Long modDate, String name, Long id) {
     super(modDate, name, R.drawable.microphone, id);
   }
 
-  public NoteAudioItem(String modDate, String name, Long id, Long bookId) {
+  public NoteAudioItem(Long modDate, String name, Long id, Long bookId) {
     super(modDate, name, null, R.drawable.microphone, id, bookId);
   }
+
 }

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The LibraryModel contains all the shelf data for the LibraryFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 public class LibraryModel {
 
@@ -32,6 +32,14 @@ public class LibraryModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
+  public BookDao getBookDao() {
+    return bookDao;
+  }
+
+  public NoteDao getNoteDao() {
+    return noteDao;
+  }
+
   /**
    * Adds a new book to the bookList and database.
    *
@@ -42,8 +50,9 @@ public class LibraryModel {
     Shelf shelf = new Shelf(name, parentId);
     shelfDao.create(shelf);
 
-    Long id = shelfDao.findLatestId();
-    libraryList.add(new ShelfItem(name, id, parentId, 0, 0));
+    shelf = shelfDao.findById(shelfDao.findLatestId());
+
+    libraryList.add(new ShelfItem(shelf, 0, 0));
   }
 
   /**
@@ -73,8 +82,8 @@ public class LibraryModel {
 
       int bookNum = shelfDao.countAllBooksForShelf(shelfId);
       int noteNum = shelfDao.countAllNotesForShelf(bookIds);
-      libraryList
-          .add(new ShelfItem(shelf.getName(), shelf.getId(), shelf.getShelfId(), bookNum, noteNum));
+
+      libraryList.add(new ShelfItem(shelf, bookNum, noteNum));
     }
 
     return libraryList;
@@ -170,4 +179,55 @@ public class LibraryModel {
       }
     }
   }
+
+  private void sortLibraryList(SortCriteria sortCriteria) {
+    switch (sortCriteria) {
+
+      case MOD_DATE_LATEST:
+        libraryList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        libraryList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        libraryList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        libraryList.sort(new SortName().reversed());
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Gets the sorted search result list by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted shelves
+   */
+  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria) {
+    sortLibraryList(sortCriteria);
+
+    return libraryList;
+  }
+
+  /**
+   * Gets the sorted libraryList by sortCriteria.
+   *
+   * @param sortCriteria sortCriteria of the list
+   * @return Returns the sorted libraryList
+   */
+  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria,
+                                              List<ShelfItem> libraryList) {
+    this.libraryList = libraryList;
+    sortLibraryList(sortCriteria);
+
+    return libraryList;
+  }
+
 }
