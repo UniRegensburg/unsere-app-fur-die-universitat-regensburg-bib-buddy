@@ -122,11 +122,6 @@ public class BookNotesFragment extends Fragment {
       adapter.handleDeleteNote();
     } else if (item.getItemId() == R.id.menu_book_note_sort) {
       handleSortNote();
-    } else if (itemId == R.id.menu_export_note) {
-      // TODO Silvia Export
-      // handleExportLibrary();
-      Toast.makeText(requireContext(), String.valueOf(R.string.export_clicked), Toast.LENGTH_SHORT)
-          .show();
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
     } else {
