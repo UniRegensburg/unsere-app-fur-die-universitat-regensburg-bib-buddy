@@ -77,6 +77,7 @@ public class VoiceNoteEditorFragment extends Fragment {
                                Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_voice_note_editor, container,
         false);
+    requireActivity().findViewById(R.id.share_btn).setVisibility(View.INVISIBLE);
 
     noteModel = new NoteModel(getContext());
 
