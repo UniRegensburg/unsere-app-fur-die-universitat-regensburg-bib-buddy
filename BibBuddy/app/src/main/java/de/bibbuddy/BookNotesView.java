@@ -79,13 +79,13 @@ public class BookNotesView extends Fragment
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
     setupRecyclerView(bookId);
-    String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-
 
     setHasOptionsMenu(true);
     setupAddButton();
 
     updateBookNoteList(noteList);
+
+    String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
 
     ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
