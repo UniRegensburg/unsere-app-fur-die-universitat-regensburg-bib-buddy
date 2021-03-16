@@ -21,7 +21,6 @@ public class AuthorFormFragment extends Fragment {
   private final AuthorFormFragment.ChangeAuthorListener listener;
   private final Author author;
   private final boolean isNewAuthor;
-  private boolean validInput;
   private int redColor;
   private int greenColor;
 
@@ -32,7 +31,8 @@ public class AuthorFormFragment extends Fragment {
    * @param listener change listener
    */
   public AuthorFormFragment(Author author, AuthorFormFragment.ChangeAuthorListener listener) {
-    this.author = author;
+    this.author = author.clone();
+    this.author.setCache();
     this.listener = listener;
     this.isNewAuthor = author.isEmpty();
   }
@@ -83,7 +83,7 @@ public class AuthorFormFragment extends Fragment {
   }
 
   private void handleAuthorInput() {
-    validInput = true;
+    boolean validInput = true;
 
     EditText authorTitleInput = getView().findViewById(R.id.author_form_title_input);
     authorTitleInput.setBackgroundColor(greenColor);

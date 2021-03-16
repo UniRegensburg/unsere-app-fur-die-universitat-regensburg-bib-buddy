@@ -1,6 +1,5 @@
 package de.bibbuddy;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ public class AuthorRecyclerViewAdapter
     extends RecyclerView.Adapter<AuthorRecyclerViewAdapter.AuthorViewHolder> {
   private final AuthorRecyclerViewAdapter.AuthorListener listener;
   private final AuthorAdapterDataObserver dataObserver = new AuthorAdapterDataObserver();
-  private final Context context;
   private final List<Author> authorList;
   private List<AuthorItem> authorItemList;
 
@@ -26,9 +24,8 @@ public class AuthorRecyclerViewAdapter
    * @author Sarah Kurek
    */
   public AuthorRecyclerViewAdapter(AuthorListener listener,
-                                   List<Author> authorList, Context context) {
+                                   List<Author> authorList) {
     this.listener = listener;
-    this.context = context;
     this.authorList = authorList;
     updateAuthorItemList();
   }
@@ -45,7 +42,7 @@ public class AuthorRecyclerViewAdapter
   @Override
   public AuthorRecyclerViewAdapter.AuthorViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                        int viewType) {
-    return new AuthorRecyclerViewAdapter.AuthorViewHolder(
+    return new AuthorViewHolder(
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_view_item_author, parent, false));
   }
@@ -105,7 +102,7 @@ public class AuthorRecyclerViewAdapter
     void onLongItemClicked(int position, AuthorItem authorItem, View view);
   }
 
-  public class AuthorViewHolder extends RecyclerView.ViewHolder {
+  public static class AuthorViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView textNameView;
     private final ImageView imageAuthorView;
