@@ -71,12 +71,25 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     setHasOptionsMenu(true);
 
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
     filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    setupSortBtn();
 
     return view;
+  }
+
+  private void setupSortBtn() {
+    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+
+    sortBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleSortSearch();
+      }
+    });
   }
 
   @Override
@@ -88,9 +101,6 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.menu_search_sort:
-        handleSortSearch();
-        break;
 
       case R.id.menu_search_help:
         handleHelp();
@@ -194,6 +204,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
           @Override
           public void onSortedSelected(SortCriteria newSortCriteria) {
             sortCriteria = newSortCriteria;
+            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
             sortResultList();
           }
         });

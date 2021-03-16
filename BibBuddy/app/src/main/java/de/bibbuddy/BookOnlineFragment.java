@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.google.android.material.textfield.TextInputLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,6 +64,7 @@ public class BookOnlineFragment extends Fragment {
     });
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
     return view;
   }

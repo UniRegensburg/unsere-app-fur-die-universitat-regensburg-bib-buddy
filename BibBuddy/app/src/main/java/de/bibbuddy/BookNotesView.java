@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,7 +77,7 @@ public class BookNotesView extends Fragment
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
 
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 
     setupRecyclerView(bookId);
 
@@ -89,6 +90,7 @@ public class BookNotesView extends Fragment
 
     ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+    setupSortBtn();
 
     setFunctionsToolbar();
 
@@ -103,6 +105,18 @@ public class BookNotesView extends Fragment
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
+  }
+
+  private void setupSortBtn() {
+    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+
+    sortBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleSortNote();
+      }
+    });
   }
 
   private void setFunctionsToolbar() {
@@ -129,10 +143,6 @@ public class BookNotesView extends Fragment
     switch (item.getItemId()) {
       case R.id.menu_delete_note:
         handleDeleteNote();
-        break;
-
-      case R.id.menu_book_note_sort:
-        handleSortNote();
         break;
 
       case R.id.menu_export_note:
@@ -199,6 +209,7 @@ public class BookNotesView extends Fragment
           @Override
           public void onSortedSelected(SortCriteria newSortCriteria) {
             sortCriteria = newSortCriteria;
+            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
             sortNoteList();
           }
         });

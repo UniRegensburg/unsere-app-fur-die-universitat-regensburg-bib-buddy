@@ -45,13 +45,14 @@ public class HelpFragment extends Fragment {
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
 
-    // style text
-    Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
-        null, null);
-
     view = inflater.inflate(R.layout.fragment_help, container, false);
 
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.headerHelp));
+    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+
+    // style text
+    Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
+                                             null, null);
 
     TextView manualView = view.findViewById(R.id.manual_text);
     manualView.setText(styledText);

@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -89,7 +89,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     view = inflater.inflate(R.layout.fragment_book, container, false);
     context = view.getContext();
 
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
@@ -118,12 +118,25 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     ((MainActivity) getActivity()).updateHeaderFragment(shelfName);
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.VISIBLE, View.VISIBLE);
+    setupSortBtn();
 
     setFunctionsToolbar();
 
     selectedBookItems = new ArrayList<>();
 
     return view;
+  }
+
+  private void setupSortBtn() {
+    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+
+    sortBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleSortBook();
+      }
+    });
   }
 
   private void setupRecyclerView() {
@@ -172,10 +185,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       case R.id.menu_delete_book:
         handleDeleteBook();
-        break;
-
-      case R.id.menu_sort_shelf:
-        handleSortBook();
         break;
 
       case R.id.menu_export_shelf:
@@ -267,6 +276,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           @Override
           public void onSortedSelected(SortCriteria newSortCriteria) {
             sortCriteria = newSortCriteria;
+            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
             sortBookList();
           }
         });
