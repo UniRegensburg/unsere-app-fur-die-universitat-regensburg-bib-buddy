@@ -6,10 +6,6 @@
         android:title="@string/sort" />
 
     <item
-        android:id="@+id/menu_search_filter"
-        android:title="@string/filter" />
-
-    <item
         android:id="@+id/menu_search_help"
         android:title="@string/help" />
 

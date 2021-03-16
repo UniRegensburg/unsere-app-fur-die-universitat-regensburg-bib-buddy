@@ -67,6 +67,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     setupSearchInput();
     setupRecyclerView();
     setupSearchButton();
+    setupFilterButton();
 
     setHasOptionsMenu(true);
 
@@ -89,10 +90,6 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     switch (item.getItemId()) {
       case R.id.menu_search_sort:
         handleSortSearch();
-        break;
-
-      case R.id.menu_search_filter:
-        handleSearchFilter();
         break;
 
       case R.id.menu_search_help:
@@ -143,6 +140,18 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         searchItems();
       }
     });
+  }
+
+  private void setupFilterButton() {
+    ImageButton filterBtn = view.findViewById(R.id.filter_btn);
+
+    filterBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleSearchFilter();
+      }
+    });
+
   }
 
   private void setupSearchInput() {
