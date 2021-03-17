@@ -29,7 +29,7 @@ public class ExportBibTex {
    *
    * @param folderName name of the folder in which the
    *                   BibTex file should be stored
-   * @param fileName name of the BibTex file
+   * @param fileName   name of the BibTex file
    */
   public ExportBibTex(String folderName, String fileName) {
     this.folderName = folderName;
@@ -68,14 +68,14 @@ public class ExportBibTex {
    * notes from the entire library.
    *
    * @param libraryModel object of the LibraryModel class
-   * @param bookDao object of the class BookDao
-   *                Depends on the used fragment.
-   *                Can be accessed through BookModel, LibraryModel
-   *                or BookNotesViewModel.
-   * @param noteDao object of the class NoteDao
-   *                Depends on the used fragment.
-   *                Can be accessed through BookModel, LibraryModel
-   *                or BookNotesViewModel.
+   * @param bookDao      object of the class BookDao
+   *                     Depends on the used fragment.
+   *                     Can be accessed through BookModel, LibraryModel
+   *                     or BookNotesViewModel.
+   * @param noteDao      object of the class NoteDao
+   *                     Depends on the used fragment.
+   *                     Can be accessed through BookModel, LibraryModel
+   *                     or BookNotesViewModel.
    * @return the BibTex format of a library as String
    */
   public String getBibDataLibrary(LibraryModel libraryModel,
@@ -129,7 +129,7 @@ public class ExportBibTex {
   /**
    * Generates the BibTex format for a given book.
    *
-   * @param bookId id of the book
+   * @param bookId  id of the book
    * @param bookDao object of the class BookDao
    *                Depends on the used fragment.
    *                Can be accessed through BookModel, LibraryModel
@@ -143,29 +143,29 @@ public class ExportBibTex {
   public String getBibDataFromBook(Long bookId, BookDao bookDao, NoteDao noteDao) {
     Book book = bookDao.findById(bookId);
 
-    return  BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
+    return BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
 
-            + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
-            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
 
-            + getBibAuthorNames(bookId, bookDao)
+        + getBibAuthorNames(bookId, bookDao)
 
-            + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
-            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
 
-            + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
-            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
 
-            + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
-            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
 
-            + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
-            + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
 
-            + getBibNotesFromBook(book, noteDao)
+        + getBibNotesFromBook(book, noteDao)
 
-            + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
-            + '\n' + '\n';
+        + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
+        + '\n' + '\n';
 
   }
 
@@ -222,8 +222,8 @@ public class ExportBibTex {
           + File.separator + folderName + File.separator + fileName
           + StorageKeys.BIB_FILE_TYPE);
 
-      FileOutputStream fileOutputStream  = new FileOutputStream(bibFile);
-      OutputStreamWriter outputStreamWriter  = new OutputStreamWriter(fileOutputStream);
+      FileOutputStream fileOutputStream = new FileOutputStream(bibFile);
+      OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
       Writer fileWriter = new BufferedWriter(outputStreamWriter);
       fileWriter.write(bibContent);
       fileWriter.close();

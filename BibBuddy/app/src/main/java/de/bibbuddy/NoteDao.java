@@ -31,7 +31,7 @@ public class NoteDao implements InterfaceNoteDao {
         db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFile);
         Cursor c =
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
-                     null, null, null, null);
+                null, null, null, null);
         c.moveToLast();
 
         ContentValues contentValues = new ContentValues();
@@ -47,7 +47,7 @@ public class NoteDao implements InterfaceNoteDao {
 
         Cursor cursor =
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
-                     null, null, null);
+                null, null, null);
         cursor.moveToLast();
         long id = cursor.getLong(0);
         cursor.close();
@@ -69,12 +69,12 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-                                 DatabaseHelper.NOTE_FILE_ID},
-                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-                             null, null, null, String.valueOf(1));
+        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+            DatabaseHelper.NOTE_FILE_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, String.valueOf(1));
 
     Note note = null;
     if (cursor.moveToFirst()) {
@@ -116,10 +116,10 @@ public class NoteDao implements InterfaceNoteDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
-              new String[] {String.valueOf(id)});
+        new String[] {String.valueOf(id)});
 
     db.delete(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, DatabaseHelper.NOTE_ID + " = ?",
-              new String[] {String.valueOf(id)});
+        new String[] {String.valueOf(id)});
 
     db.close();
   }
@@ -140,8 +140,8 @@ public class NoteDao implements InterfaceNoteDao {
     values.put("text", text);
     values.put("modifikation_date", currentTime);
     dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
-                                          DatabaseHelper._ID + " = ?",
-                                          new String[] {String.valueOf(id)});
+        DatabaseHelper._ID + " = ?",
+        new String[] {String.valueOf(id)});
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.close();
   }
@@ -223,12 +223,12 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-                                 DatabaseHelper.NOTE_FILE_ID},
-                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-                             null, null, null, String.valueOf(1));
+        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+            DatabaseHelper.NOTE_FILE_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, String.valueOf(1));
 
     String noteText = null;
     if (cursor.moveToFirst()) {
@@ -244,27 +244,10 @@ public class NoteDao implements InterfaceNoteDao {
    * This method gets text string of a specific note without formatting xml tags.
    *
    * @param id id of the note to look for
-   * @return returns the notes text value
+   * @return returns the notes text value without formatting texts
    */
   public String findStrippedTextById(Long id) {
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-            DatabaseHelper.NOTE_FILE_ID},
-        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-        null, null, null, String.valueOf(1));
-
-    String noteText = null;
-    if (cursor.moveToFirst()) {
-      noteText = cursor.getString(3);
-    }
-
-    cursor.close();
-
-    return noteText.replaceAll("<[^>]+>", "");
+    return findTextById(id).replaceAll("<[^>]+>", "");
   }
 
   private Note createNoteData(Cursor cursor) {
@@ -319,10 +302,10 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK,
-                             new String[] {DatabaseHelper.BOOK_ID},
-                             DatabaseHelper.NOTE_ID + "=?",
-                             new String[] {String.valueOf(noteId)},
-                             null, null, null, String.valueOf(1));
+        new String[] {DatabaseHelper.BOOK_ID},
+        DatabaseHelper.NOTE_ID + "=?",
+        new String[] {String.valueOf(noteId)},
+        null, null, null, String.valueOf(1));
 
     Long bookId = 0L;
     if (cursor.moveToFirst()) {
