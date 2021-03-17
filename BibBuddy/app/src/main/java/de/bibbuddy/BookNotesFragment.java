@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
@@ -25,6 +26,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,12 +41,12 @@ public class BookNotesFragment extends Fragment {
   private RecyclerView recyclerView;
   private NotesRecyclerViewAdapter adapter;
   private Long bookId;
-  private Long shelfId;
-  private String shelfName;
   private BookDao bookDao;
   private NoteDao noteDao;
   private NoteModel noteModel;
   private List<NoteItem> noteList;
+  private List<NoteItem> selectedNoteItems;
+  private Context context;
 
   private ExportBibTex exportBibTex;
   private String fileName;
@@ -68,34 +70,31 @@ public class BookNotesFragment extends Fragment {
     });
 
     Bundle bundle = this.getArguments();
-    String bookTitle = "";
-    if (bundle != null) {
-      bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-      shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-      shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
-      bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-    }
+    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
+
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
-
-    bookNotesViewModel = new BookNotesViewModel(getContext());
-    bookDao = bookNotesViewModel.getBookDao();
-    noteDao = bookNotesViewModel.getNoteDao();
+    context = view.getContext();
+    bookNotesViewModel = new BookNotesViewModel(context);
     noteModel = bookNotesViewModel.getNoteModel();
-
-    setupRecyclerView(bookId);
-    enableSwipeToDelete();
-
-    TextView bookTitleView = view.findViewById(R.id.text_view_book);
-
-    bookTitleView.setText(bookTitle);
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
     setHasOptionsMenu(true);
+    setupRecyclerView(bookId);
     setupAddButton();
-    updateEmptyView(noteList);
+    enableSwipeToDelete();
+
+    updateBookNoteList(noteList);
+
+    String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
     ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
 
     setFunctionsToolbar();
+
+    selectedNoteItems = new ArrayList<>();
+
+    bookDao = bookNotesViewModel.getBookDao();
+    noteDao = bookNotesViewModel.getNoteDao();
 
     fileName = (bookDao.findById(bookId).getTitle()
         + bookDao.findById(bookId).getPubYear())
@@ -103,6 +102,69 @@ public class BookNotesFragment extends Fragment {
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
+  }
+
+  private void setupRecyclerView(Long bookId) {
+    noteList = bookNotesViewModel.getNoteList(bookId);
+    recyclerView = view.findViewById(R.id.book_notes_view_recycler_view);
+    adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) requireActivity(), noteModel);
+    recyclerView.setAdapter(adapter);
+    updateEmptyView(noteList);
+  }
+
+  private void updateEmptyView(List<NoteItem> noteList) {
+    TextView emptyView = view.findViewById(R.id.empty_notelist_view);
+    if (noteList.isEmpty()) {
+      emptyView.setVisibility(View.VISIBLE);
+    } else {
+      emptyView.setVisibility(View.GONE);
+    }
+  }
+
+  private void setupAddButton() {
+    View addButtonView = view.findViewById(R.id.btn_add_note);
+    PopupMenu pm = new PopupMenu(context, addButtonView);
+    pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
+
+    pm.setOnMenuItemClickListener(item -> {
+      if (item.getItemId() == R.id.add_text_note) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+        TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
+        nextFrag.setArguments(bundle);
+        requireActivity().getSupportFragmentManager().beginTransaction()
+            .replace(R.id.fragment_container_view, nextFrag,
+                LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
+            .addToBackStack(null)
+            .commit();
+      } else if (item.getItemId() == R.id.add_voice_note) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+        VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
+        nextFrag.setArguments(bundle);
+        requireActivity().getSupportFragmentManager().beginTransaction()
+            .replace(R.id.fragment_container_view, nextFrag,
+                LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
+            .addToBackStack(null)
+            .commit();
+      }
+
+      return true;
+    });
+
+    addButtonView.setOnClickListener(v -> pm.show());
+  }
+
+  private void enableSwipeToDelete() {
+    SwipeToDeleteCallback swipeToDeleteCallback =
+        new SwipeToDeleteCallback(context, adapter, (MainActivity) requireActivity());
+    ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+    itemTouchhelper.attachToRecyclerView(recyclerView);
+  }
+
+  private void updateBookNoteList(List<NoteItem> noteList) {
+    sortNoteList();
+    updateEmptyView(noteList);
   }
 
   private void setFunctionsToolbar() {
@@ -118,40 +180,30 @@ public class BookNotesFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
-    if (item.getItemId() == R.id.menu_delete_note) {
+    if (itemId == R.id.menu_delete_note) {
       adapter.handleDeleteNote();
-    } else if (item.getItemId() == R.id.menu_book_note_sort) {
+    } else if (itemId == R.id.menu_export_note) {
+      checkEmptyNoteList();
+    } else if (itemId == R.id.menu_book_note_sort) {
       handleSortNote();
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
     } else {
-      Toast.makeText(requireContext(), String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, String.valueOf(R.string.error), Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleSortNote() {
-    SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
-        newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          sortNoteList();
-        });
-    sortDialog.show();
-  }
-
-  private void sortNoteList() {
-    if (noteList.size() != 0) {
-      long bookId = noteList.get(0).getBookId();
-      List<NoteItem> noteList = noteModel.getSortedNoteList(sortCriteria, bookId);
-      adapter.setBookNoteList(noteList);
-      adapter.notifyDataSetChanged();
-    }
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
+    deleteNote.setVisible(selectedNoteItems != null && !selectedNoteItems.isEmpty());
   }
 
   private void checkEmptyNoteList() {
     if (bookNotesViewModel.getCurrentNoteList().isEmpty()) {
-      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(context);
       alertDialogEmptyLib.setTitle(R.string.empty_note_list);
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
 
@@ -160,14 +212,13 @@ public class BookNotesFragment extends Fragment {
           });
 
       alertDialogEmptyLib.create().show();
-
     } else {
       checkStoragePermission();
     }
   }
 
   private void checkStoragePermission() {
-    if (ContextCompat.checkSelfPermission(requireContext(),
+    if (ContextCompat.checkSelfPermission(context,
         Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
       requestStoragePermission();
     } else {
@@ -175,7 +226,7 @@ public class BookNotesFragment extends Fragment {
       exportBibTex.createBibFile();
       exportBibTex.writeBibFile(exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
 
-      Toast.makeText(requireContext(),
+      Toast.makeText(context,
           getString(R.string.exported_file_stored_in) + '\n'
               + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
               + fileName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
@@ -194,7 +245,7 @@ public class BookNotesFragment extends Fragment {
   }
 
   private void showRequestPermissionDialog() {
-    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(requireContext());
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(context);
     reqAlertDialog.setTitle(R.string.storage_permission_needed);
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
 
@@ -207,6 +258,37 @@ public class BookNotesFragment extends Fragment {
         (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
+  }
+
+  private void handleSortNote() {
+    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          sortNoteList();
+        });
+    sortDialog.show();
+  }
+
+  private void sortNoteList() {
+    if (noteList.size() != 0) {
+      long bookId = noteList.get(0).getBookId();
+      List<NoteItem> noteList = noteModel.getSortedNoteList(sortCriteria, bookId);
+      adapter.setBookNoteList(noteList);
+      adapter.notifyDataSetChanged();
+    }
+  }
+
+  private void handleManualBookNotes() {
+    Spanned htmlAsString =
+        Html.fromHtml(getString(R.string.book_note_help_text), Html.FROM_HTML_MODE_COMPACT);
+
+    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
+    helpAlert.setCancelable(false);
+    helpAlert.setTitle(R.string.help);
+    helpAlert.setMessage(htmlAsString);
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
+    });
+    helpAlert.show();
   }
 
   /**
@@ -231,92 +313,16 @@ public class BookNotesFragment extends Fragment {
         exportBibTex.createBibFile();
         exportBibTex.writeBibFile(exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
 
-        Toast.makeText(requireContext(),
+        Toast.makeText(context,
             getString(R.string.exported_file_stored_in) + '\n'
                 + File.separator + StorageKeys.DOWNLOAD_FOLDER
                 + File.separator + fileName
                 + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
 
       } else {
-        Toast.makeText(requireContext(), R.string.storage_permission_denied,
+        Toast.makeText(context, R.string.storage_permission_denied,
             Toast.LENGTH_SHORT).show();
       }
-    }
-  }
-
-  private void handleManualBookNotes() {
-    Spanned htmlAsString =
-        Html.fromHtml(getString(R.string.book_note_help_text), Html.FROM_HTML_MODE_COMPACT);
-
-    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
-    helpAlert.setCancelable(false);
-    helpAlert.setTitle(R.string.help);
-    helpAlert.setMessage(htmlAsString);
-    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
-    });
-    helpAlert.show();
-  }
-
-  private void setupAddButton() {
-    View addButtonView = view.findViewById(R.id.btn_add_note);
-    PopupMenu pm = new PopupMenu(requireContext(), addButtonView);
-    pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
-
-    pm.setOnMenuItemClickListener(item -> {
-      if (item.getItemId() == R.id.add_text_note) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-        TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-        nextFrag.setArguments(bundle);
-        requireActivity().getSupportFragmentManager().beginTransaction()
-            .replace(R.id.fragment_container_view, nextFrag,
-                LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-            .addToBackStack(null)
-            .commit();
-
-      } else if (item.getItemId() == R.id.add_voice_note) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-        VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
-        nextFrag.setArguments(bundle);
-        requireActivity().getSupportFragmentManager().beginTransaction()
-            .replace(R.id.fragment_container_view, nextFrag,
-                LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
-            .addToBackStack(null)
-            .commit();
-      }
-      /*
-        else if (item.getItemId() == R.id.add_voice_note) {
-            TODO: add features to add image notes
-        }*/
-
-      return true;
-    });
-
-    addButtonView.setOnClickListener(v -> pm.show());
-  }
-
-  private void setupRecyclerView(Long bookId) {
-    noteList = bookNotesViewModel.getNoteList(bookId);
-    recyclerView = view.findViewById(R.id.book_notes_view_recycler_view);
-    adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) requireActivity(), noteModel);
-    recyclerView.setAdapter(adapter);
-    updateEmptyView(noteList);
-  }
-
-  private void enableSwipeToDelete() {
-    SwipeToDeleteCallback swipeToDeleteCallback =
-        new SwipeToDeleteCallback(getContext(), adapter, (MainActivity) requireActivity());
-    ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
-    itemTouchhelper.attachToRecyclerView(recyclerView);
-  }
-
-  private void updateEmptyView(List<NoteItem> noteList) {
-    TextView emptyView = view.findViewById(R.id.empty_notelist_view);
-    if (noteList.isEmpty()) {
-      emptyView.setVisibility(View.VISIBLE);
-    } else {
-      emptyView.setVisibility(View.GONE);
     }
   }
 

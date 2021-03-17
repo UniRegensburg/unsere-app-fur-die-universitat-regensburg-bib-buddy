@@ -37,6 +37,7 @@
     <string name="export_clicked">Export wurde geklickt</string>
     <string name="delete_panel_notes">Delete Panel Notes</string>
     <string name="bookTitle">Buchtitel</string>
+    <string name="confirm">Bestätigen</string>
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
@@ -103,10 +104,8 @@
     <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
 
 
-    <string name="add_author_btn">Autoren bearbeiten</string>
-    <string name="add_author_tooltip">Autor hinzufügen</string>
-    <string name="delete_author_btn">Autor löschen</string>
-    <string name="delete_author_tooltip">Autor entfernen</string>
+    <string name="add_author_btn">Autoren verwalten</string>
+    <string name="add_author_tooltip">Autor hinzufügen oder ändern</string>
 
     <!-- Author -->
     <string name="author">Autor</string>
@@ -122,7 +121,7 @@
 
     <string name="change_author">Autordaten ändern</string>
     <string name="add_author">Autor hinzufügen</string>
-    <string name="added_author">Autor wurde hinzufügt</string>
+    <string name="added_author">Autor wurde hinzufügt/geändert</string>
 
     <string name="delete_author">Autor(en) löschen</string>
     <string name="deleted_author">Autor(en) wurde(n) gelöscht</string>

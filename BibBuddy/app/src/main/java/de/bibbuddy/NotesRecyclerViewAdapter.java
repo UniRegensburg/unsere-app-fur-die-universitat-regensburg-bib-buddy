@@ -51,7 +51,6 @@ public class NotesRecyclerViewAdapter
   private final ArrayList<SeekBarListener> seekBarListeners;
   private final List<NoteItem> selectedNoteItems = new ArrayList<>();
   private List<NoteItem> data;
-  private long bookId;
   private ViewGroup parent;
 
   private int mediaPlayerPosition;
