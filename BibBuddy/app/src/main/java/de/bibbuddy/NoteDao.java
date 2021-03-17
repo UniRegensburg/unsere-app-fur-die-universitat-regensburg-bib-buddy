@@ -47,7 +47,6 @@ public class NoteDao implements InterfaceNoteDao {
         noteValues.put(DatabaseHelper.MOD_DATE, currentTime);
         noteValues.put(DatabaseHelper.NOTE_FILE_ID, c.getLong(0));
 
-
         db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, noteValues);
 
         Cursor cursor =
@@ -258,12 +257,9 @@ public class NoteDao implements InterfaceNoteDao {
         DatabaseHelper._ID + "=?", new String[] {String.valueOf(noteFileId)},
         null, null, null, null);
 
-    byte[] bytes = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
-      bytes = cursor.getBlob(1);
-      cursor.close();
-    }
+    cursor.moveToFirst();
+    byte[] bytes = cursor.getBlob(1);
+    cursor.close();
 
     return bytes;
   }
