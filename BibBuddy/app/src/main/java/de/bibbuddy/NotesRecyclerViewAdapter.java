@@ -49,7 +49,7 @@ public class NotesRecyclerViewAdapter
   private final ArrayList<ImageButton> stopButtons;
   private final ArrayList<ProgressBar> progressBars;
   private final ArrayList<SeekBarListener> seekBarListeners;
-  private final List<NoteItem> selectedNoteItems = new ArrayList<>();
+  public final List<NoteItem> selectedNoteItems = new ArrayList<>();
   private List<NoteItem> data;
   private ViewGroup parent;
 
@@ -112,9 +112,6 @@ public class NotesRecyclerViewAdapter
             .addToBackStack(null)
             .commit();
       }
-      /*} else {
-        nextFrag = new ImageNoteEditorFragment();
-       */
     });
 
     holder.itemView.setOnLongClickListener(v -> {
@@ -142,7 +139,6 @@ public class NotesRecyclerViewAdapter
 
   private Bundle createNoteBundle(NoteItem item) {
     Bundle bundle = new Bundle();
-    System.out.println(item.getId());
     bundle.putLong(LibraryKeys.BOOK_ID, item.getBookId());
     bundle.putLong(LibraryKeys.NOTE_ID, item.getId());
 
@@ -267,7 +263,7 @@ public class NotesRecyclerViewAdapter
   }
 
   private File createAudioFile(NoteItem noteItem) {
-    byte[] bytes = noteModel.getNoteMedia(noteItem.getId());
+    byte[] bytes = noteModel.getNoteMedia(noteModel.getNoteById(noteItem.getId()).getNoteFileId());
     File tempAudio = null;
     try {
       tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file), String.valueOf(
