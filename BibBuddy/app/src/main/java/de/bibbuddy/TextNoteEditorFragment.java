@@ -119,7 +119,7 @@ public class TextNoteEditorFragment extends Fragment {
       if (getArguments() != null && getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
-        noteModel.addNote(name, 0, text, null);
+        noteModel.createNote(name, 0, text, null);
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
     }
