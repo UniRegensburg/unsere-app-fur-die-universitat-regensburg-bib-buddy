@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * NoteDao contains all sql queries related to Note.
  *
- * @author Sarah Kurek, Claudia Schönherr
+ * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger
  */
 public class NoteDao implements InterfaceNoteDao {
 
@@ -238,6 +238,33 @@ public class NoteDao implements InterfaceNoteDao {
     cursor.close();
 
     return noteText;
+  }
+
+  /**
+   * This method gets text string of a specific note without formatting xml tags.
+   *
+   * @param id id of the note to look for
+   * @return returns the notes text value
+   */
+  public String findStrippedTextById(Long id) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
+        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+            DatabaseHelper.NOTE_FILE_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, String.valueOf(1));
+
+    String noteText = null;
+    if (cursor.moveToFirst()) {
+      noteText = cursor.getString(3);
+    }
+
+    cursor.close();
+
+    return noteText.replaceAll("<[^>]+>", "");
   }
 
   private Note createNoteData(Cursor cursor) {

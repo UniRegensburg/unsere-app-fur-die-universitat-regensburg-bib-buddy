@@ -14,7 +14,7 @@ import java.util.List;
  * It contains methods for generation of contents that are
  * used for the export of the BibTex file.
  *
- * @author Silvia Ivanova
+ * @author Silvia Ivanova, Luis Moßburger
  */
 
 public class ExportBibTex {
@@ -180,7 +180,7 @@ public class ExportBibTex {
 
     if (!notesList.isEmpty()) {
       for (int k = 0; k < notesList.size(); k++) {
-        String bookTextNotes = noteDao.findTextById(notesList.get(k));
+        String bookTextNotes = noteDao.findStrippedTextById(notesList.get(k));
         allNotes.append(bookTextNotes);
       }
     }
