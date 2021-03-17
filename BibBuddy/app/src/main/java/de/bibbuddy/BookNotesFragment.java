@@ -26,7 +26,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +44,6 @@ public class BookNotesFragment extends Fragment {
   private NoteDao noteDao;
   private NoteModel noteModel;
   private List<NoteItem> noteList;
-  private List<NoteItem> selectedNoteItems;
   private Context context;
 
   private ExportBibTex exportBibTex;
@@ -69,29 +67,31 @@ public class BookNotesFragment extends Fragment {
       }
     });
 
-    Bundle bundle = this.getArguments();
-    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
     bookNotesViewModel = new BookNotesViewModel(context);
     noteModel = bookNotesViewModel.getNoteModel();
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
 
+    Bundle bundle = this.getArguments();
+    if (bundle != null) {
+      bookId = bundle.getLong(LibraryKeys.BOOK_ID);
+      String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
+      ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
+    }
+
+    noteList = bookNotesViewModel.getNoteList(bookId);
+
     setHasOptionsMenu(true);
-    setupRecyclerView(bookId);
+    setupRecyclerView();
     setupAddButton();
     enableSwipeToDelete();
 
     updateBookNoteList(noteList);
 
-    String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-    ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
 
     setFunctionsToolbar();
-
-    selectedNoteItems = new ArrayList<>();
 
     bookDao = bookNotesViewModel.getBookDao();
     noteDao = bookNotesViewModel.getNoteDao();
@@ -104,8 +104,7 @@ public class BookNotesFragment extends Fragment {
     return view;
   }
 
-  private void setupRecyclerView(Long bookId) {
-    noteList = bookNotesViewModel.getNoteList(bookId);
+  private void setupRecyclerView() {
     recyclerView = view.findViewById(R.id.book_notes_view_recycler_view);
     adapter = new NotesRecyclerViewAdapter(noteList, (MainActivity) requireActivity(), noteModel);
     recyclerView.setAdapter(adapter);
@@ -168,13 +167,19 @@ public class BookNotesFragment extends Fragment {
   }
 
   private void setFunctionsToolbar() {
-    ((MainActivity) getActivity()).shareBtn.setOnClickListener(view -> checkEmptyNoteList());
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyNoteList());
   }
 
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.fragment_book_note_menu, menu);
     super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
+    deleteNote.setVisible(!adapter.selectedNoteItems.isEmpty());
   }
 
   @Override
@@ -193,12 +198,6 @@ public class BookNotesFragment extends Fragment {
     }
 
     return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(selectedNoteItems != null && !selectedNoteItems.isEmpty());
   }
 
   private void checkEmptyNoteList() {
@@ -271,9 +270,8 @@ public class BookNotesFragment extends Fragment {
 
   private void sortNoteList() {
     if (noteList.size() != 0) {
-      long bookId = noteList.get(0).getBookId();
-      List<NoteItem> noteList = noteModel.getSortedNoteList(sortCriteria, bookId);
-      adapter.setBookNoteList(noteList);
+      List<NoteItem> sortedList = noteModel.getSortedNoteList(sortCriteria, bookId);
+      adapter.setBookNoteList(sortedList);
       adapter.notifyDataSetChanged();
     }
   }

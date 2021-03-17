@@ -67,7 +67,8 @@ public class VoiceNoteEditorFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE,
+        View.INVISIBLE);
     setHasOptionsMenu(true);
   }
 

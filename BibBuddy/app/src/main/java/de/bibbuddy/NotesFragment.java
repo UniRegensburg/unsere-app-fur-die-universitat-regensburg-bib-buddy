@@ -60,7 +60,8 @@ public class NotesFragment extends Fragment {
     setupRecyclerView();
     enableSwipeToDelete();
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE,
+        View.INVISIBLE);
 
     return view;
   }
@@ -72,10 +73,16 @@ public class NotesFragment extends Fragment {
   }
 
   @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note_list);
+    deleteNote.setVisible(!adapter.selectedNoteItems.isEmpty());
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_delete_note_list) {
       adapter.handleDeleteNote();
-    } else if (item.getItemId() == R.id.menu_note_sort) {
+    } else if (item.getItemId() == R.id.menu_sort_note_list) {
       handleSortNote();
     } else if (item.getItemId() == R.id.menu_help_note_list) {
       handleManualNotesList();
@@ -85,6 +92,7 @@ public class NotesFragment extends Fragment {
 
     return super.onOptionsItemSelected(item);
   }
+
 
   private void handleSortNote() {
     SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,

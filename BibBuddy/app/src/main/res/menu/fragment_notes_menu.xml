@@ -6,7 +6,7 @@
         android:title="@string/delete" />
         
     <item
-        android:id="@+id/menu_note_sort"
+        android:id="@+id/menu_sort_note_list"
         android:title="@string/sort" />
 
     <item
