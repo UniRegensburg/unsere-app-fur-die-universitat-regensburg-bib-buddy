@@ -308,11 +308,10 @@ public class VoiceNoteEditorFragment extends Fragment {
       int size = (int) tempAudio.length();
       byte[] bytes = new byte[size];
       try {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
           bytes = Files.readAllBytes(Paths.get(tempAudio.getPath()));
         }
-        noteModel.addNote(name, 1, "", bytes);
+        noteModel.createNote(name, 1, "", bytes);
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       } catch (IOException e) {
         e.printStackTrace();
