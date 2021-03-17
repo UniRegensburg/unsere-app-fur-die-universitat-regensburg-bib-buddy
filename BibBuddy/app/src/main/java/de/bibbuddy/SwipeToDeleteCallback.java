@@ -126,12 +126,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     alertDeleteNote.setTitle(R.string.delete_note);
     alertDeleteNote.setMessage(Html.fromHtml(activity.getString(R.string.delete_note_message),
         Html.FROM_HTML_MODE_COMPACT));
-    RecyclerView recyclerView = activity.findViewById(R.id.notesRecyclerView);
-    alertDeleteNote.setNegativeButton(R.string.back, (dialog, which) -> {
 
-      for (int i = 0; i < recyclerView.getChildCount(); i++) {
-        recyclerView.getChildAt(i).setSelected(false);
-      }
+    alertDeleteNote.setNegativeButton(R.string.back, (dialog, which) -> {
       adapter.notifyDataSetChanged();
     });
 
