@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +23,8 @@ import java.util.List;
  */
 public class BookFormFragment extends Fragment {
   private final ChangeBookListener listener;
-  private final List<Author> authorList = new ArrayList<>();
+  private List<Author> authorList = new ArrayList<>();
   private boolean validInput;
-  private Long shelfId;
-  private String shelfName;
-  private Long bookId;
   private int redColor;
   private int greenColor;
   private Book book = new Book();
@@ -62,9 +61,8 @@ public class BookFormFragment extends Fragment {
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
-      shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
-      shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-      bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
+      Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+      Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
       if (bookId == 0) { // add new book
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
@@ -80,8 +78,6 @@ public class BookFormFragment extends Fragment {
             .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
 
-        Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
-        addBookBtn.setText(R.string.change);
       }
 
       setInputText(view);
@@ -95,7 +91,7 @@ public class BookFormFragment extends Fragment {
     redColor = getResources().getColor(R.color.alert_red, null);
     greenColor = getResources().getColor(R.color.green, null);
 
-    setupButtons(view);
+    setupAddBookBtnListener(view);
 
     return view;
   }
@@ -117,14 +113,36 @@ public class BookFormFragment extends Fragment {
     EditText publisherField = view.findViewById(R.id.book_form_publisher_input);
     publisherField.setText(book.getPublisher());
 
-    EditText volumeField = view.findViewById(R.id.book_form_volume_input);
-    volumeField.setText(book.getVolume());
-
     EditText editionField = view.findViewById(R.id.book_form_edition_input);
     editionField.setText(book.getEdition());
 
     EditText addInfoField = view.findViewById(R.id.book_form_add_infos_input);
     addInfoField.setText(book.getAddInfo());
+
+    TextView bookFormAuthorList = view.findViewById(R.id.book_form_author_list);
+    bookFormAuthorList.setVisibility(View.VISIBLE);
+    bookFormAuthorList.setText(convertAuthorListToString(authorList));
+  }
+
+  private String convertAuthorListToString(List<Author> authorList) {
+    StringBuilder authors = new StringBuilder();
+    authorList.size();
+
+    int counter = 1;
+    for (Author author : authorList) {
+
+      if (author.getTitle() != null && !author.getTitle().isEmpty()) {
+        authors.append(author.getTitle()).append(" ");
+      }
+      authors.append(author.getFirstName()).append(" ").append(author.getLastName());
+      if (counter != authorList.size()) {
+        authors.append(",\n");
+      }
+
+      ++ counter;
+    }
+
+    return authors.toString();
   }
 
   /**
@@ -139,21 +157,9 @@ public class BookFormFragment extends Fragment {
     }
   }
 
-  private void setupButtons(View view) {
-    Button cancelBtn = view.findViewById(R.id.btn_book_form_cancel);
-
-    cancelBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        closeFragment();
-      }
-    });
-
-    setupAddBookBtnListener(view);
-  }
 
   private void setupAddBookBtnListener(View view) {
-    Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
+    FloatingActionButton addBookBtn = view.findViewById(R.id.btn_book_form_add);
 
     addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -174,12 +180,12 @@ public class BookFormFragment extends Fragment {
     });
   }
 
-  private void switchToAuthorFragment() { // TODO
+  private void switchToAuthorFragment() {
     AuthorFragment authorFragment = new AuthorFragment(authorList,
         new AuthorFragment.ChangeAuthorListListener() {
           @Override
-          public void onAuthorListChanged() {
-            // TODO maybe not necessary
+          public void onAuthorListChanged(List<Author> authorList) {
+            BookFormFragment.this.authorList = authorList;
           }
         });
 
@@ -197,7 +203,6 @@ public class BookFormFragment extends Fragment {
     handleSubtitle();
     handlePubYear();
     handlePublisher();
-    handleVolume();
     handleEdition();
     handleAddInfos();
 
@@ -212,7 +217,6 @@ public class BookFormFragment extends Fragment {
 
     closeFragment();
   }
-
 
   private void handleIsbn() {
     EditText isbnInput = getView().findViewById(R.id.book_form_isbn_input);
@@ -275,16 +279,6 @@ public class BookFormFragment extends Fragment {
     String publisher = publisherInput.getText().toString();
     if (!DataValidation.isStringEmpty(publisher)) {
       book.setPublisher(publisher);
-    }
-  }
-
-  private void handleVolume() {
-    EditText volumeInput = getView().findViewById(R.id.book_form_volume_input);
-    volumeInput.setBackgroundColor(greenColor);
-
-    String volume = volumeInput.getText().toString();
-    if (!DataValidation.isStringEmpty(volume)) {
-      book.setVolume(volume);
     }
   }
 

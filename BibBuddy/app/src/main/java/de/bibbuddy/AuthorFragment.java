@@ -35,11 +35,9 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   private Context context;
   private AuthorRecyclerViewAdapter adapter;
   private List<AuthorItem> selectedAuthorItems;
-  private int redColor;
-  private int greenColor;
 
   public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
-    this.authorList = authorList;
+    this.authorList = new ArrayList<>(authorList);
     this.listener = listener;
   }
 
@@ -59,7 +57,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     context = view.getContext();
 
     RecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
-    adapter = new AuthorRecyclerViewAdapter(this, authorList, getContext());
+    adapter = new AuthorRecyclerViewAdapter(this, authorList);
     recyclerView.setAdapter(adapter);
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
@@ -68,10 +66,9 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     selectedAuthorItems = new ArrayList<>();
     updateEmptyView();
 
-    redColor = getResources().getColor(R.color.alert_red, null);
-    greenColor = getResources().getColor(R.color.green, null);
     setHasOptionsMenu(true);
     createAddAuthorListener();
+    confirmAuthorsBtnListener(view);
 
     return view;
   }
@@ -191,10 +188,11 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
         new AuthorFormFragment.ChangeAuthorListener() {
           @Override
           public void onAuthorChanged(Author author, boolean isNew) {
-            if (isNew) {
-              authorList.add(author);
+            if (!isNew) {
+              authorList.remove(author.getCache());
             }
 
+            authorList.add(author);
             adapter.notifyDataSetChanged();
           }
         });
@@ -207,14 +205,24 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   private void closeFragment() {
-    listener.onAuthorListChanged();
-
     FragmentManager manager = getParentFragmentManager();
     if (manager.getBackStackEntryCount() > 0) {
       manager.popBackStack();
     } else {
       requireActivity().onBackPressed();
     }
+  }
+
+  private void confirmAuthorsBtnListener(View view) {
+    FloatingActionButton addBookBtn = view.findViewById(R.id.btn_confirm_authors);
+
+    addBookBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        listener.onAuthorListChanged(authorList);
+        closeFragment();
+      }
+    });
   }
 
   @Override
@@ -234,7 +242,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   public interface ChangeAuthorListListener {
-    void onAuthorListChanged();
+    void onAuthorListChanged(List<Author> authorList);
   }
 
 }
