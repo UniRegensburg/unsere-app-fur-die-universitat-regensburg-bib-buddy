@@ -429,7 +429,10 @@
         <h2>Sprachnotiz aufnehmen</h2>
         <p>Klicken Sie auf den <b>Aufnahme-Button</b> mit dem Mikrofon und fangen Sie an zu
         sprechen. Sie können die Aufnahme stoppen, indem sie den Aufnahme-Button, Stop-Button oder
-        den Play-Button anklicken.</p><br>
+        den Play-Button anklicken.</p>
+        <p>Die Sprachnotizen können <b>maximal 1MB</b> groß werden. Daher werden Aufnahmen, die zu
+        groß werden als separate Notizen zwischengespeichert, was durch eine kleine Notiz am unteren
+        Displayrand mitgeteilt wird.</p><br>
 
         <h2>Sprachnotiz abspielen</h2>
         <p>Sie können die Sprachnotiz anhören, indem sie den <b>Playbutton</b> anklicken.
@@ -516,6 +519,9 @@
     <string name="temporary_audio_file">temporaryAudioFile</string>
     <string name="audio_file_suffix">mpeg4</string>
     <string name="voice_note_name">Sprachnotiz vom</string>
+    <string name="default_played_time">00:00</string>
+    <string name="error_no_playable_record">Keine abspielbare Aufnahme vorhanden.</string>
+    <string name="voice_note_too_large">Sprachnotiz wird zu groß und wird als Teil separat gespeichert.</string>
 
     <!-- Voice Note Editor Image Descriptions -->
     <string name="record_microphone">record_microphone</string>
@@ -523,8 +529,5 @@
     <string name="circle_play">circle_play</string>
     <string name="play_note">Play Note</string>
     <string name="stop_note">Stop Note</string>
-    <string name="default_played_time">00:00</string>
-    <string name="error_no_playable_record">Keine abspielbare Aufnahme vorhanden.</string>
-
 
 </resources>
