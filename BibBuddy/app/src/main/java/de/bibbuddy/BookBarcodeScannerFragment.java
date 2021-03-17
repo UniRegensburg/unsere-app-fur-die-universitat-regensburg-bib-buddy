@@ -21,7 +21,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +29,8 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookBarcodeScannerFragment extends Fragment {
+public class BookBarcodeScannerFragment extends Fragment
+    implements BookFormFragment.ChangeBookListener {
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
   private SurfaceView surfaceView;
@@ -149,7 +149,7 @@ public class BookBarcodeScannerFragment extends Fragment {
     if (book != null) {
       handleAddBook(book, authors);
     } else {
-      
+
       getActivity().runOnUiThread(new Runnable() {
         public void run() {
           Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
@@ -160,8 +160,18 @@ public class BookBarcodeScannerFragment extends Fragment {
   }
 
   private void handleAddBook(Book book, List<Author> authors) {
+    BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
+
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  @Override
+  public void onBookAdded(Book book, List<Author> authorList) {
     BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
-    bookDao.create(book, authors, shelfId);
+    bookDao.create(book, authorList, shelfId);
 
     getActivity().runOnUiThread(new Runnable() {
       public void run() {
@@ -170,14 +180,11 @@ public class BookBarcodeScannerFragment extends Fragment {
       }
     });
 
-    closeFragment();
+    closeFragmentAfterAdded();
   }
 
-  /**
-   * Closes the BookBarcodeScannerFragment.
-   */
-  public void closeFragment() {
-    LibraryFragment fragment = new LibraryFragment();
+  private void closeFragment() {
+    BookFragment fragment = new BookFragment();
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment)
         .setReorderingAllowed(true)
@@ -185,6 +192,17 @@ public class BookBarcodeScannerFragment extends Fragment {
         .commit();
 
     fragment.setArguments(createBookBundle());
+  }
+
+  private void closeFragmentAfterAdded() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 1) {
+      fragmentManager.popBackStack();
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+      requireActivity().onBackPressed();
+    }
   }
 
   private Bundle createBookBundle() {

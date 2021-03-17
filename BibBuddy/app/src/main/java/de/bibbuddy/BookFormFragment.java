@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * The BookFormFragment is responsible for adding a book manually to a shelf.
  *
- * @author Claudia Schönherr, Sarah Kurek
+ * @author Claudia Schönherr, Sarah Kurek, Luis Moßburger
  */
 public class BookFormFragment extends Fragment {
   private final ChangeBookListener listener;
@@ -32,6 +32,18 @@ public class BookFormFragment extends Fragment {
 
   public BookFormFragment(ChangeBookListener listener) {
     this.listener = listener;
+  }
+
+  /**
+   * Second constructor to handle construction from API call.
+   *
+   * @param listener Listener for event handling.
+   * @param book     Book retrieved from API.
+   */
+  public BookFormFragment(ChangeBookListener listener, Book book, List<Author> authorList) {
+    this.listener = listener;
+    this.book = book;
+    this.authorList.addAll(authorList);
   }
 
   @Nullable
@@ -67,11 +79,15 @@ public class BookFormFragment extends Fragment {
         ((MainActivity) getActivity())
             .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
-        
+
         Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
         addBookBtn.setText(R.string.change);
       }
 
+      setInputText(view);
+      setupAddAuthorBtnListener(view);
+    } else if (this.book != null) {
+      ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
       setInputText(view);
       setupAddAuthorBtnListener(view);
     }

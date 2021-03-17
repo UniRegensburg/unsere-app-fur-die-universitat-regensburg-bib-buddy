@@ -42,7 +42,7 @@ public class IsbnRetriever implements Runnable {
 
     try {
       value = xmlMetadata.getElementsByTagName(fieldName).item(0).getTextContent();
-    } catch(Exception e) {
+    } catch (Exception e) {
       // exception for publication year, which needs an int
       if (fieldName == "dcterms:issued") {
         value = "0";

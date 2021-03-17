@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.google.android.material.textfield.TextInputLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookOnlineFragment extends Fragment {
+public class BookOnlineFragment extends Fragment implements BookFormFragment.ChangeBookListener {
 
   private TextInputLayout searchField;
   private EditText searchFieldText;
@@ -77,18 +76,17 @@ public class BookOnlineFragment extends Fragment {
     return bundle;
   }
 
-  /**
-   * Closes the BookOnlineFragment.
-   */
-  public void closeFragment() {
-    BookFragment fragment = new BookFragment();
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
+  private void closeFragmentAfterAdded() {
+    Fragment fragment =
+        getActivity().getSupportFragmentManager().findFragmentByTag(LibraryKeys.FRAGMENT_BOOK);
+    getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 
-    fragment.setArguments(createBookBundle());
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   private void handleIsbnInput(int keyCode, KeyEvent event) {
@@ -118,17 +116,27 @@ public class BookOnlineFragment extends Fragment {
   }
 
   private void handleAddBook(Book book, List<Author> authors) {
-    try {
-      BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
-      bookDao.create(book, authors, shelfId);
+    BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
 
-      Toast.makeText(getActivity(), getString(R.string.added_book),
-          Toast.LENGTH_LONG).show();
+    getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
+        .addToBackStack(null)
+        .commit();
+  }
 
-      closeFragment();
-    } catch (Exception e) {
-      System.out.println(e);
-    }
+  @Override
+  public void onBookAdded(Book book, List<Author> authorList) {
+    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    bookDao.create(book, authorList, shelfId);
+
+    getActivity().runOnUiThread(new Runnable() {
+      public void run() {
+        Toast.makeText(getActivity(), getString(R.string.added_book),
+            Toast.LENGTH_SHORT).show();
+      }
+    });
+
+    closeFragmentAfterAdded();
   }
 
 }
