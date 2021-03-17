@@ -131,7 +131,7 @@ public class NotesRecyclerViewAdapter
 
   private void setUpBasicCardView(NotesViewHolder holder, int position) {
     NoteItem noteItem = data.get(position);
-    holder.getModDateView().setText(noteModel.getDate(noteItem.getModDate()));
+    holder.getModDateView().setText(noteItem.getModDateStr());
     holder.getNameView().setText(noteItem.getName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity,
         noteItem.getImage()));
