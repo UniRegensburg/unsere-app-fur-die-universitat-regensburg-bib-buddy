@@ -247,7 +247,11 @@ public class NoteDao implements InterfaceNoteDao {
    * @return returns the notes text value without formatting texts
    */
   public String findStrippedTextById(Long id) {
-    return findTextById(id).replaceAll("<[^>]+>", "");
+    return findTextById(id).replaceAll(
+        "(<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">|<\\/p>|" +
+            "<span style=\"text-decoration:line-through;\">|<\\/span>|<(\\/)?i>|" +
+            "<(\\/)?b>|<(\\/)?u>|<(\\/)?br>|<(\\/)?blockquote>)",
+        "");
   }
 
   private Note createNoteData(Cursor cursor) {
