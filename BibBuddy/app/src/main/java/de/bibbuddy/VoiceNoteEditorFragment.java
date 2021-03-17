@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -205,7 +206,6 @@ public class VoiceNoteEditorFragment extends Fragment {
 
   private void onRecord(boolean start) {
     stopPlaying();
-    pulse.startRippleAnimation();
     if (tempAudio != null) {
       tempAudio = null;
     }
@@ -218,6 +218,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void startRecording() {
+    pulse.startRippleAnimation();
     recorder = new MediaRecorder();
     try {
       tempAudio = File.createTempFile(String.valueOf(R.string.temporary_audio_file),
@@ -236,6 +237,22 @@ public class VoiceNoteEditorFragment extends Fragment {
       }
       recorder.prepare();
       recorder.start();
+      new CountDownTimer(60000, 1000) {
+
+        public void onTick(long millisUntilFinished) {
+        }
+
+        public void onFinish() {
+          if (isRecording) {
+            stopRecording();
+            saveNote();
+            Toast.makeText(requireContext(), getString(R.string.voice_note_too_large),
+                Toast.LENGTH_SHORT).show();
+            startRecording();
+          }
+        }
+
+      }.start();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -247,6 +264,7 @@ public class VoiceNoteEditorFragment extends Fragment {
       recorder.release();
       isRecording = false;
     }
+
   }
 
   private void onPlay() {
