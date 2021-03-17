@@ -31,7 +31,7 @@ public class NoteModel {
    * @param text  text of the note object
    * @param bytes byteArray that is representing the saved object binary
    */
-  public void addNote(String name, int type, String text, byte[] bytes) {
+  public void createNote(String name, int type, String text, byte[] bytes) {
     Note note;
     if (bytes != null) {
       note = new Note(name, type, text, bytes);
