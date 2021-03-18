@@ -44,10 +44,10 @@ public class IsbnRetriever implements Runnable {
       value = xmlMetadata.getElementsByTagName(fieldName).item(0).getTextContent();
     } catch (Exception e) {
       // exception for publication year, which needs an int
-      if (fieldName == "dcterms:issued") {
+      if (fieldName.equals("dcterms:issued")) {
         value = "0";
       }
-      System.out.println("Value of field '" + fieldName + "' could not be extracted.");
+      e.printStackTrace();
     }
 
     return value;

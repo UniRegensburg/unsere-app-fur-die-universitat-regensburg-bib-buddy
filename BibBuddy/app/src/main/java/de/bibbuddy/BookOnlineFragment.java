@@ -63,7 +63,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
       }
     });
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
 
     return view;
   }
@@ -76,10 +76,10 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     return bundle;
   }
 
-  private void closeFragmentAfterAdded() {
+  private void closeFragmentAfterAdding() {
     Fragment fragment =
-        getActivity().getSupportFragmentManager().findFragmentByTag(LibraryKeys.FRAGMENT_BOOK);
-    getActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        requireActivity().getSupportFragmentManager().findFragmentByTag(LibraryKeys.FRAGMENT_BOOK);
+    requireActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 
     FragmentManager fragmentManager = getParentFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
@@ -108,7 +108,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
         if (book != null) {
           handleAddBook(book, authors);
         } else {
-          Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
+          Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
               Toast.LENGTH_LONG).show();
         }
       }
@@ -118,7 +118,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   private void handleAddBook(Book book, List<Author> authors) {
     BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
         .addToBackStack(null)
         .commit();
@@ -129,14 +129,14 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
     bookDao.create(book, authorList, shelfId);
 
-    getActivity().runOnUiThread(new Runnable() {
+    requireActivity().runOnUiThread(new Runnable() {
       public void run() {
-        Toast.makeText(getActivity(), getString(R.string.added_book),
+        Toast.makeText(requireActivity(), getString(R.string.added_book),
             Toast.LENGTH_SHORT).show();
       }
     });
 
-    closeFragmentAfterAdded();
+    closeFragmentAfterAdding();
   }
 
 }

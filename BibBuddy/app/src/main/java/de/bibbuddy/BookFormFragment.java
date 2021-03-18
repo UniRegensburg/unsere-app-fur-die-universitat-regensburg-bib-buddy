@@ -65,7 +65,7 @@ public class BookFormFragment extends Fragment {
       Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
       if (bookId == 0) { // add new book
-        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
+        ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_book));
       } else { // edit existing book
         BookModel model = new BookModel(getContext(), shelfId);
         book = model.getBookById(bookId);
@@ -74,16 +74,16 @@ public class BookFormFragment extends Fragment {
           authorList.addAll(model.getAuthorList(bookId));
         }
 
-        ((MainActivity) getActivity())
+        ((MainActivity) requireActivity())
             .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
-        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
+        ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.change_book));
 
       }
 
       setInputText(view);
       setupAddAuthorBtnListener(view);
     } else if (this.book != null) {
-      ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
+      ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_book));
       setInputText(view);
       setupAddAuthorBtnListener(view);
     }
@@ -189,7 +189,7 @@ public class BookFormFragment extends Fragment {
           }
         });
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, authorFragment, LibraryKeys.FRAGMENT_AUTHOR)
         .addToBackStack(null)
         .commit();
