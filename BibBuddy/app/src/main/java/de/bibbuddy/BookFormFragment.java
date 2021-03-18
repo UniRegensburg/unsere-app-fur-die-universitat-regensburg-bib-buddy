@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * The BookFormFragment is responsible for adding a book manually to a shelf.
  *
- * @author Claudia Schönherr, Sarah Kurek
+ * @author Claudia Schönherr, Sarah Kurek, Luis Moßburger
  */
 public class BookFormFragment extends Fragment {
   private final ChangeBookListener listener;
@@ -31,6 +31,18 @@ public class BookFormFragment extends Fragment {
 
   public BookFormFragment(ChangeBookListener listener) {
     this.listener = listener;
+  }
+
+  /**
+   * Second constructor to handle construction from API call.
+   *
+   * @param listener Listener for event handling.
+   * @param book     Book retrieved from API.
+   */
+  public BookFormFragment(ChangeBookListener listener, Book book, List<Author> authorList) {
+    this.listener = listener;
+    this.book = book;
+    this.authorList.addAll(authorList);
   }
 
   @Nullable
@@ -53,7 +65,7 @@ public class BookFormFragment extends Fragment {
       Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
       if (bookId == 0) { // add new book
-        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
+        ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_book));
       } else { // edit existing book
         BookModel model = new BookModel(getContext(), shelfId);
         book = model.getBookById(bookId);
@@ -62,13 +74,18 @@ public class BookFormFragment extends Fragment {
           authorList.addAll(model.getAuthorList(bookId));
         }
 
-        ((MainActivity) getActivity())
+        ((MainActivity) requireActivity())
             .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
         ((MainActivity) getActivity()).setVisibilitySortButton(false);
-        
+       
       }
 
+      setInputText(view);
+      setupAddAuthorBtnListener(view);
+    } else if (this.book != null) {
+      ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_book));
       setInputText(view);
       setupAddAuthorBtnListener(view);
     }
@@ -124,7 +141,7 @@ public class BookFormFragment extends Fragment {
         authors.append(",\n");
       }
 
-      ++ counter;
+      ++counter;
     }
 
     return authors.toString();
@@ -174,7 +191,7 @@ public class BookFormFragment extends Fragment {
           }
         });
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, authorFragment, LibraryKeys.FRAGMENT_AUTHOR)
         .addToBackStack(null)
         .commit();

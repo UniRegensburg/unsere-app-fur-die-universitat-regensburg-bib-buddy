@@ -21,7 +21,6 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +29,8 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookBarcodeScannerFragment extends Fragment {
+public class BookBarcodeScannerFragment extends Fragment
+    implements BookFormFragment.ChangeBookListener {
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
   private SurfaceView surfaceView;
@@ -68,7 +68,7 @@ public class BookBarcodeScannerFragment extends Fragment {
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
 
     setupDetectorsAndSources(view);
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
 
     return view;
   }
@@ -87,11 +87,11 @@ public class BookBarcodeScannerFragment extends Fragment {
       @Override
       public void surfaceCreated(SurfaceHolder holder) {
         try {
-          if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+          if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
               == PackageManager.PERMISSION_GRANTED) {
             cameraSource.start(surfaceView.getHolder());
           } else {
-            ActivityCompat.requestPermissions(getActivity(), new
+            ActivityCompat.requestPermissions(requireActivity(), new
                 String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
           }
 
@@ -149,10 +149,10 @@ public class BookBarcodeScannerFragment extends Fragment {
     if (book != null) {
       handleAddBook(book, authors);
     } else {
-      
-      getActivity().runOnUiThread(new Runnable() {
+
+      requireActivity().runOnUiThread(new Runnable() {
         public void run() {
-          Toast.makeText(getActivity(), getString(R.string.isbn_not_found),
+          Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
               Toast.LENGTH_SHORT).show();
         }
       });
@@ -160,31 +160,49 @@ public class BookBarcodeScannerFragment extends Fragment {
   }
 
   private void handleAddBook(Book book, List<Author> authors) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
-    bookDao.create(book, authors, shelfId);
+    BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
 
-    getActivity().runOnUiThread(new Runnable() {
+    requireActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
+        .addToBackStack(null)
+        .commit();
+  }
+
+  @Override
+  public void onBookAdded(Book book, List<Author> authorList) {
+    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    bookDao.create(book, authorList, shelfId);
+
+    requireActivity().runOnUiThread(new Runnable() {
       public void run() {
-        Toast.makeText(getActivity(), getString(R.string.added_book),
+        Toast.makeText(requireActivity(), getString(R.string.added_book),
             Toast.LENGTH_SHORT).show();
       }
     });
 
-    closeFragment();
+    closeFragmentAfterAdding();
   }
 
-  /**
-   * Closes the BookBarcodeScannerFragment.
-   */
-  public void closeFragment() {
-    LibraryFragment fragment = new LibraryFragment();
-    getActivity().getSupportFragmentManager().beginTransaction()
+  private void closeFragment() {
+    BookFragment fragment = new BookFragment();
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment)
         .setReorderingAllowed(true)
         .addToBackStack(null)
         .commit();
 
     fragment.setArguments(createBookBundle());
+  }
+
+  private void closeFragmentAfterAdding() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 1) {
+      fragmentManager.popBackStack();
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+      requireActivity().onBackPressed();
+    }
   }
 
   private Bundle createBookBundle() {
