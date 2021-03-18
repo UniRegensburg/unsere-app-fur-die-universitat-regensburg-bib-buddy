@@ -63,7 +63,8 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
       }
     });
 
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) requireActivity())
+        .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
 
     return view;
   }

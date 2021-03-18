@@ -139,7 +139,7 @@ public class BookFormFragment extends Fragment {
         authors.append(",\n");
       }
 
-      ++ counter;
+      ++counter;
     }
 
     return authors.toString();
