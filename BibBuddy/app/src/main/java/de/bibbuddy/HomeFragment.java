@@ -22,6 +22,7 @@ public class HomeFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_home, container, false);
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
     return view;
   }

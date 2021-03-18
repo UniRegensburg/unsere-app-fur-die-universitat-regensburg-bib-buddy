@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -51,7 +52,7 @@ public class NotesFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
     recyclerView = view.findViewById(R.id.recyclerView);
 
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 
     noteModel = new NoteModel(getContext());
     notes = noteModel.getCompleteNoteList();
@@ -60,8 +61,21 @@ public class NotesFragment extends Fragment {
     enableSwipeToDelete();
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    setupSortBtn();
 
     return view;
+  }
+
+  private void setupSortBtn() {
+    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+
+    sortBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleSortNote();
+      }
+    });
   }
 
   @Override
@@ -75,9 +89,6 @@ public class NotesFragment extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
 
     switch (item.getItemId()) {
-      case R.id.menu_note_sort:
-        handleSortNote();
-        break;
 
       case R.id.menu_help_note_list:
         handleManualNotesList();
@@ -96,6 +107,7 @@ public class NotesFragment extends Fragment {
           @Override
           public void onSortedSelected(SortCriteria newSortCriteria) {
             sortCriteria = newSortCriteria;
+            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
             sortNoteList();
           }
         });

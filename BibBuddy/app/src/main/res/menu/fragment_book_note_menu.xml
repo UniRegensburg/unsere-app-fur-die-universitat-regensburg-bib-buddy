@@ -6,10 +6,6 @@
         android:title="@string/delete" />
 
     <item
-        android:id="@+id/menu_book_note_sort"
-        android:title="@string/sort" />
-
-    <item
         android:id="@+id/menu_export_note"
         android:title="@string/export_note" />
 

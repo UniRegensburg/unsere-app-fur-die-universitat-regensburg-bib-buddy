@@ -62,6 +62,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
+    ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
     selectedAuthorItems = new ArrayList<>();
     updateEmptyView();

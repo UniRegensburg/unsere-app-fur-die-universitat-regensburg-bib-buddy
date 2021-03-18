@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
@@ -67,12 +68,13 @@ public class LibraryFragment extends Fragment
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
 
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 
     setupRecyclerView();
     setupAddShelfBtn();
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+    setupSortBtn();
 
     setFunctionsToolbar();
 
@@ -85,6 +87,18 @@ public class LibraryFragment extends Fragment
 
 
     return view;
+  }
+
+  private void setupSortBtn() {
+    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+
+    sortBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleSortShelf();
+      }
+    });
   }
 
   private void setFunctionsToolbar() {
@@ -113,10 +127,6 @@ public class LibraryFragment extends Fragment
 
       case R.id.menu_rename_shelf:
         handleRenameShelf();
-        break;
-
-      case R.id.menu_sort_shelf:
-        handleSortShelf();
         break;
 
       case R.id.menu_delete_shelf:
@@ -331,6 +341,7 @@ public class LibraryFragment extends Fragment
           @Override
           public void onSortedSelected(SortCriteria newSortCriteria) {
             sortCriteria = newSortCriteria;
+            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
             sortLibraryList();
           }
         });

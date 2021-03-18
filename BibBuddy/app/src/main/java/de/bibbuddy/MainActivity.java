@@ -3,6 +3,7 @@ package de.bibbuddy;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,8 +27,11 @@ public class MainActivity extends AppCompatActivity {
   private LibraryFragment libraryFragment;
   private NotesFragment notesFragment;
 
+  private SortCriteria sortCriteria;
+
   public Button importBtn;
   public Button shareBtn;
+  public ImageButton sortBtn;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     dbHelper = new DatabaseHelper(this);
 
+    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortBtn = findViewById(R.id.sort_btn);
   }
 
   private void setupBottomNavigationView() {
@@ -143,6 +149,27 @@ public class MainActivity extends AppCompatActivity {
 
     shareBtn = findViewById(R.id.share_btn);
     shareBtn.setVisibility(visibilityShare);
+  }
+
+  /**
+   * Shows or hides the sort button of the toolbar.
+   *
+   * @param isVisible  if the button should be visible or not
+   */
+  public void setVisibilitySortButton(boolean isVisible) {
+    if (isVisible) {
+      sortBtn.setVisibility(View.VISIBLE);
+    } else {
+      sortBtn.setVisibility(View.GONE);
+    }
+  }
+
+  public SortCriteria getSortCriteria() {
+    return sortCriteria;
+  }
+
+  public void setSortCriteria(SortCriteria sortCriteria) {
+    this.sortCriteria = sortCriteria;
   }
 
 }
