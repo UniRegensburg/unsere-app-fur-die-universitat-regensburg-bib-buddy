@@ -37,18 +37,31 @@ public class IsbnRetriever implements Runnable {
     return builder.parse(inputSource);
   }
 
+  private String getField(Document xmlMetadata, String fieldName) {
+    String value = "";
+
+    try {
+      value = xmlMetadata.getElementsByTagName(fieldName).item(0).getTextContent();
+    } catch (Exception e) {
+      // exception for publication year, which needs an int
+      if (fieldName.equals("dcterms:issued")) {
+        value = "0";
+      }
+      e.printStackTrace();
+    }
+
+    return value;
+  }
+
   private Book createRecord(Document xmlMetadata) {
-    return new Book(xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent(), // isbn
-        xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent(), // title
-        "", // subtitle
-        Integer
-            .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent()),
-        // pubYear
-        xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent(),
-        // publisher
+    return new Book(getField(xmlMetadata, "bibo:isbn"), // isbn
+        getField(xmlMetadata, "dc:title"), // title
+        getField(xmlMetadata, "isbd:P1006"), // subtitle
+        Integer.parseInt(getField(xmlMetadata, "dcterms:issued")), // pubYear
+        getField(xmlMetadata, "dcterms:publisher"), // publisher
         "", // volume
-        "", // edition
-        ""); // addInfos
+        getField(xmlMetadata, "bibo:edition"), // edition
+        getField(xmlMetadata, "dcterms:extent")); // addInfos
   }
 
   private List<Author> createAuthors(Document xmlMetadata) {
