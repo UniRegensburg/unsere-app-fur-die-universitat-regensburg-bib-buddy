@@ -29,7 +29,6 @@ public class NoteItem implements SortableItem {
   public NoteItem(Long modDate, String name, String text, int image, Long id, Long bookId) {
     this.modDate = modDate;
     this.modDateStr = DateConverter.convertDateToString(modDate);
-
     this.name = name;
     this.text = text;
     this.image = image;
