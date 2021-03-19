@@ -178,7 +178,7 @@ public class BookNotesView extends Fragment
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        unselectNoteItems();
+        deselectNoteItems();
       }
     });
 
@@ -201,7 +201,7 @@ public class BookNotesView extends Fragment
     alertDeleteBookNote.show();
   }
 
-  private void unselectNoteItems() {
+  private void deselectNoteItems() {
     RecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
