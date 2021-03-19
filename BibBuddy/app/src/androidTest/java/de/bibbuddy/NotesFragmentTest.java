@@ -47,21 +47,21 @@ public class NotesFragmentTest {
     ActivityScenario activityScenario = scenario.onActivity(
         (ActivityScenario.ActivityAction<MainActivity>) activity -> {
           nF = (NotesFragment) activity.getSupportFragmentManager().getFragments().get(0);
-          NotesFragment.notes.clear();
-          NotesFragment.notes.size();
+          NotesFragment.noteList.clear();
+          NotesFragment.noteList.size();
           Note textNote =
               new Note(exampleText, 0, exampleText);
           modDate = String.valueOf(textNote.getModDate());
           name = textNote.getName();
           NoteTextItem noteTextItem =
               new NoteTextItem(modDate, name, textNote.getText(), textNote.getId());
-          NotesFragment.notes.add(noteTextItem);
+          NotesFragment.noteList.add(noteTextItem);
         });
 
-    onView(ViewMatchers.withId(R.id.recyclerView))
+    onView(ViewMatchers.withId(R.id.note_list_recycler_view))
         .perform(RecyclerViewActions.scrollTo(hasDescendant(withText(exampleText))));
     RecyclerView recyclerView =
-        Objects.requireNonNull(nF.getView()).findViewById(R.id.recyclerView);
+        Objects.requireNonNull(nF.getView()).findViewById(R.id.note_list_recycler_view);
     itemView = recyclerView.getChildAt(0);
     idText = itemView.getId();
   }
