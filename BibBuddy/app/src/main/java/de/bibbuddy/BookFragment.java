@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * The BookFragment is responsible for the current books of a shelf in the library.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener,
     BookFormFragment.ChangeBookListener {
@@ -58,15 +58,56 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
+  ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
+      new ActivityResultContracts.StartActivityForResult(),
+      new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
 
-  private String[] storageManifestPermissions = {
+            if (data != null) {
+
+              Uri uri = data.getData();
+              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
+
+                handleImport(uri);
+
+              } else {
+                showDialogNonBibFile();
+              }
+            }
+          }
+        }
+      });
+  private final String[] storageManifestPermissions = {
       Manifest.permission.WRITE_EXTERNAL_STORAGE,
-      Manifest.permission.READ_EXTERNAL_STORAGE };
-
+      Manifest.permission.READ_EXTERNAL_STORAGE};
   private boolean isImport = false; // it is either import or export
+  private final ActivityResultLauncher<String> requestPermissionLauncher =
+      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+          if (!isImport) {
 
+            exportBibTex.createBibFile();
+            exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+
+
+            Toast.makeText(getContext(),
+                getString(R.string.exported_file_stored_in) + '\n'
+                    + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
+                    + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+
+          } else {
+            filePicker();
+          }
+
+        } else {
+          Toast.makeText(getContext(), R.string.storage_permission_denied,
+              Toast.LENGTH_SHORT).show();
+        }
+      });
   private SortCriteria sortCriteria;
-
 
   @Nullable
   @Override
@@ -141,7 +182,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void setupRecyclerView() {
     List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria,
-                                                          bookModel.getBookList(shelfId));
+        bookModel.getBookList(shelfId));
 
     RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
@@ -249,10 +290,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     if (selectedBookItems.size() > 1) {
       alertDeleteBook.setTitle(R.string.delete_books);
-      alertDeleteBook.setMessage(getString(R.string.delete_books_message) + " " + getString(R.string.delete_warning));
+      alertDeleteBook.setMessage(
+          getString(R.string.delete_books_message) + " " + getString(R.string.delete_warning));
     } else {
       alertDeleteBook.setTitle(R.string.delete_book);
-      alertDeleteBook.setMessage(getString(R.string.delete_book_message) + " " + getString(R.string.delete_warning));
+      alertDeleteBook.setMessage(
+          getString(R.string.delete_book_message) + " " + getString(R.string.delete_warning));
     }
 
     alertDeleteBook.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
@@ -321,29 +364,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
-      new ActivityResultContracts.StartActivityForResult(),
-      new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-          if (result.getResultCode() == Activity.RESULT_OK) {
-            Intent data = result.getData();
-
-            if (data != null) {
-
-              Uri uri = data.getData();
-              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
-
-                handleImport(uri);
-
-              } else {
-                showDialogNonBibFile();
-              }
-            }
-          }
-        }
-      });
-
   private void handleImport(Uri uri) {
     String bibText = readBibFile(uri);
 
@@ -387,7 +407,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     updateEmptyView(bookModel.getCurrentBookList());
   }
 
-
   private String readBibFile(Uri uri) {
     try {
 
@@ -404,7 +423,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     return null;
   }
 
-  private void filePicker()  {
+  private void filePicker() {
     Intent filePickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
     filePickerIntent.setType("*/*");
     filePickerActivityResultLauncher.launch(filePickerIntent);
@@ -429,7 +448,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     // if the permissions are granted
     if (ContextCompat.checkSelfPermission(getContext(),
         storageManifestPermissions[0]) // Manifest.permission.WRITE_EXTERNAL_STORAGE
-        +  ContextCompat.checkSelfPermission(getContext(),
+        + ContextCompat.checkSelfPermission(getContext(),
         storageManifestPermissions[1])  // Manifest.permission.READ_EXTERNAL_STORAGE
         == PackageManager.PERMISSION_GRANTED) {
 
@@ -451,7 +470,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     } else if (shouldShowRequestPermissionRationale(
         storageManifestPermissions[0]) // Manifest.permission.WRITE_EXTERNAL_STORAGE
         || shouldShowRequestPermissionRationale(
-            storageManifestPermissions[1])) { // Manifest.permission.READ_EXTERNAL_STORAGE
+        storageManifestPermissions[1])) { // Manifest.permission.READ_EXTERNAL_STORAGE
       showRequestPermissionDialog();
 
     } else {
@@ -471,8 +490,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(), new String[] {
-            storageManifestPermissions[0], // Manifest.permission.WRITE_EXTERNAL_STORAGE
-            storageManifestPermissions[1] }, // Manifest.permission.READ_EXTERNAL_STORAGE
+                storageManifestPermissions[0], // Manifest.permission.WRITE_EXTERNAL_STORAGE
+                storageManifestPermissions[1]}, // Manifest.permission.READ_EXTERNAL_STORAGE
             StorageKeys.STORAGE_PERMISSION_CODE));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
@@ -480,30 +499,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.create().show();
   }
-
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
-      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if (isGranted) {
-          if (!isImport) {
-
-            exportBibTex.createBibFile();
-            exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
-
-
-            Toast.makeText(getContext(),
-                getString(R.string.exported_file_stored_in) + '\n'
-                    + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
-                    + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
-
-          } else {
-            filePicker();
-          }
-
-        }  else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied,
-              Toast.LENGTH_SHORT).show();
-        }
-      });
 
   private void handleManualBook() {
     HelpFragment helpFragment = new HelpFragment();

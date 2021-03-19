@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * BookNotesView is responsible for the noteList of a certain book.
  *
- * @author Sarah Kurek, Silvia Ivanova
+ * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
 public class BookNotesView extends Fragment
     implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
@@ -172,10 +172,12 @@ public class BookNotesView extends Fragment
 
     if (selectedNoteItems.size() > 1) {
       alertDeleteBookNote.setTitle(R.string.delete_notes);
-      alertDeleteBookNote.setMessage(getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
+      alertDeleteBookNote.setMessage(
+          getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
     } else {
       alertDeleteBookNote.setTitle(R.string.delete_note);
-      alertDeleteBookNote.setMessage(getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
+      alertDeleteBookNote.setMessage(
+          getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
     }
 
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {

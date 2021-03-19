@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * The LibraryFragment is responsible for the shelves in the library.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener {
@@ -175,9 +175,9 @@ public class LibraryFragment extends Fragment
       exportBibTex.writeBibFile(exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
 
       Toast.makeText(getContext(),
-                     getString(R.string.exported_file_stored_in) + '\n'
-                         + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
-                         + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+          getString(R.string.exported_file_stored_in) + '\n'
+              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+              + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -187,7 +187,7 @@ public class LibraryFragment extends Fragment
       showRequestPermissionDialog();
     } else {
       requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                         StorageKeys.STORAGE_PERMISSION_CODE);
+          StorageKeys.STORAGE_PERMISSION_CODE);
     }
   }
 
@@ -198,8 +198,8 @@ public class LibraryFragment extends Fragment
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-             new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-             StorageKeys.STORAGE_PERMISSION_CODE));
+            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            StorageKeys.STORAGE_PERMISSION_CODE));
     reqAlertDialog.setNegativeButton(R.string.cancel,
         (dialog, which) -> dialog.dismiss());
 
@@ -228,16 +228,16 @@ public class LibraryFragment extends Fragment
 
         exportBibTex.createBibFile();
         exportBibTex.writeBibFile(exportBibTex
-                                      .getBibDataLibrary(libraryModel, bookDao, noteDao));
+            .getBibDataLibrary(libraryModel, bookDao, noteDao));
 
         Toast.makeText(getContext(),
             getString(R.string.exported_file_stored_in) + '\n'
-                  + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
-                  + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
+                + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName
+                + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
 
       } else {
         Toast.makeText(getContext(), R.string.storage_permission_denied,
-                       Toast.LENGTH_SHORT).show();
+            Toast.LENGTH_SHORT).show();
       }
     }
   }
@@ -253,7 +253,7 @@ public class LibraryFragment extends Fragment
 
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
-                 LibraryKeys.FRAGMENT_HELP_VIEW)
+            LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
         .commit();
   }
@@ -282,10 +282,12 @@ public class LibraryFragment extends Fragment
 
     if (selectedShelfItems.size() > 1) {
       alertDeleteShelf.setTitle(R.string.delete_shelves);
-      alertDeleteShelf.setMessage(getString(R.string.delete_shelves_message) + " " + getString(R.string.delete_warning));
+      alertDeleteShelf.setMessage(
+          getString(R.string.delete_shelves_message) + " " + getString(R.string.delete_warning));
     } else {
       alertDeleteShelf.setTitle(R.string.delete_shelf);
-      alertDeleteShelf.setMessage(getString(R.string.delete_shelf_message) + " " + getString(R.string.delete_warning));
+      alertDeleteShelf.setMessage(
+          getString(R.string.delete_shelf_message) + " " + getString(R.string.delete_warning));
     }
 
     alertDeleteShelf.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
