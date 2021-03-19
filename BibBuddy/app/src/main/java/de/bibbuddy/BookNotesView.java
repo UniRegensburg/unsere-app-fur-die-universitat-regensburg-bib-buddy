@@ -404,7 +404,7 @@ public class BookNotesView extends Fragment {
 
     RecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), notesRecyclerView, noteList);
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList);
     notesRecyclerView.setAdapter(adapter);
 
     updateEmptyView(noteList);

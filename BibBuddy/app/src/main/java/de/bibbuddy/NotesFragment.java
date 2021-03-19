@@ -126,7 +126,7 @@ public class NotesFragment extends Fragment {
 
   private void setupRecyclerView() {
     adapter =
-        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), notesRecyclerView, noteList);
+        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList);
     notesRecyclerView.setAdapter(adapter);
     updateEmptyListView(noteList);
   }
