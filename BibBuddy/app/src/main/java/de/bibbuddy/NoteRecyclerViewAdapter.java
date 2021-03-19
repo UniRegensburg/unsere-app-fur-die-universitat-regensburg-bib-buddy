@@ -5,16 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,45 +20,45 @@ import java.util.List;
  * @author Sabrina Freisleben
  */
 public class NoteRecyclerViewAdapter
-    extends RecyclerView.Adapter<NoteRecyclerViewAdapter.MyViewHolder> {
+    extends RecyclerView.Adapter<NoteRecyclerViewAdapter.NotesViewHolder> {
 
   private final MainActivity activity;
-  private List<NoteItem> data;
-  private ImageButton panelDelete;
-  private RelativeLayout hiddenDeletePanel;
+  private List<NoteItem> noteList;
   private ViewGroup parent;
+  private RecyclerView recyclerView;
 
   /**
    * Adapter constructor to connect a NoteList with the activity.
    *
-   * @param data     List of notes as data content for the adapter
    * @param activity Base activity
+   * @param noteList     List of notes as noteList content for the adapter
    */
-  public NoteRecyclerViewAdapter(List<NoteItem> data, MainActivity activity) {
-    this.data = data;
+  public NoteRecyclerViewAdapter(MainActivity activity, RecyclerView recyclerView, List<NoteItem> noteList) {
     this.activity = activity;
-    data.sort((o1, o2) -> {
+    this.recyclerView = recyclerView;
+    this.noteList = noteList;
+
+    noteList.sort((o1, o2) -> {
       if (o1.getModDate() == null || o2.getModDate() == null) {
         return 0;
       }
       return o1.getModDate().compareTo(o2.getModDate());
     });
-    Collections.reverse(data);
+    Collections.reverse(noteList);
   }
 
   @NonNull
   @Override
-  public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View itemView;
+  public NotesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     this.parent = parent;
     Context context = parent.getContext();
-    itemView =
-        LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
-    hiddenDeletePanel = parent.getRootView().findViewById(R.id.hidden_delete_panel);
-    panelDelete = hiddenDeletePanel.findViewById(R.id.panel_delete);
 
-    return new MyViewHolder(itemView);
+    View itemView =
+        LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
+
+    return new NotesViewHolder(itemView);
   }
+
 
   /**
    * Method to setup the custom ViewHolder components for notes.
@@ -72,9 +67,9 @@ public class NoteRecyclerViewAdapter
    * @param position adapterPosition of the viewHolder-item
    */
   @Override
-  public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-    Long id = data.get(position).getId();
-    String text = data.get(position).getNoteText();
+  public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
+    Long id = noteList.get(position).getId();
+    String text = noteList.get(position).getNoteText();
     setupCardView(holder, position);
 
     holder.itemView.setOnClickListener(v -> {
@@ -94,44 +89,14 @@ public class NoteRecyclerViewAdapter
         return false;
       }
       v.setSelected(!v.isSelected());
-      slideUpOrDown();
 
       return true;
     });
-    setupDeleteListener();
+
   }
 
-  private void setupDeleteListener() {
-    panelDelete.setOnClickListener(v -> {
-      int itemNumber = parent.getChildCount();
-      ArrayList<Integer> idCounter = new ArrayList<>();
-      for (int i = 0; i < itemNumber; i++) {
-        if (parent.getChildAt(i).isSelected()) {
-          idCounter.add(i);
-        }
-      }
-      removeBackendDataAndViewItems(idCounter);
-      hidePanel();
-    });
-  }
-
-  private void removeBackendDataAndViewItems(ArrayList<Integer> idCounter) {
-    for (int i = 0; i < idCounter.size(); i++) {
-      NotesFragment.deleteNote(data.get(i).getId());
-    }
-    int removed = 0;
-    for (int i = 0; i < idCounter.size(); i++) {
-      if (removed == 0) {
-        removeItem(idCounter.get(i));
-      } else {
-        removeItem(idCounter.get(i) - removed);
-      }
-      removed++;
-    }
-  }
-
-  private void setupCardView(MyViewHolder holder, int position) {
-    NoteItem noteItem = data.get(position);
+  private void setupCardView(NotesViewHolder holder, int position) {
+    NoteItem noteItem = noteList.get(position);
     holder.getModDateView().setText(noteItem.getModDateStr());
     holder.getNameView().setText(noteItem.getName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
@@ -140,61 +105,42 @@ public class NoteRecyclerViewAdapter
 
   @Override
   public int getItemCount() {
-    return data.size();
+    return noteList.size();
   }
 
-  public List<NoteItem> getData() {
-    return data;
+  public List<NoteItem> getnoteList() {
+    return noteList;
   }
 
   public void removeItem(int position) {
-    data.remove(position);
+    noteList.remove(position);
     notifyItemRemoved(position);
   }
 
-  /**
-   * Method to perform an upside-down animation for the deletePanel.
-   */
-  public void slideUpOrDown() {
-    if (anyItemSelected() && !isPanelShown()) {
-      Animation bottomUp = AnimationUtils.loadAnimation(activity.getBaseContext(),
-          R.anim.bottom_up);
-      hiddenDeletePanel.startAnimation(bottomUp);
-      hiddenDeletePanel.setVisibility(View.VISIBLE);
-    } else if (!anyItemSelected() && isPanelShown()) {
-      hidePanel();
-    }
-  }
-
-  private void hidePanel() {
-    Animation bottomDown = AnimationUtils.loadAnimation(activity.getBaseContext(),
-        R.anim.bottom_down);
-    hiddenDeletePanel.startAnimation(bottomDown);
-    hiddenDeletePanel.setVisibility(View.GONE);
-  }
-
-  private boolean anyItemSelected() {
-    int itemNumber = parent.getChildCount();
-    for (int i = 0; i < itemNumber; i++) {
-      if (parent.getChildAt(i).isSelected()) {
-        return true;
+  public boolean anyItemSelected() {
+    if(parent != null) {
+      int itemNumber = parent.getChildCount();
+      for (int i = 0; i < itemNumber; i++) {
+        if (parent.getChildAt(i).isSelected()) {
+          return true;
+        }
       }
     }
     return false;
   }
 
-  private boolean isPanelShown() {
-    return hiddenDeletePanel.getVisibility() == View.VISIBLE;
+  public void setBookNoteList(List<NoteItem> noteList) {
+    this.noteList = noteList;
   }
 
-  public void setNoteList(List<NoteItem> noteList) {
-    data = noteList;
+  public void setNoteList(List<NoteItem> noteList){
+    this.noteList = noteList;
+    notifyDataSetChanged();
   }
-
   /**
    * Custom ViewHolder to fit the RecyclerView's cardViews.
    */
-  public static class MyViewHolder extends RecyclerView.ViewHolder {
+  public static class NotesViewHolder extends RecyclerView.ViewHolder {
 
     public final TextView modDate;
     private final TextView name;
@@ -205,7 +151,7 @@ public class NoteRecyclerViewAdapter
      *
      * @param itemView View of the RecyclerView-item.
      */
-    public MyViewHolder(View itemView) {
+    public NotesViewHolder(View itemView) {
       super(itemView);
       modDate = itemView.findViewById(R.id.noteModDate);
       name = itemView.findViewById(R.id.noteName);
