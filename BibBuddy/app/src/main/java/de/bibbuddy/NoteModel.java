@@ -45,7 +45,7 @@ public class NoteModel {
    *
    * @return a list of NoteItems (used for views)
    */
-  public List<NoteItem> getCompleteNoteList() {
+  public List<NoteItem> getNoteList() {
     List<Note> noteList = noteDao.findAll();
     return createItemList(noteList);
   }
