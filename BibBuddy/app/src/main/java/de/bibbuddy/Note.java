@@ -39,8 +39,8 @@ public class Note {
   /**
    * Constructor to set up a new note with only name, type and text.
    *
-   * @param name name of the note object
-   * @param type type of the note object (text, voice or picture)
+   * @param name         name of the note object
+   * @param type         type of the note object (text, voice or picture)
    * @param noteFilePath path to the file of the note object
    */
   public Note(String name, Integer type, String text, String noteFilePath) {
@@ -129,8 +129,12 @@ public class Note {
     this.noteFileId = noteFileId;
   }
 
-  public String getNoteFilePath(){return noteFilePath;}
+  public String getNoteFilePath() {
+    return noteFilePath;
+  }
 
-  public void setNoteFilePath(String noteFilePath){this.noteFilePath = noteFilePath;}
+  public void setNoteFilePath(String noteFilePath) {
+    this.noteFilePath = noteFilePath;
+  }
 
 }
