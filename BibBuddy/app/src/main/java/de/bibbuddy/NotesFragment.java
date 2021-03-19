@@ -24,32 +24,30 @@ import java.util.List;
  */
 public class NotesFragment extends Fragment {
 
-  static List<NoteItem> noteList;
   private static NoteModel noteModel;
+  private RecyclerView notesRecyclerView;
+  private static List<NoteItem> noteList;
   private NoteRecyclerViewAdapter adapter;
-  private RecyclerView recyclerView;
   private SortCriteria sortCriteria;
-
-  public static void deleteNote(Long id) {
-    noteModel.deleteNote(id);
-  }
+  private TextView emptyListView;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
-    recyclerView = view.findViewById(R.id.note_list_recycler_view);
-    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
-    noteModel = new NoteModel(getContext());
-    noteList = noteModel.getCompleteNoteList();
 
-    setHasOptionsMenu(true);
-    setupRecyclerView();
+    noteModel = new NoteModel(getContext());
+    notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
+    noteList = noteModel.getCompleteNoteList();
+    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
+    emptyListView = view.findViewById(R.id.empty_notes_list_view);
+
     ((MainActivity) requireActivity())
         .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
     setupSortBtn();
+    setHasOptionsMenu(true);
+    setupRecyclerView();
 
     return view;
   }
@@ -61,9 +59,15 @@ public class NotesFragment extends Fragment {
   }
 
   @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
+    deleteNote.setVisible(adapter.anyItemSelected());
+  }
+
+  @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     long id = item.getItemId();
-    if (id == R.id.menu_delete_note) {
+    if (id == R.id.menu_note_list_delete) {
       handleDeleteNote();
     } else if (item.getItemId() == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
@@ -86,6 +90,24 @@ public class NotesFragment extends Fragment {
     alertDeleteBookNote.show();
   }
 
+  private void deselectNoteItems() {
+    for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
+      notesRecyclerView.getChildAt(i).setSelected(false);
+    }
+  }
+
+  private void performDelete() {
+    for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
+      if (notesRecyclerView.getChildAt(i).isSelected()) {
+        noteModel.deleteNote(noteList.get(i).getId());
+      }
+    }
+    noteList = noteModel.getCompleteNoteList();
+    adapter.setNoteList(noteList);
+    updateEmptyListView(noteList);
+    Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+  }
+
   private void handleHelpNotesFragment() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.note_list_help_text);
@@ -102,47 +124,28 @@ public class NotesFragment extends Fragment {
         .commit();
   }
 
-  private void deselectNoteItems() {
-    RecyclerView bookNotesListView = getView().findViewById(R.id.note_list_recycler_view);
-    for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
-      bookNotesListView.getChildAt(i).setSelected(false);
-    }
-  }
-
-  private void performDelete() {
-    for (int i = 0; i < recyclerView.getChildCount(); i++) {
-      if (recyclerView.getChildAt(i).isSelected()) {
-        noteModel.deleteNote(noteList.get(i).getId());
-      }
-    }
-    noteList = noteModel.getCompleteNoteList();
-    adapter.notifyDataSetChanged();
-    updateEmptyView(noteList);
-    Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
-  }
-
   private void setupRecyclerView() {
-    adapter = new NoteRecyclerViewAdapter(noteList, (MainActivity) requireActivity());
-    recyclerView.setAdapter(adapter);
-    updateEmptyView(noteList);
+    adapter =
+        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), notesRecyclerView, noteList);
+    notesRecyclerView.setAdapter(adapter);
+    updateEmptyListView(noteList);
   }
 
-  private void updateEmptyView(List<NoteItem> noteList) {
-    TextView emptyView = requireView().findViewById(R.id.empty_notes_list_view);
+  private void updateEmptyListView(List<NoteItem> noteList) {
     if (noteList.isEmpty()) {
-      emptyView.setVisibility(View.VISIBLE);
+      emptyListView.setVisibility(View.VISIBLE);
     } else {
-      emptyView.setVisibility(View.GONE);
+      emptyListView.setVisibility(View.GONE);
     }
   }
 
   private void setupSortBtn() {
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     ((MainActivity) requireActivity()).setVisibilitySortButton(true);
-    sortBtn.setOnClickListener(v -> handleSortNote());
+    sortBtn.setOnClickListener(v -> sortNotes());
   }
 
-  private void handleSortNote() {
+  private void sortNotes() {
     SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
         newSortCriteria -> {
           sortCriteria = newSortCriteria;
@@ -154,9 +157,8 @@ public class NotesFragment extends Fragment {
   }
 
   private void sortNoteList() {
-    List<NoteItem> noteList = noteModel.getAllSortedNoteList(sortCriteria);
+    noteList = noteModel.getAllSortedNoteList(sortCriteria);
     adapter.setNoteList(noteList);
-    adapter.notifyDataSetChanged();
   }
 
 }
