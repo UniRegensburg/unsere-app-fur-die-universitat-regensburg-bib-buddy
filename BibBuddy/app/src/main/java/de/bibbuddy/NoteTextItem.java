@@ -8,11 +8,8 @@ package de.bibbuddy;
  */
 public class NoteTextItem extends NoteItem {
 
-  private String text;
-
-  public NoteTextItem(Long modDate, String name, String text, Long id) {
+  public NoteTextItem(Long modDate, String name, Long id) {
     super(modDate, name, R.drawable.document, id);
-    this.text = text;
   }
 
 }
