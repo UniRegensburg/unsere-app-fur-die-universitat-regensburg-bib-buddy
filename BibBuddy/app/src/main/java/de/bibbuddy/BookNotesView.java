@@ -39,7 +39,7 @@ public class BookNotesView extends Fragment
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
-  private BookNotesRecyclerViewAdapter adapter;
+  private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private List<NoteItem> noteList;
   private List<NoteItem> selectedNoteItems;
@@ -397,10 +397,10 @@ public class BookNotesView extends Fragment
     bookNotesViewModel = new BookNotesViewModel(getContext());
     noteList = bookNotesViewModel.getNoteList(bookId);
 
-    RecyclerView bookNotesRecyclerViewAdapter =
+    RecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new BookNotesRecyclerViewAdapter(noteList, this, context);
-    bookNotesRecyclerViewAdapter.setAdapter(adapter);
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), notesRecyclerView, noteList);
+    notesRecyclerView.setAdapter(adapter);
 
     updateEmptyView(noteList);
   }
