@@ -248,6 +248,13 @@
     <string name="filter_note">Notizen</string>
 
 
+
+    <!-- Sharing of BibTeX -->
+    <string name="share_file">BibTeX-Datei teilen:</string>
+    <string name="exception_failed_temp_file">
+        Das Schreiben der temporären Datei ist fehlgeschlagen:
+    </string>
+
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
     <string name="help">Hilfe</string>
