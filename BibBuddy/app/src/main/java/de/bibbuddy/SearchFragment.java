@@ -46,6 +46,13 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        closeFragment();
+      }
+    });
+
     view = inflater.inflate(R.layout.fragment_search, container, false);
     context = view.getContext();
 
@@ -54,13 +61,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fragmentManager = getParentFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
-          fragmentManager.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -90,6 +91,18 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         handleSortSearch();
       }
     });
+  }
+
+  /**
+   * Closes the SearchFragment.
+   */
+  public void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   @Override

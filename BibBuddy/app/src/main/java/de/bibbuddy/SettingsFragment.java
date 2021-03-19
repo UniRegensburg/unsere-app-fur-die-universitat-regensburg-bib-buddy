@@ -8,14 +8,13 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-/**
- * The HomeFragment is responsible for TODO.
- *
- * @author Claudia Schönherr
- */
-public class HomeFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
+  // public SearchFragment() {
+  //      super(R.layout.fragment_settings);
+  //   }
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -23,17 +22,26 @@ public class HomeFragment extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        requireActivity().onBackPressed();
+        closeFragment();
       }
     });
 
-    View view = inflater.inflate(R.layout.fragment_home, container, false);
+    View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
 
     return view;
   }
 
+  private void closeFragment() {
+    FragmentManager manager = getParentFragmentManager();
+    if (manager.getBackStackEntryCount() > 0) {
+      manager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
+  }
+
 }
+
 

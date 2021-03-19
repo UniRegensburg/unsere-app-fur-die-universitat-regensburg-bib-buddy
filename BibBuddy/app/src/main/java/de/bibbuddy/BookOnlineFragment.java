@@ -22,12 +22,8 @@ import java.util.List;
  */
 public class BookOnlineFragment extends Fragment implements BookFormFragment.ChangeBookListener {
 
-  private View view;
 
-  private Thread thread;
-  private IsbnRetriever isbnRetriever;
   private EditText searchFieldText;
-
   private Long shelfId;
   private String shelfName;
 
@@ -35,18 +31,12 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    view = inflater.inflate(R.layout.fragment_book_online, container, false);
+    View view = inflater.inflate(R.layout.fragment_book_online, container, false);
 
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -63,19 +53,10 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     return view;
   }
 
-  private Bundle createBookBundle() {
-    Bundle bundle = new Bundle();
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-
-    return bundle;
-  }
-
-  private void closeFragmentAfterAdding() {
-    Fragment fragment =
-        requireActivity().getSupportFragmentManager().findFragmentByTag(LibraryKeys.FRAGMENT_BOOK);
-    requireActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-
+  /**
+   * Closes the BookOnlineFragment.
+   */
+  public void closeFragment() {
     FragmentManager fragmentManager = getParentFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
       fragmentManager.popBackStack();
@@ -134,7 +115,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
       }
     });
 
-    closeFragmentAfterAdding();
+    closeFragment();
   }
 
   private void setupSearchButton() {
