@@ -19,9 +19,18 @@ public class NoteModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
-  public void addNote(String name, int type, String text, String noteFilePath) {
+  /**
+   * This method creates a new note object and passes it to the noteDao to add it to the database
+   * as well.
+   *
+   * @param name         name of the note object
+   * @param type         type of the note object
+   * @param text         text of the note object
+   * @param noteFilePath string-value representing the path to a linked noteFile-object
+   */
+  public void createNote(String name, int type, String text, String noteFilePath) {
     Note note;
-    if(noteFilePath == null) {
+    if (noteFilePath == null) {
       note = new Note(name, type, text);
     } else {
       note = new Note(name, type, text, noteFilePath);
