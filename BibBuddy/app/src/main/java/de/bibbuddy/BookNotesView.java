@@ -33,8 +33,7 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova
  */
-public class BookNotesView extends Fragment
-    implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
+public class BookNotesView extends Fragment {
 
   private View view;
   private Context context;
@@ -418,29 +417,6 @@ public class BookNotesView extends Fragment
       emptyView.setVisibility(View.VISIBLE);
     } else {
       emptyView.setVisibility(View.GONE);
-    }
-  }
-
-  @Override
-  public void onItemClicked(int position) {
-    NoteItem noteItem = bookNotesViewModel.getSelectedNoteItem(position);
-
-    TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-    nextFrag.setArguments(createNoteBundle(noteItem));
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-        .addToBackStack(null)
-        .commit();
-  }
-
-  @Override
-  public void onLongItemClicked(int position, NoteItem noteItem, View v) {
-    if (v.isSelected()) {
-      v.setSelected(false);
-      selectedNoteItems.remove(noteItem);
-    } else {
-      v.setSelected(true);
-      selectedNoteItems.add(noteItem);
     }
   }
 
