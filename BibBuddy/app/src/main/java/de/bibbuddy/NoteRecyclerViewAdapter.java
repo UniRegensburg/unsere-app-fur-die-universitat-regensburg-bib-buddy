@@ -25,17 +25,15 @@ public class NoteRecyclerViewAdapter
   private final MainActivity activity;
   private List<NoteItem> noteList;
   private ViewGroup parent;
-  private RecyclerView recyclerView;
 
   /**
    * Adapter constructor to connect a NoteList with the activity.
    *
    * @param activity Base activity
-   * @param noteList     List of notes as noteList content for the adapter
+   * @param noteList List of notes as noteList content for the adapter
    */
-  public NoteRecyclerViewAdapter(MainActivity activity, RecyclerView recyclerView, List<NoteItem> noteList) {
+  public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList) {
     this.activity = activity;
-    this.recyclerView = recyclerView;
     this.noteList = noteList;
 
     noteList.sort((o1, o2) -> {
@@ -79,7 +77,7 @@ public class NoteRecyclerViewAdapter
       args.putString(LibraryKeys.NOTE_TEXT, text);
       nextFrag.setArguments(args);
       activity.getSupportFragmentManager().beginTransaction()
-          .replace(R.id.fragment_container_view, nextFrag,  LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
+          .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
           .addToBackStack(null)
           .commit();
     });
@@ -117,8 +115,13 @@ public class NoteRecyclerViewAdapter
     notifyItemRemoved(position);
   }
 
+  /**
+   * This method is used to check for selected items in the recyclerView.
+   *
+   * @return returns true if there is any item selected on the recyclerView.
+   */
   public boolean anyItemSelected() {
-    if(parent != null) {
+    if (parent != null) {
       int itemNumber = parent.getChildCount();
       for (int i = 0; i < itemNumber; i++) {
         if (parent.getChildAt(i).isSelected()) {
@@ -129,10 +132,11 @@ public class NoteRecyclerViewAdapter
     return false;
   }
 
-  public void setNoteList(List<NoteItem> noteList){
+  public void setNoteList(List<NoteItem> noteList) {
     this.noteList = noteList;
     notifyDataSetChanged();
   }
+
   /**
    * Custom ViewHolder to fit the RecyclerView's cardViews.
    */
