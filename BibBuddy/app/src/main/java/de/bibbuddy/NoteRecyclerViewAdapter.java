@@ -129,10 +129,6 @@ public class NoteRecyclerViewAdapter
     return false;
   }
 
-  public void setBookNoteList(List<NoteItem> noteList) {
-    this.noteList = noteList;
-  }
-
   public void setNoteList(List<NoteItem> noteList){
     this.noteList = noteList;
     notifyDataSetChanged();
