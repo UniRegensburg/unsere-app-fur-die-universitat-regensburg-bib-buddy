@@ -163,7 +163,7 @@ public class BookNotesView extends Fragment
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(selectedNoteItems != null && !selectedNoteItems.isEmpty());
+    deleteNote.setVisible(adapter.anyItemSelected());
   }
 
   private void handleDeleteNote() {
@@ -176,6 +176,7 @@ public class BookNotesView extends Fragment
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        unselectNoteItems();
       }
     });
 
@@ -187,7 +188,6 @@ public class BookNotesView extends Fragment
         adapter.notifyDataSetChanged();
         updateEmptyView(bookNotesViewModel.getCurrentNoteList());
         Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
-        unselectNoteItems();
       }
     });
 
@@ -219,8 +219,7 @@ public class BookNotesView extends Fragment
 
   private void sortNoteList() {
     List<NoteItem> noteList = bookNotesViewModel.getSortedNoteList(sortCriteria, bookId);
-    adapter.setBookNoteList(noteList);
-    adapter.notifyDataSetChanged();
+    adapter.setNoteList(noteList);
   }
 
   private void checkEmptyNoteList() {
