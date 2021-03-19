@@ -39,6 +39,7 @@ public class BookNotesView extends Fragment
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
+  private RecyclerView recyclerView;
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private List<NoteItem> noteList;
@@ -76,6 +77,7 @@ public class BookNotesView extends Fragment
 
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
+    recyclerView = view.findViewById(R.id.book_notes_recycler_view);
 
     sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 
@@ -183,11 +185,16 @@ public class BookNotesView extends Fragment
     alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+          if (recyclerView.getChildAt(i).isSelected()) {
+            selectedNoteItems.add(noteList.get(i));
+          }
+        }
         bookNotesViewModel.deleteNotes(selectedNoteItems);
-
-        adapter.notifyDataSetChanged();
-        updateEmptyView(bookNotesViewModel.getCurrentNoteList());
-        Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        noteList = bookNotesViewModel.getCurrentNoteList();
+        adapter.setNoteList(noteList);
+        updateEmptyView(noteList);
+        Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
       }
     });
 
