@@ -27,6 +27,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -59,9 +60,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
 
-  private String[] storageManifestPermissions = {
-      Manifest.permission.WRITE_EXTERNAL_STORAGE,
-      Manifest.permission.READ_EXTERNAL_STORAGE };
 
   private boolean isImport = false; // it is either import or export
 
@@ -152,19 +150,21 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void setFunctionsToolbar() {
     ((MainActivity) getActivity()).importBtn.setOnClickListener(new View.OnClickListener() {
+
       @Override
       public void onClick(View view) {
-        isImport = true;
         checkStoragePermission();
       }
+
     });
 
     ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+
       @Override
       public void onClick(View view) {
-        isImport = false;
         checkEmptyShelf();
       }
+
     });
 
   }
@@ -305,7 +305,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
       alertDialogEmptyShelf.create().show();
     } else {
-      checkStoragePermission();
+      shareShelfBibIntent();
     }
   }
 
@@ -416,38 +416,20 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private void checkStoragePermission() {
     // if the permissions are granted
     if (ContextCompat.checkSelfPermission(getContext(),
-        storageManifestPermissions[0]) // Manifest.permission.WRITE_EXTERNAL_STORAGE
-        +  ContextCompat.checkSelfPermission(getContext(),
-        storageManifestPermissions[1])  // Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE)
         == PackageManager.PERMISSION_GRANTED) {
 
-      // if the Export is selected
-      if (!isImport) {
-        exportBibTex.createBibFile();
-        exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+      filePicker();
 
-        Toast.makeText(getContext(),
-            getString(R.string.exported_file_stored_in) + '\n'
-                + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
-                + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
-
-      } else {
-        // if the Import is selected
-        filePicker();
-      }
-      // if the permissions are not granted
     } else if (shouldShowRequestPermissionRationale(
-        storageManifestPermissions[0]) // Manifest.permission.WRITE_EXTERNAL_STORAGE
-        || shouldShowRequestPermissionRationale(
-            storageManifestPermissions[1])) { // Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
       showRequestPermissionDialog();
 
     } else {
 
       requestPermissionLauncher.launch(
-          storageManifestPermissions[0]); // Manifest.permission.WRITE_EXTERNAL_STORAGE
-      requestPermissionLauncher.launch(
-          storageManifestPermissions[1]); // Manifest.permission.READ_EXTERNAL_STORAGE
+          Manifest.permission.READ_EXTERNAL_STORAGE);
     }
   }
 
@@ -459,8 +441,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(), new String[] {
-            storageManifestPermissions[0], // Manifest.permission.WRITE_EXTERNAL_STORAGE
-            storageManifestPermissions[1] }, // Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE},
             StorageKeys.STORAGE_PERMISSION_CODE));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
@@ -472,20 +453,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private final ActivityResultLauncher<String> requestPermissionLauncher =
       registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
         if (isGranted) {
-          if (!isImport) {
+          filePicker();
 
-            exportBibTex.createBibFile();
-            exportBibTex.writeBibFile(exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
-
-
-            Toast.makeText(getContext(),
-                getString(R.string.exported_file_stored_in) + '\n'
-                    + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
-                    + shelfName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
-
-          } else {
-            filePicker();
-          }
 
         }  else {
           Toast.makeText(getContext(), R.string.storage_permission_denied,
@@ -667,6 +636,22 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       v.setSelected(true);
       selectedBookItems.add(bookItem);
     }
+  }
+
+  private void shareShelfBibIntent() {
+
+    Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
+        exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+
+    Intent shareShelfIntent =
+        ShareCompat.IntentBuilder.from(getActivity())
+            .setStream(contentUri)
+            .setType("text/*")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+    startActivity(Intent.createChooser(shareShelfIntent, "SEND"));
+
   }
 
 }
