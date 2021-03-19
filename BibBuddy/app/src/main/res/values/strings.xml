@@ -223,7 +223,7 @@
     <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
     <string name="empty_library_description">
         Bitte füge mindestens ein Regal und ein Buch hinzu,
-        um das Freigeben zu ermöglichen.
+        um das Teilen zu ermöglichen.
     </string>
 
     <!-- Export: Empty Note List -->
@@ -250,7 +250,7 @@
     </string>
 
 
-    <!-- Sharing of BibTeXe -->
+    <!-- Sharing of BibTeX -->
     <string name="share_file">BibTeX-Datei teilen:</string>
     <string name="exception_failed_temp_file">
         Das Schreiben der temporären Datei ist fehlgeschlagen:
