@@ -60,23 +60,15 @@ public class BookNotesViewModel {
       return;
     }
 
+
     for (NoteItem note : selectedNoteItems) {
       Long noteId = note.getId();
-
       noteModel.deleteNote(noteId);
-      deleteNoteFromNoteList(note);
-    }
-  }
-
-  private void deleteNoteFromNoteList(NoteItem note) {
-    for (int i = 0; i < noteList.size(); i++) {
-      if (note.equals(noteList.get(i))) {
-        noteList.remove(i);
-      }
     }
   }
 
   public List<NoteItem> getCurrentNoteList() {
+    noteList = noteModel.getNoteList();
     return noteList;
   }
 
