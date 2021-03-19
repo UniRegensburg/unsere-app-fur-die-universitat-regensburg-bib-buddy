@@ -31,7 +31,7 @@
             android:layout_height="20dp"
             android:layout_below="@+id/item_name"
             android:layout_marginStart="10dp"
-            android:contentDescription="@string/note_icon"
+            android:contentDescription="@string/description_note"
             android:src="@drawable/pen">
 
         </ImageView>
@@ -43,7 +43,7 @@
             android:layout_below="@+id/item_name"
             android:layout_marginStart="30dp"
             android:layout_toEndOf="@+id/note_count"
-            android:contentDescription="@string/book_icon"
+            android:contentDescription="@string/description_book"
             android:src="@drawable/books" />
 
         <TextView

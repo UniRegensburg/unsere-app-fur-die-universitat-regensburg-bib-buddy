@@ -20,7 +20,7 @@
             android:id="@+id/person_icon"
             android:layout_width="60dp"
             android:layout_height="80dp"
-            android:contentDescription="@string/book_icon"
+            android:contentDescription="@string/description_book"
             android:padding="5dp"
             android:src="@drawable/ic_book" />
 
@@ -32,7 +32,7 @@
             android:layout_below="@+id/book_year"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/person_icon"
-            android:contentDescription="@string/note_icon"
+            android:contentDescription="@string/description_note"
             android:src="@drawable/pen" />
 
         <TextView

@@ -110,10 +110,15 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
 
   private void deleteAuthors() {
     AlertDialog.Builder alertDeleteAuthor = new AlertDialog.Builder(context);
-
     alertDeleteAuthor.setCancelable(false);
-    alertDeleteAuthor.setTitle(R.string.delete_author);
-    alertDeleteAuthor.setMessage(R.string.delete_author_message);
+
+    if (selectedAuthorItems.size() > 1) {
+      alertDeleteAuthor.setTitle(R.string.delete_authors);
+      alertDeleteAuthor.setMessage(getString(R.string.delete_authors_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteAuthor.setTitle(R.string.delete_author);
+      alertDeleteAuthor.setMessage(getString(R.string.delete_author_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteAuthor.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -125,14 +130,22 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
       @Override
       public void onClick(DialogInterface dialog, int which) {
         assert (!selectedAuthorItems.isEmpty());
+        final int authorsNumber = selectedAuthorItems.size();
 
+        //This needs to be changed so that multiple authors can be deleted at once
+        // - Luis Moßburger, 19.03.2021
         Author author = selectedAuthorItems.get(0).getAuthor();
         unselectAuthorItems();
 
         authorList.remove(author);
         adapter.notifyDataSetChanged();
 
-        Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
+        if (authorsNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_authors), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
+        }
+
         updateEmptyView();
       }
     });

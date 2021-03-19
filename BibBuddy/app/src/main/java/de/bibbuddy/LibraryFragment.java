@@ -278,10 +278,15 @@ public class LibraryFragment extends Fragment
 
   private void handleDeleteShelf() {
     AlertDialog.Builder alertDeleteShelf = new AlertDialog.Builder(context);
-
     alertDeleteShelf.setCancelable(false);
-    alertDeleteShelf.setTitle(R.string.delete_shelf);
-    alertDeleteShelf.setMessage(R.string.delete_shelf_message);
+
+    if (selectedShelfItems.size() > 1) {
+      alertDeleteShelf.setTitle(R.string.delete_shelves);
+      alertDeleteShelf.setMessage(getString(R.string.delete_shelves_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteShelf.setTitle(R.string.delete_shelf);
+      alertDeleteShelf.setMessage(getString(R.string.delete_shelf_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteShelf.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -292,9 +297,17 @@ public class LibraryFragment extends Fragment
     alertDeleteShelf.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        final int shelvesNumber = selectedShelfItems.size();
+
         libraryModel.deleteShelves(selectedShelfItems);
         updateLibraryListView(libraryModel.getCurrentLibraryList());
-        Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
+
+        if (shelvesNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_shelves), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
+        }
+
         unselectLibraryItems();
       }
     });

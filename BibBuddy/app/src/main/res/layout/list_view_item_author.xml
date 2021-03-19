@@ -20,7 +20,7 @@
             android:id="@+id/person_icon"
             android:layout_width="60dp"
             android:layout_height="80dp"
-            android:contentDescription="@string/book_icon"
+            android:contentDescription="@string/description_book"
             android:padding="5dp"
             android:src="@drawable/ic_person" />
 

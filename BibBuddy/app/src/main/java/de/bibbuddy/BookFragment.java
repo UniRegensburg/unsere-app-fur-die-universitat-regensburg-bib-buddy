@@ -245,10 +245,15 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void handleDeleteBook() {
     AlertDialog.Builder alertDeleteBook = new AlertDialog.Builder(context);
-
     alertDeleteBook.setCancelable(false);
-    alertDeleteBook.setTitle(R.string.delete_book);
-    alertDeleteBook.setMessage(R.string.delete_book_message);
+
+    if (selectedBookItems.size() > 1) {
+      alertDeleteBook.setTitle(R.string.delete_books);
+      alertDeleteBook.setMessage(getString(R.string.delete_books_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteBook.setTitle(R.string.delete_book);
+      alertDeleteBook.setMessage(getString(R.string.delete_book_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteBook.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -259,10 +264,17 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     alertDeleteBook.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        bookModel.deleteBooks(selectedBookItems, shelfId);
+        final int booksNumber = selectedBookItems.size();
 
+        bookModel.deleteBooks(selectedBookItems, shelfId);
         updateBookList(bookModel.getCurrentBookList());
-        Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
+
+        if (booksNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_books), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
+        }
+
         unselectBookItems();
       }
     });

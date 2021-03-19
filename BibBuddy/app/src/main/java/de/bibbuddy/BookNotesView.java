@@ -168,10 +168,15 @@ public class BookNotesView extends Fragment
 
   private void handleDeleteNote() {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
-
     alertDeleteBookNote.setCancelable(false);
-    alertDeleteBookNote.setTitle(R.string.delete_note);
-    alertDeleteBookNote.setMessage(R.string.delete_note_message);
+
+    if (selectedNoteItems.size() > 1) {
+      alertDeleteBookNote.setTitle(R.string.delete_notes);
+      alertDeleteBookNote.setMessage(getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteBookNote.setTitle(R.string.delete_note);
+      alertDeleteBookNote.setMessage(getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -182,11 +187,18 @@ public class BookNotesView extends Fragment
     alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        bookNotesViewModel.deleteNotes(selectedNoteItems);
+        final int notesNumber = selectedNoteItems.size();
 
+        bookNotesViewModel.deleteNotes(selectedNoteItems);
         adapter.notifyDataSetChanged();
         updateEmptyView(bookNotesViewModel.getCurrentNoteList());
-        Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+
+        if (notesNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+        }
+
         unselectNoteItems();
       }
     });
