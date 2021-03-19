@@ -47,8 +47,7 @@ public class NoteModel {
    */
   public List<NoteItem> getCompleteNoteList() {
     List<Note> noteList = noteDao.findAll();
-    List<NoteItem> noteItemList = createItemList(noteList);
-    return noteItemList;
+    return createItemList(noteList);
   }
 
   /**
@@ -59,8 +58,7 @@ public class NoteModel {
    */
   public List<NoteItem> getNoteListForBook(Long bookId) {
     List<Note> noteList = noteDao.getAllNotesForBook(bookId);
-    List<NoteItem> noteItemList = createItemList(noteList);
-    return noteItemList;
+    return createItemList(noteList);
   }
 
   private List<NoteItem> createItemList(List<Note> noteList) {
@@ -85,10 +83,6 @@ public class NoteModel {
     return noteItemList;
   }
 
-  public String getNoteText(Long noteId) {
-    return noteDao.findTextById(noteId);
-  }
-
   public void linkNoteWithBook(Long bookId, Long noteId) {
     noteDao.linkNoteWithBook(bookId, noteId);
   }
@@ -97,7 +91,7 @@ public class NoteModel {
    * Gets the sorted noteList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param noteList noteList that should be sorted
+   * @param noteList     noteList that should be sorted
    * @return Returns the sorted noteList
    */
   public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
@@ -130,7 +124,7 @@ public class NoteModel {
    * Gets the sorted noteList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param bookId id of the book
+   * @param bookId       id of the book
    * @return Returns the sorted noteList
    */
   public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
