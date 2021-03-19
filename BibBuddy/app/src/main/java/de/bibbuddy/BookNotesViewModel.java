@@ -59,8 +59,6 @@ public class BookNotesViewModel {
     if (selectedNoteItems == null) {
       return;
     }
-
-
     for (NoteItem note : selectedNoteItems) {
       Long noteId = note.getId();
       noteModel.deleteNote(noteId);
