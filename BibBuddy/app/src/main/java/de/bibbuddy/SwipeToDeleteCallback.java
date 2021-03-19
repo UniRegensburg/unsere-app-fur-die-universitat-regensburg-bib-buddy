@@ -113,7 +113,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     NoteRecyclerViewAdapter.MyViewHolder myViewHolder =
         new NoteRecyclerViewAdapter.MyViewHolder(viewHolder.itemView);
     final int position = viewHolder.getAdapterPosition();
-    final NoteItem note = adapter.getData().get(position);
+    final NoteItem note = adapter.getnoteList().get(position);
     View itemView = viewHolder.itemView;
     removed = true;
     setupSnackbar(note, itemView, position);
