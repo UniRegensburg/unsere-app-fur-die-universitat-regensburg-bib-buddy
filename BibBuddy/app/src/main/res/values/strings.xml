@@ -87,6 +87,7 @@
 
     <!-- Book Form -->
     <!-- Book Form | Book -->
+    <string name="book_form_notice">Pflichtfelder sind mit * markiert</string>
     <string name="book_form_title">Titel*</string>
     <string name="book_form_subtitle">Untertitel</string>
     <string name="book_form_pub_year">Jahr</string>

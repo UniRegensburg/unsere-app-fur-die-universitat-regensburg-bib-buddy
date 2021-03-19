@@ -193,6 +193,7 @@ public class BookNotesView extends Fragment
 
         bookNotesViewModel.deleteNotes(selectedNoteItems);
         adapter.notifyDataSetChanged();
+        updateBookNoteList(bookNotesViewModel.getCurrentNoteList());
         updateEmptyView(bookNotesViewModel.getCurrentNoteList());
 
         if (notesNumber > 1) {
