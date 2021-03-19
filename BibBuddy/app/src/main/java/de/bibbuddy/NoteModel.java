@@ -19,8 +19,13 @@ public class NoteModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
-  public void addNote(String name, int type, String text) {
-    Note note = new Note(name, type, text);
+  public void addNote(String name, int type, String text, String noteFilePath) {
+    Note note;
+    if(noteFilePath == null) {
+      note = new Note(name, type, text);
+    } else {
+      note = new Note(name, type, text, noteFilePath);
+    }
     noteDao.create(note);
   }
 

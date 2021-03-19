@@ -14,6 +14,7 @@ public class Note {
   private Long createDate;
   private Long modDate;
   private Long noteFileId;
+  private String noteFilePath;
 
 
   /**
@@ -33,6 +34,20 @@ public class Note {
     this.name = name;
     this.type = type;
     this.text = text;
+  }
+
+  /**
+   * Constructor to set up a new note with only name, type and text.
+   *
+   * @param name name of the note object
+   * @param type type of the note object (text, voice or picture)
+   * @param noteFilePath path to the file of the note object
+   */
+  public Note(String name, Integer type, String text, String noteFilePath) {
+    this.name = name;
+    this.type = type;
+    this.text = text;
+    this.noteFilePath = noteFilePath;
   }
 
   /**
@@ -113,5 +128,9 @@ public class Note {
   public void setNoteFileId(Long noteFileId) {
     this.noteFileId = noteFileId;
   }
+
+  public String getNoteFilePath(){return noteFilePath;}
+
+  public void setNoteFilePath(String noteFilePath){this.noteFilePath = noteFilePath;}
 
 }
