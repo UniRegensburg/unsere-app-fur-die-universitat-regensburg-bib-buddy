@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -112,20 +115,24 @@ public class BookNotesView extends Fragment
     ((MainActivity) getActivity()).setVisibilitySortButton(true);
 
     sortBtn.setOnClickListener(new View.OnClickListener() {
+
       @Override
       public void onClick(View v) {
         handleSortNote();
       }
+
     });
   }
 
   private void setFunctionsToolbar() {
 
     ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+
       @Override
       public void onClick(View view) {
         checkEmptyNoteList();
       }
+
     });
 
   }
@@ -239,86 +246,9 @@ public class BookNotesView extends Fragment
       alertDialogEmptyLib.create().show();
 
     } else {
-      checkStoragePermission();
+      shareBookNoteBibIntent();
     }
-  }
 
-  private void checkStoragePermission() {
-    if (ContextCompat.checkSelfPermission(getContext(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-      requestStoragePermission();
-    } else {
-      // if the user has already allowed access to device external storage
-      exportBibTex.createBibFile();
-      exportBibTex.writeBibFile(exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
-
-      Toast.makeText(getContext(),
-          getString(R.string.exported_file_stored_in) + '\n'
-              + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator
-              + fileName + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
-    }
-  }
-
-  private void requestStoragePermission() {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      showRequestPermissionDialog();
-    } else {
-      requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-          StorageKeys.STORAGE_PERMISSION_CODE);
-    }
-  }
-
-  private void showRequestPermissionDialog() {
-    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
-    reqAlertDialog.setTitle(R.string.storage_permission_needed);
-    reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
-
-    reqAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> ActivityCompat.requestPermissions(getActivity(),
-            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-            StorageKeys.STORAGE_PERMISSION_CODE));
-
-    reqAlertDialog.setNegativeButton(R.string.cancel,
-        (dialog, which) -> dialog.dismiss());
-
-    reqAlertDialog.create().show();
-  }
-
-  /**
-   * Callback method, that checks the result from requesting permissions.
-   *
-   * @param requestCode  unique integer value for the requested permission
-   *                     This value is given by the programmer.
-   * @param permissions  array of requested name(s)
-   *                     of the permission(s)
-   * @param grantResults grant results for the corresponding permissions
-   *                     which is either PackageManager.PERMISSION_GRANTED
-   *                     or PackageManager.PERMISSION_DENIED.
-   */
-  @Override
-  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                         @NonNull int[] grantResults) {
-
-    if (requestCode == StorageKeys.STORAGE_PERMISSION_CODE) {
-
-      if (grantResults.length > 0
-          && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        exportBibTex.createBibFile();
-        exportBibTex.writeBibFile(exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
-
-        Toast.makeText(getContext(),
-            getString(R.string.exported_file_stored_in) + '\n'
-                + File.separator + StorageKeys.DOWNLOAD_FOLDER
-                + File.separator + fileName
-                + StorageKeys.BIB_FILE_TYPE, Toast.LENGTH_LONG).show();
-
-      } else {
-        Toast.makeText(getContext(), R.string.storage_permission_denied,
-            Toast.LENGTH_SHORT).show();
-      }
-
-    }
   }
 
   private void handleManualBookNotes() {
@@ -436,6 +366,22 @@ public class BookNotesView extends Fragment
       v.setSelected(true);
       selectedNoteItems.add(noteItem);
     }
+  }
+
+  private void shareBookNoteBibIntent() {
+
+    Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
+        exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
+
+    Intent shareBookNoteIntent =
+        ShareCompat.IntentBuilder.from(getActivity())
+            .setStream(contentUri)
+            .setType("text/*")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+    startActivity(Intent.createChooser(shareBookNoteIntent, "SEND"));
+
   }
 
 }
