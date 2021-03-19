@@ -106,7 +106,7 @@ public class NoteRecyclerViewAdapter
     return noteList.size();
   }
 
-  public List<NoteItem> getnoteList() {
+  public List<NoteItem> getNoteList() {
     return noteList;
   }
 
