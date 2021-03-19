@@ -31,6 +31,8 @@
     <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
     <string name="confirm">Bestätigen</string>
+    <string name="error">Fehler</string>
+
 
     <!-- Library -->
     <string name="back_to">&lt; zurück zu</string>
@@ -482,5 +484,6 @@
     <string name="filter_shelf">Regale</string>
     <string name="filter_book">Bücher</string>
     <string name="filter_note">Notizen</string>
+    <string name="empty_notes_list">Derzeit sind keine Notizen vorhanden.</string>
 
 </resources>
