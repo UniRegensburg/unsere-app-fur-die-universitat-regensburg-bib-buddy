@@ -39,7 +39,7 @@ public class NotesFragment extends Fragment {
 
     noteModel = new NoteModel(getContext());
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
-    noteList = noteModel.getCompleteNoteList();
+    noteList = noteModel.getNoteList();
     sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
 
@@ -102,7 +102,7 @@ public class NotesFragment extends Fragment {
         noteModel.deleteNote(noteList.get(i).getId());
       }
     }
-    noteList = noteModel.getCompleteNoteList();
+    noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
     updateEmptyListView(noteList);
     Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
