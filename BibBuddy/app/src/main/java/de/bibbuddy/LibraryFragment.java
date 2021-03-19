@@ -159,7 +159,7 @@ public class LibraryFragment extends Fragment
       alertDialogEmptyLib.create().show();
 
     } else {
-      shareBibIntent();
+      shareLibraryBibIntent();
     }
 
   }
@@ -413,18 +413,19 @@ public class LibraryFragment extends Fragment
     }
   }
 
-  private void shareBibIntent() {
+  private void shareLibraryBibIntent() {
 
     Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
         exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
 
-    Intent intent = ShareCompat.IntentBuilder.from(getActivity())
+    Intent shareLibraryIntent =
+        ShareCompat.IntentBuilder.from(getActivity())
         .setStream(contentUri)
         .setType("text/*")
         .getIntent()
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-    startActivity(Intent.createChooser(intent, "SEND"));
+    startActivity(Intent.createChooser(shareLibraryIntent, "SEND"));
 
   }
 
