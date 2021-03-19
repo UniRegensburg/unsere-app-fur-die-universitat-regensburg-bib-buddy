@@ -81,8 +81,6 @@ public class NoteModel {
         noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId));
       } else if (note.getType() == 1) {
         noteItemList.add(new NoteAudioItem(modDate, name, noteId));
-      } else {
-        noteItemList.add(new NoteImageItem(modDate, name, noteId));
       }
     }
     return noteItemList;

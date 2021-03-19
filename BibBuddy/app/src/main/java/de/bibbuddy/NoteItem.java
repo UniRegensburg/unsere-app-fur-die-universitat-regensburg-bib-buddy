@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 /**
  * The NoteItem is responsible for holding the information of the note items.
- * It is the parent of NoteAudioItem, NoteImageItem and NoteTextItem.
+ * It is the parent of NoteAudioItem and NoteTextItem.
  *
  * @author Sarah Kurek
  */
