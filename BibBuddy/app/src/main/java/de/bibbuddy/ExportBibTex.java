@@ -1,9 +1,14 @@
 package de.bibbuddy;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
+import android.widget.Toast;
+import androidx.core.content.FileProvider;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -232,6 +237,40 @@ public class ExportBibTex {
       e.printStackTrace();
     }
 
+  }
+
+  /**
+   * Writes a temporary BibTex file.
+   *
+   * @param context        the context of the used fragment
+   * @param content        the content of temporary BibTeX file
+   * @return               the temporary file as URI
+   */
+  public Uri writeTemporaryBibFile(Context context, String content) {
+
+    String fullFileName = fileName + StorageKeys.BIB_FILE_TYPE;
+    File file = new File(context.getCacheDir(), fullFileName);
+
+    try {
+
+      FileWriter fileWriter = new FileWriter(file);
+      fileWriter.append(content);
+      fileWriter.flush();
+      fileWriter.close();
+
+    } catch (Exception e) {
+      Toast.makeText(context,
+          context.getString(R.string.exception_failed_temp_file) + e.toString(),
+          Toast.LENGTH_LONG).show();
+    }
+
+    File parentFile = new File(context.getCacheDir(), "");
+    File tempFile = new File(parentFile, fullFileName);
+
+    return FileProvider.getUriForFile(
+        context,
+        "de.bibbuddy.app.file_provider_paths",
+        tempFile);
   }
 
 }

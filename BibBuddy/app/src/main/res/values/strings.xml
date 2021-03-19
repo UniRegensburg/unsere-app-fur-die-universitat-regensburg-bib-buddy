@@ -222,7 +222,8 @@
     <!-- Export: Empty Library -->
     <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
     <string name="empty_library_description">
-        Bitte füge mindestens ein Regal und ein Buch hinzu, um den Export zu ermöglichen.
+        Bitte füge mindestens ein Regal und ein Buch hinzu,
+        um das Freigeben zu ermöglichen.
     </string>
 
     <!-- Export: Empty Note List -->
@@ -246,6 +247,13 @@
     <!-- Import of Shelf Data Path Storage -->
     <string name="imported_file_name_is">
         Importiere Datei:
+    </string>
+
+
+    <!-- Sharing of BibTeXe -->
+    <string name="share_file">BibTeX-Datei teilen:</string>
+    <string name="exception_failed_temp_file">
+        Das Schreiben der temporären Datei ist fehlgeschlagen:
     </string>
 
     <!-- Help Fragment -->
