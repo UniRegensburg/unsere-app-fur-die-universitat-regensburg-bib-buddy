@@ -155,12 +155,17 @@
 
     <!-- Note -->
     <string name="note">Notiz</string>
+
+    <!-- Note List -->
+    <string name="empty_notes_list">Derzeit sind keine Notizen vorhanden.</string>
+
     <!-- Note | Add note -->
     <string name="add_note">Notiz hinzufügen</string>
     <string name="take_picture_note">Foto</string>
     <string name="create_text_note">Textnotiz</string>
     <string name="create_voice_note">Sprachnotiz</string>
     <string name="add_note_tooltip">Eine neue Notiz erstellen.</string>
+
     <!-- Note | Delete note -->
     <string name="delete_note">Notiz löschen</string>
     <string name="delete_notes">Notizen löschen</string>
@@ -168,6 +173,7 @@
     <string name="deleted_notes">Ok, wir haben die Notizen gelöscht.</string>
     <string name="delete_note_message">Willst du diese Notiz wirklich löschen?</string>
     <string name="delete_notes_message">Willst du diese Notizen wirklich löschen?</string>
+
     <!-- Note | Help -->
     <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den <b>+-Button</b>
         und wähle Sie dann die Notizart (Text, Audio oder Bild) aus. Daraufhin öffnet sich ein
