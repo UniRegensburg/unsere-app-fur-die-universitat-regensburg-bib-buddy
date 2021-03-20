@@ -157,7 +157,7 @@ public class BookNotesView extends Fragment {
         break;
 
       default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -199,13 +199,10 @@ public class BookNotesView extends Fragment {
         } else {
           Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
         }
-        for (int i = 0; i < recyclerView.getChildCount(); i++) {
-          if (recyclerView.getChildAt(i).isSelected()) {
-            noteDao.delete(noteList.get(i).getId());
-          }
-        }
-        noteList = bookNotesViewModel.getNoteList(bookId);
-        adapter.setNoteList(noteList);
+        bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
+        adapter.notifyDataSetChanged();
+        noteList = bookNotesViewModel.getBookNoteList(bookId);
+        updateBookNoteList(noteList);
         updateEmptyView(noteList);
       }
     });
@@ -242,7 +239,7 @@ public class BookNotesView extends Fragment {
   }
 
   private void checkEmptyNoteList() {
-    if (bookNotesViewModel.getCurrentNoteList().isEmpty()) {
+    if (bookNotesViewModel.getBookNoteList(bookId).isEmpty()) {
       AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
       alertDialogEmptyLib.setTitle(R.string.empty_note_list);
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
@@ -336,7 +333,7 @@ public class BookNotesView extends Fragment {
 
   private void setupRecyclerView(Long bookId) {
     bookNotesViewModel = new BookNotesViewModel(getContext());
-    noteList = bookNotesViewModel.getNoteList(bookId);
+    noteList = bookNotesViewModel.getBookNoteList(bookId);
 
     RecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
@@ -347,7 +344,7 @@ public class BookNotesView extends Fragment {
   }
 
   private void updateEmptyView(List<NoteItem> noteList) {
-    TextView emptyView = view.findViewById(R.id.empty_notelist_view);
+    TextView emptyView = view.findViewById(R.id.empty_note_list_view);
 
     if (noteList.isEmpty()) {
       emptyView.setVisibility(View.VISIBLE);
