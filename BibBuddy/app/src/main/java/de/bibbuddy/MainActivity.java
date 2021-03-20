@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
   private SortCriteria sortCriteria;
 
-  public Button importBtn;
-  public Button shareBtn;
+  public ImageButton importBtn;
+  public ImageButton shareBtn;
   public ImageButton sortBtn;
 
   @Override

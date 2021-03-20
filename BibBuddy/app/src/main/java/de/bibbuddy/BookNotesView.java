@@ -86,7 +86,7 @@ public class BookNotesView extends Fragment {
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
 
     ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
     setFunctionsToolbar();

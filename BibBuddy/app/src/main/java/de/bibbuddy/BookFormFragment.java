@@ -75,7 +75,7 @@ public class BookFormFragment extends Fragment {
         }
 
         ((MainActivity) requireActivity())
-            .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+            .setVisibilityImportShareButton(View.GONE, View.GONE);
 
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
         ((MainActivity) getActivity()).setVisibilitySortButton(false);

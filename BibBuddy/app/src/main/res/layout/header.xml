@@ -1,74 +1,90 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:elevation="10dp"
-    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:elevation="10dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/headerLogo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/description_logo"
-            app:srcCompat="@drawable/bibbuddy_icon" />
+                android:id="@+id/headerLogo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/description_logo"
+                app:srcCompat="@drawable/bibbuddy_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/headerText"
-            android:layout_width="240dp"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/headerLogo"
-            android:fontFamily="sans-serif-black"
-            android:maxLines="1"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:scrollHorizontally="true"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
-
-
-        <Button
-            android:id="@+id/import_btn"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/headerText"
-            android:background="@drawable/import_icon"
-            android:clickable="true"
-            android:focusable="true"
-            tools:visibility="visible" />
-
-        <Button
-            android:id="@+id/share_btn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/import_btn"
-            android:background="@drawable/share_icon"
-            android:clickable="true"
-            android:focusable="true"
-            tools:visibility="visible" />
-
+                android:id="@+id/headerText"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:scrollHorizontally="true"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toEndOf="@+id/headerLogo"
+                app:layout_constraintEnd_toStartOf="@+id/sort_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         <ImageButton
-            android:id="@+id/sort_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/import_btn"
-            android:background="@color/white"
-            android:src="@drawable/sort_icon"
-            android:visibility="gone"/>
+                android:id="@+id/sort_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toStartOf="@id/import_btn"
+                android:background="@color/white"
+                android:src="@drawable/sort_icon"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/import_btn" />
 
-    </RelativeLayout>
+        <ImageButton
+                android:id="@+id/import_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/import_icon"
+                android:clickable="true"
+                android:focusable="true"
+                tools:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/share_btn"/>
+
+        <ImageButton
+                android:id="@+id/share_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/share_icon"
+                android:clickable="true"
+                android:focusable="true"
+                tools:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>
 

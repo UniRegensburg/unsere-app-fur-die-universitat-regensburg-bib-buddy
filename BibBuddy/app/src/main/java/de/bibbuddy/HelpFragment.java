@@ -43,7 +43,7 @@ public class HelpFragment extends Fragment {
     Bundle bundle = this.getArguments();
     manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
 
     view = inflater.inflate(R.layout.fragment_help, container, false);
 

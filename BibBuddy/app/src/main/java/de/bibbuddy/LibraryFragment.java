@@ -71,7 +71,7 @@ public class LibraryFragment extends Fragment
     setupRecyclerView();
     setupAddShelfBtn();
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
     setFunctionsToolbar();
