@@ -71,15 +71,19 @@ public class NoteRecyclerViewAdapter
     setupCardView(holder, position);
 
     holder.itemView.setOnClickListener(v -> {
-      TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-      Bundle args = new Bundle();
-      args.putLong(LibraryKeys.NOTE_ID, id);
-      args.putString(LibraryKeys.NOTE_TEXT, text);
-      nextFrag.setArguments(args);
-      activity.getSupportFragmentManager().beginTransaction()
-          .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-          .addToBackStack(null)
-          .commit();
+      if(getSelectedItemCount() > 0){
+        v.setSelected(!v.isSelected());
+      } else {
+        TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
+        Bundle args = new Bundle();
+        args.putLong(LibraryKeys.NOTE_ID, id);
+        args.putString(LibraryKeys.NOTE_TEXT, text);
+        nextFrag.setArguments(args);
+        activity.getSupportFragmentManager().beginTransaction()
+            .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
+            .addToBackStack(null)
+            .commit();
+      }
     });
 
     holder.itemView.setOnLongClickListener(v -> {
