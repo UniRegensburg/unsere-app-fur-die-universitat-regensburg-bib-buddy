@@ -361,5 +361,5 @@ public class BookNotesView extends Fragment {
     startActivity(Intent.createChooser(shareBookNoteIntent, "SEND"));
 
   }
-  
+
 }
