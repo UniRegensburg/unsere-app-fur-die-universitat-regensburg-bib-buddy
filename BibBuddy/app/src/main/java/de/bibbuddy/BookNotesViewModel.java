@@ -45,7 +45,7 @@ public class BookNotesViewModel {
     return noteDao;
   }
 
-  public List<NoteItem> getNoteList(Long bookId) {
+  public List<NoteItem> getBookNoteList(Long bookId) {
     noteList = noteModel.getNoteListForBook(bookId);
     return noteList;
   }
@@ -63,11 +63,6 @@ public class BookNotesViewModel {
       Long noteId = note.getId();
       noteModel.deleteNote(noteId);
     }
-  }
-
-  public List<NoteItem> getCurrentNoteList() {
-    noteList = noteModel.getNoteList();
-    return noteList;
   }
 
   public NoteItem getSelectedNoteItem(int position) {
