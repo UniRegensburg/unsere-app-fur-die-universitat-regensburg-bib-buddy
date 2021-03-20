@@ -104,6 +104,12 @@ public class NotesFragment extends Fragment {
 
   private void performDelete() {
     int selectedItems = adapter.getSelectedNoteItems().size();
+    if (selectedItems > 0) {
+      Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT)
+          .show();
+    } else {
+      Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+    }
     for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
       if (notesRecyclerView.getChildAt(i).isSelected()) {
         noteModel.deleteNote(noteList.get(i).getId());
@@ -112,12 +118,6 @@ public class NotesFragment extends Fragment {
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
     updateEmptyListView(noteList);
-    if (selectedItems > 0) {
-      Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT)
-          .show();
-    } else {
-      Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
-    }
   }
 
   private void handleHelpNotesFragment() {
