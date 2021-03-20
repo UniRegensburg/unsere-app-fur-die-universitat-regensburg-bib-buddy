@@ -195,7 +195,8 @@ public class BookNotesView extends Fragment {
         noteList = bookNotesViewModel.getCurrentNoteList();
         adapter.setNoteList(noteList);
         updateEmptyView(noteList);
-        Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), getString(R.string.deleted_notes),
+            Toast.LENGTH_SHORT).show();
       }
     });
 

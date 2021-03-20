@@ -27,8 +27,8 @@ public class NoteDao implements InterfaceNoteDao {
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       try {
         ContentValues noteFileValues = new ContentValues();
-        if(note.getNoteFilePath() == null){
-          noteFileValues.put(DatabaseHelper.FILE,"");
+        if (note.getNoteFilePath() == null) {
+          noteFileValues.put(DatabaseHelper.FILE, "");
         } else {
           noteFileValues.put(DatabaseHelper.FILE, note.getNoteFilePath());
         }
