@@ -71,8 +71,6 @@ public class NotesFragment extends Fragment {
       handleDeleteNote();
     } else if (item.getItemId() == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
-    } else {
-      Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);

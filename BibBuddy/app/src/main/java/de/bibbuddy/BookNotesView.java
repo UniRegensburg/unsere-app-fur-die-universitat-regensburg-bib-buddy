@@ -138,22 +138,13 @@ public class BookNotesView extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_delete_note:
-        handleDeleteNote();
-        break;
-
-      case R.id.menu_export_note:
-        checkEmptyNoteList();
-        break;
-
-      case R.id.menu_help_book_note:
-        handleManualBookNotes();
-        break;
-
-      default:
-        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
+    int itemId = item.getItemId();
+    if (itemId == R.id.menu_delete_note) {
+      handleDeleteNote();
+    } else if (itemId == R.id.menu_export_note) {
+      checkEmptyNoteList();
+    } else if (itemId == R.id.menu_help_book_note) {
+      handleManualBookNotes();
     }
 
     return super.onOptionsItemSelected(item);
