@@ -166,7 +166,7 @@ public class BookNotesView extends Fragment {
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(adapter.getSelectedItemCount() > 0);
+    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
   }
 
   private void handleDeleteNote() {
@@ -193,26 +193,20 @@ public class BookNotesView extends Fragment {
     alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        for (int i = 0; i < recyclerView.getChildCount(); i++) {
-          if (recyclerView.getChildAt(i).isSelected()) {
-            selectedNoteItems.add(noteList.get(i));
-          }
-        }
-        bookNotesViewModel.deleteNotes(selectedNoteItems);
-        noteList = bookNotesViewModel.getCurrentNoteList();
-        adapter.setNoteList(noteList);
-        updateEmptyView(noteList);
-        Toast.makeText(requireContext(), getString(R.string.deleted_notes),
-            Toast.LENGTH_SHORT).show();
-
-        final int notesNumber = adapter.getSelectedItemCount();
+        final int notesNumber = adapter.getSelectedNoteItems().size();
         if (notesNumber > 1) {
           Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
         } else {
           Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
         }
-
-        updateEmptyView(bookNotesViewModel.getCurrentNoteList());
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+          if (recyclerView.getChildAt(i).isSelected()) {
+            noteDao.delete(noteList.get(i).getId());
+          }
+        }
+        noteList = bookNotesViewModel.getNoteList(bookId);
+        adapter.setNoteList(noteList);
+        updateEmptyView(noteList);
       }
     });
 

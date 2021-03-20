@@ -61,7 +61,7 @@ public class NotesFragment extends Fragment {
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
-    deleteNote.setVisible(adapter.getSelectedItemCount() > 0);
+    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
   }
 
   @Override
@@ -97,6 +97,11 @@ public class NotesFragment extends Fragment {
   }
 
   private void performDelete() {
+    if (adapter.getSelectedNoteItems().size() > 1) {
+      Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+    }
     for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
       if (notesRecyclerView.getChildAt(i).isSelected()) {
         noteModel.deleteNote(noteList.get(i).getId());
@@ -105,7 +110,6 @@ public class NotesFragment extends Fragment {
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
     updateEmptyListView(noteList);
-    Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
   }
 
   private void handleHelpNotesFragment() {

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class NoteRecyclerViewAdapter
     setupCardView(holder, position);
 
     holder.itemView.setOnClickListener(v -> {
-      if(getSelectedItemCount() > 0){
+      if(getSelectedNoteItems().size() > 0){
         v.setSelected(!v.isSelected());
       } else {
         TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
@@ -129,17 +130,17 @@ public class NoteRecyclerViewAdapter
    *
    * @return returns the number of selected recyclerView items.
    */
-  public int getSelectedItemCount() {
-    int selectedItems = 0;
+  public List<NoteItem> getSelectedNoteItems() {
+    List<NoteItem> selectedNotes = new ArrayList<>();
     if (parent != null) {
-      int itemNumber = parent.getChildCount();
+      int itemNumber = noteList.size();
       for (int i = 0; i < itemNumber; i++) {
         if (parent.getChildAt(i).isSelected()) {
-          selectedItems++;
+          selectedNotes.add(noteList.get(i));
         }
       }
     }
-    return selectedItems;
+    return selectedNotes;
   }
 
   /**
