@@ -8,8 +8,5 @@
     <item
         android:id="@+id/add_voice_note"
         android:title="@string/create_voice_note" />
-    <item
-        android:id="@+id/add_picture_note"
-        android:title="@string/take_picture_note" />
 
 </menu>
