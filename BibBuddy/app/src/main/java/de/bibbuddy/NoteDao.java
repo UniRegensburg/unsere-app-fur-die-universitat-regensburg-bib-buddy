@@ -185,7 +185,7 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    List<Long> noteIds = new ArrayList<Long>();
+    List<Long> noteIds = new ArrayList<>();
 
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
         + DatabaseHelper.BOOK_ID + " = ?";
@@ -256,9 +256,9 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public String findStrippedTextById(Long id) {
     return findTextById(id).replaceAll(
-        "(<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">|<\\/p>|"
-            + "<span style=\"text-decoration:line-through;\">|<\\/span>|<(\\/)?i>|"
-            + "<(\\/)?b>|<(\\/)?u>|<(\\/)?br>|<(\\/)?blockquote>)",
+        "(<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">|</p>|"
+            + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
+            + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
         "");
   }
 
@@ -319,7 +319,7 @@ public class NoteDao implements InterfaceNoteDao {
         new String[] {String.valueOf(noteId)},
         null, null, null, String.valueOf(1));
 
-    Long bookId = 0L;
+    long bookId = 0L;
     if (cursor.moveToFirst()) {
       bookId = cursor.getLong(0);
     }
