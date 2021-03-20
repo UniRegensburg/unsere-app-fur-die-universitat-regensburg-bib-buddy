@@ -80,10 +80,18 @@ public class NotesFragment extends Fragment {
 
   private void handleDeleteNote() {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(requireActivity());
-
     alertDeleteBookNote.setCancelable(false);
-    alertDeleteBookNote.setTitle(R.string.delete_note);
-    alertDeleteBookNote.setMessage(R.string.delete_note_message);
+
+    if (adapter.getSelectedNoteItems().size() > 1) {
+      alertDeleteBookNote.setTitle(R.string.delete_notes);
+      alertDeleteBookNote.setMessage(
+          getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteBookNote.setTitle(R.string.delete_note);
+      alertDeleteBookNote.setMessage(
+          getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
+    }
+
     alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> deselectNoteItems());
     alertDeleteBookNote.setPositiveButton(R.string.delete, (dialog, which) -> performDelete());
 

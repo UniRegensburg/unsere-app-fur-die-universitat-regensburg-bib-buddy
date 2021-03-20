@@ -23,7 +23,6 @@ import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,7 +39,6 @@ public class BookNotesView extends Fragment {
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private List<NoteItem> noteList;
-  private List<NoteItem> selectedNoteItems;
 
   private BookDao bookDao;
   private NoteDao noteDao;
@@ -92,8 +90,6 @@ public class BookNotesView extends Fragment {
     setupSortBtn();
 
     setFunctionsToolbar();
-
-    selectedNoteItems = new ArrayList<NoteItem>();
 
     bookDao = bookNotesViewModel.getBookDao();
     noteDao = bookNotesViewModel.getNoteDao();
@@ -173,7 +169,7 @@ public class BookNotesView extends Fragment {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
     alertDeleteBookNote.setCancelable(false);
 
-    if (selectedNoteItems.size() > 1) {
+    if (adapter.getSelectedNoteItems().size() > 1) {
       alertDeleteBookNote.setTitle(R.string.delete_notes);
       alertDeleteBookNote.setMessage(
           getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
@@ -215,8 +211,6 @@ public class BookNotesView extends Fragment {
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
     }
-
-    selectedNoteItems.clear();
   }
 
   private void handleSortNote() {
