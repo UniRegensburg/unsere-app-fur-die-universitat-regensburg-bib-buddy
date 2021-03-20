@@ -26,6 +26,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   private EditText searchFieldText;
   private Thread thread;
   private IsbnRetriever isbnRetriever;
+  private DataValidation dataValidation;
 
   private Long shelfId;
   private String shelfName;
@@ -91,25 +92,32 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   }
 
   private void handleIsbnInput(int keyCode, KeyEvent event) {
+    String textInput = searchFieldText.getText().toString().replaceAll("\\s", "");
+
     if (keyCode == KeyEvent.KEYCODE_ENTER) {
       if (event.getAction() != KeyEvent.ACTION_DOWN) {
-        isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
-        thread = new Thread(isbnRetriever);
-        thread.start();
+        if (dataValidation.isValidIsbn10or13(textInput)) {
+          isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
+          thread = new Thread(isbnRetriever);
+          thread.start();
 
-        try {
-          thread.join();
-        } catch (Exception e) {
-          System.out.println(e);
-        }
+          try {
+            thread.join();
+          } catch (Exception e) {
+            System.out.println(e);
+          }
 
-        // retrieve metadata that was saved
-        Book book = isbnRetriever.getBook();
-        List<Author> authors = isbnRetriever.getAuthors();
-        if (book != null) {
-          handleAddBook(book, authors);
+          // retrieve metadata that was saved
+          Book book = isbnRetriever.getBook();
+          List<Author> authors = isbnRetriever.getAuthors();
+          if (book != null) {
+            handleAddBook(book, authors);
+          } else {
+            Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+                Toast.LENGTH_LONG).show();
+          }
         } else {
-          Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+          Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
               Toast.LENGTH_LONG).show();
         }
       }

@@ -37,6 +37,7 @@ public class BookBarcodeScannerFragment extends Fragment
   private CameraSource cameraSource;
   private BarcodeDetector barcodeDetector;
   private IsbnRetriever isbnRetriever;
+  private DataValidation dataValidation;
   private Thread thread;
 
   private Long shelfId;
@@ -131,28 +132,40 @@ public class BookBarcodeScannerFragment extends Fragment
   }
 
   private void handleIsbnInput(String isbn) {
-    isbnRetriever = new IsbnRetriever(isbn);
-    System.out.println(isbnRetriever);
-    thread = new Thread(isbnRetriever);
-    thread.start();
+    String cleanIsbn = isbn.replaceAll("\\s", "");
 
-    try {
-      thread.join();
-    } catch (Exception e) {
-      System.out.println(e);
-    }
+    if (dataValidation.isValidIsbn10or13(cleanIsbn)) {
+      isbnRetriever = new IsbnRetriever(cleanIsbn);
+      System.out.println(isbnRetriever);
+      thread = new Thread(isbnRetriever);
+      thread.start();
 
-    // retrieve metadata that was saved
-    Book book = isbnRetriever.getBook();
-    List<Author> authors = isbnRetriever.getAuthors();
-    closeFragment();
-    if (book != null) {
-      handleAddBook(book, authors);
+      try {
+        thread.join();
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+
+      // retrieve metadata that was saved
+      Book book = isbnRetriever.getBook();
+      List<Author> authors = isbnRetriever.getAuthors();
+      closeFragment();
+      if (book != null) {
+        handleAddBook(book, authors);
+      } else {
+
+        requireActivity().runOnUiThread(new Runnable() {
+          public void run() {
+            Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+                Toast.LENGTH_SHORT).show();
+          }
+        });
+      }
     } else {
 
       requireActivity().runOnUiThread(new Runnable() {
         public void run() {
-          Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+          Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
               Toast.LENGTH_SHORT).show();
         }
       });
