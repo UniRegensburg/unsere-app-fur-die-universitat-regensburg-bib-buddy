@@ -26,7 +26,7 @@ public class NotesFragment extends Fragment {
 
   private static NoteModel noteModel;
   private RecyclerView notesRecyclerView;
-  private static List<NoteItem> noteList;
+  public static List<NoteItem> noteList;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
   private TextView emptyListView;
