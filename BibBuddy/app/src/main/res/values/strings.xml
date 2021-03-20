@@ -4,11 +4,11 @@
         Recherche. Unser Service macht deine Literatur-Arbeit so intuitiv wie nie!</string>
 
     <!-- Image Descriptions -->
-    <string name="description_logo">BibBuddy-Logo. Two stylized quotes forming a smiley face.</string>
-    <string name="description_settings">A black gear icon, visualizing settings.</string>
-
-    <string name="description_text_note">Text Note Icon</string>
-    <string name="description_add_note">Add note button</string>
+    <string name="description_logo">BibBuddy-Logo. Zwei stilisierte Anführungszeichen, die einen Smilie symbolisieren.</string>
+    <string name="description_settings">Ein schwarzes Zahnrad-Icon, das Einstellungen symbolisiert.</string>
+    <string name="description_text_note">Ein schwarz-weißes Icon von einem Blatt Papier mit einem Knick in der oberen rechten Ecke.</string>
+    <string name="description_book">Ein schwarz-weißes Icon von einem geschlossenen Buch, das auf dem Rücken liegt.</string>
+    <string name="description_note">Ein schwarz-weißes Icon von einem schrägen Stift, das Notizen symbolisiert.</string>
 
     <!-- Navigation Items -->
     <string name="navigation_home">Home</string>
@@ -17,53 +17,67 @@
     <string name="navigation_notes">Notizen</string>
 
     <!-- Common -->
-    <string name="empty_list">Keine Einträge vorhanden</string>
+    <string name="empty_list">Hier gibt\'s noch nichts zu sehen!</string>
     <string name="navigation_settings">Einstellungen</string>
-    <string name="back">zurück</string>
+    <string name="back">Zurück</string>
     <string name="add">+</string>
-    <string name="ok">OK</string>
+    <string name="ok">Ok</string>
     <string name="cancel">Abbrechen</string>
-    <string name="invalid_name">Bitte einen gültigen Namen angeben. Reine Whitespaces sind nicht
-        erlaubt.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
-    <string name="isbn_not_found">Ups, diese ISBN konnten wir nicht finden!</string>
     <string name="backup">Backup</string>
     <string name="confirm">Bestätigen</string>
     <string name="error">Fehler</string>
-
+    <string name="delete_warning">Das können wir <b>nicht rückgängig</b> machen!</string>
+    <string name="delete_question">löschen?</string>
 
     <!-- Library -->
-    <string name="back_to">&lt; zurück zu</string>
-    <string name="back_to_library">&lt; zurück zu Bibliothek</string>
-    <string name="add_shelf">hinzufügen</string>
-    <string name="add_new_shelf">Regal hinzufügen</string>
-    <string name="input_shelf_name">Neuen Regalnamen eingeben</string>
-    <string name="shelf_added">Regal wurde hinzugefügt</string>
-    <string name="name_exists">Name existiert bereits in der Bibliothek</string>
+    <!-- Library | Add Shelf -->
+    <string name="add_shelf">Hinzufügen</string>
+    <string name="add_new_shelf">Neues Regal</string>
+    <string name="input_shelf_name">Regalnamen eingeben</string>
+    <string name="invalid_name">Bitte gib einen Namen für das Regal an.</string>
+    <string name="name_exists">Sorry, den Namen gibt\'s schon!</string>
+    <string name="shelf_added">Ok, wir haben das Regal hinzugefügt.</string>
+    <string name="add_shelf_tooltip">Ein neues Regal anlegen.</string>
+    <!-- Library | Rename Shelf -->
     <string name="rename_shelf">Regal umbenennen</string>
-    <string name="delete_shelf">Regal(e) löschen</string>
-    <string name="delete_shelf_message">Alle ausgewählten Regale werden gelöscht inklusive der
-        Bücher und Notizen.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="renamed_shelf">Ok, wir haben das Regal umbenannt.</string>
+    <!-- Library | Delete Shelf -->
+    <string name="delete_shelf">Regal löschen</string>
+    <string name="delete_shelves">Regale löschen</string>
+    <string name="delete_shelf_message">Willst du dieses Regal und seine Inhalte wirklich löschen?</string>
+    <string name="delete_shelves_message">Willst du diese Regale und deren Inhalte wirklich löschen?</string>
+    <string name="deleted_shelf">Ok, wir haben das Regal gelöscht.</string>
+    <string name="deleted_shelves">Ok, wir haben die Regale gelöscht.</string>
+    <!-- Library | Help -->
     <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>. Danach
         geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern und zu
         diesen Notizen schreiben. Für weitere Informationen öffnen Sie das Menü rechts oben und
         klicken Sie auf <b>Hilfe</b>. </string>
-    <string name="add_shelf_tooltip">Neues Regal anlegen</string>
-    <string name="deleted_shelf">Regal(e) wurde(n) gelöscht</string>
-    <string name="renamed_shelf">Regal wurde umbenannt</string>
 
 
     <!-- Book -->
     <string name="book">Buch</string>
     <string name="books">Bücher</string>
+    <!-- Book | Add book -->
     <string name="add_book">Buch hinzufügen</string>
-    <string name="added_book">Buch wurde hinzufügt</string>
+    <string name="add_book_scan_text">ISBN scannen</string>
+    <string name="add_book_manually_text">Selbst hinzufügen</string>
+    <string name="add_book_online_text">ISBN eingeben</string>
+    <string name="add_book_tooltip">Ein neues Buch hinzufügen.</string>
+    <string name="added_book">Ok, wir haben das Buch hinzugefügt.</string>
+    <!-- Book | Change book -->
     <string name="change_book">Buchdaten ändern</string>
-    <string name="book_icon">Buch Icon</string>
-    <string name="add_book_tooltip">Neues Buch hinzufügen</string>
+    <!-- Book | Delete book -->
+    <string name="delete_book">Buch löschen</string>
+    <string name="delete_books">Bücher löschen</string>
+    <string name="deleted_book">Ok, wir haben das Buch gelöscht.</string>
+    <string name="deleted_books">Ok, wir haben die Bücher gelöscht.</string>
+    <string name="delete_book_message">Willst du dieses Buch und deine Notizen wirklich löschen?</string>
+    <string name="delete_books_message">Willst du diese Bücher und deine Notizen wirklich löschen?</string>
+    <!-- Book | Help -->
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
         öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
             Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch
@@ -71,52 +85,42 @@
         Buch erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie
         auf <b>Hilfe</b>.</string>
 
-    <string name="delete_book">Bücher löschen</string>
-    <string name="deleted_book">Buch (Bücher) wurde(n) gelöscht</string>
-    <string name="delete_book_message">Alle ausgewählten Bücher werden gelöscht inklusive der
-        Notizen.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
-
-    <string name="add_book_scan_text">Barcode scannen</string>
-    <string name="add_book_online_text">Im Online-Katalog suchen</string>
-    <string name="add_book_manually_text">Manuell hinzufügen</string>
 
     <!-- Book Form -->
-    <string name="book_form_isbn">ISBN (optional)</string>
-    <string name="book_form_title">Titel</string>
-    <string name="book_form_subtitle">Untertitel (optional)</string>
-    <string name="book_form_pub_year">Jahr der Veröffentlichung (optional)</string>
-    <string name="book_form_publisher">Verlag (optional)</string>
-    <string name="book_form_volume">Band (optional)</string>
-    <string name="book_form_edition">Auflage (optional)</string>
-    <string name="book_form_add_infos">Zusätzliche Informationen (optional)</string>
-
-
-    <string name="add_author_btn">Autoren verwalten</string>
-    <string name="add_author_tooltip">Autor hinzufügen oder ändern</string>
-
-    <!-- Author -->
+    <!-- Book Form | Book -->
+    <string name="book_form_notice">Pflichtfelder sind mit * markiert</string>
+    <string name="book_form_title">Titel*</string>
+    <string name="book_form_subtitle">Untertitel</string>
+    <string name="book_form_pub_year">Jahr</string>
+    <string name="book_form_publisher">Verlag</string>
+    <string name="book_form_volume">Band</string>
+    <string name="book_form_edition">Auflage</string>
+    <string name="book_form_isbn">ISBN</string>
+    <string name="book_form_add_infos">Mehr Infos</string>
+    <!-- Book Form | Authors -->
+    <string name="add_author_btn">Autoren bearbeiten</string>
+    <string name="add_author_tooltip">Einen Autor hinzufügen oder ändern</string>
     <string name="author">Autor</string>
     <string name="authors">Autoren</string>
-    <string name="author_first_name">Vorname</string>
-    <string name="author_last_name">Nachname</string>
-    <string name="author_title">Titel (optional)</string>
-
+    <string name="author_first_name">Vorname*</string>
+    <string name="author_last_name">Nachname*</string>
+    <string name="author_title">Titel</string>
+    <!-- Book Form | Change authors -->
+    <string name="change_author">Autor ändern</string>
+    <string name="add_author">Autor hinzufügen</string>
+    <!-- Book Form | Delete authors -->
+    <string name="delete_author">Autor löschen</string>
+    <string name="delete_authors">Autoren löschen</string>
+    <string name="deleted_author">Ok, wir haben den Autor gelöscht.</string>
+    <string name="deleted_authors">Ok, wir haben die Autoren gelöscht.</string>
+    <string name="delete_author_message">Willst du diesen Autor wirklich löschen?</string>
+    <string name="delete_authors_message">Willst du diese Autoren wirklich löschen?</string>
+    <!-- Book Form | Help -->
     <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
         Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
         eingeben können. Wurde der Autor erfolgreich angelegt, wird er in der Liste angezeigt.
         Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
-
-    <string name="change_author">Autordaten ändern</string>
-    <string name="add_author">Autor hinzufügen</string>
-    <string name="added_author">Autor wurde hinzufügt/geändert</string>
-
-    <string name="delete_author">Autor(en) löschen</string>
-    <string name="deleted_author">Autor(en) wurde(n) gelöscht</string>
-    <string name="delete_author_message">Alle ausgewählten Autoren werden gelöscht.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
-
     <string name="author_help_text">
         <![CDATA[
         <h1><u>Hilfe zu den Autoren</u></h1>
@@ -146,15 +150,25 @@
 
     <!-- Barcode Scanner -->
     <string name="isbn_scan">ISBN scannen</string>
-    <string name="barcode_value">ISBN Nummer: </string>
+    <string name="isbn_not_found">Sorry, diese ISBN konnten wir nicht finden!</string>
 
 
     <!-- Note -->
     <string name="note">Notiz</string>
-    <string name="note_icon">Notizen Icon</string>
-
+    <!-- Note | Add note -->
     <string name="add_note">Notiz hinzufügen</string>
-    <string name="add_note_tooltip">Neues Notiz erstellen</string>
+    <string name="take_picture_note">Foto</string>
+    <string name="create_text_note">Textnotiz</string>
+    <string name="create_voice_note">Sprachnotiz</string>
+    <string name="add_note_tooltip">Eine neue Notiz erstellen.</string>
+    <!-- Note | Delete note -->
+    <string name="delete_note">Notiz löschen</string>
+    <string name="delete_notes">Notizen löschen</string>
+    <string name="deleted_note">Ok, wir haben die Notiz gelöscht.</string>
+    <string name="deleted_notes">Ok, wir haben die Notizen gelöscht.</string>
+    <string name="delete_note_message">Willst du diese Notiz wirklich löschen?</string>
+    <string name="delete_notes_message">Willst du diese Notizen wirklich löschen?</string>
+    <!-- Note | Help -->
     <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den <b>+-Button</b>
         und wähle Sie dann die Notizart (Text, Audio oder Bild) aus. Daraufhin öffnet sich ein
         Texteditor, in welchen Sie Ihre Notiz eintippen können. Die erste Zeile der Notiz wird als
@@ -163,22 +177,11 @@
         zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
         <b>Hilfe</b>.</string>
 
-    <string name="delete_note">Notizen löschen</string>
-    <string name="deleted_notes">Notiz(en) wurde(n) gelöscht</string>
-    <string name="delete_note_message">Alle ausgewählten Notizen werden gelöscht.
-        \n ACHTUNG! Diese Aktion kann nicht rückgängig gemacht werden.</string>
-
-    <!-- Adding Notes Items -->
-    <string name="create_text_note">Textnotiz</string>
-    <string name="create_voice_note">Sprachnotiz</string>
-    <string name="take_picture_note">Foto</string>
-
-    <!-- Text Note Editor Items -->
-    <string name="deleted_note">Gelöscht</string>
+    <!-- Note Editor Text -->
+    <!-- Note Editor Text | Items -->
     <string name="undo">Rückgängig</string>
     <string name="redo">Wiederholen</string>
-
-    <!-- Text Note Editor Toasts -->
+    <!-- Note Editor Text | Toasts -->
     <string name="toast_bold">Fett</string>
     <string name="toast_italic">Kursiv</string>
     <string name="toast_underline">Unterstreichen</string>
@@ -188,9 +191,8 @@
     <string name="toast_alignLeft">Linksbündig</string>
     <string name="toast_alignRight">Rechtsbündig</string>
     <string name="toast_alignCenter">Zentriert</string>
-    <string name="delete_notification">Die Notiz wurde entfernt.</string>
-
-    <!-- Text Note Editor Content Descriptions -->
+    <string name="delete_notification">Ok, wir haben die Notiz gelöscht.</string>
+    <!-- Note Editor Text | Content Descriptions -->
     <string name="slidebar_left">Slidebar_Left</string>
     <string name="slidebar_right">Slidebar_Right</string>
     <string name="round_border">Round_Border</string>
@@ -198,58 +200,54 @@
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
 
-    <!-- Export Dialog Alert Window Descriptions -->
+    <!-- Export -->
+    <!-- Export | Permission -->
     <string name="storage_permission_needed">Zugriff erforderlich</string>
     <string name="storage_permission_alert_msg">
-        Wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
+        Hey, wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="storage_permission_denied">Zugriff verweigert</string>
-
-    <!-- Export Shelf Data Path Storage -->
-    <string name="exported_file_stored_in">
-        Exportierte Datei ist gespeichert unter:
-    </string>
-
-    <!-- Export Menu Items -->
+    <string name="storage_permission_denied">Zugriff verweigert :(</string>
+    <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
+    <!-- Export | Menu -->
     <string name="export_library">Bibliothek exportieren (BibTeX)</string>
     <string name="export_shelf">Regal(e) exportieren (BibTeX)</string>
     <string name="export_note">Notiz(en) exportieren (BibTeX)</string>
+    <!-- Export | Empty Alerts -->
+    <string name="empty_shelf">Leeres Regal</string>
+    <string name="empty_shelf_description">Sorry, hier gibt es keine Bücher zum Exportieren.</string>
+    <string name="empty_library">Leeres Regal</string>
+    <string name="empty_library_description">Sorry, hier gibt es keine Regale oder Bücher zum Exportieren.</string>
+    <string name="empty_note_list">Keine Notizen</string>
+    <string name="empty_note_list_description">Sorry, hier gibt es keine Notizen zum Exportieren.</string>
 
-    <!-- Export: Empty Shelf -->
-    <string name="empty_shelf">Das Regal ist leer.</string>
-    <string name="empty_shelf_description">
-        Bitte stelle Bücher in das Regal, um den Export zu ermöglichen.
-    </string>
 
-    <!-- Export: Empty Library -->
-    <string name="empty_library">Das Regal ist leer/keine Bücher im Regal.</string>
-    <string name="empty_library_description">
-        Bitte füge mindestens ein Regal und ein Buch hinzu,
-        um das Teilen zu ermöglichen.
-    </string>
-
-    <!-- Export: Empty Note List -->
-    <string name="empty_note_list">Keine Notizen.</string>
-    <string name="empty_note_list_description">
-        Bitte füge mindestens eine Notiz hinzu, um den Export zu ermöglichen.
-    </string>
-
-    <!-- Import Menu Items -->
+    <!-- Import -->
     <string name="import_in_shelf">In Regal importieren (BibTeX)</string>
+    <string name="import_non_bib_file">Keine BibTeX Datei</string>
+    <string name="import_non_bib_file_description">Sorry, aber wir können nur BibTeX-Dateien importieren.</string>
+    <string name="not_valid_bib_file">Sorry, diese Datei enthält nichts, das wir importieren können.</string>
+    <string name="imported_file_name_is">Importiere Datei:</string>
 
-    <!-- Import: Bib File Selection -->
-    <string name="import_non_bib_file">Keine BibTeX Datei.</string>
-    <string name="import_non_bib_file_description">
-        Bitte wähle eine BibTeX Datei, um den Import zu ermöglichen.
-    </string>
-    <string name="not_valid_bib_file">
-        Die BibTeX Datei ist leer oder enthält keine Bücher.
-    </string>
 
-    <!-- Import of Shelf Data Path Storage -->
-    <string name="imported_file_name_is">
-        Importiere Datei:
-    </string>
+    <!-- Search -->
+    <string name="search">Suchen...</string>
+    <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
+    <string name="search_invalid_name">Hey, bitte gib einen Suchbegriff ein, bevor wir loslegen.</string>
+    <string name="search_empty">Sorry, dazu konnten wir nichts finden.</string>
+    <!-- Search | Sort -->
+    <string name="sort">Sortieren</string>
+    <string name="search_sort_to">Sortieren nach</string>
+    <string name="sort_name_ascending">Name (A-Z)</string>
+    <string name="sort_name_descending">Name (Z-A)</string>
+    <string name="sort_mod_date_oldest">Datum (ältestes zuerst)</string>
+    <string name="sort_mod_date_latest">Datum (neuestes zuerst)</string>
+    <!-- Search | Filter -->
+    <string name="filter">Filtern</string>
+    <string name="filter_to">Filtern nach</string>
+    <string name="filter_shelf">Regale</string>
+    <string name="filter_book">Bücher</string>
+    <string name="filter_note">Notizen</string>
+
 
 
     <!-- Sharing of BibTeX -->
@@ -260,7 +258,6 @@
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
-
     <string name="help">Hilfe</string>
 
     <string name="library_help_text">
@@ -460,30 +457,5 @@
 
         ]]>
     </string>
-
-    <!-- Search Fragment -->
-    <string name="search">Suchen …</string>
-    <string name="search_hint">Suche Regal, Buch oder Notiz</string>
-    <string name="search_invalid_name">Bitte einen gültigen Begriff eingeben.
-        Reine Whitespaces sind nicht erlaubt.</string>
-    <string name="search_empty">Keine Suchergebnisse vorhanden</string>
-
-    <!-- Sort -->
-    <string name="sort">Sortieren</string>
-    <string name="search_sort_to">Sortieren nach</string>
-
-    <string name="sort_name_ascending">Name aufsteigend</string>
-    <string name="sort_name_descending">Name absteigend</string>
-    <string name="sort_mod_date_oldest">Datum ältestes</string>
-    <string name="sort_mod_date_latest">Datum neuestes</string>
-
-    <!-- Filter -->
-    <string name="filter">Filtern</string>
-    <string name="filter_to">Filtern nach</string>
-
-    <string name="filter_shelf">Regale</string>
-    <string name="filter_book">Bücher</string>
-    <string name="filter_note">Notizen</string>
-    <string name="empty_notes_list">Derzeit sind keine Notizen vorhanden.</string>
 
 </resources>

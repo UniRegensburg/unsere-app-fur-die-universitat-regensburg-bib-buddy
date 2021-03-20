@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * BookNotesView is responsible for the noteList of a certain book.
  *
- * @author Sarah Kurek, Silvia Ivanova
+ * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
 public class BookNotesView extends Fragment {
 
@@ -166,15 +166,22 @@ public class BookNotesView extends Fragment {
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(adapter.anyItemSelected());
+    deleteNote.setVisible(adapter.getSelectedItemCount() > 0);
   }
 
   private void handleDeleteNote() {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
-
     alertDeleteBookNote.setCancelable(false);
-    alertDeleteBookNote.setTitle(R.string.delete_note);
-    alertDeleteBookNote.setMessage(R.string.delete_note_message);
+
+    if (selectedNoteItems.size() > 1) {
+      alertDeleteBookNote.setTitle(R.string.delete_notes);
+      alertDeleteBookNote.setMessage(
+          getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteBookNote.setTitle(R.string.delete_note);
+      alertDeleteBookNote.setMessage(
+          getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -197,6 +204,15 @@ public class BookNotesView extends Fragment {
         updateEmptyView(noteList);
         Toast.makeText(requireContext(), getString(R.string.deleted_notes),
             Toast.LENGTH_SHORT).show();
+
+        final int notesNumber = adapter.getSelectedItemCount();
+        if (notesNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+        }
+
+        updateEmptyView(bookNotesViewModel.getCurrentNoteList());
       }
     });
 
