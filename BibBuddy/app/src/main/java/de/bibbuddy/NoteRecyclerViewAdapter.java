@@ -133,7 +133,7 @@ public class NoteRecyclerViewAdapter
   public List<NoteItem> getSelectedNoteItems() {
     List<NoteItem> selectedNotes = new ArrayList<>();
     if (parent != null) {
-      int itemNumber = noteList.size();
+      int itemNumber = parent.getChildCount();
       for (int i = 0; i < itemNumber; i++) {
         if (parent.getChildAt(i).isSelected()) {
           selectedNotes.add(noteList.get(i));
