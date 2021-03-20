@@ -61,7 +61,7 @@ public class NotesFragment extends Fragment {
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
-    deleteNote.setVisible(adapter.anyItemSelected());
+    deleteNote.setVisible(adapter.getSelectedItemCount() > 0);
   }
 
   @Override
