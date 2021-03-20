@@ -156,9 +156,6 @@
     <!-- Note -->
     <string name="note">Notiz</string>
 
-    <!-- Note List -->
-    <string name="empty_notes_list">Derzeit sind keine Notizen vorhanden.</string>
-
     <!-- Note | Add note -->
     <string name="add_note">Notiz hinzufügen</string>
     <string name="take_picture_note">Foto</string>

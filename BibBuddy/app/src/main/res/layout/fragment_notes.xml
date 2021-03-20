@@ -15,7 +15,7 @@
         android:layout_marginTop="58dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="@string/empty_notes_list"
+        android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
         android:visibility="gone" />
