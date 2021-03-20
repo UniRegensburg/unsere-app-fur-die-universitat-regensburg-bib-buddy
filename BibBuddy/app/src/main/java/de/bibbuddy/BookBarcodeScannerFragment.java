@@ -37,7 +37,6 @@ public class BookBarcodeScannerFragment extends Fragment
   private CameraSource cameraSource;
   private BarcodeDetector barcodeDetector;
   private IsbnRetriever isbnRetriever;
-  private DataValidation dataValidation;
   private Thread thread;
 
   private Long shelfId;
@@ -134,16 +133,15 @@ public class BookBarcodeScannerFragment extends Fragment
   private void handleIsbnInput(String isbn) {
     String cleanIsbn = isbn.replaceAll("\\s", "");
 
-    if (dataValidation.isValidIsbn10or13(cleanIsbn)) {
+    if (DataValidation.isValidIsbn10or13(cleanIsbn)) {
       isbnRetriever = new IsbnRetriever(cleanIsbn);
-      System.out.println(isbnRetriever);
       thread = new Thread(isbnRetriever);
       thread.start();
 
       try {
         thread.join();
       } catch (Exception e) {
-        System.out.println(e);
+        e.printStackTrace();
       }
 
       // retrieve metadata that was saved

@@ -26,7 +26,6 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   private EditText searchFieldText;
   private Thread thread;
   private IsbnRetriever isbnRetriever;
-  private DataValidation dataValidation;
 
   private Long shelfId;
   private String shelfName;
@@ -96,7 +95,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
     if (keyCode == KeyEvent.KEYCODE_ENTER) {
       if (event.getAction() != KeyEvent.ACTION_DOWN) {
-        if (dataValidation.isValidIsbn10or13(textInput)) {
+        if (DataValidation.isValidIsbn10or13(textInput)) {
           isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
           thread = new Thread(isbnRetriever);
           thread.start();
@@ -104,7 +103,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
           try {
             thread.join();
           } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
           }
 
           // retrieve metadata that was saved
