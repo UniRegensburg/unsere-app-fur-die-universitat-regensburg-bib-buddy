@@ -24,9 +24,9 @@ import java.util.List;
  */
 public class NotesFragment extends Fragment {
 
+  public static List<NoteItem> noteList;
   private static NoteModel noteModel;
   private RecyclerView notesRecyclerView;
-  public static List<NoteItem> noteList;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
   private TextView emptyListView;
@@ -98,7 +98,8 @@ public class NotesFragment extends Fragment {
 
   private void performDelete() {
     if (adapter.getSelectedNoteItems().size() > 1) {
-      Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+      Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT)
+          .show();
     } else {
       Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }

@@ -72,7 +72,7 @@ public class NoteRecyclerViewAdapter
     setupCardView(holder, position);
 
     holder.itemView.setOnClickListener(v -> {
-      if(getSelectedNoteItems().size() > 0){
+      if (getSelectedNoteItems().size() > 0) {
         v.setSelected(!v.isSelected());
       } else {
         TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();

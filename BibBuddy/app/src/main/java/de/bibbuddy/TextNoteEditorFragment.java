@@ -56,7 +56,8 @@ public class TextNoteEditorFragment extends Fragment {
       }
     });
 
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) requireActivity())
+        .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
     ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     setHasOptionsMenu(true);
