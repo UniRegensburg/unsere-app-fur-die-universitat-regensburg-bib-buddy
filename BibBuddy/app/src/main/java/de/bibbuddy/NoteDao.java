@@ -26,31 +26,39 @@ public class NoteDao implements InterfaceNoteDao {
     Long currentTime = new Date().getTime();
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       try {
-        ContentValues noteFile = new ContentValues();
-        noteFile.put(DatabaseHelper.FILE, "");
-        db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFile);
+        ContentValues noteFileValues = new ContentValues();
+        if (note.getNoteFilePath() == null) {
+          noteFileValues.put(DatabaseHelper.FILE, "");
+        } else {
+          noteFileValues.put(DatabaseHelper.FILE, note.getNoteFilePath());
+        }
+        db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFileValues);
         Cursor c =
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
                 null, null, null, null);
         c.moveToLast();
+        note.setNoteFileId(c.getLong(0));
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseHelper.NAME, note.getName());
-        contentValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
-        contentValues.put(DatabaseHelper.TEXT, note.getText());
-        contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
-        contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-        contentValues.put(DatabaseHelper.NOTE_FILE_ID, c.getLong(0));
+        ContentValues noteValues = new ContentValues();
+        noteValues.put(DatabaseHelper.NAME, note.getName());
+        noteValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
+        noteValues.put(DatabaseHelper.TEXT, note.getText());
+        noteValues.put(DatabaseHelper.CREATE_DATE, currentTime);
+        noteValues.put(DatabaseHelper.MOD_DATE, currentTime);
+        noteValues.put(DatabaseHelper.NOTE_FILE_ID, c.getLong(0));
 
         c.close();
-        db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, contentValues);
+
+        db.insert(DatabaseHelper.TABLE_NAME_NOTE, null, noteValues);
 
         Cursor cursor =
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
                 null, null, null);
         cursor.moveToLast();
         long id = cursor.getLong(0);
+
         cursor.close();
+
         note.setId(id);
         note.setCreateDate(currentTime);
         note.setModDate(currentTime);
@@ -177,7 +185,7 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    List<Long> noteIds = new ArrayList<Long>();
+    List<Long> noteIds = new ArrayList<>();
 
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
         + DatabaseHelper.BOOK_ID + " = ?";
@@ -248,9 +256,9 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public String findStrippedTextById(Long id) {
     return findTextById(id).replaceAll(
-        "(<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">|<\\/p>|"
-            + "<span style=\"text-decoration:line-through;\">|<\\/span>|<(\\/)?i>|"
-            + "<(\\/)?b>|<(\\/)?u>|<(\\/)?br>|<(\\/)?blockquote>)",
+        "(<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">|</p>|"
+            + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
+            + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
         "");
   }
 
@@ -311,7 +319,7 @@ public class NoteDao implements InterfaceNoteDao {
         new String[] {String.valueOf(noteId)},
         null, null, null, String.valueOf(1));
 
-    Long bookId = 0L;
+    long bookId = 0L;
     if (cursor.moveToFirst()) {
       bookId = cursor.getLong(0);
     }

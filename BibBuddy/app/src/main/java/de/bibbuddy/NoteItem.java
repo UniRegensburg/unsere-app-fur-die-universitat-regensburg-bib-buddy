@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 /**
  * The NoteItem is responsible for holding the information of the note items.
- * It is the parent of NoteAudioItem, NoteImageItem and NoteTextItem.
+ * It is the parent of NoteAudioItem and NoteTextItem.
  *
  * @author Sarah Kurek
  */
@@ -29,7 +29,6 @@ public class NoteItem implements SortableItem {
   public NoteItem(Long modDate, String name, String text, int image, Long id, Long bookId) {
     this.modDate = modDate;
     this.modDateStr = DateConverter.convertDateToString(modDate);
-
     this.name = name;
     this.text = text;
     this.image = image;

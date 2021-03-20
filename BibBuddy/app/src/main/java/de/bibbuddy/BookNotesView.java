@@ -1,11 +1,9 @@
 package de.bibbuddy;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,14 +19,10 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,16 +30,15 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
-public class BookNotesView extends Fragment
-    implements BookNotesRecyclerViewAdapter.BookNotesViewListener {
+public class BookNotesView extends Fragment {
 
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
-  private BookNotesRecyclerViewAdapter adapter;
+  private RecyclerView recyclerView;
+  private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private List<NoteItem> noteList;
-  private List<NoteItem> selectedNoteItems;
 
   private BookDao bookDao;
   private NoteDao noteDao;
@@ -79,6 +72,7 @@ public class BookNotesView extends Fragment
 
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
+    recyclerView = view.findViewById(R.id.book_notes_recycler_view);
 
     sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 
@@ -96,8 +90,6 @@ public class BookNotesView extends Fragment
     setupSortBtn();
 
     setFunctionsToolbar();
-
-    selectedNoteItems = new ArrayList<NoteItem>();
 
     bookDao = bookNotesViewModel.getBookDao();
     noteDao = bookNotesViewModel.getNoteDao();
@@ -146,22 +138,13 @@ public class BookNotesView extends Fragment
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_delete_note:
-        handleDeleteNote();
-        break;
-
-      case R.id.menu_export_note:
-        checkEmptyNoteList();
-        break;
-
-      case R.id.menu_help_book_note:
-        handleManualBookNotes();
-        break;
-
-      default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    int itemId = item.getItemId();
+    if (itemId == R.id.menu_delete_note) {
+      handleDeleteNote();
+    } else if (itemId == R.id.menu_export_note) {
+      checkEmptyNoteList();
+    } else if (itemId == R.id.menu_help_book_note) {
+      handleManualBookNotes();
     }
 
     return super.onOptionsItemSelected(item);
@@ -170,14 +153,14 @@ public class BookNotesView extends Fragment
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(selectedNoteItems != null && !selectedNoteItems.isEmpty());
+    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
   }
 
   private void handleDeleteNote() {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
     alertDeleteBookNote.setCancelable(false);
 
-    if (selectedNoteItems.size() > 1) {
+    if (adapter.getSelectedNoteItems().size() > 1) {
       alertDeleteBookNote.setTitle(R.string.delete_notes);
       alertDeleteBookNote.setMessage(
           getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
@@ -190,39 +173,35 @@ public class BookNotesView extends Fragment
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        deselectNoteItems();
       }
     });
 
     alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        final int notesNumber = selectedNoteItems.size();
-
-        bookNotesViewModel.deleteNotes(selectedNoteItems);
+        final int notesNumber = adapter.getSelectedNoteItems().size();
+        bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
         adapter.notifyDataSetChanged();
-        updateBookNoteList(bookNotesViewModel.getCurrentNoteList());
-        updateEmptyView(bookNotesViewModel.getCurrentNoteList());
-
+        noteList = bookNotesViewModel.getBookNoteList(bookId);
+        updateBookNoteList(noteList);
+        updateEmptyView(noteList);
         if (notesNumber > 1) {
           Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
         } else {
           Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
         }
-
-        unselectNoteItems();
       }
     });
 
     alertDeleteBookNote.show();
   }
 
-  private void unselectNoteItems() {
+  private void deselectNoteItems() {
     RecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
     }
-
-    selectedNoteItems.clear();
   }
 
   private void handleSortNote() {
@@ -241,12 +220,11 @@ public class BookNotesView extends Fragment
 
   private void sortNoteList() {
     List<NoteItem> noteList = bookNotesViewModel.getSortedNoteList(sortCriteria, bookId);
-    adapter.setBookNoteList(noteList);
-    adapter.notifyDataSetChanged();
+    adapter.setNoteList(noteList);
   }
 
   private void checkEmptyNoteList() {
-    if (bookNotesViewModel.getCurrentNoteList().isEmpty()) {
+    if (bookNotesViewModel.getBookNoteList(bookId).isEmpty()) {
       AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
       alertDialogEmptyLib.setTitle(R.string.empty_note_list);
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
@@ -340,46 +318,23 @@ public class BookNotesView extends Fragment
 
   private void setupRecyclerView(Long bookId) {
     bookNotesViewModel = new BookNotesViewModel(getContext());
-    noteList = bookNotesViewModel.getNoteList(bookId);
+    noteList = bookNotesViewModel.getBookNoteList(bookId);
 
-    RecyclerView bookNotesRecyclerViewAdapter =
+    RecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new BookNotesRecyclerViewAdapter(noteList, this, context);
-    bookNotesRecyclerViewAdapter.setAdapter(adapter);
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList);
+    notesRecyclerView.setAdapter(adapter);
 
     updateEmptyView(noteList);
   }
 
   private void updateEmptyView(List<NoteItem> noteList) {
-    TextView emptyView = view.findViewById(R.id.empty_notelist_view);
+    TextView emptyView = view.findViewById(R.id.empty_note_list_view);
 
     if (noteList.isEmpty()) {
       emptyView.setVisibility(View.VISIBLE);
     } else {
       emptyView.setVisibility(View.GONE);
-    }
-  }
-
-  @Override
-  public void onItemClicked(int position) {
-    NoteItem noteItem = bookNotesViewModel.getSelectedNoteItem(position);
-
-    TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-    nextFrag.setArguments(createNoteBundle(noteItem));
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, nextFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-        .addToBackStack(null)
-        .commit();
-  }
-
-  @Override
-  public void onLongItemClicked(int position, NoteItem noteItem, View v) {
-    if (v.isSelected()) {
-      v.setSelected(false);
-      selectedNoteItems.remove(noteItem);
-    } else {
-      v.setSelected(true);
-      selectedNoteItems.add(noteItem);
     }
   }
 

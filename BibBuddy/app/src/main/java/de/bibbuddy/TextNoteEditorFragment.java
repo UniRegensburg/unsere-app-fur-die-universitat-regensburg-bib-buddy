@@ -56,11 +56,11 @@ public class TextNoteEditorFragment extends Fragment {
       }
     });
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    ((MainActivity) requireActivity())
+        .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     setHasOptionsMenu(true);
-
   }
 
   @Override
@@ -72,16 +72,11 @@ public class TextNoteEditorFragment extends Fragment {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_help_texteditor:
-        handleManualTexteditor();
-        break;
-
-      default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+    if (item.getItemId() == R.id.menu_help_texteditor) {
+      handleManualTexteditor();
+    } else {
+      Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
-
     return super.onOptionsItemSelected(item);
   }
 
@@ -94,7 +89,7 @@ public class TextNoteEditorFragment extends Fragment {
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
             LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
@@ -117,7 +112,7 @@ public class TextNoteEditorFragment extends Fragment {
       if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
-        noteModel.addNote(name, 0, text);
+        noteModel.createNote(name, 0, text, "");
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
     }

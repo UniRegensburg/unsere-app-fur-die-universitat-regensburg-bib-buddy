@@ -19,8 +19,22 @@ public class NoteModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
-  public void addNote(String name, int type, String text) {
-    Note note = new Note(name, type, text);
+  /**
+   * This method creates a new note object and passes it to the noteDao to add it to the database
+   * as well.
+   *
+   * @param name         name of the note object
+   * @param type         type of the note object
+   * @param text         text of the note object
+   * @param noteFilePath string-value representing the path to a linked noteFile-object
+   */
+  public void createNote(String name, int type, String text, String noteFilePath) {
+    Note note;
+    if (noteFilePath == null) {
+      note = new Note(name, type, text);
+    } else {
+      note = new Note(name, type, text, noteFilePath);
+    }
     noteDao.create(note);
   }
 
@@ -45,10 +59,9 @@ public class NoteModel {
    *
    * @return a list of NoteItems (used for views)
    */
-  public List<NoteItem> getCompleteNoteList() {
+  public List<NoteItem> getNoteList() {
     List<Note> noteList = noteDao.findAll();
-    List<NoteItem> noteItemList = createItemList(noteList);
-    return noteItemList;
+    return createItemList(noteList);
   }
 
   /**
@@ -59,8 +72,7 @@ public class NoteModel {
    */
   public List<NoteItem> getNoteListForBook(Long bookId) {
     List<Note> noteList = noteDao.getAllNotesForBook(bookId);
-    List<NoteItem> noteItemList = createItemList(noteList);
-    return noteItemList;
+    return createItemList(noteList);
   }
 
   private List<NoteItem> createItemList(List<Note> noteList) {
@@ -75,18 +87,12 @@ public class NoteModel {
         if (name.length() > 40) {
           name = name.substring(0, 35) + " ...";
         }
-        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId));
+        noteItemList.add(new NoteTextItem(modDate, name, noteId));
       } else if (note.getType() == 1) {
         noteItemList.add(new NoteAudioItem(modDate, name, noteId));
-      } else {
-        noteItemList.add(new NoteImageItem(modDate, name, noteId));
       }
     }
     return noteItemList;
-  }
-
-  public String getNoteText(Long noteId) {
-    return noteDao.findTextById(noteId);
   }
 
   public void linkNoteWithBook(Long bookId, Long noteId) {
@@ -97,7 +103,7 @@ public class NoteModel {
    * Gets the sorted noteList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param noteList noteList that should be sorted
+   * @param noteList     noteList that should be sorted
    * @return Returns the sorted noteList
    */
   public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
@@ -130,7 +136,7 @@ public class NoteModel {
    * Gets the sorted noteList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param bookId id of the book
+   * @param bookId       id of the book
    * @return Returns the sorted noteList
    */
   public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {

@@ -11,8 +11,4 @@ public class NoteAudioItem extends NoteItem {
     super(modDate, name, R.drawable.microphone, id);
   }
 
-  public NoteAudioItem(Long modDate, String name, Long id, Long bookId) {
-    super(modDate, name, null, R.drawable.microphone, id, bookId);
-  }
-
 }

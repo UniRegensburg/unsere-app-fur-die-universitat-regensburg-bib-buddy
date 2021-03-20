@@ -96,7 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       "CREATE TABLE " + TABLE_NAME_NOTE_FILE
           + "( "
           + _ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
-          + FILE + " BLOB NOT NULL"
+          + FILE + " STRING NOT NULL"
           + " );";
 
 
