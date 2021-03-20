@@ -41,9 +41,11 @@
     <string name="name_exists">Sorry, den Namen gibt\'s schon!</string>
     <string name="shelf_added">Ok, wir haben das Regal hinzugefügt.</string>
     <string name="add_shelf_tooltip">Ein neues Regal anlegen.</string>
+
     <!-- Library | Rename Shelf -->
     <string name="rename_shelf">Regal umbenennen</string>
     <string name="renamed_shelf">Ok, wir haben das Regal umbenannt.</string>
+
     <!-- Library | Delete Shelf -->
     <string name="delete_shelf">Regal löschen</string>
     <string name="delete_shelves">Regale löschen</string>
@@ -51,6 +53,7 @@
     <string name="delete_shelves_message">Willst du diese Regale und deren Inhalte wirklich löschen?</string>
     <string name="deleted_shelf">Ok, wir haben das Regal gelöscht.</string>
     <string name="deleted_shelves">Ok, wir haben die Regale gelöscht.</string>
+
     <!-- Library | Help -->
     <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>. Danach
         geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern und zu
@@ -61,6 +64,7 @@
     <!-- Book -->
     <string name="book">Buch</string>
     <string name="books">Bücher</string>
+
     <!-- Book | Add book -->
     <string name="add_book">Buch hinzufügen</string>
     <string name="add_book_scan_text">ISBN scannen</string>
@@ -68,8 +72,10 @@
     <string name="add_book_online_text">ISBN eingeben</string>
     <string name="add_book_tooltip">Ein neues Buch hinzufügen.</string>
     <string name="added_book">Ok, wir haben das Buch hinzugefügt.</string>
+
     <!-- Book | Change book -->
     <string name="change_book">Buchdaten ändern</string>
+
     <!-- Book | Delete book -->
     <string name="delete_book">Buch löschen</string>
     <string name="delete_books">Bücher löschen</string>
@@ -77,6 +83,7 @@
     <string name="deleted_books">Ok, wir haben die Bücher gelöscht.</string>
     <string name="delete_book_message">Willst du dieses Buch und deine Notizen wirklich löschen?</string>
     <string name="delete_books_message">Willst du diese Bücher und deine Notizen wirklich löschen?</string>
+
     <!-- Book | Help -->
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
         öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
@@ -97,6 +104,7 @@
     <string name="book_form_edition">Auflage</string>
     <string name="book_form_isbn">ISBN</string>
     <string name="book_form_add_infos">Mehr Infos</string>
+
     <!-- Book Form | Authors -->
     <string name="add_author_btn">Autoren bearbeiten</string>
     <string name="add_author_tooltip">Einen Autor hinzufügen oder ändern</string>
@@ -105,9 +113,11 @@
     <string name="author_first_name">Vorname*</string>
     <string name="author_last_name">Nachname*</string>
     <string name="author_title">Titel</string>
+
     <!-- Book Form | Change authors -->
     <string name="change_author">Autor ändern</string>
     <string name="add_author">Autor hinzufügen</string>
+
     <!-- Book Form | Delete authors -->
     <string name="delete_author">Autor löschen</string>
     <string name="delete_authors">Autoren löschen</string>
@@ -115,6 +125,7 @@
     <string name="deleted_authors">Ok, wir haben die Autoren gelöscht.</string>
     <string name="delete_author_message">Willst du diesen Autor wirklich löschen?</string>
     <string name="delete_authors_message">Willst du diese Autoren wirklich löschen?</string>
+
     <!-- Book Form | Help -->
     <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
         Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
@@ -151,6 +162,7 @@
     <!-- Barcode Scanner -->
     <string name="isbn_scan">ISBN scannen</string>
     <string name="isbn_not_found">Sorry, diese ISBN konnten wir nicht finden!</string>
+    <string name="isbn_not_valid">Sorry, diese ISBN scheint nicht richtig zu sein!</string>
 
 
     <!-- Note -->
@@ -184,6 +196,7 @@
     <!-- Note Editor Text | Items -->
     <string name="undo">Rückgängig</string>
     <string name="redo">Wiederholen</string>
+
     <!-- Note Editor Text | Toasts -->
     <string name="toast_bold">Fett</string>
     <string name="toast_italic">Kursiv</string>
@@ -195,6 +208,7 @@
     <string name="toast_alignRight">Rechtsbündig</string>
     <string name="toast_alignCenter">Zentriert</string>
     <string name="delete_notification">Ok, wir haben die Notiz gelöscht.</string>
+
     <!-- Note Editor Text | Content Descriptions -->
     <string name="slidebar_left">Slidebar_Left</string>
     <string name="slidebar_right">Slidebar_Right</string>
@@ -211,10 +225,12 @@
     </string>
     <string name="storage_permission_denied">Zugriff verweigert :(</string>
     <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
+
     <!-- Export | Menu -->
     <string name="export_library">Bibliothek exportieren (BibTeX)</string>
     <string name="export_shelf">Regal(e) exportieren (BibTeX)</string>
     <string name="export_note">Notiz(en) exportieren (BibTeX)</string>
+
     <!-- Export | Empty Alerts -->
     <string name="empty_shelf">Leeres Regal</string>
     <string name="empty_shelf_description">Sorry, hier gibt es keine Bücher zum Exportieren.</string>
@@ -237,6 +253,7 @@
     <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
     <string name="search_invalid_name">Hey, bitte gib einen Suchbegriff ein, bevor wir loslegen.</string>
     <string name="search_empty">Sorry, dazu konnten wir nichts finden.</string>
+
     <!-- Search | Sort -->
     <string name="sort">Sortieren</string>
     <string name="search_sort_to">Sortieren nach</string>
@@ -244,6 +261,7 @@
     <string name="sort_name_descending">Name (Z-A)</string>
     <string name="sort_mod_date_oldest">Datum (ältestes zuerst)</string>
     <string name="sort_mod_date_latest">Datum (neuestes zuerst)</string>
+
     <!-- Search | Filter -->
     <string name="filter">Filtern</string>
     <string name="filter_to">Filtern nach</string>

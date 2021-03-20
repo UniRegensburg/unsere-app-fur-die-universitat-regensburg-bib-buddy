@@ -26,7 +26,7 @@ public class IsbnRetriever implements Runnable {
    * @author Luis Moßburger
    */
   IsbnRetriever(String isbn) {
-    this.isbn = isbn;
+    this.isbn = isbn.replaceAll("-", "").replaceAll("\\s", "");
   }
 
   private static Document loadXmlFromString(String xml) throws Exception {
@@ -74,7 +74,6 @@ public class IsbnRetriever implements Runnable {
   /**
    * Main method for the Runnable to start - read from API and resolve to metadata.
    *
-   * @author Luis Moßburger
    */
   public void run() {
     // initialize variables
