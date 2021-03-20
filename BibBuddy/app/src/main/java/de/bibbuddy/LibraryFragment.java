@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * The LibraryFragment is responsible for the shelves in the library.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener {
@@ -175,7 +175,7 @@ public class LibraryFragment extends Fragment
 
     getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
-                 LibraryKeys.FRAGMENT_HELP_VIEW)
+            LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
         .commit();
   }
@@ -200,10 +200,17 @@ public class LibraryFragment extends Fragment
 
   private void handleDeleteShelf() {
     AlertDialog.Builder alertDeleteShelf = new AlertDialog.Builder(context);
-
     alertDeleteShelf.setCancelable(false);
-    alertDeleteShelf.setTitle(R.string.delete_shelf);
-    alertDeleteShelf.setMessage(R.string.delete_shelf_message);
+
+    if (selectedShelfItems.size() > 1) {
+      alertDeleteShelf.setTitle(R.string.delete_shelves);
+      alertDeleteShelf.setMessage(
+          getString(R.string.delete_shelves_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteShelf.setTitle(R.string.delete_shelf);
+      alertDeleteShelf.setMessage(
+          getString(R.string.delete_shelf_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteShelf.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -214,9 +221,17 @@ public class LibraryFragment extends Fragment
     alertDeleteShelf.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        final int shelvesNumber = selectedShelfItems.size();
+
         libraryModel.deleteShelves(selectedShelfItems);
         updateLibraryListView(libraryModel.getCurrentLibraryList());
-        Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
+
+        if (shelvesNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_shelves), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
+        }
+
         unselectLibraryItems();
       }
     });

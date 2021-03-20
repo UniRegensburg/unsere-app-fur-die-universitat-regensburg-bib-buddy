@@ -33,7 +33,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ import java.util.List;
 /**
  * The BookFragment is responsible for the current books of a shelf in the library.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener,
     BookFormFragment.ChangeBookListener {
@@ -60,11 +59,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
 
-
   private boolean isImport = false; // it is either import or export
 
   private SortCriteria sortCriteria;
-
 
   @Nullable
   @Override
@@ -139,7 +136,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void setupRecyclerView() {
     List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria,
-                                                          bookModel.getBookList(shelfId));
+        bookModel.getBookList(shelfId));
 
     RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
@@ -245,10 +242,17 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void handleDeleteBook() {
     AlertDialog.Builder alertDeleteBook = new AlertDialog.Builder(context);
-
     alertDeleteBook.setCancelable(false);
-    alertDeleteBook.setTitle(R.string.delete_book);
-    alertDeleteBook.setMessage(R.string.delete_book_message);
+
+    if (selectedBookItems.size() > 1) {
+      alertDeleteBook.setTitle(R.string.delete_books);
+      alertDeleteBook.setMessage(
+          getString(R.string.delete_books_message) + " " + getString(R.string.delete_warning));
+    } else {
+      alertDeleteBook.setTitle(R.string.delete_book);
+      alertDeleteBook.setMessage(
+          getString(R.string.delete_book_message) + " " + getString(R.string.delete_warning));
+    }
 
     alertDeleteBook.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
@@ -259,10 +263,17 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     alertDeleteBook.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        bookModel.deleteBooks(selectedBookItems, shelfId);
+        final int booksNumber = selectedBookItems.size();
 
+        bookModel.deleteBooks(selectedBookItems, shelfId);
         updateBookList(bookModel.getCurrentBookList());
-        Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
+
+        if (booksNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_books), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
+        }
+
         unselectBookItems();
       }
     });
@@ -375,7 +386,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     updateEmptyView(bookModel.getCurrentBookList());
   }
 
-
   private String readBibFile(Uri uri) {
     try {
 
@@ -392,7 +402,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     return null;
   }
 
-  private void filePicker()  {
+  private void filePicker() {
     Intent filePickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
     filePickerIntent.setType("*/*");
     filePickerActivityResultLauncher.launch(filePickerIntent);
@@ -456,7 +466,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           filePicker();
 
 
-        }  else {
+        } else {
           Toast.makeText(getContext(), R.string.storage_permission_denied,
               Toast.LENGTH_SHORT).show();
         }

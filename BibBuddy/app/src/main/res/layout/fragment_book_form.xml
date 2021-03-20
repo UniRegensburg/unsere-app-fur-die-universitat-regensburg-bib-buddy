@@ -28,27 +28,14 @@
             android:orientation="vertical"
             >
 
-            <!-- ISBN -->
-            <TextView
-                android:id="@+id/book_form_isbn_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/book_form_isbn"
-                android:theme="@style/TextViewCustom"
-                />
-
-            <EditText
-                android:id="@+id/book_form_isbn_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:focusedByDefault="true"
-                android:hint="@string/book_form_isbn"
-                android:inputType="text"
-                />
-
             <!-- title -->
+            <TextView
+                    android:text="@string/book_form_notice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/info_mandatory"
+                    android:textColor="@color/gray_btn" />
+
             <TextView
                 android:id="@+id/book_form_title"
                 android:layout_width="wrap_content"
@@ -142,6 +129,26 @@
                 android:hint="@string/book_form_edition"
                 android:inputType="text"
                 />
+
+            <!-- ISBN -->
+            <TextView
+                    android:id="@+id/book_form_isbn_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/book_form_isbn"
+                    android:theme="@style/TextViewCustom"
+                    />
+
+            <EditText
+                    android:id="@+id/book_form_isbn_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:focusedByDefault="true"
+                    android:hint="@string/book_form_isbn"
+                    android:inputType="text"
+                    />
 
             <!-- add_infos -->
             <TextView
