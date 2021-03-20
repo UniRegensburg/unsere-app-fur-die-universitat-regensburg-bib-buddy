@@ -127,10 +127,12 @@ public class NoteRecyclerViewAdapter
    */
   public int getSelectedItemCount() {
     int selectedItems = 0;
-    int itemNumber = parent.getChildCount();
-    for (int i = 0; i < itemNumber; i++) {
-      if (parent.getChildAt(i).isSelected()) {
-        selectedItems++;
+    if(parent != null) {
+      int itemNumber = parent.getChildCount();
+      for (int i = 0; i < itemNumber; i++) {
+        if (parent.getChildAt(i).isSelected()) {
+          selectedItems++;
+        }
       }
     }
     return selectedItems;
