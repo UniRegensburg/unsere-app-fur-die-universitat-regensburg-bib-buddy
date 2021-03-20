@@ -110,31 +110,30 @@ public class NoteRecyclerViewAdapter
     return noteList;
   }
 
+  public void setNoteList(List<NoteItem> noteList) {
+    this.noteList = noteList;
+    notifyDataSetChanged();
+  }
+
   public void removeItem(int position) {
     noteList.remove(position);
     notifyItemRemoved(position);
   }
 
   /**
-   * This method is used to check for selected items in the recyclerView.
+   * This method fetches the number of items selected in the recyclerView.
    *
-   * @return returns true if there is any item selected on the recyclerView.
+   * @return returns the number of selected recyclerView items.
    */
-  public boolean anyItemSelected() {
-    if (parent != null) {
-      int itemNumber = parent.getChildCount();
-      for (int i = 0; i < itemNumber; i++) {
-        if (parent.getChildAt(i).isSelected()) {
-          return true;
-        }
+  public int getSelectedItemCount() {
+    int selectedItems = 0;
+    int itemNumber = parent.getChildCount();
+    for (int i = 0; i < itemNumber; i++) {
+      if (parent.getChildAt(i).isSelected()) {
+        selectedItems++;
       }
     }
-    return false;
-  }
-
-  public void setNoteList(List<NoteItem> noteList) {
-    this.noteList = noteList;
-    notifyDataSetChanged();
+    return selectedItems;
   }
 
   /**
