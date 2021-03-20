@@ -181,16 +181,16 @@ public class BookNotesView extends Fragment {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         final int notesNumber = adapter.getSelectedNoteItems().size();
-        if (notesNumber > 1) {
-          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
-        }
         bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
         adapter.notifyDataSetChanged();
         noteList = bookNotesViewModel.getBookNoteList(bookId);
         updateBookNoteList(noteList);
         updateEmptyView(noteList);
+        if (notesNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+        }
       }
     });
 
