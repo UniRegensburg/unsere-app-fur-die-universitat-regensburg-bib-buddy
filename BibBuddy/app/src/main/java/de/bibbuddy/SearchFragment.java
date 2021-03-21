@@ -142,6 +142,10 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     searchRecyclerView.setAdapter(adapter);
 
     updateEmptyView(searchResultList);
+
+    if (DataValidation.isStringEmpty(searchText)) {
+      view.findViewById(R.id.list_view_search_empty).setVisibility(View.GONE);
+    }
   }
 
   private void updateEmptyView(List<SearchItem> searchResultList) {
