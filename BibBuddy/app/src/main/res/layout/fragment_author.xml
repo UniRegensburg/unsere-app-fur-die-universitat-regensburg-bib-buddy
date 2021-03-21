@@ -67,21 +67,12 @@
             tools:targetApi="o"
             />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_confirm_authors"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/btn_add_author"
-            android:layout_marginStart="@android:dimen/app_icon_size"
-            android:clickable="true"
-            android:contentDescription="@string/confirm"
-            android:focusable="true"
-            android:theme="@style/Button.Mint"
-            android:tooltipText="@string/confirm"
-            app:maxImageSize="40dp"
-            app:srcCompat="@drawable/ic_check"
-            tools:targetApi="o"
-            />
+        <include
+                layout="@layout/confirm_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/btn_add_author"
+                android:layout_marginStart="@android:dimen/app_icon_size"/>
 
     </RelativeLayout>
 
