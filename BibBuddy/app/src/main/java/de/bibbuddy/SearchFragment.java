@@ -72,8 +72,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     setHasOptionsMenu(true);
 
-    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
-    filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
+    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
+    filterCriteria = ((MainActivity) requireActivity()).getFilterCriteria();
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     setupSortBtn();
@@ -248,6 +248,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
           @Override
           public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
             filterCriteria[choice] = isChecked;
+            ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
           }
         });
 
