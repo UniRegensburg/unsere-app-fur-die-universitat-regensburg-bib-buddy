@@ -55,7 +55,6 @@ public class BookBarcodeScannerFragment extends Fragment
     Bundle bundle = getArguments();
 
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-    String shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
 
     setupDetectorsAndSources(view);
     ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
@@ -124,8 +123,8 @@ public class BookBarcodeScannerFragment extends Fragment
     String cleanIsbn = isbn.replaceAll("\\s", "");
 
     if (DataValidation.isValidIsbn10or13(cleanIsbn)) {
-      isbnRetriever = new IsbnRetriever(cleanIsbn);
-      thread = new Thread(isbnRetriever);
+      IsbnRetriever isbnRetriever = new IsbnRetriever(cleanIsbn);
+      Thread thread = new Thread(isbnRetriever);
       thread.start();
 
       try {

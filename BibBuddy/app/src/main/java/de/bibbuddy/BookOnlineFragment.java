@@ -69,8 +69,8 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     String textInput = searchFieldText.getText().toString().replaceAll("\\s", "");
 
     if (DataValidation.isValidIsbn10or13(textInput)) {
-      isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
-      thread = new Thread(isbnRetriever);
+          IsbnRetriever isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
+          Thread thread = new Thread(isbnRetriever);
       thread.start();
 
       try {
