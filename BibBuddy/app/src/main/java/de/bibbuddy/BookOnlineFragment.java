@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.textfield.TextInputLayout;
 import java.util.List;
 
 /**
@@ -22,10 +22,11 @@ import java.util.List;
  */
 public class BookOnlineFragment extends Fragment implements BookFormFragment.ChangeBookListener {
 
-  private TextInputLayout searchField;
-  private EditText searchFieldText;
+  private View view;
+
   private Thread thread;
   private IsbnRetriever isbnRetriever;
+  private EditText searchFieldText;
 
   private Long shelfId;
   private String shelfName;
@@ -34,7 +35,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_book_online, container, false);
+    view = inflater.inflate(R.layout.fragment_book_online, container, false);
 
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
@@ -49,19 +50,12 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
       }
     });
 
-    searchField = view.findViewById(R.id.search_field);
-    searchFieldText = searchField.getEditText();
+    setupSearchInput();
+    setupSearchButton();
 
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-
-    searchFieldText.setOnKeyListener(new View.OnKeyListener() {
-      public boolean onKey(View v, int keyCode, KeyEvent event) {
-        handleIsbnInput(keyCode, event);
-        return true;
-      }
-    });
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
@@ -90,36 +84,32 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     }
   }
 
-  private void handleIsbnInput(int keyCode, KeyEvent event) {
+  private void handleIsbnInput() {
     String textInput = searchFieldText.getText().toString().replaceAll("\\s", "");
 
-    if (keyCode == KeyEvent.KEYCODE_ENTER) {
-      if (event.getAction() != KeyEvent.ACTION_DOWN) {
-        if (DataValidation.isValidIsbn10or13(textInput)) {
-          isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
-          thread = new Thread(isbnRetriever);
-          thread.start();
+    if (DataValidation.isValidIsbn10or13(textInput)) {
+      isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
+      thread = new Thread(isbnRetriever);
+      thread.start();
 
-          try {
-            thread.join();
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-
-          // retrieve metadata that was saved
-          Book book = isbnRetriever.getBook();
-          List<Author> authors = isbnRetriever.getAuthors();
-          if (book != null) {
-            handleAddBook(book, authors);
-          } else {
-            Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-                Toast.LENGTH_LONG).show();
-          }
-        } else {
-          Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-              Toast.LENGTH_LONG).show();
-        }
+      try {
+        thread.join();
+      } catch (Exception e) {
+        e.printStackTrace();
       }
+
+      // retrieve metadata that was saved
+      Book book = isbnRetriever.getBook();
+      List<Author> authors = isbnRetriever.getAuthors();
+      if (book != null) {
+        handleAddBook(book, authors);
+      } else {
+        Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+            Toast.LENGTH_LONG).show();
+      }
+    } else {
+      Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
+          Toast.LENGTH_LONG).show();
     }
   }
 
@@ -145,6 +135,37 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     });
 
     closeFragmentAfterAdding();
+  }
+
+  private void setupSearchButton() {
+    ImageButton searchBtn = view.findViewById(R.id.search_btn);
+
+    searchBtn.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        handleIsbnInput();
+      }
+    });
+  }
+
+  private void setupSearchInput() {
+    searchFieldText = view.findViewById(R.id.search_input);
+    searchFieldText.setHint(R.string.add_book_online_text);
+
+    searchFieldText.setOnKeyListener(new View.OnKeyListener() {
+      public boolean onKey(View v, int keyCode, KeyEvent event) {
+        handleSearchInput(keyCode, event);
+        return true;
+      }
+    });
+  }
+
+  private void handleSearchInput(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+      if (event.getAction() != KeyEvent.ACTION_DOWN) {
+        handleIsbnInput();
+      }
+    }
   }
 
 }
