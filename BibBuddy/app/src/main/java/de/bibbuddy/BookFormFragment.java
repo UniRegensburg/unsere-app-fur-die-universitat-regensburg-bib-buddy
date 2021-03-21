@@ -90,7 +90,7 @@ public class BookFormFragment extends Fragment {
       setupAddAuthorBtnListener(view);
     }
 
-    redColor = getResources().getColor(R.color.alert_red, null);
+    redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);
 
     setupAddBookBtnListener(view);

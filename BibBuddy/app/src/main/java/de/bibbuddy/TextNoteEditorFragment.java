@@ -191,7 +191,7 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void backgroundColorChange(ImageButton button) {
-    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.flirt_light));
+    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray_medium));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }

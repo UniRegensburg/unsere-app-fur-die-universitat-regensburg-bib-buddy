@@ -53,7 +53,7 @@ public class AuthorFormFragment extends Fragment {
 
     setInputText(view);
 
-    redColor = getResources().getColor(R.color.alert_red, null);
+    redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);
     setupAddAuthorBtnListener(view);
     ((MainActivity) getActivity()).setVisibilitySortButton(false);

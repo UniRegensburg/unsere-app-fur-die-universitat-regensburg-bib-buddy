@@ -39,7 +39,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/info_mandatory_author"
-                        android:textColor="@color/gray_btn" />
+                        android:textColor="@color/gray_dark" />
 
                 <TextView
                     android:id="@+id/author_form_title_text"

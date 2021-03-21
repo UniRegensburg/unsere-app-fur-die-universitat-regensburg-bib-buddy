@@ -25,7 +25,7 @@
             android:contentDescription="@string/format_options"
             android:scaleType="fitCenter"
             android:src="@drawable/text_format"
-            android:tint="@color/true_black" />
+            android:tint="@color/black" />
 
         <ImageButton
             android:id="@+id/formatArrow"
@@ -36,7 +36,7 @@
             android:contentDescription="@string/format_arrow"
             android:scaleType="fitCenter"
             android:src="@drawable/arrow_down"
-            android:tint="@color/true_black" />
+            android:tint="@color/black" />
 
     </LinearLayout>
 
@@ -52,7 +52,7 @@
             android:scrollbars="horizontal"
             android:translationZ="15dp"
             android:visibility="gone"
-            android:background="@color/flirt_dark">
+            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -65,7 +65,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/undo" />
+                    android:src="@drawable/undo"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_redo"
@@ -73,7 +74,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/redo" />
+                    android:src="@drawable/redo"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_bold"
@@ -81,7 +83,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/bold" />
+                    android:src="@drawable/bold"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_italic"
@@ -89,7 +92,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/italic" />
+                    android:src="@drawable/italic"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_strikeThrough"
@@ -97,7 +101,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/strike_through" />
+                    android:src="@drawable/strike_through"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_underline"
@@ -105,7 +110,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/underline" />
+                    android:src="@drawable/underline"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_insert_bullets"
@@ -113,7 +119,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/bullets" />
+                    android:src="@drawable/bullets"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_quote"
@@ -121,7 +128,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/quote" />
+                    android:src="@drawable/quote"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_alignLeft"
@@ -129,7 +137,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_left" />
+                    android:src="@drawable/align_left"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_alignRight"
@@ -137,7 +146,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_right" />
+                    android:src="@drawable/align_right"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_alignCenter"
@@ -145,7 +155,8 @@
                     android:layout_height="48dp"
                     android:background="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_center" />
+                    android:src="@drawable/align_center"
+                    android:tint="@color/black" />
 
             </LinearLayout>
 
@@ -162,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
-                app:bulletColor="@color/true_black"
+                app:bulletColor="@color/black"
                 app:bulletGapWidth="3dp"
                 app:bulletRadius="3dp"
                 app:layout_constrainedHeight="true" />

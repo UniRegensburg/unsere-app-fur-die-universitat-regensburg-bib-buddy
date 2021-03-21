@@ -44,7 +44,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.noteDao = new NoteDao(databaseHelper);
     background = new ColorDrawable();
-    backgroundColor = context.getColor(R.color.alert_red);
+    backgroundColor = context.getColor(R.color.red);
     clearPaint = new Paint();
     clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     Drawable d = context.getDrawable(R.drawable.delete);
