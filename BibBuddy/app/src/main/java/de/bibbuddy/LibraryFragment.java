@@ -305,7 +305,7 @@ public class LibraryFragment extends Fragment
   }
 
   private void setupAddShelfBtn() {
-    FloatingActionButton addShelfBtn = view.findViewById(R.id.btn_add_shelf);
+    FloatingActionButton addShelfBtn = view.findViewById(R.id.add_btn);
     createAddShelfListener(addShelfBtn);
   }
 

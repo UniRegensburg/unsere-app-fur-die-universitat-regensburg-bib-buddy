@@ -48,31 +48,23 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="end|bottom"
         >
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_add_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@android:dimen/thumbnail_width"
-            android:layout_marginBottom="@dimen/list_item_height"
-            android:clickable="true"
-            android:contentDescription="@string/add_author_btn"
-            android:focusable="true"
-            android:theme="@style/Button.Pink"
-            android:tooltipText="@string/add_author_tooltip"
-            app:maxImageSize="40dp"
-            app:srcCompat="@android:drawable/ic_input_add"
-            tools:targetApi="o"
-            />
+        <include
+                layout="@layout/add_button"
+                android:id="@+id/btn_add_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/btn_confirm_author"
+                android:contentDescription="@string/add_author_btn" />
 
         <include
                 layout="@layout/confirm_button"
+                android:id="@+id/btn_confirm_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/btn_add_author"
-                android:layout_marginStart="@android:dimen/app_icon_size"/>
+                android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

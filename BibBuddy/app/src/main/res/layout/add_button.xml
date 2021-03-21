@@ -7,15 +7,15 @@
         android:layout_gravity="end|bottom">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/confirm_btn"
+            android:id="@+id/add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:tooltipText="@string/confirm"
-            android:contentDescription="@string/confirm"
-            android:src="@drawable/ic_check"
-            app:tint="@color/tiffany"
+            android:tooltipText="@string/add"
+            android:contentDescription="@string/add"
+            android:src="@drawable/add"
+            app:tint="@color/flirt"
             app:backgroundTint="@color/white"
             app:useCompatPadding="true"
             tools:targetApi="o"

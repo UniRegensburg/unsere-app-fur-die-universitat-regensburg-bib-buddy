@@ -47,22 +47,15 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_note"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="30dp"
-        android:clickable="true"
-        android:contentDescription="@string/add_book"
-        android:focusable="true"
-        android:theme="@style/Button.Pink"
-        android:tooltipText="@string/add_book_tooltip"
-        app:maxImageSize="40dp"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:targetApi="o" />
+    <include
+            layout="@layout/add_button"
+            android:id="@+id/btn_add_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="end|bottom"
+            android:contentDescription="@string/add_book" />
+
 
 </RelativeLayout>

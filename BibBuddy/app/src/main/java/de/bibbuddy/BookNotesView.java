@@ -261,7 +261,7 @@ public class BookNotesView extends Fragment {
   }
 
   private void setupAddButton() {
-    View addButtonView = view.findViewById(R.id.btn_add_note);
+    View addButtonView = view.findViewById(R.id.add_btn);
     PopupMenu pm = new PopupMenu(getContext(), addButtonView);
     pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
 

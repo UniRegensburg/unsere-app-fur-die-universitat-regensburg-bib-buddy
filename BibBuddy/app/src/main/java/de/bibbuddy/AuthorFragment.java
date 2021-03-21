@@ -188,7 +188,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   private void createAddAuthorListener() {
-    FloatingActionButton addAuthorBtn = view.findViewById(R.id.btn_add_author);
+    FloatingActionButton addAuthorBtn = view.findViewById(R.id.add_btn);
 
     addAuthorBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -229,7 +229,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   private void confirmAuthorsBtnListener(View view) {
-    FloatingActionButton addBookBtn = view.findViewById(R.id.btn_confirm_authors);
+    FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
 
     addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override

@@ -161,7 +161,7 @@ public class BookFormFragment extends Fragment {
 
 
   private void setupAddBookBtnListener(View view) {
-    FloatingActionButton addBookBtn = view.findViewById(R.id.btn_book_form_add);
+    FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
 
     addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override

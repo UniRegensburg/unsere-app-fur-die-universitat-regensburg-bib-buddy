@@ -73,7 +73,7 @@ public class AuthorFormFragment extends Fragment {
   }
 
   private void setupAddAuthorBtnListener(View view) {
-    FloatingActionButton addAuthorBtn = view.findViewById(R.id.author_form_add_author_btn);
+    FloatingActionButton addAuthorBtn = view.findViewById(R.id.confirm_btn);
 
     addAuthorBtn.setOnClickListener(new View.OnClickListener() {
       @Override
