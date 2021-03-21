@@ -57,7 +57,7 @@ public class TextNoteEditorFragment extends Fragment {
     });
 
     ((MainActivity) requireActivity())
-        .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+        .setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     setHasOptionsMenu(true);
@@ -191,7 +191,7 @@ public class TextNoteEditorFragment extends Fragment {
   }
 
   private void backgroundColorChange(ImageButton button) {
-    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.flirt_light));
+    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }

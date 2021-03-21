@@ -74,7 +74,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
     filterCriteria = new boolean[] {true, true, true}; // search for shelves, books and notes
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     setupSortBtn();
 
     return view;

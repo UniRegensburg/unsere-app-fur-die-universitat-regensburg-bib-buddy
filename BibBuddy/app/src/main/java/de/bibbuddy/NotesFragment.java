@@ -44,7 +44,7 @@ public class NotesFragment extends Fragment {
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
 
     ((MainActivity) requireActivity())
-        .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+        .setVisibilityImportShareButton(View.GONE, View.GONE);
     setupSortBtn();
     setHasOptionsMenu(true);
     setupRecyclerView();

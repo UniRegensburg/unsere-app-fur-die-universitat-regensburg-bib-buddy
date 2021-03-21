@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/info_mandatory"
-                    android:textColor="@color/gray_btn" />
+                    android:textColor="@color/gray_dark" />
 
             <TextView
                 android:id="@+id/book_form_title"
@@ -201,20 +201,11 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_book_form_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@android:dimen/app_icon_size"
-        android:clickable="true"
-        android:contentDescription="@string/confirm"
-        android:focusable="true"
-        android:theme="@style/Button.Mint"
-        android:tooltipText="@string/confirm"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_check"
-        tools:targetApi="o"
-        />
+    <include
+            layout="@layout/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

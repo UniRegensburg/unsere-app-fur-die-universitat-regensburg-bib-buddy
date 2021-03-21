@@ -313,7 +313,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         if (span.equals(RichTextEditorQuoteSpan.class)) {
           styleValid(FORMAT_ITALIC, start, end);
           getEditableText().setSpan(
-              new BackgroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray_quote)),
+              new BackgroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray)),
               start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
       }
@@ -610,7 +610,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     if (quote) {
       valid(containFormat(RichTextEditorQuoteSpan.class), new RichTextEditorQuoteSpan());
       styleValid(FORMAT_ITALIC, lastCursorPosition, endOfString);
-      str.setSpan(new BackgroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray_quote)),
+      str.setSpan(new BackgroundColorSpan(ContextCompat.getColor(getContext(), R.color.gray)),
           lastCursorPosition, endOfString, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
     if (alignmentLeft) {

@@ -17,7 +17,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="15dp"
             android:fillViewport="true"
             android:orientation="vertical"
@@ -39,7 +39,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/info_mandatory_author"
-                        android:textColor="@color/gray_btn" />
+                        android:textColor="@color/gray_dark" />
 
                 <TextView
                     android:id="@+id/author_form_title_text"
@@ -98,21 +98,11 @@
                     android:inputType="text"
                     />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/author_form_add_author_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginTop="20dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/confirm"
-                    android:focusable="true"
-                    android:theme="@style/Button.Mint"
-                    android:tooltipText="@string/confirm"
-                    app:maxImageSize="40dp"
-                    app:srcCompat="@drawable/ic_check"
-                    tools:targetApi="o"
-                    />
+                <include
+                        layout="@layout/confirm_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"/>
 
             </LinearLayout>
 

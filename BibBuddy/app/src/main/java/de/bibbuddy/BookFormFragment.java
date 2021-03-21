@@ -75,7 +75,7 @@ public class BookFormFragment extends Fragment {
         }
 
         ((MainActivity) requireActivity())
-            .setVisibilityImportShareButton(View.INVISIBLE, View.INVISIBLE);
+            .setVisibilityImportShareButton(View.GONE, View.GONE);
 
         ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
         ((MainActivity) getActivity()).setVisibilitySortButton(false);
@@ -90,7 +90,7 @@ public class BookFormFragment extends Fragment {
       setupAddAuthorBtnListener(view);
     }
 
-    redColor = getResources().getColor(R.color.alert_red, null);
+    redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);
 
     setupAddBookBtnListener(view);
@@ -161,7 +161,7 @@ public class BookFormFragment extends Fragment {
 
 
   private void setupAddBookBtnListener(View view) {
-    FloatingActionButton addBookBtn = view.findViewById(R.id.btn_book_form_add);
+    FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
 
     addBookBtn.setOnClickListener(new View.OnClickListener() {
       @Override

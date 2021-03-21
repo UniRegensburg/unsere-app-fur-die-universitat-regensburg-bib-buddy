@@ -5,24 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="150dp"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
     android:translationY="80dp">
 
     <TextView
         android:id="@+id/empty_notes_list_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="58dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
         android:visibility="gone" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="https://schemas.android.com/tools"
         android:id="@+id/coordinatorLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".NotesFragment">
 

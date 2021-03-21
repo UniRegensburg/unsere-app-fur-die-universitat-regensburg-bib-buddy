@@ -22,7 +22,7 @@ public class RichTextEditorQuoteSpan extends QuoteSpan {
    * Constructor to setup default color, stripeWidth and gapWidth for quotes.
    */
   public RichTextEditorQuoteSpan() {
-    this.quoteColor = R.color.gray_background;
+    this.quoteColor = R.color.gray_dark;
   }
 
   /**

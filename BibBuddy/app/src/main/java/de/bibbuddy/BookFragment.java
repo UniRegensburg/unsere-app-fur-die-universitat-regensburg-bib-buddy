@@ -199,7 +199,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         break;
 
       default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -536,7 +536,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void createAddBookListener() {
-    FloatingActionButton addBookBtn = view.findViewById(R.id.btn_add_book);
+    FloatingActionButton addBookBtn = view.findViewById(R.id.add_btn);
     PopupMenu pm = new PopupMenu(getContext(), addBookBtn);
     pm.getMenuInflater().inflate(R.menu.add_book_menu, pm.getMenu());
 

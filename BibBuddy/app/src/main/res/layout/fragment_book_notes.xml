@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="75dp"
-    android:layout_marginTop="58dp">
+    android:layout_marginTop="40dp">
 
     <TextView
         android:id="@+id/empty_note_list_view"
@@ -26,12 +26,15 @@
         android:id="@+id/book_notes_coordinator_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         tools:context=".NotesFragment">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/book_notes_nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
             android:adjustViewBounds="true">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -47,22 +50,15 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_note"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="30dp"
-        android:clickable="true"
-        android:contentDescription="@string/add_book"
-        android:focusable="true"
-        android:theme="@style/Button.Pink"
-        android:tooltipText="@string/add_book_tooltip"
-        app:maxImageSize="40dp"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:targetApi="o" />
+    <include
+            layout="@layout/add_button"
+            android:id="@+id/btn_add_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="end|bottom"
+            android:contentDescription="@string/add_book" />
+
 
 </RelativeLayout>

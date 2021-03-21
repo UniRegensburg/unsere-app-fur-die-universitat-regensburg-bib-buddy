@@ -53,7 +53,7 @@ public class AuthorFormFragment extends Fragment {
 
     setInputText(view);
 
-    redColor = getResources().getColor(R.color.alert_red, null);
+    redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);
     setupAddAuthorBtnListener(view);
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
@@ -73,7 +73,7 @@ public class AuthorFormFragment extends Fragment {
   }
 
   private void setupAddAuthorBtnListener(View view) {
-    FloatingActionButton addAuthorBtn = view.findViewById(R.id.author_form_add_author_btn);
+    FloatingActionButton addAuthorBtn = view.findViewById(R.id.confirm_btn);
 
     addAuthorBtn.setOnClickListener(new View.OnClickListener() {
       @Override

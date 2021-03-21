@@ -9,6 +9,8 @@
     <string name="description_text_note">Ein schwarz-weißes Icon von einem Blatt Papier mit einem Knick in der oberen rechten Ecke.</string>
     <string name="description_book">Ein schwarz-weißes Icon von einem geschlossenen Buch, das auf dem Rücken liegt.</string>
     <string name="description_note">Ein schwarz-weißes Icon von einem schrägen Stift, das Notizen symbolisiert.</string>
+    <string name="description_library">Ein schwarz-weißes Icon von drei aneinander gelehnten Büchern.</string>
+    <string name="description_person">Ein schwarz-weißes Icon von einer Büste, die eine Person symbolisiert.</string>
 
     <!-- Navigation Items -->
     <string name="navigation_home">Home</string>

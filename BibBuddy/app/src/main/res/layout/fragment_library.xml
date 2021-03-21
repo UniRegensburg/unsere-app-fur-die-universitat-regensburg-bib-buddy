@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="75dp"
-    android:layout_marginTop="58dp">
+    android:layout_marginTop="40dp">
 
     <TextView
         android:id="@+id/list_view_library_empty"
@@ -32,27 +32,20 @@
         android:id="@+id/library_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="60dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
         android:clipToPadding="false"
         android:orientation="vertical"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add_shelf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="25dp"
-        android:layout_marginEnd="30dp"
-        android:clickable="true"
-        android:contentDescription="@string/add_shelf"
-        android:tooltipText="@string/add_shelf_tooltip"
-        android:focusable="true"
-        android:theme="@style/Button.Pink"
-        app:maxImageSize="40dp"
-        app:srcCompat="@android:drawable/ic_input_add"
-        tools:targetApi="o"
-        />
+    <include
+            layout="@layout/add_button"
+            android:id="@+id/btn_add_shelf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:contentDescription="@string/add_shelf" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

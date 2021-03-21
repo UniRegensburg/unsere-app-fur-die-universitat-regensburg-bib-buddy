@@ -71,7 +71,7 @@ public class LibraryFragment extends Fragment
     setupRecyclerView();
     setupAddShelfBtn();
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.INVISIBLE, View.VISIBLE);
+    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
     setFunctionsToolbar();
@@ -305,7 +305,7 @@ public class LibraryFragment extends Fragment
   }
 
   private void setupAddShelfBtn() {
-    FloatingActionButton addShelfBtn = view.findViewById(R.id.btn_add_shelf);
+    FloatingActionButton addShelfBtn = view.findViewById(R.id.add_btn);
     createAddShelfListener(addShelfBtn);
   }
 
