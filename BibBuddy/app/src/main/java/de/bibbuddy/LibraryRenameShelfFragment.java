@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -30,6 +31,13 @@ public class LibraryRenameShelfFragment extends DialogFragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        closeFragment();
+      }
+    });
+
     // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_library_rename_shelf, container, false);
 
@@ -45,8 +53,6 @@ public class LibraryRenameShelfFragment extends DialogFragment {
 
   /**
    * Closes the LibraryRenameShelfFragment.
-   *
-   * @author Claudia Schönherr
    */
   public void closeFragment() {
     onDestroyView();
@@ -99,8 +105,8 @@ public class LibraryRenameShelfFragment extends DialogFragment {
     });
   }
 
-  public interface RenameShelfLibraryListener { // create an interface
-    void onShelfRenamed(String name); // create callback function
+  public interface RenameShelfLibraryListener {
+    void onShelfRenamed(String name);
   }
 
 }

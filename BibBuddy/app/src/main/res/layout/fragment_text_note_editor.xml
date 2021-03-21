@@ -63,7 +63,7 @@
                     android:id="@+id/action_undo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/undo"
                     android:tint="@color/black" />
@@ -72,7 +72,7 @@
                     android:id="@+id/action_redo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/redo"
                     android:tint="@color/black" />
@@ -81,7 +81,7 @@
                     android:id="@+id/action_bold"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/bold"
                     android:tint="@color/black" />
@@ -90,7 +90,7 @@
                     android:id="@+id/action_italic"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/italic"
                     android:tint="@color/black" />
@@ -99,7 +99,7 @@
                     android:id="@+id/action_strikeThrough"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/strike_through"
                     android:tint="@color/black" />
@@ -108,7 +108,7 @@
                     android:id="@+id/action_underline"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/underline"
                     android:tint="@color/black" />
@@ -117,7 +117,7 @@
                     android:id="@+id/action_insert_bullets"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/bullets"
                     android:tint="@color/black" />
@@ -126,7 +126,7 @@
                     android:id="@+id/action_quote"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/quote"
                     android:tint="@color/black" />
@@ -135,7 +135,7 @@
                     android:id="@+id/action_alignLeft"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/align_left"
                     android:tint="@color/black" />
@@ -144,7 +144,7 @@
                     android:id="@+id/action_alignRight"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/align_right"
                     android:tint="@color/black" />
@@ -153,7 +153,7 @@
                     android:id="@+id/action_alignCenter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
                     android:src="@drawable/align_center"
                     android:tint="@color/black" />

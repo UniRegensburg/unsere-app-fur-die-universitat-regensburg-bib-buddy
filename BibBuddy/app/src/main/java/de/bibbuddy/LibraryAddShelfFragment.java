@@ -89,8 +89,8 @@ public class LibraryAddShelfFragment extends DialogFragment {
     });
   }
 
-  public interface AddShelfLibraryListener { // create an interface
-    void onShelfAdded(String name, Long shelfId); // create callback function
+  public interface AddShelfLibraryListener {
+    void onShelfAdded(String name, Long shelfId);
   }
 
 }

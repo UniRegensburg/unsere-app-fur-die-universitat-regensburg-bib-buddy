@@ -58,9 +58,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
-
-  private boolean isImport = false; // it is either import or export
-
   private SortCriteria sortCriteria;
 
   @Nullable
@@ -71,13 +68,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -120,6 +111,18 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     selectedBookItems = new ArrayList<>();
 
     return view;
+  }
+
+  /**
+   * Closes the BookFragment.
+   */
+  public void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   private void setupSortBtn() {
@@ -174,6 +177,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+    // it is either import or export
+    boolean isImport = false;
 
     switch (item.getItemId()) {
       case R.id.menu_change_book_data:
@@ -185,7 +190,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         break;
 
       case R.id.menu_export_shelf:
-        isImport = false;
         checkEmptyShelf();
         break;
 

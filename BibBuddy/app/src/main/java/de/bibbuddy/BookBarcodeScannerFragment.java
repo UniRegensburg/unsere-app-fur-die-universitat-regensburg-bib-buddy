@@ -36,36 +36,25 @@ public class BookBarcodeScannerFragment extends Fragment
   private SurfaceView surfaceView;
   private CameraSource cameraSource;
   private BarcodeDetector barcodeDetector;
-  private IsbnRetriever isbnRetriever;
-  private Thread thread;
-
   private Long shelfId;
-  private String shelfName;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
-
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
+
+    View view = inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
 
     surfaceView = view.findViewById(R.id.surface_view);
     Bundle bundle = getArguments();
 
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-    shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
 
     setupDetectorsAndSources(view);
     ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
@@ -134,8 +123,8 @@ public class BookBarcodeScannerFragment extends Fragment
     String cleanIsbn = isbn.replaceAll("\\s", "");
 
     if (DataValidation.isValidIsbn10or13(cleanIsbn)) {
-      isbnRetriever = new IsbnRetriever(cleanIsbn);
-      thread = new Thread(isbnRetriever);
+      IsbnRetriever isbnRetriever = new IsbnRetriever(cleanIsbn);
+      Thread thread = new Thread(isbnRetriever);
       thread.start();
 
       try {
@@ -147,11 +136,10 @@ public class BookBarcodeScannerFragment extends Fragment
       // retrieve metadata that was saved
       Book book = isbnRetriever.getBook();
       List<Author> authors = isbnRetriever.getAuthors();
-      closeFragment();
+
       if (book != null) {
         handleAddBook(book, authors);
       } else {
-
         requireActivity().runOnUiThread(new Runnable() {
           public void run() {
             Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
@@ -191,37 +179,16 @@ public class BookBarcodeScannerFragment extends Fragment
       }
     });
 
-    closeFragmentAfterAdding();
+    closeFragment();
   }
 
   private void closeFragment() {
-    BookFragment fragment = new BookFragment();
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
-
-    fragment.setArguments(createBookBundle());
-  }
-
-  private void closeFragmentAfterAdding() {
     FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 1) {
-      fragmentManager.popBackStack();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
       fragmentManager.popBackStack();
     } else {
       requireActivity().onBackPressed();
-      requireActivity().onBackPressed();
     }
-  }
-
-  private Bundle createBookBundle() {
-    Bundle bundle = new Bundle();
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-
-    return bundle;
   }
 
   @Override

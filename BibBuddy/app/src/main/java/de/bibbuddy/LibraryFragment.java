@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
@@ -32,8 +33,6 @@ import java.util.List;
  */
 public class LibraryFragment extends Fragment
     implements LibraryRecyclerViewAdapter.LibraryListener {
-
-  private final String fileName = "library_export_BibBuddy";
 
   private View view;
   private Context context;
@@ -57,8 +56,7 @@ public class LibraryFragment extends Fragment
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        requireActivity().finish();
-        requireActivity().moveTaskToBack(true);
+        closeFragment();
       }
     });
 
@@ -81,6 +79,7 @@ public class LibraryFragment extends Fragment
     selectedShelfItems = new ArrayList<ShelfItem>();
     bookDao = libraryModel.getBookDao();
     noteDao = libraryModel.getNoteDao();
+    String fileName = "library_export_BibBuddy";
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
 
@@ -108,6 +107,18 @@ public class LibraryFragment extends Fragment
       }
     });
 
+  }
+
+  /**
+   * Closes the LibraryFragment.
+   */
+  public void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   @Override

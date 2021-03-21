@@ -30,13 +30,7 @@ public class HelpFragment extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -58,6 +52,18 @@ public class HelpFragment extends Fragment {
     manualView.setText(styledText);
 
     return view;
+  }
+
+  /**
+   * Closes the HelpFragment.
+   */
+  public void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
 }

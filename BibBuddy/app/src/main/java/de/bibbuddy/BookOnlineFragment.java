@@ -24,12 +24,8 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
   private View view;
 
-  private Thread thread;
-  private IsbnRetriever isbnRetriever;
   private EditText searchFieldText;
-
   private Long shelfId;
-  private String shelfName;
 
   @Nullable
   @Override
@@ -40,13 +36,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -54,7 +44,6 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     setupSearchButton();
 
     Bundle bundle = this.getArguments();
-    shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
@@ -63,19 +52,10 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     return view;
   }
 
-  private Bundle createBookBundle() {
-    Bundle bundle = new Bundle();
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-
-    return bundle;
-  }
-
-  private void closeFragmentAfterAdding() {
-    Fragment fragment =
-        requireActivity().getSupportFragmentManager().findFragmentByTag(LibraryKeys.FRAGMENT_BOOK);
-    requireActivity().getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-
+  /**
+   * Closes the BookOnlineFragment.
+   */
+  public void closeFragment() {
     FragmentManager fragmentManager = getParentFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
       fragmentManager.popBackStack();
@@ -88,8 +68,8 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     String textInput = searchFieldText.getText().toString().replaceAll("\\s", "");
 
     if (DataValidation.isValidIsbn10or13(textInput)) {
-      isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
-      thread = new Thread(isbnRetriever);
+      IsbnRetriever isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
+      Thread thread = new Thread(isbnRetriever);
       thread.start();
 
       try {
@@ -134,7 +114,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
       }
     });
 
-    closeFragmentAfterAdding();
+    closeFragment();
   }
 
   private void setupSearchButton() {

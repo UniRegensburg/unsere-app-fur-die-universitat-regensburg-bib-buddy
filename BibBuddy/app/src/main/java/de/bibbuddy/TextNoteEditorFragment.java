@@ -47,12 +47,7 @@ public class TextNoteEditorFragment extends Fragment {
       @Override
       public void handleOnBackPressed() {
         saveNote();
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -61,6 +56,18 @@ public class TextNoteEditorFragment extends Fragment {
     ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     setHasOptionsMenu(true);
+  }
+
+  /**
+   * Closes the TextNoteEditorFragment.
+   */
+  public void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   @Override

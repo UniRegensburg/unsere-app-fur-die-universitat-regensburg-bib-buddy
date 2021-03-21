@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
@@ -35,6 +37,13 @@ public class NotesFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
+      @Override
+      public void handleOnBackPressed() {
+        closeFragment();
+      }
+    });
+
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
 
     noteModel = new NoteModel(getContext());
@@ -50,6 +59,19 @@ public class NotesFragment extends Fragment {
     setupRecyclerView();
 
     return view;
+  }
+
+
+  /**
+   * Closes the NotesFragment.
+   */
+  private void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   @Override

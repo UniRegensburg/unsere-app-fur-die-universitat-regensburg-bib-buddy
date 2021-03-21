@@ -44,8 +44,6 @@ public class BookNotesView extends Fragment {
   private NoteDao noteDao;
 
   private ExportBibTex exportBibTex;
-  private String fileName;
-
   private SortCriteria sortCriteria;
 
 
@@ -57,13 +55,7 @@ public class BookNotesView extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        FragmentManager fm = getParentFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-          fm.popBackStack();
-        } else {
-          requireActivity().onBackPressed();
-        }
+        closeFragment();
       }
     });
 
@@ -94,12 +86,24 @@ public class BookNotesView extends Fragment {
     bookDao = bookNotesViewModel.getBookDao();
     noteDao = bookNotesViewModel.getNoteDao();
 
-    fileName = (bookDao.findById(bookId).getTitle()
+    String fileName = (bookDao.findById(bookId).getTitle()
         + bookDao.findById(bookId).getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
     return view;
+  }
+
+  /**
+   * Closes the BookNotesViewFragment.
+   */
+  public void closeFragment() {
+    FragmentManager fragmentManager = getParentFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      requireActivity().onBackPressed();
+    }
   }
 
   private void setupSortBtn() {

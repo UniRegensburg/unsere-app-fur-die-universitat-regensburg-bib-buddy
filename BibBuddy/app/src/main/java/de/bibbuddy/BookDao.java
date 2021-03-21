@@ -228,7 +228,6 @@ public class BookDao implements InterfaceBookDao {
           .filter(id -> !existingAuthorIds.contains(id))
           .forEach(id -> insertAuthorBookLink(db, bookId, id));
     } catch (SQLException ex) {
-      // TODO error handling
       ex.printStackTrace();
     } finally {
       db.close();
