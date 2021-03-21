@@ -131,9 +131,9 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     searchModel = new SearchModel(context);
     searchResultList = new ArrayList<>();
 
-    // TODO String is always empty when this fragment is newly created even if the text is filled in
-    if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
-      searchItems();
+    String searchText = ((MainActivity) requireActivity()).getSearchText();
+    if (!DataValidation.isStringEmpty(searchText)) {
+      searchItems(searchText);
     }
 
     adapter = new SearchRecyclerViewAdapter(searchResultList, this);
@@ -160,7 +160,9 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     searchBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        searchItems();
+        String searchText = searchInput.getText().toString();
+        ((MainActivity) requireActivity()).setSearchText(searchText);
+        searchItems(searchText);
       }
     });
   }
@@ -183,22 +185,23 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        searchItems();
+        String searchText = searchInput.getText().toString();
+        ((MainActivity) requireActivity()).setSearchText(searchText);
+        searchItems(searchText);
+
         return false;
       }
     });
   }
 
-  private void searchItems() {
-    String searchInputStr = searchInput.getText().toString();
-
-    if (DataValidation.isStringEmpty(searchInputStr)) {
+  private void searchItems(String searchText) {
+    if (DataValidation.isStringEmpty(searchText)) {
       Toast.makeText(context, R.string.search_invalid_name, Toast.LENGTH_SHORT).show();
       return;
     }
 
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
-    updateSearchResultList(searchInputStr);
+    updateSearchResultList(searchText);
   }
 
   private void updateSearchResultList(String searchInputStr) {

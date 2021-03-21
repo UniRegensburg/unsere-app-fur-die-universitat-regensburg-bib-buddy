@@ -2,7 +2,6 @@ package de.bibbuddy;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
   private NotesFragment notesFragment;
 
   private SortCriteria sortCriteria;
+  private String searchText;
 
   public ImageButton importBtn;
   public ImageButton shareBtn;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
     sortBtn = findViewById(R.id.sort_btn);
+    searchText = "";
   }
 
   private void setupBottomNavigationView() {
@@ -170,6 +171,14 @@ public class MainActivity extends AppCompatActivity {
 
   public void setSortCriteria(SortCriteria sortCriteria) {
     this.sortCriteria = sortCriteria;
+  }
+
+  public String getSearchText() {
+    return searchText;
+  }
+
+  public void setSearchText(String searchText) {
+    this.searchText = searchText;
   }
 
 }
