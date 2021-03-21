@@ -2,7 +2,6 @@ package de.bibbuddy;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,20 +17,19 @@ public class MainActivity extends AppCompatActivity {
   private final String searchFragmentTag = "search";
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
+  public ImageButton importBtn;
+  public ImageButton shareBtn;
+  public ImageButton sortBtn;
   BottomNavigationView bottomNavigationView;
   FragmentManager fragmentManager;
   DatabaseHelper dbHelper;
-
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
   private NotesFragment notesFragment;
-
   private SortCriteria sortCriteria;
-
-  public ImageButton importBtn;
-  public ImageButton shareBtn;
-  public ImageButton sortBtn;
+  private boolean[] filterCriteria;
+  private String searchText;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
 
     sortCriteria = SortCriteria.MOD_DATE_LATEST;
     sortBtn = findViewById(R.id.sort_btn);
+
+    filterCriteria = new boolean[] {true, true, true};
+
+    searchText = "";
   }
 
   private void setupBottomNavigationView() {
@@ -140,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Shows/ hides the import and share buttons on the toolbar.
    *
-   * @param visibilityImport  visibility of the import button
-   * @param visibilityShare   visibility of the share button
+   * @param visibilityImport visibility of the import button
+   * @param visibilityShare  visibility of the share button
    */
   public void setVisibilityImportShareButton(int visibilityImport, int visibilityShare) {
     importBtn = findViewById(R.id.import_btn);
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Shows or hides the sort button of the toolbar.
    *
-   * @param isVisible  if the button should be visible or not
+   * @param isVisible if the button should be visible or not
    */
   public void setVisibilitySortButton(boolean isVisible) {
     if (isVisible) {
@@ -172,4 +174,19 @@ public class MainActivity extends AppCompatActivity {
     this.sortCriteria = sortCriteria;
   }
 
+  public String getSearchText() {
+    return searchText;
+  }
+
+  public void setSearchText(String searchText) {
+    this.searchText = searchText;
+  }
+
+  public boolean[] getFilterCriteria() {
+    return filterCriteria;
+  }
+
+  public void setFilterCriteria(int choice, boolean isChecked) {
+    filterCriteria[choice] = isChecked;
+  }
 }
