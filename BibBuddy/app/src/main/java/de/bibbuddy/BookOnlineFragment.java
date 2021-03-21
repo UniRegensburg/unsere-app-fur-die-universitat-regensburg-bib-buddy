@@ -22,16 +22,16 @@ import java.util.List;
  */
 public class BookOnlineFragment extends Fragment implements BookFormFragment.ChangeBookListener {
 
+  private View view;
 
   private EditText searchFieldText;
   private Long shelfId;
-  private String shelfName;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_book_online, container, false);
+    view = inflater.inflate(R.layout.fragment_book_online, container, false);
 
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
@@ -44,7 +44,6 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     setupSearchButton();
 
     Bundle bundle = this.getArguments();
-    shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
@@ -69,8 +68,8 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     String textInput = searchFieldText.getText().toString().replaceAll("\\s", "");
 
     if (DataValidation.isValidIsbn10or13(textInput)) {
-          IsbnRetriever isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
-          Thread thread = new Thread(isbnRetriever);
+      IsbnRetriever isbnRetriever = new IsbnRetriever(searchFieldText.getText().toString());
+      Thread thread = new Thread(isbnRetriever);
       thread.start();
 
       try {
