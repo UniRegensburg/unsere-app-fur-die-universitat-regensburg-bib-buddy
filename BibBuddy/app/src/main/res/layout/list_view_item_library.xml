@@ -5,45 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    card_view:cardBackgroundColor="@color/library_item_selector"
-    card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="2dp">
+    android:background="@drawable/rounded_corners"
+    card_view:cardElevation="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_margin="15dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/library_icon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:contentDescription="TODO"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/description_library"
             android:padding="5dp"
             android:visibility="gone" />
 
 
         <ImageView
             android:id="@+id/image_note"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_below="@+id/item_name"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="2dp"
             android:contentDescription="@string/description_note"
-            android:src="@drawable/pen">
-
-        </ImageView>
+            android:src="@drawable/pen" />
 
         <ImageView
-            android:id="@+id/image_book"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/image_books"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_below="@+id/item_name"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="2dp"
             android:layout_toEndOf="@+id/note_count"
-            android:contentDescription="@string/description_book"
+            android:contentDescription="@string/description_library"
             android:src="@drawable/books" />
 
         <TextView
@@ -53,8 +51,8 @@
             android:layout_below="@+id/item_name"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/image_note"
-            android:padding="2dp"
             android:text="@string/navigation_notes"
+            android:textSize="15dp"
             android:textColor="@color/black" />
 
         <TextView
@@ -76,9 +74,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_name"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/image_book"
+            android:layout_toEndOf="@+id/image_books"
             android:padding="2dp"
             android:text="@string/book"
+            android:textSize="15dp"
             android:textColor="@color/black" />
 
     </RelativeLayout>

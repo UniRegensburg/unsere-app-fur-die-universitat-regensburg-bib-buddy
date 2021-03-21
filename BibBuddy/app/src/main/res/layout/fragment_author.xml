@@ -6,7 +6,7 @@
     android:id="@+id/fragment_author"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="58dp"
+    android:layout_marginTop="40dp"
     android:layout_marginBottom="75dp"
     >
 
@@ -36,7 +36,9 @@
         android:id="@+id/author_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="60dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:clipToPadding="false"
         android:orientation="vertical"
         android:scrollbars="vertical"

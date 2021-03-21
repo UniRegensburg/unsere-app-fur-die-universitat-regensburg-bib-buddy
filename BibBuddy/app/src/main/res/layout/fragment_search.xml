@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp" />
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp" />
 
         <ImageButton
                 android:id="@+id/filter_btn"
@@ -32,7 +32,7 @@
                 android:tint="@color/tiffany"
                 android:background="#80ffffff"
                 android:layout_below="@+id/search_bar"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 app:layout_constraintTop_toBottomOf="@+id/search_bar" />
 
         <TextView
@@ -50,8 +50,8 @@
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_below="@id/filter_btn"
             android:layout_gravity="bottom"
             android:clipToPadding="false"
