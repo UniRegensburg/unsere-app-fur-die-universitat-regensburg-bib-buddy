@@ -199,7 +199,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         break;
 
       default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);

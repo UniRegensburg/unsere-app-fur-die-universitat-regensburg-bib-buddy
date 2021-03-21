@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="75dp"
-    android:layout_marginTop="58dp">
+    android:layout_marginTop="40dp">
 
     <TextView
         android:id="@+id/empty_note_list_view"
@@ -26,12 +26,15 @@
         android:id="@+id/book_notes_coordinator_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         tools:context=".NotesFragment">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/book_notes_nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
             android:adjustViewBounds="true">
 
             <androidx.recyclerview.widget.RecyclerView
