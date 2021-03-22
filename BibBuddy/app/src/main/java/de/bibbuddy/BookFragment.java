@@ -456,7 +456,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(), new String[] {
-                Manifest.permission.READ_EXTERNAL_STORAGE},
+            Manifest.permission.READ_EXTERNAL_STORAGE},
             StorageKeys.STORAGE_PERMISSION_CODE));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
