@@ -130,10 +130,6 @@ public class LibraryFragment extends Fragment
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.menu_export_library:
-        checkEmptyLibrary();
-        break;
-
       case R.id.menu_rename_shelf:
         handleRenameShelf();
         break;
@@ -446,10 +442,10 @@ public class LibraryFragment extends Fragment
 
     Intent shareLibraryIntent =
         ShareCompat.IntentBuilder.from(getActivity())
-        .setStream(contentUri)
-        .setType("text/*")
-        .getIntent()
-        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            .setStream(contentUri)
+            .setType("text/*")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     startActivity(Intent.createChooser(shareLibraryIntent, "SEND"));
 

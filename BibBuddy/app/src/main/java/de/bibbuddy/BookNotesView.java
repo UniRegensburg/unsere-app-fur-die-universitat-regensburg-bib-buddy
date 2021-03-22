@@ -145,8 +145,6 @@ public class BookNotesView extends Fragment {
     int itemId = item.getItemId();
     if (itemId == R.id.menu_delete_note) {
       handleDeleteNote();
-    } else if (itemId == R.id.menu_export_note) {
-      checkEmptyNoteList();
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
     }
