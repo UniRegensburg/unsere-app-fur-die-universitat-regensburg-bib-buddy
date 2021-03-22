@@ -39,7 +39,6 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   @Override
   public void onProgressChanged(SeekBar seekBar, int progress,
                                 boolean fromUser) {
-    // TODO Auto-generated method stub
     if (fromUser) {
       mediaPlayer.seekTo(progress);
     }
@@ -47,13 +46,13 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
 
   @Override
   public void onStartTrackingTouch(SeekBar seekBar) {
-    // TODO Auto-generated method stub
+    //Auto-generated method stub
 
   }
 
   @Override
   public void onStopTrackingTouch(SeekBar seekBar) {
-    // TODO Auto-generated method stub
+    //Auto-generated method stub
   }
 
   /**
