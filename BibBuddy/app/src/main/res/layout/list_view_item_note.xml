@@ -15,6 +15,31 @@
         android:layout_margin="15dp"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/play_note"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/stop_note"
+            android:background="@null"
+            android:contentDescription="@string/play_button_note"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_play"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/stop_note"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="30dp"
+            android:layout_toStartOf="@+id/noteType"
+            android:background="@null"
+            android:contentDescription="@string/stop_button_note"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_stop"
+            android:visibility="gone" />
+
         <ImageView
                 android:id="@+id/noteType"
                 android:layout_width="50dp"
@@ -42,4 +67,39 @@
                 android:textSize="12sp" />
 
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/voice_note_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/playedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progressBar"
+            android:text="@string/default_played_timer"
+            android:textSize="12sp"
+            android:translationX="230dp"
+            android:translationY="-10dp" />
+
+        <TextView
+            android:id="@+id/totalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/progressBar"
+            android:textSize="12sp"
+            android:translationX="365dp"
+            android:translationY="-10dp" />
+
+        <app.minimize.com.seek_bar_compat.SeekBarCompat
+            android:id="@+id/progressBar"
+            android:layout_width="170dp"
+            android:layout_height="35dp"
+            android:layout_centerInParent="true"
+            android:translationX="30dp" />
+
+    </RelativeLayout>
+
 </androidx.cardview.widget.CardView>
