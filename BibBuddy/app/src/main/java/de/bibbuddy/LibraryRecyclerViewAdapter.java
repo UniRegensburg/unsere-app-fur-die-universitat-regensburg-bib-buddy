@@ -15,7 +15,7 @@ import java.util.List;
  * The LibraryRecyclerViewAdapter provides a binding from the libraryList to the view
  * that is displayed within the RecyclerView of the LibraryFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Luis Moßburger
  */
 public class LibraryRecyclerViewAdapter
     extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.LibraryViewHolder> {

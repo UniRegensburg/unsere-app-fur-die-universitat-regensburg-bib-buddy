@@ -22,7 +22,7 @@ public class AuthorRecyclerViewAdapter
    * AuthorRecyclerViewAdapter provides a binding from the authorList to the view
    * that is displayed within the RecyclerView of the AuthorFragment.
    *
-   * @author Sarah Kurek
+   * @author Sarah Kurek, Luis Moßburger
    */
   public AuthorRecyclerViewAdapter(AuthorListener listener,
                                    List<Author> authorList) {

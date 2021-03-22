@@ -15,7 +15,7 @@ import java.util.List;
  * Custom RecyclerViewAdapter provides a binding from the bookList to the view
  * that is displayed within the RecyclerView of the BookFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Luis Moßburger
  */
 
 public class BookRecyclerViewAdapter

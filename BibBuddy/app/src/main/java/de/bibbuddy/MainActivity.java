@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
   BottomNavigationView bottomNavigationView;
   FragmentManager fragmentManager;
   DatabaseHelper dbHelper;
+  private ImageButton logoButton;
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+    logoButton = findViewById(R.id.headerLogo);
     bottomNavigationView = findViewById(R.id.bottom_navigation);
     fragmentManager = getSupportFragmentManager();
 
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
       updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
     }
 
+    setupLogoButton();
     setupBottomNavigationView();
 
     dbHelper = new DatabaseHelper(this);
@@ -96,6 +99,18 @@ public class MainActivity extends AppCompatActivity {
       }
 
       return true;
+    });
+  }
+
+  private void setupLogoButton() {
+    logoButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (homeFragment == null) {
+          homeFragment = new HomeFragment();
+        }
+        updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+      }
     });
   }
 

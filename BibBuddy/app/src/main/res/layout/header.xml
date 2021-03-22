@@ -13,10 +13,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
+        <ImageButton
                 android:id="@+id/headerLogo"
                 android:layout_width="37dp"
                 android:layout_height="37dp"
+                android:scaleType="centerInside"
+                android:background="@color/white"
                 android:contentDescription="@string/description_logo"
                 app:srcCompat="@drawable/bibbuddy_icon"
                 app:layout_constraintStart_toStartOf="parent"
@@ -87,4 +89,3 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>
-
