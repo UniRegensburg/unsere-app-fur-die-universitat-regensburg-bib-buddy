@@ -75,6 +75,25 @@ public class NoteModel {
     return createItemList(noteList);
   }
 
+  /**
+   * This method gets the list of all existing notes of the voice-type (int=1).
+   *
+   * @return returns the list of voice type note objects.
+   */
+  public List<Note> getVoiceNoteList() {
+    List<Note> noteList = noteDao.findAll();
+    for (int i = 0; i < noteList.size(); i++) {
+      if (noteList.get(i).getType() != 1) {
+        noteList.remove(noteList.get(i));
+      }
+    }
+    return noteList;
+  }
+
+  public String getNoteFilePath(Long id){
+    return getNoteById(id).getNoteFilePath();
+  }
+
   private List<NoteItem> createItemList(List<Note> noteList) {
     List<NoteItem> noteItemList = new ArrayList<>();
     for (Note note : noteList) {
