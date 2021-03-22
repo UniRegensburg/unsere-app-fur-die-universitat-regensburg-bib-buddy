@@ -89,7 +89,7 @@ public class TextNoteEditorFragment extends Fragment {
 
   private void handleManualTexteditor() {
     HelpFragment helpFragment = new HelpFragment();
-    String htmlAsString = getString(R.string.texteditor_help_text);
+    String htmlAsString = getString(R.string.text_editor_help_text);
 
     Bundle bundle = new Bundle();
 
