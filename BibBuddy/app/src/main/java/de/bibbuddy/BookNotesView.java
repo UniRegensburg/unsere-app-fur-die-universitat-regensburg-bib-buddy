@@ -283,10 +283,7 @@ public class BookNotesView extends Fragment {
               .addToBackStack(null)
               .commit();
 
-        } /* else if (item.getItemId() == R.id.add_picture_note) {
-                    TODO: add features to add pictures
-                }
-                else if (item.getItemId() == R.id.add_voice_note) {
+        } /* else if (item.getItemId() == R.id.add_voice_note) {
                     TODO: add features to add voice notes
                 }*/
 
