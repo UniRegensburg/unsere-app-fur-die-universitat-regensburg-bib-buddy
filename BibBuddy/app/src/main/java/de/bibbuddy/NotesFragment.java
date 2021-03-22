@@ -160,7 +160,7 @@ public class NotesFragment extends Fragment {
 
   private void setupRecyclerView() {
     adapter =
-        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList);
+        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList, noteModel);
     notesRecyclerView.setAdapter(adapter);
     updateEmptyListView(noteList);
   }
