@@ -55,7 +55,11 @@ public class BookNotesView extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (adapter.getSelectedNoteItems().size() > 0) {
+          deselectNoteItems();
+        } else {
+          closeFragment();
+        }
       }
     });
 
@@ -77,8 +81,9 @@ public class BookNotesView extends Fragment {
 
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
 
-    ((MainActivity) getActivity()).updateHeaderFragment(bookTitle);
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
+    ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
     setFunctionsToolbar();
@@ -122,7 +127,7 @@ public class BookNotesView extends Fragment {
 
   private void setFunctionsToolbar() {
 
-    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
 
       @Override
       public void onClick(View view) {
@@ -145,8 +150,6 @@ public class BookNotesView extends Fragment {
     int itemId = item.getItemId();
     if (itemId == R.id.menu_delete_note) {
       handleDeleteNote();
-    } else if (itemId == R.id.menu_export_note) {
-      checkEmptyNoteList();
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
     }
@@ -283,10 +286,7 @@ public class BookNotesView extends Fragment {
               .addToBackStack(null)
               .commit();
 
-        } /* else if (item.getItemId() == R.id.add_picture_note) {
-                    TODO: add features to add pictures
-                }
-                else if (item.getItemId() == R.id.add_voice_note) {
+        } /* else if (item.getItemId() == R.id.add_voice_note) {
                     TODO: add features to add voice notes
                 }*/
 

@@ -20,9 +20,12 @@ public class MainActivity extends AppCompatActivity {
   public ImageButton importBtn;
   public ImageButton shareBtn;
   public ImageButton sortBtn;
+
   BottomNavigationView bottomNavigationView;
   FragmentManager fragmentManager;
   DatabaseHelper dbHelper;
+
+  private ImageButton logoButton;
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+    logoButton = findViewById(R.id.headerLogo);
     bottomNavigationView = findViewById(R.id.bottom_navigation);
     fragmentManager = getSupportFragmentManager();
 
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
       updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
     }
 
+    setupLogoButton();
     setupBottomNavigationView();
 
     dbHelper = new DatabaseHelper(this);
@@ -99,6 +104,18 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  private void setupLogoButton() {
+    logoButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (homeFragment == null) {
+          homeFragment = new HomeFragment();
+        }
+        updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+      }
+    });
+  }
+
   private void updateFragment(int id, Fragment fragment, String tag) {
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
     fragmentTransaction.replace(id, fragment, tag);
@@ -111,6 +128,11 @@ public class MainActivity extends AppCompatActivity {
   public void updateHeaderFragment(String name) {
     TextView headerView = findViewById(R.id.headerText);
     headerView.setText(name);
+  }
+
+  public void updateNavigationFragment(int item) {
+    bottomNavigationView = findViewById(R.id.bottom_navigation);
+    bottomNavigationView.getMenu().findItem(item).setChecked(true);
   }
 
   private void updateHeader(String tag) {
@@ -129,9 +151,6 @@ public class MainActivity extends AppCompatActivity {
         break;
       case "notes":
         headerText.setText(getString(R.string.navigation_notes));
-        break;
-      case "settings":
-        headerText.setText(getString(R.string.navigation_settings));
         break;
 
       default:
