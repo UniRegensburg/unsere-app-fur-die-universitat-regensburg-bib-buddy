@@ -44,9 +44,7 @@ public class NoteRecyclerViewAdapter
   private ViewGroup parent;
   private int mediaPlayerPosition;
   private boolean paused;
-  private long bookId;
-
-
+  
   /**
    * Adapter constructor to connect a NoteList with the activity.
    *
