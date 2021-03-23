@@ -33,9 +33,9 @@
             android:id="@+id/book_notes_nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-            android:adjustViewBounds="true">
+            android:adjustViewBounds="true"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/book_notes_recycler_view"
@@ -51,14 +51,14 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <include
-            layout="@layout/add_button"
-            android:id="@+id/btn_add_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="end|bottom"
-            android:contentDescription="@string/add_book" />
+        android:id="@+id/btn_add_note"
+        layout="@layout/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/add_book"
+        android:gravity="end|bottom" />
 
 
 </RelativeLayout>
