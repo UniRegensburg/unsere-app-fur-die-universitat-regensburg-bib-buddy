@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_search"
@@ -15,90 +16,88 @@
         android:layout_margin="15dp"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/play_note"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/stop_note"
-            android:background="@null"
-            android:contentDescription="@string/play_button_note"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_play"
-            android:visibility="gone" />
-
-        <ImageButton
-            android:id="@+id/stop_note"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="30dp"
-            android:layout_toStartOf="@+id/noteType"
-            android:background="@null"
-            android:contentDescription="@string/stop_button_note"
-            android:scaleType="fitXY"
-            android:src="@drawable/icon_stop"
-            android:visibility="gone" />
-
         <ImageView
-                android:id="@+id/noteType"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+            android:id="@+id/note_type"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/description_text_note"
+            android:src="@drawable/document" />
+
+        <RelativeLayout
+            android:id="@+id/voice_note_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <ImageButton
+                android:id="@+id/play_note"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:contentDescription="@string/description_text_note"
-                android:src="@drawable/document" />
+                android:layout_marginHorizontal="5dp"
+                android:layout_toEndOf="@+id/seekBar"
+                android:background="@null"
+                android:contentDescription="@string/play_note"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_play" />
 
-        <TextView
-                android:id="@+id/noteName"
+            <ImageButton
+                android:id="@+id/stop_note"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/play_note"
+                android:background="@null"
+                android:contentDescription="@string/stop_note"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_stop" />
+
+            <TextView
+                android:id="@+id/played_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/noteType"
-                android:text="@string/note"
-                android:textColor="@color/black" />
+                android:layout_below="@+id/seekBar"
+                android:layout_marginStart="60dp"
+                android:text="@string/default_played_timer"
+                android:textSize="12sp"
+                android:translationY="-5dp" />
 
-        <TextView
-                android:id="@+id/noteModDate"
+            <TextView
+                android:id="@+id/total_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:textSize="12sp" />
+                android:layout_below="@+id/seekBar"
+                android:layout_marginStart="250dp"
+                android:textSize="12sp"
+                android:translationY="-5dp" />
 
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/voice_note_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:visibility="gone">
+            <app.minimize.com.seek_bar_compat.SeekBarCompat
+                android:id="@+id/seekBar"
+                android:layout_width="230dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="60dp" />
 
-        <TextView
-            android:id="@+id/playedTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/progressBar"
-            android:text="@string/default_played_timer"
-            android:textSize="12sp"
-            android:translationX="230dp"
-            android:translationY="-10dp" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/totalTime"
+            android:id="@+id/note_mod_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/progressBar"
-            android:textSize="12sp"
-            android:translationX="365dp"
-            android:translationY="-10dp" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:textSize="12sp" />
 
-        <app.minimize.com.seek_bar_compat.SeekBarCompat
-            android:id="@+id/progressBar"
-            android:layout_width="170dp"
-            android:layout_height="35dp"
-            android:layout_centerInParent="true"
-            android:translationX="30dp" />
+        <TextView
+            android:id="@+id/note_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/note_type"
+            android:text="@string/note"
+            android:textColor="@color/black" />
 
     </RelativeLayout>
 
