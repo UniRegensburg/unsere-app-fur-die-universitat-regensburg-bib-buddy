@@ -492,7 +492,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         .commit();
   }
 
-  private Bundle createBookBundle(LibraryItem item) {
+  private Bundle createBookBundle(BookItem item) {
     Bundle bundle = new Bundle();
 
     Long currentBookId = item.getId();
@@ -503,6 +503,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     bundle.putLong(LibraryKeys.BOOK_ID, currentBookId);
     bundle.putString(LibraryKeys.BOOK_TITLE, currentBookTitle);
+
+    bundle.putString(LibraryKeys.BOOK_AUTHORS, item.getAuthors());
+    bundle.putString(LibraryKeys.BOOK_YEAR, String.valueOf(item.getYear()));
 
     return bundle;
   }
@@ -518,7 +521,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   @Override
   public void onItemClicked(int position) {
     BookItem bookItem = bookModel.getSelectedBookItem(position);
-    ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
+    // Not needed anymore since book data is now displayed in the bookNotesFragment and the
+    // header would therefore only double (which is not very appealing)
+    // ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
 
     BookNotesView fragment = new BookNotesView();
     getActivity().getSupportFragmentManager().beginTransaction()

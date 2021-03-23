@@ -80,8 +80,9 @@ public class BookNotesView extends Fragment {
     updateBookNoteList(noteList);
 
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
+    fillBookData();
 
-    ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
+    //((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
     ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
@@ -321,6 +322,19 @@ public class BookNotesView extends Fragment {
     bundle.putLong(LibraryKeys.NOTE_ID, currentNoteId);
 
     return bundle;
+  }
+
+  private void fillBookData() {
+    Bundle bundle = this.getArguments();
+
+    TextView bookTitle = view.findViewById(R.id.book_title);
+    bookTitle.setText(bundle.getString(LibraryKeys.BOOK_TITLE));
+
+    TextView bookAuthors = view.findViewById(R.id.book_authors);
+    bookAuthors.setText(bundle.getString(LibraryKeys.BOOK_AUTHORS));
+
+    TextView bookYear = view.findViewById(R.id.book_year);
+    bookYear.setText(bundle.getString(LibraryKeys.BOOK_YEAR));
   }
 
   private void setupRecyclerView(Long bookId) {
