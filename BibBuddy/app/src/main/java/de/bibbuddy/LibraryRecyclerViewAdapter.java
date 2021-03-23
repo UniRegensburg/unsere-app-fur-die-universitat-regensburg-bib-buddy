@@ -126,14 +126,15 @@ public class LibraryRecyclerViewAdapter
    */
   public List<LibraryItem> getSelectedLibraryItems() {
     List<LibraryItem> selectedItems = new ArrayList<>();
+
     if (parent != null) {
-      int itemNumber = parent.getChildCount();
-      for (int i = 0; i < itemNumber; i++) {
+      for (int i = 0; i < parent.getChildCount(); i++) {
         if (parent.getChildAt(i).isSelected()) {
           selectedItems.add(libraryList.get(i));
         }
       }
     }
+
     return selectedItems;
   }
 

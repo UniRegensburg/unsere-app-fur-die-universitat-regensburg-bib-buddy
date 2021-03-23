@@ -20,9 +20,11 @@ public class MainActivity extends AppCompatActivity {
   public ImageButton importBtn;
   public ImageButton shareBtn;
   public ImageButton sortBtn;
+
   BottomNavigationView bottomNavigationView;
   FragmentManager fragmentManager;
   DatabaseHelper dbHelper;
+
   private ImageButton logoButton;
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;

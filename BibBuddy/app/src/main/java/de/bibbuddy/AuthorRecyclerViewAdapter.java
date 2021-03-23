@@ -110,14 +110,15 @@ public class AuthorRecyclerViewAdapter
    */
   public List<AuthorItem> getSelectedAuthorItems() {
     List<AuthorItem> selectedItems = new ArrayList<>();
+
     if (parent != null) {
-      int itemNumber = parent.getChildCount();
-      for (int i = 0; i < itemNumber; i++) {
+      for (int i = 0; i < parent.getChildCount(); i++) {
         if (parent.getChildAt(i).isSelected()) {
           selectedItems.add(authorItemList.get(i));
         }
       }
     }
+
     return selectedItems;
   }
 
