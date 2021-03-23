@@ -30,7 +30,7 @@ public class NoteModel {
    */
   public void createNote(String name, int type, String text, String noteFilePath) {
     Note note;
-    if (noteFilePath == null) {
+    if (noteFilePath.equals("")) {
       note = new Note(name, type, text);
     } else {
       note = new Note(name, type, text, noteFilePath);
@@ -91,7 +91,7 @@ public class NoteModel {
   }
 
   public String getNoteFilePath(Long id){
-    return getNoteById(id).getNoteFilePath();
+    return noteDao.getNoteFilePath(getNoteById(id).getNoteFileId());
   }
 
   private List<NoteItem> createItemList(List<Note> noteList) {
@@ -106,9 +106,9 @@ public class NoteModel {
         if (name.length() > 40) {
           name = name.substring(0, 35) + " ...";
         }
-        noteItemList.add(new NoteTextItem(modDate, name, noteId));
+        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId, noteDao.findBookIdByNoteId(noteId)));
       } else if (note.getType() == 1) {
-        noteItemList.add(new NoteAudioItem(modDate, name, noteId));
+        noteItemList.add(new NoteAudioItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       }
     }
     return noteItemList;
