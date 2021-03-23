@@ -54,43 +54,43 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/headerText">
 
-        <ImageButton
-                android:id="@+id/sort_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/white"
-                android:src="@drawable/sort_icon"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/import_btn" />
+            <ImageButton
+                    android:id="@+id/sort_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/white"
+                    android:src="@drawable/sort_icon"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/import_btn" />
 
-        <ImageButton
-                android:id="@+id/share_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/share_icon"
-                android:clickable="true"
-                android:focusable="true"
-                tools:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            <ImageButton
+                    android:id="@+id/share_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/share_icon"
+                    android:clickable="true"
+                    android:focusable="true"
+                    tools:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageButton
-                android:id="@+id/import_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/import_icon"
-                android:clickable="true"
-                android:focusable="true"
-                tools:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/share_btn"/>
+            <ImageButton
+                    android:id="@+id/import_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/import_icon"
+                    android:clickable="true"
+                    android:focusable="true"
+                    tools:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/share_btn"/>
 
         </LinearLayout>
 
