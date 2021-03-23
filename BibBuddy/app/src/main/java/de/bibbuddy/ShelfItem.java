@@ -18,7 +18,7 @@ public class ShelfItem extends LibraryItem {
    * @param noteCount total number of notes in the shelf
    */
   public ShelfItem(Shelf shelf, int bookCount, int noteCount) {
-    super(shelf.getName(), R.drawable.ic_shelf, shelf.getId(), shelf.getShelfId(),
+    super(shelf.getName(), R.drawable.books, shelf.getId(), shelf.getShelfId(),
           shelf.getModDate());
 
     this.bookCount = bookCount;
