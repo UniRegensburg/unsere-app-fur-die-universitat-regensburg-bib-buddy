@@ -4,7 +4,7 @@
     android:id="@+id/fragment_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="65dp"
+    android:layout_marginTop="100dp"
     android:layout_marginBottom="75dp">
 
     <RelativeLayout
@@ -62,5 +62,4 @@
             app:layout_anchorGravity="bottom" />
 
     </RelativeLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

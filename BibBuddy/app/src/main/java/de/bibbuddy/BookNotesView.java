@@ -191,7 +191,7 @@ public class BookNotesView extends Fragment {
         bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
         adapter.notifyDataSetChanged();
         noteList = bookNotesViewModel.getBookNoteList(bookId);
-        
+
         updateBookNoteList(noteList);
         deselectNoteItems();
         updateEmptyView(noteList);
