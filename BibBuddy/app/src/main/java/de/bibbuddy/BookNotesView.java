@@ -1,9 +1,10 @@
 package de.bibbuddy;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,9 +18,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,17 +39,43 @@ public class BookNotesView extends Fragment {
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
-  private RecyclerView recyclerView;
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
-  private List<NoteItem> noteList;
 
+  private ActivityResultLauncher<String> requestPermissionLauncher;
+
+  private List<NoteItem> noteList;
   private BookDao bookDao;
   private NoteDao noteDao;
-
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
 
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setupPermissionLauncher();
+  }
+
+  /* Register permissions callback, which handles the user's response to the
+   system permissions dialog. Save the return value, an instance of
+   ActivityResultLauncher, as an instance variable.
+   */
+  private void setupPermissionLauncher() {
+    requestPermissionLauncher =
+        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+          if (isGranted) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+            VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
+            nextFrag.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, nextFrag,
+                    LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
+                .addToBackStack(null)
+                .commit();
+          }
+        });
+  }
 
   @Nullable
   @Override
@@ -63,29 +93,25 @@ public class BookNotesView extends Fragment {
       }
     });
 
-    Bundle bundle = this.getArguments();
-    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
-    recyclerView = view.findViewById(R.id.book_notes_recycler_view);
+    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
 
-    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
+    Bundle bundle = this.getArguments();
+    if (bundle != null) {
+      bookId = bundle.getLong(LibraryKeys.BOOK_ID);
+      String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
+      ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
+    }
 
-    setupRecyclerView(bookId);
-
-    setHasOptionsMenu(true);
-    setupAddButton();
-
-    updateBookNoteList(noteList);
-
-    String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-
-    ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
     ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
+    setupRecyclerView(bookId);
+    setHasOptionsMenu(true);
+    setupAddButton();
+    updateBookNoteList(noteList);
     setFunctionsToolbar();
 
     bookDao = bookNotesViewModel.getBookDao();
@@ -112,30 +138,13 @@ public class BookNotesView extends Fragment {
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) getActivity()).setVisibilitySortButton(true);
-
-    sortBtn.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        handleSortNote();
-      }
-
-    });
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
+    sortBtn.setOnClickListener(v -> handleSortNote());
   }
 
   private void setFunctionsToolbar() {
-
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View view) {
-        checkEmptyNoteList();
-      }
-
-    });
-
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyNoteList());
   }
 
   @Override
@@ -143,7 +152,6 @@ public class BookNotesView extends Fragment {
     inflater.inflate(R.menu.fragment_book_note_menu, menu);
     super.onCreateOptionsMenu(menu, inflater);
   }
-
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -177,27 +185,19 @@ public class BookNotesView extends Fragment {
           getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
     }
 
-    alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        deselectNoteItems();
-      }
-    });
+    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> deselectNoteItems());
 
-    alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        final int notesNumber = adapter.getSelectedNoteItems().size();
-        bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
-        adapter.notifyDataSetChanged();
-        noteList = bookNotesViewModel.getBookNoteList(bookId);
-        updateBookNoteList(noteList);
-        updateEmptyView(noteList);
-        if (notesNumber > 1) {
-          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
-        }
+    alertDeleteBookNote.setPositiveButton(R.string.delete, (dialog, which) -> {
+      final int notesNumber = adapter.getSelectedNoteItems().size();
+      bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
+      adapter.notifyDataSetChanged();
+      noteList = bookNotesViewModel.getBookNoteList(bookId);
+      updateBookNoteList(noteList);
+      updateEmptyView(noteList);
+      if (notesNumber > 1) {
+        Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+      } else {
+        Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
       }
     });
 
@@ -205,7 +205,7 @@ public class BookNotesView extends Fragment {
   }
 
   private void deselectNoteItems() {
-    RecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_recycler_view);
+    RecyclerView bookNotesListView = requireView().findViewById(R.id.book_notes_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
     }
@@ -213,13 +213,10 @@ public class BookNotesView extends Fragment {
 
   private void handleSortNote() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
-            sortNoteList();
-          }
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortNoteList();
         });
 
     sortDialog.show();
@@ -237,10 +234,7 @@ public class BookNotesView extends Fragment {
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+          (dialog, which) -> {
           });
 
       alertDialogEmptyLib.create().show();
@@ -260,7 +254,7 @@ public class BookNotesView extends Fragment {
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
             LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
@@ -272,52 +266,65 @@ public class BookNotesView extends Fragment {
     PopupMenu pm = new PopupMenu(getContext(), addButtonView);
     pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
 
-    pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-      @Override
-      public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.add_text_note) {
-          Bundle bundle = new Bundle();
-          bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-          TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-          nextFrag.setArguments(bundle);
-          getActivity().getSupportFragmentManager().beginTransaction()
-              .replace(R.id.fragment_container_view, nextFrag,
-                  LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-              .addToBackStack(null)
-              .commit();
-
-        } /* else if (item.getItemId() == R.id.add_voice_note) {
-                    TODO: add features to add voice notes
-                }*/
-
-
-        return true;
+    pm.setOnMenuItemClickListener(item -> {
+      if (item.getItemId() == R.id.add_text_note) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+        TextNoteEditorFragment textFrag = new TextNoteEditorFragment();
+        textFrag.setArguments(bundle);
+        requireActivity().getSupportFragmentManager().beginTransaction()
+            .replace(R.id.fragment_container_view, textFrag,
+                LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
+            .addToBackStack(null)
+            .commit();
+      } else {
+        checkRecordPermission();
       }
+
+      return true;
     });
 
+    addButtonView.setOnClickListener(v -> pm.show());
+  }
 
-    addButtonView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        pm.show();
-      }
-    });
+  private void checkRecordPermission() {
+    if (ContextCompat.checkSelfPermission(
+        context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+      Bundle bundle = new Bundle();
+      bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+      VoiceNoteEditorFragment voiceFrag = new VoiceNoteEditorFragment();
+      voiceFrag.setArguments(bundle);
+      requireActivity().getSupportFragmentManager().beginTransaction()
+          .replace(R.id.fragment_container_view, voiceFrag,
+              LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
+          .addToBackStack(null)
+          .commit();
+    } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+      showAudioRecordRequest();
+    } else {
+      requestPermissionLauncher.launch(
+          Manifest.permission.RECORD_AUDIO);
+    }
+  }
 
+  private void showAudioRecordRequest() {
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(context);
+    reqAlertDialog.setTitle(R.string.record_permission_needed);
+    reqAlertDialog.setMessage(R.string.record_permission_alert_msg);
+
+    reqAlertDialog.setPositiveButton(R.string.ok,
+        (dialog, which) -> requestPermissionLauncher.launch(
+            Manifest.permission.RECORD_AUDIO));
+
+    reqAlertDialog.setNegativeButton(R.string.cancel,
+        (dialog, which) -> dialog.dismiss());
+
+    reqAlertDialog.create().show();
   }
 
   private void updateBookNoteList(List<NoteItem> noteList) {
     sortNoteList();
-
     updateEmptyView(noteList);
-  }
-
-  private Bundle createNoteBundle(NoteItem item) {
-    Bundle bundle = new Bundle();
-    Long currentNoteId = item.getId();
-    bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-    bundle.putLong(LibraryKeys.NOTE_ID, currentNoteId);
-
-    return bundle;
   }
 
   private void setupRecyclerView(Long bookId) {
@@ -326,7 +333,8 @@ public class BookNotesView extends Fragment {
 
     RecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList);
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList,
+        bookNotesViewModel.getNoteModel());
     notesRecyclerView.setAdapter(adapter);
 
     updateEmptyView(noteList);
@@ -348,7 +356,7 @@ public class BookNotesView extends Fragment {
         exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
 
     Intent shareBookNoteIntent =
-        ShareCompat.IntentBuilder.from(getActivity())
+        ShareCompat.IntentBuilder.from(requireActivity())
             .setStream(contentUri)
             .setType("text/*")
             .getIntent()
