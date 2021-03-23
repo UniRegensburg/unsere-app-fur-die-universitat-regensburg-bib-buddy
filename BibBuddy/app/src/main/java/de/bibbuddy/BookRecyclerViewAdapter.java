@@ -8,13 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Custom RecyclerViewAdapter provides a binding from the bookList to the view
  * that is displayed within the RecyclerView of the BookFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Luis Moßburger
  */
 
 public class BookRecyclerViewAdapter
@@ -22,6 +23,7 @@ public class BookRecyclerViewAdapter
   private final BookRecyclerViewAdapter.BookListener listener;
   private final Context context;
   private List<BookItem> bookList;
+  private ViewGroup parent;
 
   /**
    * Constructor of the BookRecyclerViewAdapter.
@@ -45,6 +47,8 @@ public class BookRecyclerViewAdapter
   @Override
   public BookRecyclerViewAdapter.BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                    int viewType) {
+    this.parent = parent;
+
     return new BookRecyclerViewAdapter.BookViewHolder(
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_view_item_book, parent, false));
@@ -72,7 +76,11 @@ public class BookRecyclerViewAdapter
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        listener.onItemClicked(position);
+        if (getSelectedBookItems().size() > 0) {
+          listener.onLongItemClicked(position, bookItem, v);
+        } else {
+          listener.onItemClicked(position);
+        }
       }
     });
 
@@ -94,6 +102,24 @@ public class BookRecyclerViewAdapter
     return bookList.size();
   }
 
+  /**
+   * This method fetches the number of items selected in the recyclerView.
+   *
+   * @return returns the selected recyclerView items.
+   */
+  public List<BookItem> getSelectedBookItems() {
+    List<BookItem> selectedItems = new ArrayList<>();
+
+    if (parent != null) {
+      for (int i = 0; i < parent.getChildCount(); i++) {
+        if (parent.getChildAt(i).isSelected()) {
+          selectedItems.add(bookList.get(i));
+        }
+      }
+    }
+
+    return selectedItems;
+  }
 
   public interface BookListener { // create an interface
     void onItemClicked(int position); // create callback function

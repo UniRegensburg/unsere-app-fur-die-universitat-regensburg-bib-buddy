@@ -16,12 +16,13 @@ public class AuthorRecyclerViewAdapter
   private final AuthorAdapterDataObserver dataObserver = new AuthorAdapterDataObserver();
   private final List<Author> authorList;
   private List<AuthorItem> authorItemList;
+  private ViewGroup parent;
 
   /**
    * AuthorRecyclerViewAdapter provides a binding from the authorList to the view
    * that is displayed within the RecyclerView of the AuthorFragment.
    *
-   * @author Sarah Kurek
+   * @author Sarah Kurek, Luis Moßburger
    */
   public AuthorRecyclerViewAdapter(AuthorListener listener,
                                    List<Author> authorList) {
@@ -42,6 +43,8 @@ public class AuthorRecyclerViewAdapter
   @Override
   public AuthorRecyclerViewAdapter.AuthorViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                        int viewType) {
+    this.parent = parent;
+
     return new AuthorViewHolder(
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_view_item_author, parent, false));
@@ -74,7 +77,11 @@ public class AuthorRecyclerViewAdapter
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        listener.onItemClicked(position);
+        if (getSelectedAuthorItems().size() > 0) {
+          listener.onLongItemClicked(position, authorItem, v);
+        } else {
+          listener.onItemClicked(position);
+        }
       }
     });
 
@@ -94,6 +101,25 @@ public class AuthorRecyclerViewAdapter
   @Override
   public int getItemCount() {
     return authorItemList.size();
+  }
+
+  /**
+   * This method fetches the number of items selected in the recyclerView.
+   *
+   * @return returns the selected recyclerView items.
+   */
+  public List<AuthorItem> getSelectedAuthorItems() {
+    List<AuthorItem> selectedItems = new ArrayList<>();
+
+    if (parent != null) {
+      for (int i = 0; i < parent.getChildCount(); i++) {
+        if (parent.getChildAt(i).isSelected()) {
+          selectedItems.add(authorItemList.get(i));
+        }
+      }
+    }
+
+    return selectedItems;
   }
 
   public interface AuthorListener {

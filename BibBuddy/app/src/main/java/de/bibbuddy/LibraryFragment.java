@@ -22,6 +22,7 @@ import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,11 @@ public class LibraryFragment extends Fragment
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (selectedShelfItems.isEmpty()) {
+          closeFragment();
+        } else {
+          deselectLibraryItems();
+        }
       }
     });
 
@@ -68,7 +73,10 @@ public class LibraryFragment extends Fragment
 
     setupRecyclerView();
     setupAddShelfBtn();
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
@@ -130,10 +138,6 @@ public class LibraryFragment extends Fragment
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.menu_export_library:
-        checkEmptyLibrary();
-        break;
-
       case R.id.menu_rename_shelf:
         handleRenameShelf();
         break;
@@ -243,7 +247,7 @@ public class LibraryFragment extends Fragment
           Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
         }
 
-        unselectLibraryItems();
+        deselectLibraryItems();
       }
     });
 
@@ -264,7 +268,7 @@ public class LibraryFragment extends Fragment
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
-            unselectLibraryItems();
+            deselectLibraryItems();
             adapter.notifyDataSetChanged();
           }
         });
@@ -274,7 +278,7 @@ public class LibraryFragment extends Fragment
         .show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_RENAME_SHELF);
   }
 
-  private void unselectLibraryItems() {
+  private void deselectLibraryItems() {
     RecyclerView shelfListView = getView().findViewById(R.id.library_recycler_view);
     for (int i = 0; i < shelfListView.getChildCount(); i++) {
       shelfListView.getChildAt(i).setSelected(false);
@@ -361,7 +365,7 @@ public class LibraryFragment extends Fragment
           public void onShelfAdded(String name, Long shelfId) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
-            unselectLibraryItems();
+            deselectLibraryItems();
           }
         });
 
@@ -446,10 +450,10 @@ public class LibraryFragment extends Fragment
 
     Intent shareLibraryIntent =
         ShareCompat.IntentBuilder.from(getActivity())
-        .setStream(contentUri)
-        .setType("text/*")
-        .getIntent()
-        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            .setStream(contentUri)
+            .setType("text/*")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     startActivity(Intent.createChooser(shareLibraryIntent, "SEND"));
 

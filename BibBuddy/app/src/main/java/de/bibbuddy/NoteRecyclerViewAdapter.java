@@ -126,20 +126,21 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * This method fetches the number of items selected in the recyclerView.
+   * This method fetches the items selected in the recyclerView.
    *
-   * @return returns the number of selected recyclerView items.
+   * @return returns the selected recyclerView items.
    */
   public List<NoteItem> getSelectedNoteItems() {
     List<NoteItem> selectedNotes = new ArrayList<>();
+
     if (parent != null) {
-      int itemNumber = parent.getChildCount();
-      for (int i = 0; i < itemNumber; i++) {
+      for (int i = 0; i < parent.getChildCount(); i++) {
         if (parent.getChildAt(i).isSelected()) {
           selectedNotes.add(noteList.get(i));
         }
       }
     }
+
     return selectedNotes;
   }
 

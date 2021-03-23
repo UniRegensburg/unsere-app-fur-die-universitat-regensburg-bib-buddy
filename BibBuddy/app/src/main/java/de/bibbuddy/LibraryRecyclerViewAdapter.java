@@ -8,13 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The LibraryRecyclerViewAdapter provides a binding from the libraryList to the view
  * that is displayed within the RecyclerView of the LibraryFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Luis Moßburger
  */
 public class LibraryRecyclerViewAdapter
     extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.LibraryViewHolder> {
@@ -22,6 +23,7 @@ public class LibraryRecyclerViewAdapter
   private final LibraryListener listener;
   private final Context context;
   private List<ShelfItem> libraryList;
+  private ViewGroup parent;
 
   /**
    * Constructor of the LibraryRecyclerViewAdapter.
@@ -47,6 +49,8 @@ public class LibraryRecyclerViewAdapter
     // but does not fill in the view's contents—the ViewHolder
     // has not yet been bound to specific data.
 
+    this.parent = parent;
+
     return new LibraryViewHolder(LayoutInflater.from(parent.getContext())
                                      .inflate(R.layout.list_view_item_library, parent, false));
   }
@@ -69,7 +73,11 @@ public class LibraryRecyclerViewAdapter
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        listener.onItemClicked(position);
+        if (getSelectedLibraryItems().size() > 0) {
+          listener.onLongItemClicked(position, shelfItem, v);
+        } else {
+          listener.onItemClicked(position);
+        }
       }
     });
 
@@ -109,6 +117,25 @@ public class LibraryRecyclerViewAdapter
 
   public void setLibraryList(List<ShelfItem> libraryList) {
     this.libraryList = libraryList;
+  }
+
+  /**
+   * This method fetches the number of items selected in the recyclerView.
+   *
+   * @return returns the selected recyclerView items.
+   */
+  public List<LibraryItem> getSelectedLibraryItems() {
+    List<LibraryItem> selectedItems = new ArrayList<>();
+
+    if (parent != null) {
+      for (int i = 0; i < parent.getChildCount(); i++) {
+        if (parent.getChildAt(i).isSelected()) {
+          selectedItems.add(libraryList.get(i));
+        }
+      }
+    }
+
+    return selectedItems;
   }
 
   public interface LibraryListener {

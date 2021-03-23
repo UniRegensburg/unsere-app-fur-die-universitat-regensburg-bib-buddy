@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     view = inflater.inflate(R.layout.fragment_search, container, false);
     context = view.getContext();
 
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_search));
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_search));
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_search);
 
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
