@@ -96,6 +96,24 @@ public class NoteDao implements InterfaceNoteDao {
     return note;
   }
 
+  public String getNoteFilePath(long id) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE,
+        new String[] {DatabaseHelper._ID,
+            DatabaseHelper.FILE},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, String.valueOf(1));
+
+    String path = "";
+    if (cursor.moveToFirst()) {
+      path = cursor.getString(1);
+    }
+    cursor.close();
+
+    return path;
+  }
+
   // get all notes in a list view
   @Override
   public List<Note> findAll() {
