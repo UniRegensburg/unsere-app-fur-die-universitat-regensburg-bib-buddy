@@ -11,5 +11,5 @@ public class NoteTextItem extends NoteItem {
   public NoteTextItem(Long modDate, String name, String text, Long id, Long bookId) {
     super(modDate, name, text, R.drawable.document, id, bookId);
   }
-  
+
 }
