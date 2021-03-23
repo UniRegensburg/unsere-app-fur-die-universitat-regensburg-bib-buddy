@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -23,6 +24,7 @@ public class AuthorFormFragment extends Fragment {
   private final boolean isNewAuthor;
   private int redColor;
   private int greenColor;
+  private BottomNavigationView bottomNavigationView;
 
   /**
    * Constructor that sets the author to empty when it is newly created.
@@ -52,6 +54,9 @@ public class AuthorFormFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_author_form, container, false);
 
     setInputText(view);
+
+    bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);

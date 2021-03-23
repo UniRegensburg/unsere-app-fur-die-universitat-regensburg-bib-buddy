@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private String shelfName;
   private View view;
   private Context context;
+  private BottomNavigationView bottomNavigationView;
 
   private BookModel bookModel;
   private BookRecyclerViewAdapter adapter;
@@ -78,6 +80,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     view = inflater.inflate(R.layout.fragment_book, container, false);
     context = view.getContext();
+
+    bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
 

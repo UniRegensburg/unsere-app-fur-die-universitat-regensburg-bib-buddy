@@ -128,6 +128,11 @@ public class MainActivity extends AppCompatActivity {
     headerView.setText(name);
   }
 
+  public void updateNavigationFragment(int item) {
+    bottomNavigationView = findViewById(R.id.bottom_navigation);
+    bottomNavigationView.getMenu().findItem(item).setChecked(true);
+  }
+
   private void updateHeader(String tag) {
     // change header text according to fragment
     View headerTextView = findViewById(R.id.headerText);
@@ -144,9 +149,6 @@ public class MainActivity extends AppCompatActivity {
         break;
       case "notes":
         headerText.setText(getString(R.string.navigation_notes));
-        break;
-      case "settings":
-        headerText.setText(getString(R.string.navigation_settings));
         break;
 
       default:

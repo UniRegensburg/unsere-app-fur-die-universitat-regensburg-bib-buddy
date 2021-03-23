@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 /**
@@ -51,6 +52,8 @@ public class NotesFragment extends Fragment {
     noteList = noteModel.getNoteList();
     sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
+
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_notes);
 
     ((MainActivity) requireActivity())
         .setVisibilityImportShareButton(View.GONE, View.GONE);

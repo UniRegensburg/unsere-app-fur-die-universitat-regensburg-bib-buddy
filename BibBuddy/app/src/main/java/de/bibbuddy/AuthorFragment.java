@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   private Context context;
   private AuthorRecyclerViewAdapter adapter;
   private List<AuthorItem> selectedAuthorItems;
+  private BottomNavigationView bottomNavigationView;
 
   public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
     this.authorList = new ArrayList<>(authorList);
@@ -67,6 +69,9 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
+
+    bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     selectedAuthorItems = new ArrayList<>();
     updateEmptyView();

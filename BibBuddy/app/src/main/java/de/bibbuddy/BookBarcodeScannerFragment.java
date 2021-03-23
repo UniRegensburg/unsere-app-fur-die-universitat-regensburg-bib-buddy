@@ -20,6 +20,7 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class BookBarcodeScannerFragment extends Fragment
 
     setupDetectorsAndSources(view);
     ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
 
     return view;
   }

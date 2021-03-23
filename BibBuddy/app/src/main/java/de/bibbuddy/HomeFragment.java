@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
  * The HomeFragment is responsible for TODO.
@@ -15,6 +16,8 @@ import androidx.fragment.app.Fragment;
  * @author Claudia Schönherr
  */
 public class HomeFragment extends Fragment {
+
+  private View view;
 
   @Nullable
   @Override
@@ -27,10 +30,13 @@ public class HomeFragment extends Fragment {
       }
     });
 
-    View view = inflater.inflate(R.layout.fragment_home, container, false);
+    view = inflater.inflate(R.layout.fragment_home, container, false);
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
+
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_home));
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_home);
 
     return view;
   }

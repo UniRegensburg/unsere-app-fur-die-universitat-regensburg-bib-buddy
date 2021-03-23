@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 /**
@@ -48,6 +49,8 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
+
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
 
     return view;
   }

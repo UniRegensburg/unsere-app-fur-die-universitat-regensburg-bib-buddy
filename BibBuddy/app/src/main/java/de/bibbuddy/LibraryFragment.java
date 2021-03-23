@@ -22,6 +22,7 @@ import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,10 @@ public class LibraryFragment extends Fragment
 
     setupRecyclerView();
     setupAddShelfBtn();
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
