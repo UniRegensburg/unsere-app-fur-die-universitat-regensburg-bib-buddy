@@ -56,7 +56,11 @@ public class LibraryFragment extends Fragment
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (selectedShelfItems.isEmpty()) {
+          closeFragment();
+        } else {
+          deselectLibraryItems();
+        }
       }
     });
 
@@ -239,7 +243,7 @@ public class LibraryFragment extends Fragment
           Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
         }
 
-        unselectLibraryItems();
+        deselectLibraryItems();
       }
     });
 
@@ -260,7 +264,7 @@ public class LibraryFragment extends Fragment
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
-            unselectLibraryItems();
+            deselectLibraryItems();
             adapter.notifyDataSetChanged();
           }
         });
@@ -270,7 +274,7 @@ public class LibraryFragment extends Fragment
         .show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_RENAME_SHELF);
   }
 
-  private void unselectLibraryItems() {
+  private void deselectLibraryItems() {
     RecyclerView shelfListView = getView().findViewById(R.id.library_recycler_view);
     for (int i = 0; i < shelfListView.getChildCount(); i++) {
       shelfListView.getChildAt(i).setSelected(false);
@@ -357,7 +361,7 @@ public class LibraryFragment extends Fragment
           public void onShelfAdded(String name, Long shelfId) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
-            unselectLibraryItems();
+            deselectLibraryItems();
           }
         });
 

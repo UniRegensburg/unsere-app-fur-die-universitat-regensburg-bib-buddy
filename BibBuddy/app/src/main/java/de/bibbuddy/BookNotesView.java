@@ -55,7 +55,11 @@ public class BookNotesView extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (adapter.getSelectedNoteItems().size() > 0) {
+          deselectNoteItems();
+        } else {
+          closeFragment();
+        }
       }
     });
 
@@ -122,7 +126,7 @@ public class BookNotesView extends Fragment {
 
   private void setFunctionsToolbar() {
 
-    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
 
       @Override
       public void onClick(View view) {

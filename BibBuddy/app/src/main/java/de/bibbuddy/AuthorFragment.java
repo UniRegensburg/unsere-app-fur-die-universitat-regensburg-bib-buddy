@@ -49,7 +49,11 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (selectedAuthorItems.isEmpty()) {
+          closeFragment();
+        } else {
+          deselectAuthorItems();
+        }
       }
     });
 
@@ -138,7 +142,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
           authorList.remove(authorItem.getAuthor());
         }
 
-        unselectAuthorItems();
+        deselectAuthorItems();
         adapter.notifyDataSetChanged();
 
         if (authorsNumber > 1) {
@@ -170,7 +174,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
         .commit();
   }
 
-  private void unselectAuthorItems() {
+  private void deselectAuthorItems() {
     RecyclerView authorListView = getView().findViewById(R.id.author_recycler_view);
     for (int i = 0; i < authorListView.getChildCount(); i++) {
       authorListView.getChildAt(i).setSelected(false);

@@ -58,39 +58,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
-  ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
-      new ActivityResultContracts.StartActivityForResult(),
-      new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-          if (result.getResultCode() == Activity.RESULT_OK) {
-            Intent data = result.getData();
-
-            if (data != null) {
-
-              Uri uri = data.getData();
-              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
-
-                handleImport(uri);
-
-              } else {
-                showDialogNonBibFile();
-              }
-            }
-          }
-        }
-      });
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
-      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if (isGranted) {
-          filePicker();
-
-
-        } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied,
-              Toast.LENGTH_SHORT).show();
-        }
-      });
   private SortCriteria sortCriteria;
 
   @Nullable
@@ -101,7 +68,11 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (selectedBookItems.isEmpty()) {
+          closeFragment();
+        } else {
+          deselectBookItems();
+        }
       }
     });
 
@@ -302,7 +273,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
         }
 
-        unselectBookItems();
+        deselectBookItems();
       }
     });
 
@@ -347,6 +318,29 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       shareShelfBibIntent();
     }
   }
+
+  ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
+      new ActivityResultContracts.StartActivityForResult(),
+      new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+
+            if (data != null) {
+
+              Uri uri = data.getData();
+              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
+
+                handleImport(uri);
+
+              } else {
+                showDialogNonBibFile();
+              }
+            }
+          }
+        }
+      });
 
   private void handleImport(Uri uri) {
     String bibText = readBibFile(uri);
@@ -464,6 +458,18 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.create().show();
   }
+
+  private final ActivityResultLauncher<String> requestPermissionLauncher =
+      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+          filePicker();
+
+
+        } else {
+          Toast.makeText(getContext(), R.string.storage_permission_denied,
+              Toast.LENGTH_SHORT).show();
+        }
+      });
 
   private void handleManualBook() {
     HelpFragment helpFragment = new HelpFragment();
@@ -604,7 +610,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     fragment.setArguments(createBookBundle());
   }
 
-  private void unselectBookItems() {
+  private void deselectBookItems() {
     RecyclerView bookListView = getView().findViewById(R.id.book_recycler_view);
     for (int i = 0; i < bookListView.getChildCount(); i++) {
       bookListView.getChildAt(i).setSelected(false);
