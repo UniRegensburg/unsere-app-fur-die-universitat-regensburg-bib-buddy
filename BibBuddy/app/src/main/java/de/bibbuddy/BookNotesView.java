@@ -180,7 +180,6 @@ public class BookNotesView extends Fragment {
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        deselectNoteItems();
       }
     });
 
@@ -188,11 +187,15 @@ public class BookNotesView extends Fragment {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         final int notesNumber = adapter.getSelectedNoteItems().size();
+
         bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
         adapter.notifyDataSetChanged();
         noteList = bookNotesViewModel.getBookNoteList(bookId);
+        
         updateBookNoteList(noteList);
+        deselectNoteItems();
         updateEmptyView(noteList);
+
         if (notesNumber > 1) {
           Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
         } else {
