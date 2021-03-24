@@ -97,7 +97,7 @@ public class NoteModel {
         noteItemList.add(new NoteAudioItem(modDate, name, noteId));
       }
     }
-    
+
     return noteItemList;
   }
 
