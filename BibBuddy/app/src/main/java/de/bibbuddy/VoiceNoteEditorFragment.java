@@ -57,9 +57,7 @@ public class VoiceNoteEditorFragment extends Fragment {
                                Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_voice_note_editor, container,
         false);
-
     noteModel = new NoteModel(requireContext());
-
     pulse = view.findViewById(R.id.ripple_animation);
     recordButton = view.findViewById(R.id.record_button);
 
@@ -67,7 +65,6 @@ public class VoiceNoteEditorFragment extends Fragment {
       bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
     }
 
-    // Record to the external cache directory for visibility
     String filePath = requireActivity().getExternalCacheDir().getAbsolutePath();
     if (noteModel.getVoiceNoteList().isEmpty()) {
       filePath += "/audio_record_1.mp4";
@@ -104,8 +101,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
-    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
-    });
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {});
     helpAlert.show();
   }
 
@@ -136,11 +132,10 @@ public class VoiceNoteEditorFragment extends Fragment {
     recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
     recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
     recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-    int samplingRate = 44100;
-    recorder.setAudioSamplingRate(samplingRate);
-    int encodingBitRate = 56000;
-    recorder.setAudioEncodingBitRate(encodingBitRate);
+    recorder.setAudioSamplingRate(44100);
+    recorder.setAudioEncodingBitRate(56000);
     recorder.setOutputFile(newAudio.getPath());
+
     try {
       recorder.prepare();
     } catch (IOException e) {
@@ -172,7 +167,6 @@ public class VoiceNoteEditorFragment extends Fragment {
     String day = string.substring(8, 10);
     String month = string.substring(5, 7);
     String year = string.substring(0, 4);
-
     string = day + "." + month + "." + year;
 
     return string;
