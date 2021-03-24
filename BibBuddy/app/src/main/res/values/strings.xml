@@ -272,7 +272,6 @@
     <string name="filter_note">Notizen</string>
 
 
-
     <!-- Sharing of BibTeX -->
     <string name="share_file">BibTeX-Datei teilen:</string>
     <string name="exception_failed_temp_file">
@@ -441,26 +440,18 @@
     <string name="voice_editor_help_text">
         <![CDATA[
         <h1><u>Hilfe zum Spracheditor</u></h1>
-        <p>Sie befinden sich im Spracheditor. Hier können Sie eine neue Sprachnotiz erstellen und
-        abspielen.</p><br>
+        <br>
         <h2>Sprachnotiz aufnehmen</h2>
+        <p>Sie befinden sich im Spracheditor. Hier können Sie eine neue Sprachnotiz erstellen.</p>
+        <br>
         <p>Klicken Sie auf den <b>Aufnahme-Button</b> mit dem Mikrofon und fangen Sie an zu
-        sprechen. Sie können die Aufnahme stoppen, indem sie den Aufnahme-Button, Stop-Button oder
-        den Play-Button anklicken.</p>
-        <p>Sprachnotizen können <b>maximal 1 Minute</b> lang werden. Daher werden längere
-        Aufnahmen nach einer Minute als separate Notizen zwischengespeichert und eine neue
-        Sprachnotiz wird automatisch übergangslos begonnen.</p><br>
+        sprechen. Sie können die Aufnahme stoppen, indem Sie den Aufnahme-Button erneut klicken oder
+        den Editor verlassen. Beim <b>Stoppen</b> der Aufnahme wird diese auch <b>gespeichert</b>.</p>
+        <br>
         <h2>Sprachnotiz abspielen</h2>
-        <p>Sie können die Sprachnotiz anhören, indem sie den <b>Playbutton</b> anklicken.
-        Danach kann die Aufnahme mit selbigem Button mit einem Pause-Icon pausiert oder durch Klick
-        auf den Stop-Button gestoppt und auf Anfang zurückgesetzt werden.<br>
-        Außerdem erscheint nach der Aufnahme einer Notiz unter den Buttons auch eine
-        <b>Suchleiste</b> mit der durch Ziehen des Punktindikators zu einer beliebigen Stelle
-        gesprungen werden kann.</p><br>
-        <h2>Sprachnotiz speichern</h2>
-        <p>Sobald Sie auf den internen Zurück-Buttons Ihres Handys drücken, wird die aktuelle
-        Aufnahme automatisch gespeichert. Sie befindet sich dann in der Übersicht des jeweiligen
-        Buches oder in der Gesamtübersicht der Notizen.</p>
+        <p>Sie können die Sprachnotiz anhören, indem Sie eine der <b>Notizlisten</b> öffnen und
+        entsprechende Buttons für das Abspielen, Pausieren und Stoppen bzw. die jeweilige
+        Suchleiste nutzen.</p>
         ]]>
     </string>
 
@@ -508,23 +499,18 @@
     </string>
 
     <!-- Voice Note Editor -->
-    <string name="temporary_audio_file">temporaryAudioFile</string>
-    <string name="audio_file_suffix">mpeg4</string>
     <string name="voice_note_name">Sprachnotiz vom </string>
     <string name="default_played_timer">00:00</string>
-    <string name="error_no_playable_record">Keine abspielbare Aufnahme vorhanden.</string>
     <string name="record_permission_needed">Erlaubnis zur Aufnahme erforderlich</string>
     <string name="record_permission_alert_msg">
         Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
     </string>
+    <string name="voice_note_saved">Die Sprachnotiz wurde gespeichert.</string>
 
     <!-- Voice Note Editor Image Descriptions -->
-    <string name="record_microphone">record_microphone</string>
-    <string name="stop_button_note">Stop Button Note</string>
-    <string name="play_button_note">Play Button Note</string>
-    <string name="microphone">Microphone</string>
-    <string name="play_note">Play Note</string>
-    <string name="stop_note">Stop Note</string>
-    <string name="voice_note_saved">Die Sprachnotiz wurde gespeichert.</string>
+    <string name="record_microphone">Record Microphone Icon</string>
+    <string name="stop_button_note">Stop Button</string>
+    <string name="play_button_note">Play Button</string>
+    <string name="microphone">Microphone Icon</string>
 
 </resources>

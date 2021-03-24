@@ -38,7 +38,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_toEndOf="@+id/seekBar"
                 android:background="@null"
-                android:contentDescription="@string/play_note"
+                android:contentDescription="@string/play_button_note"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon_play" />
 
@@ -49,7 +49,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/play_note"
                 android:background="@null"
-                android:contentDescription="@string/stop_note"
+                android:contentDescription="@string/stop_button_note"
                 android:scaleType="fitXY"
                 android:src="@drawable/icon_stop" />
 
