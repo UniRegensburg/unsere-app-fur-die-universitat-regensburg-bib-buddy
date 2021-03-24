@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * The VoiceNoteEditorFragment is responsible for the note in the voice editor.
+ * The VoiceNoteEditorFragment is responsible for creating and saving voice notes.
  *
  * @author Sabrina Freisleben
  */
