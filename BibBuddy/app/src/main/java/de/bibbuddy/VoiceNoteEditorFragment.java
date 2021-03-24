@@ -39,7 +39,6 @@ public class VoiceNoteEditorFragment extends Fragment {
 
   private MediaRecorder recorder;
   private File newAudio;
-
   private boolean isRecording = false;
 
   @Override
