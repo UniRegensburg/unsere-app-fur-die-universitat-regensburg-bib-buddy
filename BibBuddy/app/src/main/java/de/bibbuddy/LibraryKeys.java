@@ -12,8 +12,6 @@ public class LibraryKeys {
 
   public static final String BOOK_ID = "book_id";
   public static final String BOOK_TITLE = "book_title";
-  public static final String BOOK_AUTHORS = "book_authors";
-  public static final String BOOK_YEAR = "book_year";
 
   public static final String NOTE_ID = "note_id";
   public static final String NOTE_NAME = "note_name";

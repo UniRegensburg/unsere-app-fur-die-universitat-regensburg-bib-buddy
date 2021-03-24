@@ -492,7 +492,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         .commit();
   }
 
-  private Bundle createBookBundle(BookItem item) {
+  private Bundle createBookBundle(LibraryItem item) {
     Bundle bundle = new Bundle();
 
     Long currentBookId = item.getId();
@@ -503,9 +503,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     bundle.putLong(LibraryKeys.BOOK_ID, currentBookId);
     bundle.putString(LibraryKeys.BOOK_TITLE, currentBookTitle);
-
-    bundle.putString(LibraryKeys.BOOK_AUTHORS, item.getAuthors());
-    bundle.putString(LibraryKeys.BOOK_YEAR, String.valueOf(item.getYear()));
 
     return bundle;
   }

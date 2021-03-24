@@ -80,7 +80,6 @@ public class BookNotesView extends Fragment {
     updateBookNoteList(noteList);
 
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-    fillBookData();
 
     //((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
@@ -96,6 +95,8 @@ public class BookNotesView extends Fragment {
         + bookDao.findById(bookId).getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
+
+    fillBookData();
 
     return view;
   }
@@ -326,15 +327,17 @@ public class BookNotesView extends Fragment {
 
   private void fillBookData() {
     Bundle bundle = this.getArguments();
+    Book book = bookDao.findById(bookId);
+    BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
 
     TextView bookTitle = view.findViewById(R.id.book_title);
-    bookTitle.setText(bundle.getString(LibraryKeys.BOOK_TITLE));
+    bookTitle.setText(book.getTitle());
 
     TextView bookAuthors = view.findViewById(R.id.book_authors);
-    bookAuthors.setText(bundle.getString(LibraryKeys.BOOK_AUTHORS));
+    bookAuthors.setText(bookModel.getAuthorString(bookId));
 
     TextView bookYear = view.findViewById(R.id.book_year);
-    bookYear.setText(bundle.getString(LibraryKeys.BOOK_YEAR));
+    bookYear.setText(String.valueOf(book.getPubYear()));
   }
 
   private void setupRecyclerView(Long bookId) {
