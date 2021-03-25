@@ -327,8 +327,8 @@ public class BookNotesView extends Fragment {
 
   private void fillBookData() {
     Bundle bundle = this.getArguments();
-    Book book = bookDao.findById(bookId);
     BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
+    Book book = bookModel.getBookById(bookId);
 
     TextView bookTitle = view.findViewById(R.id.book_title);
     bookTitle.setText(book.getTitle());

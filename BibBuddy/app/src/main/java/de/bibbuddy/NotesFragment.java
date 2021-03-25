@@ -129,8 +129,6 @@ public class NotesFragment extends Fragment {
     for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
       notesRecyclerView.getChildAt(i).setSelected(false);
     }
-
-    adapter.getSelectedNoteItems().clear();
   }
 
   private void performDelete() {
