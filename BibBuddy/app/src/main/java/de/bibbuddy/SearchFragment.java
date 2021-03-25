@@ -69,7 +69,6 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     setupSearchInput();
     setupRecyclerView();
-    setupSearchButton();
     setupFilterButton();
 
     setHasOptionsMenu(true);
@@ -158,19 +157,6 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     } else {
       emptyView.setVisibility(View.GONE);
     }
-  }
-
-  private void setupSearchButton() {
-    ImageButton searchBtn = view.findViewById(R.id.search_btn);
-
-    searchBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        String searchText = searchInput.getText().toString();
-        ((MainActivity) requireActivity()).setSearchText(searchText);
-        searchItems(searchText);
-      }
-    });
   }
 
   private void setupFilterButton() {

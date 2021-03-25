@@ -121,6 +121,10 @@ public class BookModel {
     return bookDao.getAllAuthorsForBook(bookId);
   }
 
+  public String getAuthorString(Long bookId) {
+    return convertAuthorListToString(getAuthorList(bookId));
+  }
+
   private void deleteAuthors(Long bookId) {
     List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
 
@@ -231,7 +235,7 @@ public class BookModel {
    * Gets the sorted bookList by sortCriteria with the given bookList.
    *
    * @param sortCriteria sortCriteria of the list
-   * @param bookList bookList that should be sorted
+   * @param bookList     bookList that should be sorted
    * @return Returns the sorted bookList
    */
   public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {

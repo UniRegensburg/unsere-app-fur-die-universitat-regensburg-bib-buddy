@@ -4,16 +4,15 @@
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="150dp"
+    android:layout_marginTop="100dp"
+    android:layout_marginBottom="75dp"
     android:paddingStart="15dp"
-    android:paddingEnd="15dp"
-    android:translationY="80dp">
+    android:paddingEnd="15dp">
 
     <TextView
         android:id="@+id/empty_notes_list_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
         android:layout_centerHorizontal="true"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"

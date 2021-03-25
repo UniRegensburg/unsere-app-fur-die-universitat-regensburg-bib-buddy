@@ -81,7 +81,7 @@ public class BookNotesView extends Fragment {
 
     String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
 
-    ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
+    //((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
     ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
@@ -95,6 +95,8 @@ public class BookNotesView extends Fragment {
         + bookDao.findById(bookId).getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
+
+    fillBookData();
 
     return view;
   }
@@ -180,7 +182,6 @@ public class BookNotesView extends Fragment {
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        deselectNoteItems();
       }
     });
 
@@ -188,11 +189,15 @@ public class BookNotesView extends Fragment {
       @Override
       public void onClick(DialogInterface dialog, int which) {
         final int notesNumber = adapter.getSelectedNoteItems().size();
+
         bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
         adapter.notifyDataSetChanged();
         noteList = bookNotesViewModel.getBookNoteList(bookId);
+
         updateBookNoteList(noteList);
+        deselectNoteItems();
         updateEmptyView(noteList);
+
         if (notesNumber > 1) {
           Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
         } else {
@@ -318,6 +323,21 @@ public class BookNotesView extends Fragment {
     bundle.putLong(LibraryKeys.NOTE_ID, currentNoteId);
 
     return bundle;
+  }
+
+  private void fillBookData() {
+    Bundle bundle = this.getArguments();
+    BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
+    Book book = bookModel.getBookById(bookId);
+
+    TextView bookTitle = view.findViewById(R.id.book_title);
+    bookTitle.setText(book.getTitle());
+
+    TextView bookAuthors = view.findViewById(R.id.book_authors);
+    bookAuthors.setText(bookModel.getAuthorString(bookId));
+
+    TextView bookYear = view.findViewById(R.id.book_year);
+    bookYear.setText(String.valueOf(book.getPubYear()));
   }
 
   private void setupRecyclerView(Long bookId) {

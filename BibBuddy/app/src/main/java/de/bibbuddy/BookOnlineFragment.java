@@ -42,7 +42,6 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     });
 
     setupSearchInput();
-    setupSearchButton();
 
     Bundle bundle = this.getArguments();
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
@@ -118,17 +117,6 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     });
 
     closeFragment();
-  }
-
-  private void setupSearchButton() {
-    ImageButton searchBtn = view.findViewById(R.id.search_btn);
-
-    searchBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleIsbnInput();
-      }
-    });
   }
 
   private void setupSearchInput() {

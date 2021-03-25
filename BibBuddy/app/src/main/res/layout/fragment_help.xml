@@ -3,22 +3,19 @@
     android:id="@+id/fragment_help"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="58dp"
-    android:layout_marginBottom="75dp"
-    >
+    android:layout_marginTop="100dp"
+    android:layout_marginBottom="75dp">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/manual_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            />
+            android:layout_marginRight="20dp" />
+
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
