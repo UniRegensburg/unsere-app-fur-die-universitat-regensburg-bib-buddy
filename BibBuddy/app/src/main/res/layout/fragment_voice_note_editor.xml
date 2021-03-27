@@ -16,10 +16,10 @@
         android:scaleType="fitCenter"
         app:rb_color="@color/flirt_dark"
         app:rb_duration="2200"
-        app:rb_radius="16dp"
-        app:rb_rippleAmount="8"
-        app:rb_scale="6"
-        app:rb_strokeWidth="10dp"
+        app:rb_radius="14dp"
+        app:rb_rippleAmount="5"
+        app:rb_scale="7"
+        app:rb_strokeWidth="6dp"
         app:rb_type="fillRipple">
 
         <ImageButton
