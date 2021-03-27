@@ -34,6 +34,7 @@
                 android:id="@+id/play_note"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="7dp"
                 android:layout_toEndOf="@+id/seekBar"
                 android:background="@null"
@@ -45,6 +46,7 @@
                 android:id="@+id/stop_note"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/play_note"
                 android:background="@null"
                 android:contentDescription="@string/stop_button_note"
@@ -59,7 +61,7 @@
                 android:layout_marginStart="60dp"
                 android:text="@string/default_played_timer"
                 android:textSize="12sp"
-                android:translationY="-5dp" />
+                android:translationY="-3dp" />
 
             <TextView
                 android:id="@+id/total_time"
@@ -68,7 +70,7 @@
                 android:layout_below="@+id/seekBar"
                 android:layout_marginStart="258dp"
                 android:textSize="12sp"
-                android:translationY="-5dp" />
+                android:translationY="-3dp" />
 
             <app.minimize.com.seek_bar_compat.SeekBarCompat
                 android:id="@+id/seekBar"
