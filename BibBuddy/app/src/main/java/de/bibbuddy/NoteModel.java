@@ -90,7 +90,7 @@ public class NoteModel {
     return noteList;
   }
 
-  public String getNoteFilePath(Long id){
+  public String getNoteFilePath(Long id) {
     return noteDao.getNoteFilePath(getNoteById(id).getNoteFileId());
   }
 
@@ -109,9 +109,11 @@ public class NoteModel {
         if (name.length() > 20) {
           name = name.substring(0, 20) + " ...";
         }
-        noteItemList.add(new NoteTextItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
+        noteItemList
+            .add(new NoteTextItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       } else if (note.getType() == 1) {
-        noteItemList.add(new NoteAudioItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
+        noteItemList
+            .add(new NoteAudioItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       }
     }
 
