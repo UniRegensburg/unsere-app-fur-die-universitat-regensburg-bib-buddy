@@ -81,14 +81,14 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_help_texteditor) {
-      handleManualTexteditor();
+      handleManualTextNoteEditor();
     } else {
       Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleManualTexteditor() {
+  private void handleManualTextNoteEditor() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.text_editor_help_text);
 
