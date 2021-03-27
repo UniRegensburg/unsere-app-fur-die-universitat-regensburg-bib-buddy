@@ -146,6 +146,7 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
+    holder.itemView.findViewById(R.id.voice_note_layout).setVisibility(View.VISIBLE);
     ImageButton playButton = holder.getPlayNoteButton();
     playButtons.add(playButton);
     playButton.setVisibility(View.VISIBLE);
