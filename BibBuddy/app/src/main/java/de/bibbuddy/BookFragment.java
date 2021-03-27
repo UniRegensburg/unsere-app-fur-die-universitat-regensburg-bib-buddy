@@ -518,7 +518,9 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   @Override
   public void onItemClicked(int position) {
     BookItem bookItem = bookModel.getSelectedBookItem(position);
-    ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
+    // Not needed anymore since book data is now displayed in the bookNotesFragment and the
+    // header would therefore only double (which is not very appealing)
+    // ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
 
     BookNotesView fragment = new BookNotesView();
     getActivity().getSupportFragmentManager().beginTransaction()

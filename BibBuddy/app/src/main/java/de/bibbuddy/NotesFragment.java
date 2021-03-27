@@ -40,7 +40,11 @@ public class NotesFragment extends Fragment {
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        closeFragment();
+        if (adapter.getSelectedNoteItems().size() > 0) {
+          deselectNoteItems();
+        } else {
+          closeFragment();
+        }
       }
     });
 
@@ -114,7 +118,7 @@ public class NotesFragment extends Fragment {
           getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
     }
 
-    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> deselectNoteItems());
+    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> {});
     alertDeleteBookNote.setPositiveButton(R.string.delete, (dialog, which) -> performDelete());
 
     alertDeleteBookNote.show();
@@ -128,19 +132,24 @@ public class NotesFragment extends Fragment {
 
   private void performDelete() {
     int selectedItems = adapter.getSelectedNoteItems().size();
+
     if (selectedItems > 0) {
       Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT)
           .show();
     } else {
       Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }
+
     for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
       if (notesRecyclerView.getChildAt(i).isSelected()) {
         noteModel.deleteNote(noteList.get(i).getId());
       }
     }
+
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
+
+    deselectNoteItems();
     updateEmptyListView(noteList);
   }
 

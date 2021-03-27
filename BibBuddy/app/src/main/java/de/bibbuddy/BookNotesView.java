@@ -3,6 +3,7 @@ package de.bibbuddy;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -100,9 +101,9 @@ public class BookNotesView extends Fragment {
     Bundle bundle = this.getArguments();
     if (bundle != null) {
       bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-      String bookTitle = bundle.getString(LibraryKeys.BOOK_TITLE);
-      ((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
     }
+
+    //((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
 
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
     ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
@@ -121,6 +122,8 @@ public class BookNotesView extends Fragment {
         + bookDao.findById(bookId).getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
+
+    fillBookData();
 
     return view;
   }
@@ -185,19 +188,31 @@ public class BookNotesView extends Fragment {
           getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
     }
 
-    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> deselectNoteItems());
+    alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+    });
 
-    alertDeleteBookNote.setPositiveButton(R.string.delete, (dialog, which) -> {
-      final int notesNumber = adapter.getSelectedNoteItems().size();
-      bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
-      adapter.notifyDataSetChanged();
-      noteList = bookNotesViewModel.getBookNoteList(bookId);
-      updateBookNoteList(noteList);
-      updateEmptyView(noteList);
-      if (notesNumber > 1) {
-        Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+    alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        final int notesNumber = adapter.getSelectedNoteItems().size();
+
+        bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
+        adapter.notifyDataSetChanged();
+        noteList = bookNotesViewModel.getBookNoteList(bookId);
+
+        updateBookNoteList(noteList);
+        deselectNoteItems();
+        updateEmptyView(noteList);
+
+        if (notesNumber > 1) {
+          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+        } else {
+          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+        }
+
       }
     });
 
@@ -325,6 +340,30 @@ public class BookNotesView extends Fragment {
   private void updateBookNoteList(List<NoteItem> noteList) {
     sortNoteList();
     updateEmptyView(noteList);
+  }
+
+  private Bundle createNoteBundle(NoteItem item) {
+    Bundle bundle = new Bundle();
+    Long currentNoteId = item.getId();
+    bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+    bundle.putLong(LibraryKeys.NOTE_ID, currentNoteId);
+
+    return bundle;
+  }
+
+  private void fillBookData() {
+    Bundle bundle = this.getArguments();
+    BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
+    Book book = bookModel.getBookById(bookId);
+
+    TextView bookTitle = view.findViewById(R.id.book_title);
+    bookTitle.setText(book.getTitle());
+
+    TextView bookAuthors = view.findViewById(R.id.book_authors);
+    bookAuthors.setText(bookModel.getAuthorString(bookId));
+
+    TextView bookYear = view.findViewById(R.id.book_year);
+    bookYear.setText(String.valueOf(book.getPubYear()));
   }
 
   private void setupRecyclerView(Long bookId) {

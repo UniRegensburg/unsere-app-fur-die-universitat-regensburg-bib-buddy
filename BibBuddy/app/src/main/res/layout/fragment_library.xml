@@ -6,15 +6,14 @@
     android:id="@+id/fragment_library"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="75dp"
-    android:layout_marginTop="40dp">
+    android:layout_marginTop="100dp"
+    android:layout_marginBottom="75dp">
 
     <TextView
         android:id="@+id/list_view_library_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="58dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:text="@string/library_help"
@@ -32,7 +31,6 @@
         android:id="@+id/library_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:clipToPadding="false"

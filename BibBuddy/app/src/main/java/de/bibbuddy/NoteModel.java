@@ -96,21 +96,25 @@ public class NoteModel {
 
   private List<NoteItem> createItemList(List<Note> noteList) {
     List<NoteItem> noteItemList = new ArrayList<>();
+
     for (Note note : noteList) {
       Long noteId = note.getId();
       Long modDate = note.getModDate();
       String name = "";
+
       if (note.getType() == 0) {
         name = note.getName();
         name = Jsoup.parse(name).text();
-        if (name.length() > 40) {
-          name = name.substring(0, 35) + " ...";
+
+        if (name.length() > 20) {
+          name = name.substring(0, 20) + " ...";
         }
-        noteItemList.add(new NoteTextItem(modDate, name, note.getText(), noteId, noteDao.findBookIdByNoteId(noteId)));
+        noteItemList.add(new NoteTextItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       } else if (note.getType() == 1) {
         noteItemList.add(new NoteAudioItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       }
     }
+
     return noteItemList;
   }
 

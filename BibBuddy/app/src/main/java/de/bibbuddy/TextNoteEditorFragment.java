@@ -20,9 +20,12 @@ import androidx.fragment.app.FragmentManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 
 /**
@@ -109,15 +112,25 @@ public class TextNoteEditorFragment extends Fragment {
   private void saveNote() {
     String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
     String rawText = Jsoup.parse(text).text();
+    String[] lines = text.split("\\n");
     String name = "";
-    BufferedReader bufferedReader = new BufferedReader(new StringReader(rawText));
-    try {
-      name = bufferedReader.readLine();
-    } catch (IOException e) {
-      e.printStackTrace();
+
+    Pattern pattern = Pattern.compile("\\S+");
+    Matcher matcher;
+
+    for (String line : lines) {
+      String rawLine = Jsoup.parse(line).text();
+      matcher = pattern.matcher(rawLine);
+
+      if (matcher.find()) {
+        name = rawLine;
+        break;
+      }
     }
+
     if (rawText.length() != 0) {
       assert getArguments() != null;
+
       if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {

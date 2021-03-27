@@ -1,45 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_search"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="65dp"
+    android:layout_marginTop="100dp"
     android:layout_marginBottom="75dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp">
 
-        <include
-            layout="@layout/search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/search_part"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <ImageButton
-                android:id="@+id/filter_btn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:adjustViewBounds="true"
-                android:padding="5dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/filter_icon"
-                android:tint="@color/tiffany"
-                android:background="#80ffffff"
-                android:layout_below="@+id/search_bar"
-                android:layout_alignParentEnd="true"
-                app:layout_constraintTop_toBottomOf="@+id/search_bar" />
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/filter_btn">
+
+                <include
+                    layout="@layout/search_bar" />
+
+            </LinearLayout>
+
+            <ImageButton
+                    android:id="@+id/filter_btn"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/filter_icon"
+                    android:tint="@color/tiffany"
+                    android:background="#80ffffff"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="MissingConstraints" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/list_view_search_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/filter_btn"
+            android:layout_below="@+id/search_part"
             android:layout_marginTop="60dp"
             android:layout_centerHorizontal="true"
             android:text="@string/search_empty"
@@ -50,17 +60,14 @@
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_below="@id/filter_btn"
+                android:layout_marginTop="60dp"
             android:layout_gravity="bottom"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:scrollbars="vertical"
             app:layoutManager="LinearLayoutManager"
-            app:layout_anchor="@+id/search_bar"
+            app:layout_anchor="@+id/search_part"
             app:layout_anchorGravity="bottom" />
 
     </RelativeLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
