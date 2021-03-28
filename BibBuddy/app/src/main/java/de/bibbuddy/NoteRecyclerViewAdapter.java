@@ -279,6 +279,10 @@ public class NoteRecyclerViewAdapter
     notifyItemRemoved(position);
   }
 
+  public NoteItem getNoteItem(int position) {
+    return noteList.get(position);
+  }
+
   /**
    * This method fetches the items selected in the recyclerView.
    *

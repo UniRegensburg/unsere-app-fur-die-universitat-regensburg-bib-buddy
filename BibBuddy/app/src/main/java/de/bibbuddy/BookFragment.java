@@ -34,6 +34,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
+import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +46,11 @@ import java.util.List;
  * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class BookFragment extends Fragment implements BookRecyclerViewAdapter.BookListener,
-    BookFormFragment.ChangeBookListener {
+    BookFormFragment.ChangeBookListener, SwipeLeftRightCallback.Listener {
   private Long shelfId;
   private String shelfName;
   private View view;
   private Context context;
-  private BottomNavigationView bottomNavigationView;
 
   private BookModel bookModel;
   private BookRecyclerViewAdapter adapter;
@@ -81,7 +82,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     view = inflater.inflate(R.layout.fragment_book, container, false);
     context = view.getContext();
 
-    bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+    BottomNavigationView bottomNavigationView =
+        requireActivity().findViewById(R.id.bottom_navigation);
     bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
@@ -101,9 +103,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
     importBibTex = new ImportBibTex(context);
 
-    RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
+    SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
+    recyclerView.setListener(this);
 
     setupRecyclerView();
 
@@ -262,7 +265,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           getString(R.string.delete_book_message) + " " + getString(R.string.delete_warning));
     }
 
-    alertDeleteBook.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+    alertDeleteBook.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
       }
@@ -271,22 +274,25 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     alertDeleteBook.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        final int booksNumber = selectedBookItems.size();
-
-        bookModel.deleteBooks(selectedBookItems, shelfId);
-        updateBookList(bookModel.getCurrentBookList());
-
-        if (booksNumber > 1) {
-          Toast.makeText(context, getString(R.string.deleted_books), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
-        }
-
+        performDeleteBook();
         deselectBookItems();
       }
     });
 
     alertDeleteBook.show();
+  }
+
+  private void performDeleteBook() {
+    final int booksNumber = selectedBookItems.size();
+
+    bookModel.deleteBooks(selectedBookItems, shelfId);
+    updateBookList(bookModel.getCurrentBookList());
+
+    if (booksNumber > 1) {
+      Toast.makeText(context, getString(R.string.deleted_books), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(context, getString(R.string.deleted_book), Toast.LENGTH_SHORT).show();
+    }
   }
 
   private void handleSortBook() {
@@ -520,11 +526,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   @Override
-  public void onItemClicked(int position) {
+  public void onBookClicked(int position) {
     BookItem bookItem = bookModel.getSelectedBookItem(position);
-    // Not needed anymore since book data is now displayed in the bookNotesFragment and the
-    // header would therefore only double (which is not very appealing)
-    // ((MainActivity) getActivity()).updateHeaderFragment(bookItem.getName());
 
     BookNotesView fragment = new BookNotesView();
     getActivity().getSupportFragmentManager().beginTransaction()
@@ -622,7 +625,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void deselectBookItems() {
-    RecyclerView bookListView = getView().findViewById(R.id.book_recycler_view);
+    SwipeableRecyclerView bookListView = getView().findViewById(R.id.book_recycler_view);
     for (int i = 0; i < bookListView.getChildCount(); i++) {
       bookListView.getChildAt(i).setSelected(false);
     }
@@ -648,7 +651,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   @Override
-  public void onLongItemClicked(int position, BookItem bookItem, View v) {
+  public void onBookLongClicked(int position, BookItem bookItem, View v) {
     if (v.isSelected()) {
       v.setSelected(false);
       selectedBookItems.remove(bookItem);
@@ -674,4 +677,16 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   }
 
+  @Override
+  public void onSwipedLeft(int position) {
+    selectedBookItems.add(adapter.getBookItem(position));
+    handleDeleteBook();
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onSwipedRight(int position) {
+    selectedBookItems.add(adapter.getBookItem(position));
+    handleChangeBookData();
+  }
 }

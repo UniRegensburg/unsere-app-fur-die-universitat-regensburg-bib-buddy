@@ -16,7 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
+import com.tsuryo.swipeablerv.SwipeableRecyclerView;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,11 +26,11 @@ import java.util.List;
  *
  * @author Sabrina Freisleben
  */
-public class NotesFragment extends Fragment {
+public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Listener {
 
   public static List<NoteItem> noteList;
   private static NoteModel noteModel;
-  private RecyclerView notesRecyclerView;
+  private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
   private TextView emptyListView;
@@ -62,7 +64,7 @@ public class NotesFragment extends Fragment {
         .setVisibilityImportShareButton(View.GONE, View.GONE);
     setupSortBtn();
     setHasOptionsMenu(true);
-    setupRecyclerView();
+    setupRecyclerView(view);
 
     return view;
   }
@@ -96,7 +98,7 @@ public class NotesFragment extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
     long id = item.getItemId();
     if (id == R.id.menu_note_list_delete) {
-      handleDeleteNote();
+      handleDeleteNote(adapter.getSelectedNoteItems());
     } else if (id == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
     } else if (id == R.id.menu_imprint) {
@@ -106,7 +108,7 @@ public class NotesFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleDeleteNote() {
+  private void handleDeleteNote(List<NoteItem> itemsToDelete) {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(requireActivity());
     alertDeleteBookNote.setCancelable(false);
 
@@ -120,8 +122,9 @@ public class NotesFragment extends Fragment {
           getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
     }
 
-    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> {});
-    alertDeleteBookNote.setPositiveButton(R.string.delete, (dialog, which) -> performDelete());
+    alertDeleteBookNote.setNegativeButton(R.string.cancel, (dialog, which) -> deselectNoteItems());
+    alertDeleteBookNote
+        .setPositiveButton(R.string.delete, (dialog, which) -> performDelete(itemsToDelete));
 
     alertDeleteBookNote.show();
   }
@@ -132,24 +135,18 @@ public class NotesFragment extends Fragment {
     }
   }
 
-  private void performDelete() {
-    int selectedItems = adapter.getSelectedNoteItems().size();
+  private void performDelete(List<NoteItem> itemsToDelete) {
+    itemsToDelete.forEach(n -> noteModel.deleteNote(n.getId()));
 
-    if (selectedItems > 0) {
+    noteList = noteModel.getNoteList();
+    adapter.setNoteList(noteList);
+
+    if (itemsToDelete.size() > 0) {
       Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT)
           .show();
     } else {
       Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }
-
-    for (int i = 0; i < notesRecyclerView.getChildCount(); i++) {
-      if (notesRecyclerView.getChildAt(i).isSelected()) {
-        noteModel.deleteNote(noteList.get(i).getId());
-      }
-    }
-
-    noteList = noteModel.getNoteList();
-    adapter.setNoteList(noteList);
 
     deselectNoteItems();
     updateEmptyListView(noteList);
@@ -171,10 +168,12 @@ public class NotesFragment extends Fragment {
         .commit();
   }
 
-  private void setupRecyclerView() {
+  private void setupRecyclerView(View view) {
+    notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
     adapter =
         new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList, noteModel);
     notesRecyclerView.setAdapter(adapter);
+    notesRecyclerView.setListener(this);
     updateEmptyListView(noteList);
   }
 
@@ -206,6 +205,16 @@ public class NotesFragment extends Fragment {
   private void sortNoteList() {
     noteList = noteModel.getAllSortedNoteList(sortCriteria);
     adapter.setNoteList(noteList);
+  }
+
+  @Override
+  public void onSwipedLeft(int position) {
+    handleDeleteNote(Collections.singletonList(noteList.get(position)));
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onSwipedRight(int position) {
   }
 
 }

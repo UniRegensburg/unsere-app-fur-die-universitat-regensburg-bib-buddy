@@ -27,7 +27,9 @@ import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
+import com.tsuryo.swipeablerv.SwipeableRecyclerView;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,50 +37,20 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
-public class BookNotesView extends Fragment {
+public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Listener {
 
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
+  private List<NoteItem> selectedNoteItems;
 
-  private ActivityResultLauncher<String> requestPermissionLauncher;
-
-  private List<NoteItem> noteList;
   private BookDao bookDao;
   private NoteDao noteDao;
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setupPermissionLauncher();
-  }
-
-  /** Register permissions callback, which handles the user's response to the
-    * system permissions dialog. Save the return value, an instance of
-    * ActivityResultLauncher, as an instance variable.
-    */
-  private void setupPermissionLauncher() {
-    requestPermissionLauncher =
-        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        
-          if (isGranted) {
-            Bundle bundle = new Bundle();
-            bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-            VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
-            nextFrag.setArguments(bundle);
-            
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, nextFrag,
-                    LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
-                .addToBackStack(null)
-                .commit();
-          }
-        });
-  }
 
   @Nullable
   @Override
@@ -96,22 +68,23 @@ public class BookNotesView extends Fragment {
       }
     });
 
+    Bundle bundle = this.getArguments();
+    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
+
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
-    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
       bookId = bundle.getLong(LibraryKeys.BOOK_ID);
     }
+    updateBookNoteList(selectedNoteItems);
 
-    //((MainActivity) requireActivity()).updateHeaderFragment(bookTitle);
 
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
     ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
-    setupSortBtn();
 
-    setupRecyclerView(bookId);
+    setupSortBtn();
     setHasOptionsMenu(true);
     setupAddButton();
     updateBookNoteList(noteList);
@@ -162,7 +135,7 @@ public class BookNotesView extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
     if (itemId == R.id.menu_delete_note) {
-      handleDeleteNote();
+      handleDeleteNote(adapter.getSelectedNoteItems());
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
     } else if (itemId == R.id.menu_imprint) {
@@ -178,7 +151,7 @@ public class BookNotesView extends Fragment {
     deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
   }
 
-  private void handleDeleteNote() {
+  private void handleDeleteNote(List<NoteItem> selectedItems) {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
     alertDeleteBookNote.setCancelable(false);
 
@@ -195,36 +168,40 @@ public class BookNotesView extends Fragment {
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        deselectNoteItems();
       }
     });
 
     alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        final int notesNumber = adapter.getSelectedNoteItems().size();
-
-        bookNotesViewModel.deleteNotes(adapter.getSelectedNoteItems());
-        adapter.notifyDataSetChanged();
-        noteList = bookNotesViewModel.getBookNoteList(bookId);
-
-        updateBookNoteList(noteList);
-        deselectNoteItems();
-        updateEmptyView(noteList);
-
-        if (notesNumber > 1) {
-          Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
-        }
-
+        performDeleteNotes(selectedItems);
       }
     });
 
     alertDeleteBookNote.show();
   }
 
+
+  private void performDeleteNotes(List<NoteItem> itemsToDelete) {
+    bookNotesViewModel.deleteNotes(itemsToDelete);
+    adapter.notifyDataSetChanged();
+
+    if (itemsToDelete.size() > 1) {
+      Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+    }
+
+
+    updateBookNoteList(itemsToDelete);
+    deselectNoteItems();
+
+    updateEmptyView(selectedNoteItems);
+  }
+
   private void deselectNoteItems() {
-    RecyclerView bookNotesListView = requireView().findViewById(R.id.book_notes_recycler_view);
+    SwipeableRecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
     }
@@ -353,15 +330,6 @@ public class BookNotesView extends Fragment {
     updateEmptyView(noteList);
   }
 
-  private Bundle createNoteBundle(NoteItem item) {
-    Bundle bundle = new Bundle();
-    Long currentNoteId = item.getId();
-    bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-    bundle.putLong(LibraryKeys.NOTE_ID, currentNoteId);
-
-    return bundle;
-  }
-
   private void fillBookData() {
     Bundle bundle = this.getArguments();
     BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
@@ -379,15 +347,16 @@ public class BookNotesView extends Fragment {
 
   private void setupRecyclerView(Long bookId) {
     bookNotesViewModel = new BookNotesViewModel(getContext());
-    noteList = bookNotesViewModel.getBookNoteList(bookId);
+    selectedNoteItems = bookNotesViewModel.getBookNoteList(bookId);
 
-    RecyclerView notesRecyclerView =
+    SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList,
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), selectedNoteItems);
         bookNotesViewModel.getNoteModel());
     notesRecyclerView.setAdapter(adapter);
+    notesRecyclerView.setListener(this);
 
-    updateEmptyView(noteList);
+    updateEmptyView(selectedNoteItems);
   }
 
   private void updateEmptyView(List<NoteItem> noteList) {
@@ -401,7 +370,6 @@ public class BookNotesView extends Fragment {
   }
 
   private void shareBookNoteBibIntent() {
-
     Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
         exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
 
@@ -415,5 +383,14 @@ public class BookNotesView extends Fragment {
     startActivity(Intent.createChooser(shareBookNoteIntent, "SEND"));
 
   }
+
+  @Override
+  public void onSwipedLeft(int position) {
+    handleDeleteNote(Collections.singletonList(selectedNoteItems.get(position)));
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onSwipedRight(int position) {}
 
 }

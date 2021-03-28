@@ -28,7 +28,7 @@
         android:layout_height="match_parent" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.tsuryo.swipeablerv.SwipeableRecyclerView
         android:id="@+id/book_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,7 +38,11 @@
         android:clipToPadding="false"
         android:orientation="vertical"
         android:scrollbars="vertical"
-        app:layoutManager="LinearLayoutManager" />
+        app:layoutManager="LinearLayoutManager"
+        app:rightBgColor="@color/delete"
+        app:rightImage="@drawable/ic_delete"
+        app:leftBgColor="@color/edit"
+        app:leftImage="@drawable/ic_edit"/>
 
     <include
             layout="@layout/add_button"
