@@ -110,6 +110,10 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
         authorManualFragment();
         break;
 
+      case R.id.menu_imprint:
+        ((MainActivity) getActivity()).openImprint();
+        break;
+
       default:
         Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
     }

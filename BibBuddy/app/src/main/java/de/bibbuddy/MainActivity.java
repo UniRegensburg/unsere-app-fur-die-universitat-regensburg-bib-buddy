@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
   private final String searchFragmentTag = "search";
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
+  private final String imprintFragmentTag = "imprint";
   public ImageButton importBtn;
   public ImageButton shareBtn;
   public ImageButton sortBtn;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
   private NotesFragment notesFragment;
+  private ImprintFragment imprintFragment;
+
   private SortCriteria sortCriteria;
   private boolean[] filterCriteria;
   private String searchText;
@@ -152,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
       case "notes":
         headerText.setText(getString(R.string.navigation_notes));
         break;
+      case "imprint":
+        headerText.setText(R.string.headerImprint);
+        break;
 
       default:
         headerText.setText(getString(R.string.app_name));
@@ -183,6 +189,17 @@ public class MainActivity extends AppCompatActivity {
     } else {
       sortBtn.setVisibility(View.GONE);
     }
+  }
+
+  /**
+   * Opens the imprint fragment.
+   */
+  public void openImprint() {
+    if (imprintFragment == null) {
+      imprintFragment = new ImprintFragment();
+    }
+    updateFragment(R.id.fragment_container_view, imprintFragment, imprintFragmentTag);
+    updateHeader(imprintFragmentTag);
   }
 
   public SortCriteria getSortCriteria() {

@@ -9,4 +9,8 @@
         android:id="@+id/menu_help_book_note"
         android:title="@string/help" />
 
+    <item
+            android:id="@+id/menu_imprint"
+            android:title="@string/headerImprint" />
+
 </menu>

@@ -87,8 +87,8 @@ public class TextNoteEditorFragment extends Fragment {
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_help_texteditor) {
       handleManualTexteditor();
-    } else {
-      Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
+    } else if (item.getItemId() == R.id.menu_imprint) {
+      ((MainActivity) getActivity()).openImprint();
     }
     return super.onOptionsItemSelected(item);
   }

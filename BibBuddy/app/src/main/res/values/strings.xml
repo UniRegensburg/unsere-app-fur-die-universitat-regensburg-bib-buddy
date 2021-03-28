@@ -250,6 +250,13 @@
     <string name="imported_file_name_is">Importiere Datei:</string>
 
 
+    <!-- Sharing -->
+    <string name="share_file">BibTeX-Datei teilen:</string>
+    <string name="exception_failed_temp_file">
+        Das Schreiben der temporären Datei ist fehlgeschlagen:
+    </string>
+
+
     <!-- Search -->
     <string name="search">Suchen...</string>
     <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
@@ -272,12 +279,44 @@
     <string name="filter_note">Notizen</string>
 
 
+    <!-- Imprint Fragment -->
+    <string name="headerImprint">Impressum</string>
+    <string name="imprint"><![CDATA[
+        <h1><u>Hilfe zur Bibliothek</u></h1>
+        <p>Sie befinden sich in der Bibliotheksansicht. Hier werden alle Ihre angelegten Regale
+        angezeigt, in die Sie Ihre Bücher und Notizen speichern können.</p>
 
-    <!-- Sharing of BibTeX -->
-    <string name="share_file">BibTeX-Datei teilen:</string>
-    <string name="exception_failed_temp_file">
-        Das Schreiben der temporären Datei ist fehlgeschlagen:
-    </string>
+        <h2>Anlegen eines neuen Regal</h2>
+        <p>Ein neues Regal können Sie mit Klicken auf den <b>+-Button</b> angelegen. Geben Sie
+        anschließend den Name für das Regal ein und bestätigen Sie diesen per Klick auf den Button
+        <b>Hinzufügen</b>. <br>
+        Danach erscheint das neu angelegte Regal in der Übersicht. Mit Klick auf <b>Zurück</b>
+        gelangen Sie zur Übersicht ohne das Regal zu speichern.</p>
+
+        <h2>Regalnamen ändern</h2>
+        <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
+        das Menü und wählen Sie <b>Umbenennen</b> aus. Es erscheint ein Eingabefeld, in welchem Sie
+        den Namen ändern können, indem Sie die Änderung mit Klick auf den Button bestätigen.<br><br>
+        Wenn Sie auf <b>Zurück</b> gehen werden die Änderungen nicht gespeichert und Sie gelangen
+        zurück zur Übersicht. <br><br>
+
+        <b>Beachten</b> Sie, dass nur ein Regal ausgewählt sein darf, um dieses zu ändern.</p>
+
+        <h2>Regal löschen</h2>
+        <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
+        das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass Sie das Regal
+        endgültig löschen wollen.<br><br>
+        <u><b>Achtung!</b></u> Das Regal wird samt seinen enthaltenen Büchern und
+        Notizen gelöscht und kann nicht wieder hergestellt werden. <br><br>
+        Wenn Sie mehrere Regale gleichzeitig löschen wollen, wählen Sie mehrere Regale aus und
+        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+
+        <h2>Backup von Daten</h2>
+        <p>Sie können ein Backup Ihrer Daten in Form einer Datenbankdatei ertsellen, indem Sie oben
+        rechts auf das Menü klicken und <b>Backup</b> wählen. So werden alle Ihre Daten und
+        in einer Datei (.db) exportiert.</p>
+        ]]></string>
+
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>

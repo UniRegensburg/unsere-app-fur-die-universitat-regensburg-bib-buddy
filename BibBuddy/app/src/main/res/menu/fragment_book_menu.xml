@@ -13,4 +13,8 @@
         android:id="@+id/menu_help_book"
         android:title="@string/help" />
 
+    <item
+            android:id="@+id/menu_imprint"
+            android:title="@string/headerImprint" />
+
 </menu>

@@ -98,8 +98,10 @@ public class NotesFragment extends Fragment {
     long id = item.getItemId();
     if (id == R.id.menu_note_list_delete) {
       handleDeleteNote();
-    } else if (item.getItemId() == R.id.menu_note_list_help) {
+    } else if (id == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
+    } else if (id == R.id.menu_imprint) {
+      ((MainActivity) getActivity()).openImprint();
     }
 
     return super.onOptionsItemSelected(item);
