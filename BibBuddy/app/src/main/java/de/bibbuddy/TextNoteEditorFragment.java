@@ -147,12 +147,7 @@ public class TextNoteEditorFragment extends Fragment {
                            @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     richTextEditor = view.findViewById(R.id.editor);
-    ImageButton formatIndicator = view.findViewById(R.id.formatIndicator);
     formatArrow = view.findViewById(R.id.formatArrow);
-    formatIndicator.setOnClickListener(v -> {
-      formatOptions = view.findViewById(R.id.scroll_view);
-      slideUpOrDown();
-    });
     formatArrow.setOnClickListener(v -> {
       formatOptions = view.findViewById(R.id.scroll_view);
       slideUpOrDown();
@@ -176,7 +171,7 @@ public class TextNoteEditorFragment extends Fragment {
   public void slideUpOrDown() {
     if (!formatOptionsAreShown()) {
       formatOptions.setVisibility(View.VISIBLE);
-      formatArrow.setImageResource(R.drawable.arrow_up);
+      formatArrow.setImageResource(R.drawable.format_up);
       setupUndo();
       setupRedo();
       setupBold();
@@ -193,7 +188,7 @@ public class TextNoteEditorFragment extends Fragment {
 
   private void hideFormatOptions() {
     formatOptions.setVisibility(View.GONE);
-    formatArrow.setImageResource(R.drawable.arrow_down);
+    formatArrow.setImageResource(R.drawable.format_down);
   }
 
   private boolean formatOptionsAreShown() {
