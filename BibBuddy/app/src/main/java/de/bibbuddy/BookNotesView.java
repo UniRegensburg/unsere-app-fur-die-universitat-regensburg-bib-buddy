@@ -57,10 +57,10 @@ public class BookNotesView extends Fragment {
     setupPermissionLauncher();
   }
 
-  /* Register permissions callback, which handles the user's response to the
-   system permissions dialog. Save the return value, an instance of
-   ActivityResultLauncher, as an instance variable.
-   */
+  /** Register permissions callback, which handles the user's response to the
+    * system permissions dialog. Save the return value, an instance of
+    * ActivityResultLauncher, as an instance variable.
+    */
   private void setupPermissionLauncher() {
     requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
