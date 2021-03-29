@@ -42,8 +42,9 @@ public class ImprintFragment extends Fragment {
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
     // style text
-    Spanned styledText = HtmlCompat.fromHtml(getString(R.string.imprint), HtmlCompat.FROM_HTML_MODE_LEGACY,
-        null, null);
+    Spanned styledText =
+        HtmlCompat.fromHtml(getString(R.string.imprint), HtmlCompat.FROM_HTML_MODE_LEGACY,
+            null, null);
 
     TextView imprintView = view.findViewById(R.id.imprint_text);
     imprintView.setText(styledText);

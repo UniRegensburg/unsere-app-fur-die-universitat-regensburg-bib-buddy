@@ -195,9 +195,11 @@ public class MainActivity extends AppCompatActivity {
    * Opens the imprint fragment.
    */
   public void openImprint() {
+
     if (imprintFragment == null) {
       imprintFragment = new ImprintFragment();
     }
+
     updateFragment(R.id.fragment_container_view, imprintFragment, imprintFragmentTag);
     updateHeader(imprintFragmentTag);
   }
