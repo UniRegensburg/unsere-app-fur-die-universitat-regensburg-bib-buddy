@@ -64,11 +64,13 @@ public class BookNotesView extends Fragment {
   private void setupPermissionLauncher() {
     requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        
           if (isGranted) {
             Bundle bundle = new Bundle();
             bundle.putLong(LibraryKeys.BOOK_ID, bookId);
             VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
             nextFrag.setArguments(bundle);
+            
             requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_view, nextFrag,
                     LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
