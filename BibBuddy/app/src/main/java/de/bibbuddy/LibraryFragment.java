@@ -223,16 +223,29 @@ public class LibraryFragment extends Fragment
     if (selectedShelfItems.size() > 1) {
       alertDeleteShelf.setTitle(R.string.delete_shelves);
       alertDeleteShelf.setMessage(
-          getString(R.string.delete_shelves_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_shelves_message)
+              + convertShelfListToString(selectedShelfItems)
+              + getString(R.string.delete_counter_msg)
+              + getBooksToDeleteNumber(selectedShelfItems)
+              + " und " + getNotesToDeleteNumber(selectedShelfItems) + " "
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     } else {
       alertDeleteShelf.setTitle(R.string.delete_shelf);
       alertDeleteShelf.setMessage(
-          getString(R.string.delete_shelf_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_shelf_message)
+              + convertShelfListToString(selectedShelfItems)
+              + getString(R.string.delete_counter_msg)
+              + getBooksToDeleteNumber(selectedShelfItems)
+              + " und " + getNotesToDeleteNumber(selectedShelfItems) + " "
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     }
 
     alertDeleteShelf.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        deselectLibraryItems();
       }
     });
 
@@ -245,6 +258,50 @@ public class LibraryFragment extends Fragment
     });
 
     alertDeleteShelf.show();
+  }
+
+  private String convertShelfListToString(List<ShelfItem> shelfList) {
+    StringBuilder shelfs = new StringBuilder();
+
+    int counter = 1;
+    for (ShelfItem shelf : shelfList) {
+      shelfs.append(" \"").append(shelf.getName()).append("\"");
+
+      if (counter != shelfList.size()) {
+        shelfs.append(",");
+      }
+
+      shelfs.append(" ");
+      ++counter;
+    }
+
+    return shelfs.toString();
+  }
+
+  private String getBooksToDeleteNumber(List<ShelfItem> shelfList) {
+    int booksNumber = 0;
+    for (ShelfItem shelf : shelfList) {
+      booksNumber += shelf.getBookCount();
+    }
+
+    if (booksNumber == 1) {
+      return " einem " + getString(R.string.book);
+    }
+
+    return " " + booksNumber + " " + getString(R.string.books) + "n";
+  }
+
+  private String getNotesToDeleteNumber(List<ShelfItem> shelfList) {
+    int notesNumber = 0;
+    for (ShelfItem shelf : shelfList) {
+      notesNumber += shelf.getNoteCount();
+    }
+
+    if (notesNumber == 1) {
+      return " einer " + getString(R.string.note);
+    }
+
+    return " " + notesNumber + " " + getString(R.string.notes);
   }
 
   private void performDeleteShelf() {
@@ -468,6 +525,7 @@ public class LibraryFragment extends Fragment
 
   @Override
   public void onSwipedLeft(int position) {
+    deselectLibraryItems();
     selectedShelfItems.add(adapter.getLibraryItem(position));
     handleDeleteShelf();
     adapter.notifyDataSetChanged();

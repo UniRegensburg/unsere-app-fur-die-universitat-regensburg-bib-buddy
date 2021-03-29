@@ -158,11 +158,17 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     if (adapter.getSelectedNoteItems().size() > 1) {
       alertDeleteBookNote.setTitle(R.string.delete_notes);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_notes_message)
+              + convertNoteListToString(selectedItems)
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     } else {
       alertDeleteBookNote.setTitle(R.string.delete_note);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_note_message)
+              + convertNoteListToString(selectedItems)
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     }
 
     alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
@@ -182,6 +188,22 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     alertDeleteBookNote.show();
   }
 
+  private String convertNoteListToString(List<NoteItem> noteList) {
+    StringBuilder notes = new StringBuilder();
+
+    int counter = 1;
+    for (NoteItem note : noteList) {
+      notes.append(" \"").append(note.getName()).append("\"");
+
+      if (counter != noteList.size()) {
+        notes.append(",");
+      }
+
+      notes.append(" ");
+      ++counter;
+    }
+    return notes.toString();
+  }
 
   private void performDeleteNotes(List<NoteItem> itemsToDelete) {
     bookNotesViewModel.deleteNotes(itemsToDelete);
@@ -386,6 +408,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
 
   @Override
   public void onSwipedLeft(int position) {
+    deselectNoteItems();
     handleDeleteNote(Collections.singletonList(selectedNoteItems.get(position)));
     adapter.notifyDataSetChanged();
   }

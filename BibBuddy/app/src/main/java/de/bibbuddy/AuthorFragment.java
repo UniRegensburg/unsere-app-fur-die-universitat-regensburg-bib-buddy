@@ -131,16 +131,23 @@ public class AuthorFragment extends Fragment
     if (selectedAuthorItems.size() > 1) {
       alertDeleteAuthor.setTitle(R.string.delete_authors);
       alertDeleteAuthor.setMessage(
-          getString(R.string.delete_authors_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_authors_message)
+              + convertAuthorListToString(selectedAuthorItems)
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     } else {
       alertDeleteAuthor.setTitle(R.string.delete_author);
       alertDeleteAuthor.setMessage(
-          getString(R.string.delete_author_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_author_message)
+              + convertAuthorListToString(selectedAuthorItems)
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     }
 
     alertDeleteAuthor.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        deselectAuthorItems();
       }
     });
 
@@ -152,6 +159,29 @@ public class AuthorFragment extends Fragment
     });
 
     alertDeleteAuthor.show();
+  }
+
+  private String convertAuthorListToString(List<AuthorItem> authorList) {
+    StringBuilder authors = new StringBuilder();
+    authorList.size();
+
+    int counter = 1;
+    for (AuthorItem author : authorList) {
+      authors.append(" \"");
+
+      if (author.getTitle() != null && !author.getTitle().isEmpty()) {
+        authors.append(author.getTitle()).append(" ");
+      }
+      authors.append(author.getFirstName()).append(" ").append(author.getLastName()).append("\"");
+      if (counter != authorList.size()) {
+        authors.append(",");
+      }
+
+      authors.append(" ");
+      ++counter;
+    }
+
+    return authors.toString();
   }
 
   private void performDeleteAuthors() {
@@ -278,6 +308,7 @@ public class AuthorFragment extends Fragment
 
   @Override
   public void onSwipedLeft(int position) {
+    deselectAuthorItems();
     selectedAuthorItems.add(adapter.getAuthorItem(position));
     deleteAuthors();
     adapter.notifyDataSetChanged();

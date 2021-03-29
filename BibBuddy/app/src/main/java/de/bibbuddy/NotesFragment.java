@@ -111,15 +111,20 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(requireActivity());
     alertDeleteBookNote.setCancelable(false);
+    alertDeleteBookNote.setTitle(R.string.delete_notes);
 
     if (adapter.getSelectedNoteItems().size() > 1) {
-      alertDeleteBookNote.setTitle(R.string.delete_notes);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_notes_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_notes_message)
+              + convertNoteListToString(itemsToDelete)
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     } else {
-      alertDeleteBookNote.setTitle(R.string.delete_note);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_note_message)
+              + convertNoteListToString(itemsToDelete)
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     }
 
     alertDeleteBookNote.setNegativeButton(R.string.cancel, (dialog, which) -> deselectNoteItems());
@@ -127,6 +132,24 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
         .setPositiveButton(R.string.delete, (dialog, which) -> performDelete(itemsToDelete));
 
     alertDeleteBookNote.show();
+  }
+
+  private String convertNoteListToString(List<NoteItem> noteList) {
+    StringBuilder notes = new StringBuilder();
+
+    int counter = 1;
+    for (NoteItem note : noteList) {
+      notes.append(" \"").append(note.getName()).append("\"");
+
+      if (counter != noteList.size()) {
+        notes.append(",");
+      }
+
+      notes.append(" ");
+
+      ++counter;
+    }
+    return notes.toString();
   }
 
   private void deselectNoteItems() {
@@ -209,6 +232,7 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
 
   @Override
   public void onSwipedLeft(int position) {
+    deselectNoteItems();
     handleDeleteNote(Collections.singletonList(noteList.get(position)));
     adapter.notifyDataSetChanged();
   }

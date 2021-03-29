@@ -258,16 +258,27 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     if (selectedBookItems.size() > 1) {
       alertDeleteBook.setTitle(R.string.delete_books);
       alertDeleteBook.setMessage(
-          getString(R.string.delete_books_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_books_message)
+              + convertBookListToString(selectedBookItems)
+              + getString(R.string.delete_counter_msg)
+              + getNotesToDeleteNumber(selectedBookItems) + " "
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     } else {
       alertDeleteBook.setTitle(R.string.delete_book);
       alertDeleteBook.setMessage(
-          getString(R.string.delete_book_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_book_message)
+              + convertBookListToString(selectedBookItems)
+              + getString(R.string.delete_counter_msg)
+              + getNotesToDeleteNumber(selectedBookItems) + " "
+              + getString(R.string.finally_delete) + " "
+              + getString(R.string.delete_warning));
     }
 
     alertDeleteBook.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        deselectBookItems();
       }
     });
 
@@ -275,11 +286,41 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       @Override
       public void onClick(DialogInterface dialog, int which) {
         performDeleteBook();
-        deselectBookItems();
       }
     });
 
     alertDeleteBook.show();
+  }
+
+  private String convertBookListToString(List<BookItem> bookList) {
+    StringBuilder books = new StringBuilder();
+
+    int counter = 1;
+    for (BookItem book : bookList) {
+      books.append(" \"").append(book.getName()).append("\"");
+
+      if (counter != bookList.size()) {
+        books.append(",");
+      }
+    }
+
+    books.append(" ");
+    ++counter;
+
+    return books.toString();
+  }
+
+  private String getNotesToDeleteNumber(List<BookItem> bookList) {
+    int notesNumber = 0;
+    for (BookItem book : bookList) {
+      notesNumber += book.getNoteCount();
+    }
+
+    if (notesNumber == 1) {
+      return " einer " + getString(R.string.note);
+    }
+
+    return " " + notesNumber + " " + getString(R.string.notes);
   }
 
   private void performDeleteBook() {
@@ -679,6 +720,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   @Override
   public void onSwipedLeft(int position) {
+    deselectBookItems();
     selectedBookItems.add(adapter.getBookItem(position));
     handleDeleteBook();
     adapter.notifyDataSetChanged();
