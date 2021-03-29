@@ -286,16 +286,19 @@ public class BookNotesView extends Fragment {
     pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
 
     pm.setOnMenuItemClickListener(item -> {
+    
       if (item.getItemId() == R.id.add_text_note) {
         Bundle bundle = new Bundle();
         bundle.putLong(LibraryKeys.BOOK_ID, bookId);
         TextNoteEditorFragment textFrag = new TextNoteEditorFragment();
         textFrag.setArguments(bundle);
+        
         requireActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.fragment_container_view, textFrag,
                 LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
             .addToBackStack(null)
             .commit();
+            
       } else {
         checkRecordPermission();
       }
