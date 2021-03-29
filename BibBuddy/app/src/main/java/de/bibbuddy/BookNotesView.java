@@ -414,6 +414,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   }
 
   @Override
-  public void onSwipedRight(int position) {}
+  public void onSwipedRight(int position) {
+  }
 
 }

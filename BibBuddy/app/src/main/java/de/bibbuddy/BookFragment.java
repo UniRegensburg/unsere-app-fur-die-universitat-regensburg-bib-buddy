@@ -61,6 +61,39 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
+  ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
+      new ActivityResultContracts.StartActivityForResult(),
+      new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+
+            if (data != null) {
+
+              Uri uri = data.getData();
+              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
+
+                handleImport(uri);
+
+              } else {
+                showDialogNonBibFile();
+              }
+            }
+          }
+        }
+      });
+  private final ActivityResultLauncher<String> requestPermissionLauncher =
+      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+          filePicker();
+
+
+        } else {
+          Toast.makeText(getContext(), R.string.storage_permission_denied,
+              Toast.LENGTH_SHORT).show();
+        }
+      });
   private SortCriteria sortCriteria;
 
   @Nullable
@@ -375,29 +408,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     }
   }
 
-  ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
-      new ActivityResultContracts.StartActivityForResult(),
-      new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-          if (result.getResultCode() == Activity.RESULT_OK) {
-            Intent data = result.getData();
-
-            if (data != null) {
-
-              Uri uri = data.getData();
-              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
-
-                handleImport(uri);
-
-              } else {
-                showDialogNonBibFile();
-              }
-            }
-          }
-        }
-      });
-
   private void handleImport(Uri uri) {
     String bibText = readBibFile(uri);
 
@@ -506,7 +516,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.setPositiveButton(R.string.ok,
         (dialog, which) -> ActivityCompat.requestPermissions(getActivity(), new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE},
+                Manifest.permission.READ_EXTERNAL_STORAGE},
             StorageKeys.STORAGE_PERMISSION_CODE));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
@@ -514,18 +524,6 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
     reqAlertDialog.create().show();
   }
-
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
-      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if (isGranted) {
-          filePicker();
-
-
-        } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied,
-              Toast.LENGTH_SHORT).show();
-        }
-      });
 
   private void handleManualBook() {
     HelpFragment helpFragment = new HelpFragment();
