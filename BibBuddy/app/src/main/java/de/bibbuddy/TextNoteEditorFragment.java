@@ -81,7 +81,7 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_help_texteditor) {
-      handleManualTexteditor();
+      handleManualTextNoteEditor();
     } else if (item.getItemId() == R.id.menu_imprint) {
       ((MainActivity) getActivity()).openImprint();
     }
