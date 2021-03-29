@@ -57,18 +57,20 @@ public class BookNotesView extends Fragment {
     setupPermissionLauncher();
   }
 
-  /* Register permissions callback, which handles the user's response to the
-   system permissions dialog. Save the return value, an instance of
-   ActivityResultLauncher, as an instance variable.
-   */
+  /** Register permissions callback, which handles the user's response to the
+    * system permissions dialog. Save the return value, an instance of
+    * ActivityResultLauncher, as an instance variable.
+    */
   private void setupPermissionLauncher() {
     requestPermissionLauncher =
         registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        
           if (isGranted) {
             Bundle bundle = new Bundle();
             bundle.putLong(LibraryKeys.BOOK_ID, bookId);
             VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
             nextFrag.setArguments(bundle);
+            
             requireActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_view, nextFrag,
                     LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
@@ -284,16 +286,19 @@ public class BookNotesView extends Fragment {
     pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
 
     pm.setOnMenuItemClickListener(item -> {
+    
       if (item.getItemId() == R.id.add_text_note) {
         Bundle bundle = new Bundle();
         bundle.putLong(LibraryKeys.BOOK_ID, bookId);
         TextNoteEditorFragment textFrag = new TextNoteEditorFragment();
         textFrag.setArguments(bundle);
+        
         requireActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.fragment_container_view, textFrag,
                 LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
             .addToBackStack(null)
             .commit();
+            
       } else {
         checkRecordPermission();
       }
@@ -307,17 +312,21 @@ public class BookNotesView extends Fragment {
   private void checkRecordPermission() {
     if (ContextCompat.checkSelfPermission(
         context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+        
       Bundle bundle = new Bundle();
       bundle.putLong(LibraryKeys.BOOK_ID, bookId);
       VoiceNoteEditorFragment voiceFrag = new VoiceNoteEditorFragment();
       voiceFrag.setArguments(bundle);
+      
       requireActivity().getSupportFragmentManager().beginTransaction()
           .replace(R.id.fragment_container_view, voiceFrag,
               LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
           .addToBackStack(null)
           .commit();
+          
     } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
       showAudioRecordRequest();
+      
     } else {
       requestPermissionLauncher.launch(
           Manifest.permission.RECORD_AUDIO);
