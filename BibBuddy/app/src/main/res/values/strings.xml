@@ -250,6 +250,13 @@
     <string name="imported_file_name_is">Importiere Datei:</string>
 
 
+    <!-- Sharing -->
+    <string name="share_file">BibTeX-Datei teilen:</string>
+    <string name="exception_failed_temp_file">
+        Das Schreiben der temporären Datei ist fehlgeschlagen:
+    </string>
+
+
     <!-- Search -->
     <string name="search">Suchen...</string>
     <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
@@ -272,12 +279,28 @@
     <string name="filter_note">Notizen</string>
 
 
+    <!-- Imprint Fragment -->
+    <string name="header_imprint">Impressum</string>
+    <string name="imprint"><![CDATA[
+        <h1><u>Impressum zur App "Bib Buddy"</u></h1>
+        <p>Die App "Bib Buddy" ist ein akademisches Softwareprojekt im Rahmen des Kurses "Advanced
+        Software Engineering" an der Universität Regensburg im Wintersemester 2020/2021. Geleitet
+        wird der Kurs von Alexander Bazo.</p>
 
-    <!-- Sharing of BibTeX -->
-    <string name="share_file">BibTeX-Datei teilen:</string>
-    <string name="exception_failed_temp_file">
-        Das Schreiben der temporären Datei ist fehlgeschlagen:
-    </string>
+        <h2>Mitwirkende</h2>
+        <p>An der Entwicklung der App sind Sabrina Freisleben, Silvia Ivanova, Sarah Kurek, Luis
+        Moßburger und Claudia Schönherr beteiligt. Sie alle sind Studierende im M.Sc.
+        Medieninformatik an der Universität Regensburg.</p>
+
+        <h2>Verwendung von Icons</h2>
+        <p>Für diese App werden mehrere Icon-Packs nachgenutzt, die unter der Flaticon License mit
+        Attribution frei zur Verfügung gestellt wurden.</p>
+
+        <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
+        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+        ]]></string>
+
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>

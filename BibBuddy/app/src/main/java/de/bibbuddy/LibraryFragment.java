@@ -150,6 +150,10 @@ public class LibraryFragment extends Fragment
         handleManualLibrary();
         break;
 
+      case R.id.menu_imprint:
+        ((MainActivity) getActivity()).openImprint();
+        break;
+
       default:
         break;
     }
