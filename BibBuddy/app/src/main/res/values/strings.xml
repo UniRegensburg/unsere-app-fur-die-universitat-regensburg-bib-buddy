@@ -11,6 +11,10 @@
     <string name="description_note">Ein schwarz-weißes Icon von einem schrägen Stift, das Notizen symbolisiert.</string>
     <string name="description_library">Ein schwarz-weißes Icon von drei aneinander gelehnten Büchern.</string>
     <string name="description_person">Ein schwarz-weißes Icon von einer Büste, die eine Person symbolisiert.</string>
+    <string name="record_microphone">Ein türkises Mikrofon-Icon, das eine Aufnahme-Funktion symbolisiert.</string>
+    <string name="stop_button_note">Ein schwarzes quadratisches Icon, das eine Stop-Funktion symbolisiert.</string>
+    <string name="play_button_note">Ein schwarzes dreieckiges Icon, das eine Abspiel-Funktion symbolisiert.</string>
+    <string name="microphone">Ein schwarzes Mikrofon-Icon, das den Notiztyp einer Sprachaufnahme symbolisiert.</string>
 
     <!-- Navigation Items -->
     <string name="navigation_home">Home</string>
@@ -528,11 +532,5 @@
         Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
     </string>
     <string name="voice_note_saved">Die Sprachnotiz wurde gespeichert.</string>
-
-    <!-- Voice Note Editor Image Descriptions -->
-    <string name="record_microphone">Record Microphone Icon</string>
-    <string name="stop_button_note">Stop Button</string>
-    <string name="play_button_note">Play Button</string>
-    <string name="microphone">Microphone Icon</string>
 
 </resources>
