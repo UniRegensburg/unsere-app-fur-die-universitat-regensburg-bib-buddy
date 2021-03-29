@@ -312,17 +312,21 @@ public class BookNotesView extends Fragment {
   private void checkRecordPermission() {
     if (ContextCompat.checkSelfPermission(
         context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+        
       Bundle bundle = new Bundle();
       bundle.putLong(LibraryKeys.BOOK_ID, bookId);
       VoiceNoteEditorFragment voiceFrag = new VoiceNoteEditorFragment();
       voiceFrag.setArguments(bundle);
+      
       requireActivity().getSupportFragmentManager().beginTransaction()
           .replace(R.id.fragment_container_view, voiceFrag,
               LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
           .addToBackStack(null)
           .commit();
+          
     } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
       showAudioRecordRequest();
+      
     } else {
       requestPermissionLauncher.launch(
           Manifest.permission.RECORD_AUDIO);
