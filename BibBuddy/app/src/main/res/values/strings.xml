@@ -280,7 +280,7 @@
 
 
     <!-- Imprint Fragment -->
-    <string name="headerImprint">Impressum</string>
+    <string name="header_imprint">Impressum</string>
     <string name="imprint"><![CDATA[
         <h1><u>Impressum zur App "Bib Buddy"</u></h1>
         <p>Die App "Bib Buddy" ist ein akademisches Softwareprojekt im Rahmen des Kurses "Advanced

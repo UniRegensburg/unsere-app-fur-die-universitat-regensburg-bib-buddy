@@ -7,6 +7,6 @@
 
     <item
             android:id="@+id/menu_imprint"
-            android:title="@string/headerImprint" />
+            android:title="@string/header_imprint" />
 
 </menu>

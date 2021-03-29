@@ -38,7 +38,7 @@ public class ImprintFragment extends Fragment {
 
     view = inflater.inflate(R.layout.fragment_imprint, container, false);
 
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.headerImprint));
+    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.header_imprint));
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
     // style text

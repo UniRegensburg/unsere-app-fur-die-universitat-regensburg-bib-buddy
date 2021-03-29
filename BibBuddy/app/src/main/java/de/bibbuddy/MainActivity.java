@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         headerText.setText(getString(R.string.navigation_notes));
         break;
       case "imprint":
-        headerText.setText(R.string.headerImprint);
+        headerText.setText(R.string.header_imprint);
         break;
 
       default:
