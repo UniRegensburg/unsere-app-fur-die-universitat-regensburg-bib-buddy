@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view_search"
     android:layout_width="match_parent"
@@ -24,63 +25,6 @@
             android:contentDescription="@string/description_text_note"
             android:src="@drawable/document" />
 
-        <RelativeLayout
-            android:id="@+id/voice_note_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <ImageButton
-                android:id="@+id/play_note"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="7dp"
-                android:layout_toEndOf="@+id/seekBar"
-                android:background="@null"
-                android:contentDescription="@string/play_button_note"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_play" />
-
-            <ImageButton
-                android:id="@+id/stop_note"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/play_note"
-                android:background="@null"
-                android:contentDescription="@string/stop_button_note"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_stop" />
-
-            <TextView
-                android:id="@+id/played_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/seekBar"
-                android:layout_marginStart="60dp"
-                android:text="@string/default_played_timer"
-                android:textSize="12sp"
-                android:translationY="-3dp" />
-
-            <TextView
-                android:id="@+id/total_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/seekBar"
-                android:layout_marginStart="258dp"
-                android:textSize="12sp"
-                android:translationY="-3dp" />
-
-            <app.minimize.com.seek_bar_compat.SeekBarCompat
-                android:id="@+id/seekBar"
-                android:layout_width="230dp"
-                android:layout_height="35dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="60dp" />
-
-        </RelativeLayout>
-
         <TextView
             android:id="@+id/note_mod_date"
             android:layout_width="wrap_content"
@@ -98,6 +42,74 @@
             android:layout_toEndOf="@+id/note_type"
             android:text="@string/note"
             android:textColor="@color/black" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/voice_note_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <ImageButton
+                android:id="@+id/play_note"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:contentDescription="@string/play_button_note"
+                android:scaleType="fitCenter"
+                android:src="@drawable/play"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/stop_note"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/stop_note"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="80dp"
+                android:background="@null"
+                android:contentDescription="@string/stop_button_note"
+                android:scaleType="fitCenter"
+                android:src="@drawable/stop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/played_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/default_played_timer"
+                android:textSize="12sp"
+                android:translationX="30dp"
+                android:translationY="-10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/seekBar"
+                app:layout_constraintTop_toBottomOf="@id/seekBar" />
+
+            <TextView
+                android:id="@+id/total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:translationX="-32dp"
+                android:translationY="-10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/seekBar"
+                app:layout_constraintTop_toBottomOf="@id/seekBar" />
+
+            <app.minimize.com.seek_bar_compat.SeekBarCompat
+                android:id="@+id/seekBar"
+                android:layout_width="230dp"
+                android:layout_height="35dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/play_note"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </RelativeLayout>
 

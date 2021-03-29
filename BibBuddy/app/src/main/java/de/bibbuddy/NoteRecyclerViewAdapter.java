@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import app.minimize.com.seek_bar_compat.SeekBarCompat;
@@ -158,7 +158,7 @@ public class NoteRecyclerViewAdapter
     MediaPlayer mediaPlayer = new MediaPlayer();
     mediaPlayers.add(mediaPlayer);
 
-    RelativeLayout voiceNoteLayout = holder.getVoiceNoteLayout();
+    ConstraintLayout voiceNoteLayout = holder.getVoiceNoteLayout();
     voiceNoteLayout.setVisibility(View.VISIBLE);
 
     SeekBarCompat progressBar = holder.getProgressBar();
@@ -198,7 +198,7 @@ public class NoteRecyclerViewAdapter
       mp.reset();
       seekBarListener.reset();
       stopButton.setClickable(false);
-      setSelection(playButton, false, R.drawable.icon_play);
+      setSelection(playButton, false, R.drawable.play);
       paused = false;
     });
 
@@ -209,10 +209,10 @@ public class NoteRecyclerViewAdapter
           mediaPlayerPosition = mediaPlayer.getCurrentPosition();
           mediaPlayer.seekTo(mediaPlayerPosition);
           mediaPlayer.start();
-          button.setImageResource(R.drawable.icon_pause);
+          button.setImageResource(R.drawable.pause);
         } else {
           mediaPlayer.pause();
-          button.setImageResource(R.drawable.icon_play);
+          button.setImageResource(R.drawable.play);
         }
         paused = !paused;
       } else {
@@ -235,7 +235,7 @@ public class NoteRecyclerViewAdapter
       seekBarListeners.get(i).reset();
       progressBars.get(i).setEnabled(false);
       stopButtons.get(i).setClickable(false);
-      setSelection(playButtons.get(i), false, R.drawable.icon_play);
+      setSelection(playButtons.get(i), false, R.drawable.play);
     }
     paused = false;
   }
@@ -254,7 +254,7 @@ public class NoteRecyclerViewAdapter
     }
     mediaPlayer.prepareAsync();
     mediaPlayer.setOnPreparedListener(mp -> {
-      setSelection(button, true, R.drawable.icon_pause);
+      setSelection(button, true, R.drawable.pause);
       mp.start();
       seekBarListener.updateProgress();
     });
@@ -308,7 +308,7 @@ public class NoteRecyclerViewAdapter
     private final ImageView type;
     private final ImageButton play;
     private final ImageButton stop;
-    private final RelativeLayout voiceNoteLayout;
+    private final ConstraintLayout voiceNoteLayout;
     private final SeekBarCompat progressBar;
     private final TextView playedTime;
     private final TextView totalTime;
@@ -351,7 +351,7 @@ public class NoteRecyclerViewAdapter
       return stop;
     }
 
-    public RelativeLayout getVoiceNoteLayout() {
+    public ConstraintLayout getVoiceNoteLayout() {
       return voiceNoteLayout;
     }
 
