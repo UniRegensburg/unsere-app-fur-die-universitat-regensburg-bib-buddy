@@ -163,6 +163,8 @@ public class BookNotesView extends Fragment {
       handleDeleteNote();
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
+    } else if (itemId == R.id.menu_imprint) {
+      ((MainActivity) getActivity()).openImprint();
     }
 
     return super.onOptionsItemSelected(item);

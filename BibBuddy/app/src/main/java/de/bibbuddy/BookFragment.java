@@ -202,6 +202,10 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
         handleManualBook();
         break;
 
+      case R.id.menu_imprint:
+        ((MainActivity) getActivity()).openImprint();
+        break;
+
       default:
         Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }

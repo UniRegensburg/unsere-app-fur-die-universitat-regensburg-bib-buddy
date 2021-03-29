@@ -120,6 +120,10 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         handleHelp();
         break;
 
+      case R.id.menu_imprint:
+        ((MainActivity) getActivity()).openImprint();
+        break;
+
       default:
         break;
     }

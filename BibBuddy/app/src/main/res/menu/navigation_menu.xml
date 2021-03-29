@@ -11,11 +11,11 @@
         android:title="@string/navigation_search" />
     <item
         android:id="@+id/navigation_library"
-        android:icon="@drawable/books"
+        android:icon="@drawable/library_nav"
         android:title="@string/navigation_library" />
     <item
         android:id="@+id/navigation_notes"
-        android:icon="@drawable/pen"
+        android:icon="@drawable/notes_nav"
         android:title="@string/navigation_notes" />
 
 </menu>
