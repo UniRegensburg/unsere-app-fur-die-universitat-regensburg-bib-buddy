@@ -82,11 +82,13 @@ public class NoteModel {
    */
   public List<Note> getVoiceNoteList() {
     List<Note> noteList = noteDao.findAll();
+    
     for (int i = 0; i < noteList.size(); i++) {
       if (noteList.get(i).getType() != 1) {
         noteList.remove(noteList.get(i));
       }
     }
+    
     return noteList;
   }
 
