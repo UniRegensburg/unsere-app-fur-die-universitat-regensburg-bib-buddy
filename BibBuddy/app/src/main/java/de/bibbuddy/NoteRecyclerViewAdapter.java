@@ -97,7 +97,7 @@ public class NoteRecyclerViewAdapter
     int image = noteItem.getImage();
 
     setupBasicCardView(holder, position);
-    if (noteItem.getImage() == R.drawable.microphone) {
+    if (noteItem.getImage() == R.drawable.audionote) {
       setupAudioElements(holder, noteItem);
     }
 
