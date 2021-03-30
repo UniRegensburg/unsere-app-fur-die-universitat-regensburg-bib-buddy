@@ -102,7 +102,7 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
     } else if (id == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
     } else if (id == R.id.menu_imprint) {
-      ((MainActivity) getActivity()).openImprint();
+      ((MainActivity) requireActivity()).openImprint();
     }
 
     return super.onOptionsItemSelected(item);
@@ -159,7 +159,7 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
   }
 
   private void performDelete(List<NoteItem> itemsToDelete) {
-    itemsToDelete.forEach(n -> noteModel.deleteNote(n.getId()));
+    itemsToDelete.forEach(note -> noteModel.deleteNote(note.getId()));
 
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);

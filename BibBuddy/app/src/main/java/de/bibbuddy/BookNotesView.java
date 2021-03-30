@@ -45,12 +45,42 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private List<NoteItem> selectedNoteItems;
+  private ActivityResultLauncher<String> requestPermissionLauncher;
 
   private BookDao bookDao;
   private NoteDao noteDao;
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
 
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setupPermissionLauncher();
+  }
+
+  /**
+   * Register permissions callback, which handles the user's response to the
+   * system permissions dialog. Save the return value, an instance of
+   * ActivityResultLauncher, as an instance variable.
+   */
+  private void setupPermissionLauncher() {
+    requestPermissionLauncher =
+        registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+
+          if (isGranted) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(LibraryKeys.BOOK_ID, bookId);
+            VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
+            nextFrag.setArguments(bundle);
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, nextFrag,
+                    LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
+                .addToBackStack(null)
+                .commit();
+          }
+        });
+  }
 
   @Nullable
   @Override
@@ -68,28 +98,21 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
       }
     });
 
-    Bundle bundle = this.getArguments();
-    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
+    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
+
+    bookNotesViewModel = new BookNotesViewModel(context);
+
+    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
       bookId = bundle.getLong(LibraryKeys.BOOK_ID);
     }
-    updateBookNoteList(selectedNoteItems);
 
-
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
-
-    setupSortBtn();
-    setHasOptionsMenu(true);
-    setupAddButton();
-    updateBookNoteList(noteList);
-    setFunctionsToolbar();
-
+    // TODO model instead of dao
     bookDao = bookNotesViewModel.getBookDao();
     noteDao = bookNotesViewModel.getNoteDao();
 
@@ -98,6 +121,12 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
 
+    setupRecyclerView(bookId);
+    setupSortBtn();
+    setHasOptionsMenu(true);
+    setupAddButton();
+    updateBookNoteList(selectedNoteItems);
+    setFunctionsToolbar();
     fillBookData();
 
     return view;
@@ -134,12 +163,13 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
+
     if (itemId == R.id.menu_delete_note) {
       handleDeleteNote(adapter.getSelectedNoteItems());
     } else if (itemId == R.id.menu_help_book_note) {
       handleManualBookNotes();
     } else if (itemId == R.id.menu_imprint) {
-      ((MainActivity) getActivity()).openImprint();
+      ((MainActivity) requireActivity()).openImprint();
     }
 
     return super.onOptionsItemSelected(item);
@@ -215,15 +245,14 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
       Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }
 
-
     updateBookNoteList(itemsToDelete);
     deselectNoteItems();
-
     updateEmptyView(selectedNoteItems);
   }
 
   private void deselectNoteItems() {
-    SwipeableRecyclerView bookNotesListView = getView().findViewById(R.id.book_notes_recycler_view);
+    SwipeableRecyclerView bookNotesListView =
+        requireView().findViewById(R.id.book_notes_recycler_view);
     for (int i = 0; i < bookNotesListView.getChildCount(); i++) {
       bookNotesListView.getChildAt(i).setSelected(false);
     }
@@ -285,19 +314,19 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
 
     pm.setOnMenuItemClickListener(item -> {
-    
+
       if (item.getItemId() == R.id.add_text_note) {
         Bundle bundle = new Bundle();
         bundle.putLong(LibraryKeys.BOOK_ID, bookId);
         TextNoteEditorFragment textFrag = new TextNoteEditorFragment();
         textFrag.setArguments(bundle);
-        
+
         requireActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.fragment_container_view, textFrag,
                 LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
             .addToBackStack(null)
             .commit();
-            
+
       } else {
         checkRecordPermission();
       }
@@ -311,21 +340,21 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   private void checkRecordPermission() {
     if (ContextCompat.checkSelfPermission(
         context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-        
+
       Bundle bundle = new Bundle();
       bundle.putLong(LibraryKeys.BOOK_ID, bookId);
       VoiceNoteEditorFragment voiceFrag = new VoiceNoteEditorFragment();
       voiceFrag.setArguments(bundle);
-      
+
       requireActivity().getSupportFragmentManager().beginTransaction()
           .replace(R.id.fragment_container_view, voiceFrag,
               LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
           .addToBackStack(null)
           .commit();
-          
+
     } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
       showAudioRecordRequest();
-      
+
     } else {
       requestPermissionLauncher.launch(
           Manifest.permission.RECORD_AUDIO);
@@ -368,16 +397,15 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   }
 
   private void setupRecyclerView(Long bookId) {
-    bookNotesViewModel = new BookNotesViewModel(getContext());
     selectedNoteItems = bookNotesViewModel.getBookNoteList(bookId);
 
     SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), selectedNoteItems);
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), selectedNoteItems,
         bookNotesViewModel.getNoteModel());
+
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
-
     updateEmptyView(selectedNoteItems);
   }
 
@@ -392,6 +420,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   }
 
   private void shareBookNoteBibIntent() {
+    // TODO model instead of dao
     Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
         exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
 
