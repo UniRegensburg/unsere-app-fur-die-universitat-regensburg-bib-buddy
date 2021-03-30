@@ -44,8 +44,8 @@ public class NoteItem implements SortableItem {
    * @param image   id for the drawable resource of the note type icon
    * @param id      id of the note
    */
-  public NoteItem(Long modDate, String name, int image, Long id) {
-    this(modDate, name, null, image, id, null);
+  public NoteItem(Long modDate, String name, int image, Long id, Long bookId) {
+    this(modDate, name, null, image, id, bookId);
 
     this.modDateStr = DateConverter.convertDateToString(modDate);
   }

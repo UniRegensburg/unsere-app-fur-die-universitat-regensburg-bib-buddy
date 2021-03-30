@@ -96,6 +96,30 @@ public class NoteDao implements InterfaceNoteDao {
     return note;
   }
 
+  /**
+   * This method fetches the path-string of a note-file linked to a note.
+   *
+   * @param noteFileId id of the note-file linked to the note
+   * @return returns a string representing the path to the saved note media
+   */
+  public String getNoteFilePath(long noteFileId) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE,
+        new String[] {DatabaseHelper._ID,
+            DatabaseHelper.FILE},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(noteFileId)},
+        null, null, null, String.valueOf(1));
+
+    String path = "";
+    if (cursor.moveToFirst()) {
+      path = cursor.getString(1);
+    }
+    cursor.close();
+
+    return path;
+  }
+
   // get all notes in a list view
   @Override
   public List<Note> findAll() {

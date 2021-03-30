@@ -11,6 +11,10 @@
     <string name="description_note">Ein schwarz-weißes Icon von einem schrägen Stift, das Notizen symbolisiert.</string>
     <string name="description_library">Ein schwarz-weißes Icon von drei aneinander gelehnten Büchern.</string>
     <string name="description_person">Ein schwarz-weißes Icon von einer Büste, die eine Person symbolisiert.</string>
+    <string name="record_microphone">Ein türkises Mikrofon-Icon, das eine Aufnahme-Funktion symbolisiert.</string>
+    <string name="stop_button_note">Ein schwarzes quadratisches Icon, das eine Stop-Funktion symbolisiert.</string>
+    <string name="play_button_note">Ein schwarzes dreieckiges Icon, das eine Abspiel-Funktion symbolisiert.</string>
+    <string name="microphone">Ein schwarzes Mikrofon-Icon, das den Notiztyp einer Sprachaufnahme symbolisiert.</string>
 
     <!-- Navigation Items -->
     <string name="navigation_home">Home</string>
@@ -278,7 +282,6 @@
     <string name="filter_book">Bücher</string>
     <string name="filter_note">Notizen</string>
 
-
     <!-- Imprint Fragment -->
     <string name="header_imprint">Impressum</string>
     <string name="imprint"><![CDATA[
@@ -300,7 +303,6 @@
         <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 
         ]]></string>
-
 
     <!-- Help Fragment -->
     <string name="headerHelp">Hilfe</string>
@@ -427,7 +429,7 @@
         ]]>
     </string>
 
-    <string name="texteditor_help_text">
+    <string name="text_editor_help_text">
         <![CDATA[
         <h1><u>Hilfe zum Texteditor</u></h1>
         <p>Sie befinden sich im Texteditor. Hier können Sie die ausgewählte Notiz bearbeiten bzw.
@@ -458,6 +460,24 @@
         <p>Sobald Sie auf den internen Zurück-Buttons Ihres Handys drücken, wird die Notiz
         automatisch gespeichert. Sie befindet sich dann in der Übersicht des jeweiligen Buches oder
         in der Gesamtübersicht der Notizen.</p>
+        ]]>
+    </string>
+
+    <string name="voice_editor_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zum Spracheditor</u></h1>
+        <br>
+        <h2>Sprachnotiz aufnehmen</h2>
+        <p>Sie befinden sich im Spracheditor. Hier können Sie eine neue Sprachnotiz erstellen.</p>
+        <br>
+        <p>Klicken Sie auf den <b>Aufnahme-Button</b> mit dem Mikrofon und fangen Sie an zu
+        sprechen. Sie können die Aufnahme stoppen, indem Sie den Aufnahme-Button erneut klicken oder
+        den Editor verlassen. Beim <b>Stoppen</b> der Aufnahme wird diese auch <b>gespeichert</b>.</p>
+        <br>
+        <h2>Sprachnotiz abspielen</h2>
+        <p>Sie können die Sprachnotiz anhören, indem Sie eine der <b>Notizlisten</b> öffnen und
+        entsprechende Buttons für das Abspielen, Pausieren und Stoppen bzw. die jeweilige
+        Suchleiste nutzen.</p>
         ]]>
     </string>
 
@@ -503,5 +523,14 @@
 
         ]]>
     </string>
+
+    <!-- Voice Note Editor -->
+    <string name="voice_note_name">Sprachnotiz vom </string>
+    <string name="default_played_timer">00:00</string>
+    <string name="record_permission_needed">Erlaubnis zur Aufnahme erforderlich</string>
+    <string name="record_permission_alert_msg">
+        Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
+    </string>
+    <string name="voice_note_saved">Die Sprachnotiz wurde gespeichert.</string>
 
 </resources>
