@@ -4,10 +4,8 @@
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="100dp"
     android:layout_marginBottom="75dp"
-    android:paddingStart="15dp"
-    android:paddingEnd="15dp">
+    android:layout_marginTop="100dp">
 
     <TextView
         android:id="@+id/empty_notes_list_view"
@@ -18,11 +16,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="https://schemas.android.com/tools"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".NotesFragment">
+        android:layout_marginHorizontal="20dp">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"

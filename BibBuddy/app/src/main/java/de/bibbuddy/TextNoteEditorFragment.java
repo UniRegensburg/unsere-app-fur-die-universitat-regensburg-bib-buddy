@@ -17,11 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -86,16 +81,16 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.menu_help_texteditor) {
-      handleManualTexteditor();
+      handleManualTextNoteEditor();
     } else if (item.getItemId() == R.id.menu_imprint) {
       ((MainActivity) getActivity()).openImprint();
     }
     return super.onOptionsItemSelected(item);
   }
 
-  private void handleManualTexteditor() {
+  private void handleManualTextNoteEditor() {
     HelpFragment helpFragment = new HelpFragment();
-    String htmlAsString = getString(R.string.texteditor_help_text);
+    String htmlAsString = getString(R.string.text_editor_help_text);
 
     Bundle bundle = new Bundle();
 

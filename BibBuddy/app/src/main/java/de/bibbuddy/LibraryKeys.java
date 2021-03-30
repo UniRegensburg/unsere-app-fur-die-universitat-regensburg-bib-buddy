@@ -25,6 +25,7 @@ public class LibraryKeys {
   public static final String FRAGMENT_BOOK = "fragment_book";
   public static final String FRAGMENT_BARCODE_SCANNER = "fragment_barcode_scanner";
   public static final String FRAGMENT_TEXT_NOTE_EDITOR = "fragment_text_note_editor";
+  public static final String FRAGMENT_VOICE_NOTE_EDITOR = "fragment_voice_note_editor";
   public static final String FRAGMENT_HELP_VIEW = "fragment_help";
   public static final String FRAGMENT_AUTHOR = "fragment_author";
 

@@ -30,7 +30,7 @@ public class NoteModel {
    */
   public void createNote(String name, int type, String text, String noteFilePath) {
     Note note;
-    if (noteFilePath == null) {
+    if (noteFilePath.equals("")) {
       note = new Note(name, type, text);
     } else {
       note = new Note(name, type, text, noteFilePath);
@@ -75,6 +75,27 @@ public class NoteModel {
     return createItemList(noteList);
   }
 
+  /**
+   * This method gets the list of all existing notes of the voice-type (int=1).
+   *
+   * @return returns the list of voice type note objects.
+   */
+  public List<Note> getVoiceNoteList() {
+    List<Note> noteList = noteDao.findAll();
+    
+    for (int i = 0; i < noteList.size(); i++) {
+      if (noteList.get(i).getType() != 1) {
+        noteList.remove(noteList.get(i));
+      }
+    }
+    
+    return noteList;
+  }
+
+  public String getNoteFilePath(Long id) {
+    return noteDao.getNoteFilePath(getNoteById(id).getNoteFileId());
+  }
+
   private List<NoteItem> createItemList(List<Note> noteList) {
     List<NoteItem> noteItemList = new ArrayList<>();
 
@@ -90,11 +111,11 @@ public class NoteModel {
         if (name.length() > 20) {
           name = name.substring(0, 20) + " ...";
         }
-
-        noteItemList.add(new NoteTextItem(modDate, name, noteId));
-
+        noteItemList
+            .add(new NoteTextItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       } else if (note.getType() == 1) {
-        noteItemList.add(new NoteAudioItem(modDate, name, noteId));
+        noteItemList
+            .add(new NoteAudioItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
       }
     }
 
