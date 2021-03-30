@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.text.Html;
@@ -103,7 +102,8 @@ public class VoiceNoteEditorFragment extends Fragment {
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
-    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {});
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
+    });
     helpAlert.show();
   }
 
@@ -118,12 +118,14 @@ public class VoiceNoteEditorFragment extends Fragment {
   private void onRecord(boolean start) {
     if (start) {
       pulse.startRippleAnimation();
-      recordButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.gray_light));
+      recordButton.setBackgroundTintList(
+          ContextCompat.getColorStateList(requireContext(), R.color.gray_light));
       isRecording = true;
       startRecording();
     } else {
       pulse.stopRippleAnimation();
-      recordButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.white));
+      recordButton
+          .setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.white));
       isRecording = false;
       stopRecording();
     }
