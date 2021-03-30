@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.text.Html;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.skyfishjy.library.RippleBackground;
 import java.io.File;
@@ -116,12 +118,12 @@ public class VoiceNoteEditorFragment extends Fragment {
   private void onRecord(boolean start) {
     if (start) {
       pulse.startRippleAnimation();
-      recordButton.setImageResource(R.drawable.record_microphone_selected);
+      recordButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.gray_light));
       isRecording = true;
       startRecording();
     } else {
       pulse.stopRippleAnimation();
-      recordButton.setImageResource(R.drawable.record_microphone);
+      recordButton.setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.white));
       isRecording = false;
       stopRecording();
     }
