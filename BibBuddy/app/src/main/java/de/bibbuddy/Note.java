@@ -7,10 +7,10 @@ package de.bibbuddy;
  */
 public class Note {
 
+  private final String name;
+  private final Integer type;
+  private final String text;
   private Long id;
-  private String name;
-  private Integer type;
-  private String text;
   private Long createDate;
   private Long modDate;
   private Long noteFileId;
