@@ -183,7 +183,7 @@ public class NoteDao implements InterfaceNoteDao {
    *
    * @param bookId id of the book to link
    * @param noteId id of the note to link
-   * @return if linking was successfull
+   * @return true if linking was successful
    */
   public boolean linkNoteWithBook(Long bookId, Long noteId) {
 
