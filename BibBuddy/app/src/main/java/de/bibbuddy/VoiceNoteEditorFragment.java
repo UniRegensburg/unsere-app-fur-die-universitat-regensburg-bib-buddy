@@ -20,10 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.skyfishjy.library.RippleBackground;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * The VoiceNoteEditorFragment is responsible for creating and saving voice notes.
@@ -156,24 +153,12 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void saveNote() {
-    String fileName = getString(R.string.voice_note_name) + getDate();
+    Long currentTime = new Date().getTime();
+    String fileName = getString(R.string.voice_note_name) + DateConverter.convertDateToString(currentTime);
     noteModel.createNote(fileName, 1, "", newAudio.getPath());
     noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
     Toast.makeText(requireActivity(), getString(R.string.voice_note_saved), Toast.LENGTH_SHORT)
         .show();
-  }
-
-  private String getDate() {
-    Date d = Calendar.getInstance().getTime();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-        Locale.getDefault());
-    String string = simpleDateFormat.format(d);
-    String day = string.substring(8, 10);
-    String month = string.substring(5, 7);
-    String year = string.substring(0, 4);
-    string = day + "." + month + "." + year;
-
-    return string;
   }
 
   @Override
