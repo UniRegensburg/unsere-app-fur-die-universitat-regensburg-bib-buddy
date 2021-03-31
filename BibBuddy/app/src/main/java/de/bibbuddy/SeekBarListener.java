@@ -10,6 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * The SeekBarListener is responsible for handling the scrolling through the seekBar in voice notes.
+ *
+ * @author Sabrina Freisleben
+ */
 public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
 
   private final MediaPlayer mediaPlayer;
