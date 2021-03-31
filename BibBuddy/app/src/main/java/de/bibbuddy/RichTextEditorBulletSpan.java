@@ -10,7 +10,7 @@ import android.text.Spanned;
 import android.text.style.BulletSpan;
 
 /**
- * The RichTextEditorBulletSpan is responsible for the bullets in the text note.
+ * The RichTextEditorBulletSpan is responsible for the bullets in text notes.
  *
  * @author Sabrina Freisleben
  */
