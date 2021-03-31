@@ -100,7 +100,7 @@ public class NotesFragment extends Fragment {
     } else if (id == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
     } else if (id == R.id.menu_imprint) {
-      ((MainActivity) getActivity()).openImprint();
+      ((MainActivity) requireActivity()).openImprint();
     }
 
     return super.onOptionsItemSelected(item);
@@ -120,7 +120,8 @@ public class NotesFragment extends Fragment {
           getString(R.string.delete_note_message) + " " + getString(R.string.delete_warning));
     }
 
-    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> {});
+    alertDeleteBookNote.setNegativeButton(R.string.back, (dialog, which) -> {
+    });
     alertDeleteBookNote.setPositiveButton(R.string.delete, (dialog, which) -> performDelete());
 
     alertDeleteBookNote.show();
