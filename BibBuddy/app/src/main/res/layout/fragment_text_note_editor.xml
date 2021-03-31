@@ -156,24 +156,24 @@
 
         </HorizontalScrollView>
 
-        <ScrollView
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="20dp">
+
+        <de.bibbuddy.RichTextEditor
+            android:id="@+id/editor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="20dp">
+            android:gravity="top"
+            app:bulletColor="@color/black"
+            app:bulletGapWidth="3dp"
+            app:bulletRadius="3dp"
+            app:layout_constrainedHeight="true" />
 
-            <de.bibbuddy.RichTextEditor
-                android:id="@+id/editor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                app:bulletColor="@color/black"
-                app:bulletGapWidth="3dp"
-                app:bulletRadius="3dp"
-                app:layout_constrainedHeight="true" />
-
-        </ScrollView>
-
-    </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>
