@@ -83,7 +83,7 @@ public class TextNoteEditorFragment extends Fragment {
     if (item.getItemId() == R.id.menu_help_texteditor) {
       handleManualTextNoteEditor();
     } else if (item.getItemId() == R.id.menu_imprint) {
-      ((MainActivity) getActivity()).openImprint();
+      ((MainActivity) requireActivity()).openImprint();
     }
     return super.onOptionsItemSelected(item);
   }
@@ -106,7 +106,7 @@ public class TextNoteEditorFragment extends Fragment {
 
 
   private void saveNote() {
-    String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+    String text = Html.toHtml(richTextEditor.getText(), Html.FROM_HTML_MODE_LEGACY);
     String rawText = Jsoup.parse(text).text();
     String[] lines = text.split("\\n");
     String name = "";
@@ -153,7 +153,10 @@ public class TextNoteEditorFragment extends Fragment {
       if (getArguments().size() == 2) {
         Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);
         note = noteModel.getNoteById(noteId);
-        richTextEditor.setText(Html.fromHtml(note.getText(), 33));
+        String text = note.getText();
+        text = text.replace("align=\"center\"", "style=\"text-align:center;\"");
+        text = text.replace("align=\"right\"", "style=\"text-align:end;\"");
+        richTextEditor.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
       }
     }
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
