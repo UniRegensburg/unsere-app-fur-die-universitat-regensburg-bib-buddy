@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 
 /**
- * The TextNoteEditorFragment is responsible for the note in the text editor.
+ * The TextNoteEditorFragment is responsible for creating and saving text notes.
  *
  * @author Sabrina Freisleben
  */
