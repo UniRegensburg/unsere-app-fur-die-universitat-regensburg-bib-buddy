@@ -485,6 +485,12 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     if (start >= end) {
       return;
     }
+
+    Object[] spansToRemove = getEditableText().getSpans(start, end, AlignmentSpan.class);
+    for (Object span : spansToRemove) {
+      getEditableText().removeSpan(span);
+    }
+    
     getEditableText().setSpan((AlignmentSpan) () -> {
       if (style == FORMAT_ALIGN_RIGHT) {
         return Alignment.ALIGN_OPPOSITE;
