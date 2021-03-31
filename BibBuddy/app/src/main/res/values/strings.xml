@@ -29,6 +29,7 @@
     <string name="add">+</string>
     <string name="ok">Ok</string>
     <string name="cancel">Abbrechen</string>
+    <string name="cancel_short">Abbr.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>

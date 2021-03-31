@@ -3,7 +3,6 @@ package de.bibbuddy;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -185,37 +184,28 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
     alertDeleteBookNote.setCancelable(false);
 
-    if (adapter.getSelectedNoteItems().size() > 1) {
+    if (selectedItems.size() > 1) {
       alertDeleteBookNote.setTitle(R.string.delete_notes);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_notes_message)
-              + convertNoteListToString(selectedItems)
-              + getString(R.string.finally_delete) + " "
-              + getString(R.string.delete_warning));
+          getString(R.string.delete_notes_message) + assembleAlertString(selectedItems));
     } else {
       alertDeleteBookNote.setTitle(R.string.delete_note);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_note_message)
-              + convertNoteListToString(selectedItems)
-              + getString(R.string.finally_delete) + " "
-              + getString(R.string.delete_warning));
+          getString(R.string.delete_note_message) + assembleAlertString(selectedItems));
     }
 
-    alertDeleteBookNote.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        deselectNoteItems();
-      }
-    });
+    alertDeleteBookNote.setNegativeButton(R.string.cancel, (dialog, which) -> deselectNoteItems());
 
-    alertDeleteBookNote.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        performDeleteNotes(selectedItems);
-      }
-    });
+    alertDeleteBookNote
+        .setPositiveButton(R.string.delete, (dialog, which) -> performDeleteNotes(selectedItems));
 
     alertDeleteBookNote.show();
+  }
+
+  private String assembleAlertString(List<NoteItem> selectedItems) {
+    return convertNoteListToString(selectedItems)
+        + getString(R.string.finally_delete) + " "
+        + getString(R.string.delete_warning);
   }
 
   private String convertNoteListToString(List<NoteItem> noteList) {
@@ -236,7 +226,10 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   }
 
   private void performDeleteNotes(List<NoteItem> itemsToDelete) {
+    deselectNoteItems();
+
     bookNotesViewModel.deleteNotes(itemsToDelete);
+    adapter.setNoteList(bookNotesViewModel.getBookNoteList(bookId));
     adapter.notifyDataSetChanged();
 
     if (itemsToDelete.size() > 1) {
@@ -245,9 +238,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
       Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }
 
-    updateBookNoteList(itemsToDelete);
-    deselectNoteItems();
-    updateEmptyView(selectedNoteItems);
+    updateBookNoteList(adapter.getNoteList());
   }
 
   private void deselectNoteItems() {
@@ -438,8 +429,9 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   @Override
   public void onSwipedLeft(int position) {
     deselectNoteItems();
-    handleDeleteNote(Collections.singletonList(selectedNoteItems.get(position)));
+    handleDeleteNote(Collections.singletonList(adapter.getNoteList().get(position)));
     adapter.notifyDataSetChanged();
+
   }
 
   @Override

@@ -131,17 +131,11 @@ public class AuthorFragment extends Fragment
     if (selectedAuthorItems.size() > 1) {
       alertDeleteAuthor.setTitle(R.string.delete_authors);
       alertDeleteAuthor.setMessage(
-          getString(R.string.delete_authors_message)
-              + convertAuthorListToString(selectedAuthorItems)
-              + getString(R.string.finally_delete) + " "
-              + getString(R.string.delete_warning));
+          getString(R.string.delete_authors_message) + assembleAlertString());
     } else {
       alertDeleteAuthor.setTitle(R.string.delete_author);
       alertDeleteAuthor.setMessage(
-          getString(R.string.delete_author_message)
-              + convertAuthorListToString(selectedAuthorItems)
-              + getString(R.string.finally_delete) + " "
-              + getString(R.string.delete_warning));
+          getString(R.string.delete_author_message) + assembleAlertString());
     }
 
     alertDeleteAuthor.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -159,6 +153,12 @@ public class AuthorFragment extends Fragment
     });
 
     alertDeleteAuthor.show();
+  }
+
+  private String assembleAlertString() {
+    return convertAuthorListToString(selectedAuthorItems)
+        + getString(R.string.finally_delete) + " "
+        + getString(R.string.delete_warning);
   }
 
   private String convertAuthorListToString(List<AuthorItem> authorList) {

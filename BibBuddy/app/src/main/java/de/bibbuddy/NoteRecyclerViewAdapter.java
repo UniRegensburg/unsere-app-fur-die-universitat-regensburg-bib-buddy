@@ -265,22 +265,13 @@ public class NoteRecyclerViewAdapter
     return noteList.size();
   }
 
-  public List<NoteItem> getNoteList() {
-    return noteList;
-  }
-
   public void setNoteList(List<NoteItem> noteList) {
     this.noteList = noteList;
     notifyDataSetChanged();
   }
 
-  public void removeItem(int position) {
-    noteList.remove(position);
-    notifyItemRemoved(position);
-  }
-
-  public NoteItem getNoteItem(int position) {
-    return noteList.get(position);
+  public List<NoteItem> getNoteList() {
+    return noteList;
   }
 
   /**

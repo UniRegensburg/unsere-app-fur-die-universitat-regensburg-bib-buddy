@@ -111,20 +111,15 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(requireActivity());
     alertDeleteBookNote.setCancelable(false);
-    alertDeleteBookNote.setTitle(R.string.delete_notes);
 
     if (adapter.getSelectedNoteItems().size() > 1) {
+      alertDeleteBookNote.setTitle(R.string.delete_notes);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_notes_message)
-              + convertNoteListToString(itemsToDelete)
-              + getString(R.string.finally_delete) + " "
-              + getString(R.string.delete_warning));
+          getString(R.string.delete_notes_message) + assembleAlertString(itemsToDelete));
     } else {
+      alertDeleteBookNote.setTitle(R.string.delete_note);
       alertDeleteBookNote.setMessage(
-          getString(R.string.delete_note_message)
-              + convertNoteListToString(itemsToDelete)
-              + getString(R.string.finally_delete) + " "
-              + getString(R.string.delete_warning));
+          getString(R.string.delete_note_message) + assembleAlertString(itemsToDelete));
     }
 
     alertDeleteBookNote.setNegativeButton(R.string.cancel, (dialog, which) -> deselectNoteItems());
@@ -133,6 +128,12 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
 
     alertDeleteBookNote.show();
   }
+
+ private String assembleAlertString(List<NoteItem> itemsToDelete) {
+    return convertNoteListToString(itemsToDelete)
+        + getString(R.string.finally_delete) + " "
+        + getString(R.string.delete_warning);
+ }
 
   private String convertNoteListToString(List<NoteItem> noteList) {
     StringBuilder notes = new StringBuilder();
@@ -149,6 +150,7 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
 
       ++counter;
     }
+
     return notes.toString();
   }
 
