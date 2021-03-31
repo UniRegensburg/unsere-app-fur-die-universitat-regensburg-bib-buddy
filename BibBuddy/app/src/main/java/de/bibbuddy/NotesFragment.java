@@ -129,11 +129,11 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
     alertDeleteBookNote.show();
   }
 
- private String assembleAlertString(List<NoteItem> itemsToDelete) {
+  private String assembleAlertString(List<NoteItem> itemsToDelete) {
     return convertNoteListToString(itemsToDelete)
         + getString(R.string.finally_delete) + " "
         + getString(R.string.delete_warning);
- }
+  }
 
   private String convertNoteListToString(List<NoteItem> noteList) {
     StringBuilder notes = new StringBuilder();

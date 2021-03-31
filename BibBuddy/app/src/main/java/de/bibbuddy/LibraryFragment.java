@@ -245,7 +245,7 @@ public class LibraryFragment extends Fragment
     alertDeleteShelf.show();
   }
 
-  private void setAlertMessage(AlertDialog.Builder alertDeleteShelf){
+  private void setAlertMessage(AlertDialog.Builder alertDeleteShelf) {
     alertDeleteShelf.setMessage(
         getString(R.string.delete_shelf_message)
             + convertShelfListToString(selectedShelfItems)
