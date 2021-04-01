@@ -23,8 +23,8 @@ public class NoteModel {
    * Create a note object and pass it to the noteDao to add it to the database as well.
    *
    * @param name         of the note object.
-   * @param type         of the note object
-   * @param text         of the note object
+   * @param type         of the note object.
+   * @param text         of the note object.
    * @param noteFilePath string-value representing the path to a linked noteFile-object.
    */
   public void createNote(String name, int type, String text, String noteFilePath) {
