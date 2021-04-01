@@ -10,7 +10,7 @@ import android.text.Spanned;
 import android.text.style.BulletSpan;
 
 /**
- * The RichTextEditorBulletSpan is responsible for creating bullet spans in text notes.
+ * The RichTextEditorBulletSpan is responsible for styling bullet spans in text notes.
  *
  * @author Sabrina Freisleben
  */
@@ -22,10 +22,10 @@ public class RichTextEditorBulletSpan extends BulletSpan {
   private final int bulletGapWidth = 20;
 
   /**
-   * Write a design parcel for bullet spans.
+   * Put default bullet span settings to a parcel.
    *
-   * @param dest  parcel to put the bullet settings
-   * @param flags flags for bullet settings
+   * @param dest  parcel to put the bullet settings.
+   * @param flags how the settings should be written.
    */
   public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
@@ -48,10 +48,10 @@ public class RichTextEditorBulletSpan extends BulletSpan {
    *
    * @param c      canvas to draw on.
    * @param p      paint used to draw.
-   * @param x      X-coordinate to setup the canvas.
-   * @param dir    X-coordinate to give the canvas a direction to draw (+ or -).
-   * @param top    Y-coordinate to set the top of the canvas.
-   * @param bottom Y-coordinate to set the bottom of the canvas.
+   * @param x      x-coordinate to setup the canvas.
+   * @param dir    x-coordinate to give the canvas a direction to draw (+ or -).
+   * @param top    y-coordinate to set the top of the canvas.
+   * @param bottom y-coordinate to set the bottom of the canvas.
    * @param text   text content as charSequence.
    * @param start  first character position of the text.
    */
