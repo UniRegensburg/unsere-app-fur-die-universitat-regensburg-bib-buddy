@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * NoteDao contains all sql queries related to Note.
  *
- * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger
+ * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger, Silvia Ivanova
  */
 public class NoteDao implements InterfaceNoteDao {
 
