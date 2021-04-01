@@ -191,8 +191,8 @@ public class ExportBibTex {
       }
     }
 
-    return BibTexKeys.ANNOTE + BibTexKeys.OPENING_CURLY_BRACKET + allNotes +
-            BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n';
+    return BibTexKeys.ANNOTE + BibTexKeys.OPENING_CURLY_BRACKET + allNotes
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n';
 
   }
 
@@ -215,8 +215,8 @@ public class ExportBibTex {
       authorNames = new StringBuilder();
     }
 
-    return BibTexKeys.AUTHOR + BibTexKeys.OPENING_CURLY_BRACKET + authorNames +
-        BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n';
+    return BibTexKeys.AUTHOR + BibTexKeys.OPENING_CURLY_BRACKET + authorNames
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n';
 
   }
 
