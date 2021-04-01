@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * The RichTextEditor is responsible for text note formatting.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
@@ -83,7 +83,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Set or remove the text format bold depending on its related toolbar icon selection.
    *
-   * @param valid boolean if icon for format type bold is selected
+   * @param valid if the icon for format type bold is not selected.
    */
   public void bold(boolean valid) {
     bold = valid;
@@ -97,7 +97,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Set or remove the text format italic depending on its related toolbar icon selection.
    *
-   * @param valid boolean if icon for format type italic is selected
+   * @param valid if the icon for format type italic is not selected.
    */
   public void italic(boolean valid) {
     italic = valid;
@@ -137,7 +137,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Set or remove the text format underline depending on its related toolbar icon selection.
    *
-   * @param valid boolean if icon for format type underline is selected
+   * @param valid if icon for format type underline is not selected.
    */
   public void underline(boolean valid) {
     underline = valid;
@@ -181,7 +181,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Set or remove the text format strikeThrough depending on its related toolbar icon selection.
    *
-   * @param valid boolean if icon for format type strikeThrough is selected
+   * @param valid if the icon for format type strikeThrough is not selected.
    */
   public void strikeThrough(boolean valid) {
     strikeThrough = valid;
@@ -229,7 +229,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Set or remove the text format bullets depending on its related toolbar icon selection.
    *
-   * @param valid boolean if icon for format type bullets is selected
+   * @param valid if the icon for format type bullets is not selected.
    */
   public void bullet(boolean valid) {
     bullet = valid;
@@ -432,7 +432,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Set or remove the text format quote depending on its related toolbar icon selection.
    *
-   * @param valid boolean if icon for format type quote is selected
+   * @param valid if the icon for format type quote is not selected.
    */
   public void quote(boolean valid) {
     quote = valid;
@@ -534,7 +534,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Check if there is a redo-able user input action.
    *
-   * @return boolean if there is a valid user input action to redo
+   * @return true, if there is a valid user input action to redo.
    */
   public boolean redoValid() {
     if (historyEnable && historySize > 0 && !historyList.isEmpty()
@@ -562,7 +562,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Check if there is an undo-able user input action.
    *
-   * @return boolean if there is a valid user input action to undo
+   * @return true, if there is a valid user input action to undo.
    */
   public boolean undoValid() {
     if (historyEnable && historySize > 0 && !historyWorking) {
@@ -575,7 +575,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
    * Save the current text format as a span before any further user input action to provide a
    * history of redo-able and undo-able actions.
    *
-   * @param text charSequence of the current editable text
+   * @param text current editable text as charSequence.
    */
   public void beforeTextChanged(CharSequence text, int start, int count, int after) {
     if (historyEnable && !historyWorking) {
@@ -586,7 +586,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Apply selected text format options as spans on new inserted text.
    *
-   * @param text charSequence of the current editable text
+   * @param text current editable text as charSequence.
    */
   @Override
   public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
@@ -647,7 +647,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   /**
    * Save current text state after any user input action to provide a history of input actions.
    *
-   * @param text current editable text
+   * @param text current text content as editable.
    */
   public void afterTextChanged(Editable text) {
     if (historyEnable && !historyWorking) {
