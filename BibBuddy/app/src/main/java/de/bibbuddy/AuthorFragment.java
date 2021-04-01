@@ -17,9 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
+import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,8 @@ import java.util.List;
  *
  * @author Sarah Kurek, Luis Moßburger
  */
-public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapter.AuthorListener {
+public class AuthorFragment extends Fragment
+    implements AuthorRecyclerViewAdapter.AuthorListener, SwipeLeftRightCallback.Listener {
 
   private final ChangeAuthorListListener listener;
   private final List<Author> authorList;
@@ -36,7 +38,6 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   private Context context;
   private AuthorRecyclerViewAdapter adapter;
   private List<AuthorItem> selectedAuthorItems;
-  private BottomNavigationView bottomNavigationView;
 
   public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
     this.authorList = new ArrayList<>(authorList);
@@ -62,15 +63,17 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     view = inflater.inflate(R.layout.fragment_author, container, false);
     context = view.getContext();
 
-    RecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
+    SwipeableRecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
     adapter = new AuthorRecyclerViewAdapter(this, authorList);
     recyclerView.setAdapter(adapter);
+    recyclerView.setListener(this);
 
     ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
     ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
-    bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+    BottomNavigationView bottomNavigationView =
+        requireActivity().findViewById(R.id.bottom_navigation);
     bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     selectedAuthorItems = new ArrayList<>();
@@ -128,43 +131,77 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
     if (selectedAuthorItems.size() > 1) {
       alertDeleteAuthor.setTitle(R.string.delete_authors);
       alertDeleteAuthor.setMessage(
-          getString(R.string.delete_authors_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_authors_message) + assembleAlertString());
     } else {
       alertDeleteAuthor.setTitle(R.string.delete_author);
       alertDeleteAuthor.setMessage(
-          getString(R.string.delete_author_message) + " " + getString(R.string.delete_warning));
+          getString(R.string.delete_author_message) + assembleAlertString());
     }
 
-    alertDeleteAuthor.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
+    alertDeleteAuthor.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
+        deselectAuthorItems();
       }
     });
 
     alertDeleteAuthor.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        assert (!selectedAuthorItems.isEmpty());
-        final int authorsNumber = selectedAuthorItems.size();
-
-        for (AuthorItem authorItem : selectedAuthorItems) {
-          authorList.remove(authorItem.getAuthor());
-        }
-
-        deselectAuthorItems();
-        adapter.notifyDataSetChanged();
-
-        if (authorsNumber > 1) {
-          Toast.makeText(context, getString(R.string.deleted_authors), Toast.LENGTH_SHORT).show();
-        } else {
-          Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
-        }
-
-        updateEmptyView();
+        performDeleteAuthors();
       }
     });
 
     alertDeleteAuthor.show();
+  }
+
+  private String assembleAlertString() {
+    return convertAuthorListToString(selectedAuthorItems)
+        + getString(R.string.finally_delete) + " "
+        + getString(R.string.delete_warning);
+  }
+
+  private String convertAuthorListToString(List<AuthorItem> authorList) {
+    StringBuilder authors = new StringBuilder();
+    authorList.size();
+
+    int counter = 1;
+    for (AuthorItem author : authorList) {
+      authors.append(" \"");
+
+      if (author.getTitle() != null && !author.getTitle().isEmpty()) {
+        authors.append(author.getTitle()).append(" ");
+      }
+      authors.append(author.getFirstName()).append(" ").append(author.getLastName()).append("\"");
+      if (counter != authorList.size()) {
+        authors.append(",");
+      }
+
+      authors.append(" ");
+      ++counter;
+    }
+
+    return authors.toString();
+  }
+
+  private void performDeleteAuthors() {
+    assert (!selectedAuthorItems.isEmpty());
+    final int authorsNumber = selectedAuthorItems.size();
+
+    for (AuthorItem authorItem : selectedAuthorItems) {
+      authorList.remove(authorItem.getAuthor());
+    }
+
+    deselectAuthorItems();
+    adapter.notifyDataSetChanged();
+
+    if (authorsNumber > 1) {
+      Toast.makeText(context, getString(R.string.deleted_authors), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
+    }
+
+    updateEmptyView();
   }
 
   private void authorManualFragment() {
@@ -184,7 +221,7 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   private void deselectAuthorItems() {
-    RecyclerView authorListView = getView().findViewById(R.id.author_recycler_view);
+    SwipeableRecyclerView authorListView = getView().findViewById(R.id.author_recycler_view);
     for (int i = 0; i < authorListView.getChildCount(); i++) {
       authorListView.getChildAt(i).setSelected(false);
     }
@@ -254,12 +291,12 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
   }
 
   @Override
-  public void onItemClicked(int position) {
+  public void onAuthorClicked(int position) {
     handleEditAuthor(authorList.get(position));
   }
 
   @Override
-  public void onLongItemClicked(int position, AuthorItem authorItem, View view) {
+  public void onAuthorLongClicked(int position, AuthorItem authorItem, View view) {
     if (view.isSelected()) {
       view.setSelected(false);
       selectedAuthorItems.remove(authorItem);
@@ -267,6 +304,19 @@ public class AuthorFragment extends Fragment implements AuthorRecyclerViewAdapte
       view.setSelected(true);
       selectedAuthorItems.add(authorItem);
     }
+  }
+
+  @Override
+  public void onSwipedLeft(int position) {
+    deselectAuthorItems();
+    selectedAuthorItems.add(adapter.getAuthorItem(position));
+    deleteAuthors();
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onSwipedRight(int position) {
+    onAuthorClicked(position);
   }
 
   public interface ChangeAuthorListListener {

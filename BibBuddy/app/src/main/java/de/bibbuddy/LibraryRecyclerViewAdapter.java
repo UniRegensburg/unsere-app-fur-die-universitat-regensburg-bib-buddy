@@ -52,7 +52,7 @@ public class LibraryRecyclerViewAdapter
     this.parent = parent;
 
     return new LibraryViewHolder(LayoutInflater.from(parent.getContext())
-                                     .inflate(R.layout.list_view_item_library, parent, false));
+        .inflate(R.layout.list_view_item_library, parent, false));
   }
 
   @Override
@@ -74,9 +74,9 @@ public class LibraryRecyclerViewAdapter
       @Override
       public void onClick(View v) {
         if (getSelectedLibraryItems().size() > 0) {
-          listener.onLongItemClicked(position, shelfItem, v);
+          listener.onShelfLongClicked(position, shelfItem, v);
         } else {
-          listener.onItemClicked(position);
+          listener.onShelfClicked(position);
         }
       }
     });
@@ -88,7 +88,7 @@ public class LibraryRecyclerViewAdapter
           return false;
         }
 
-        listener.onLongItemClicked(position, shelfItem, v);
+        listener.onShelfLongClicked(position, shelfItem, v);
         return true;
       }
     });
@@ -119,6 +119,10 @@ public class LibraryRecyclerViewAdapter
     this.libraryList = libraryList;
   }
 
+  public ShelfItem getLibraryItem(int position) {
+    return libraryList.get(position);
+  }
+
   /**
    * This method fetches the number of items selected in the recyclerView.
    *
@@ -139,13 +143,13 @@ public class LibraryRecyclerViewAdapter
   }
 
   public interface LibraryListener {
-    void onItemClicked(int position);
+    void onShelfClicked(int position);
 
-    void onLongItemClicked(int position, ShelfItem shelfItem, View view);
+    void onShelfLongClicked(int position, ShelfItem shelfItem, View view);
   }
 
 
-  public class LibraryViewHolder extends RecyclerView.ViewHolder {
+  public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView textView;
     private final ImageView imageView;

@@ -28,14 +28,17 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true">
 
-            <androidx.recyclerview.widget.RecyclerView
+            <com.tsuryo.swipeablerv.SwipeableRecyclerView
                 android:id="@+id/note_list_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:orientation="vertical"
                 android:scrollbars="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                app:layoutManager="LinearLayoutManager"
+                app:rightBgColor="@color/delete"
+                app:rightImage="@drawable/ic_delete" />
+
 
         </androidx.core.widget.NestedScrollView>
 

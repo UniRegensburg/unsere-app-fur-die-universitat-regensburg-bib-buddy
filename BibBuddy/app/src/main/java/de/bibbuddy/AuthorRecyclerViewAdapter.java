@@ -78,9 +78,9 @@ public class AuthorRecyclerViewAdapter
       @Override
       public void onClick(View v) {
         if (getSelectedAuthorItems().size() > 0) {
-          listener.onLongItemClicked(position, authorItem, v);
+          listener.onAuthorLongClicked(position, authorItem, v);
         } else {
-          listener.onItemClicked(position);
+          listener.onAuthorClicked(position);
         }
       }
     });
@@ -92,7 +92,7 @@ public class AuthorRecyclerViewAdapter
           return false;
         }
 
-        listener.onLongItemClicked(position, authorItem, v);
+        listener.onAuthorLongClicked(position, authorItem, v);
         return true;
       }
     });
@@ -101,6 +101,10 @@ public class AuthorRecyclerViewAdapter
   @Override
   public int getItemCount() {
     return authorItemList.size();
+  }
+
+  public AuthorItem getAuthorItem(int position) {
+    return authorItemList.get(position);
   }
 
   /**
@@ -123,9 +127,9 @@ public class AuthorRecyclerViewAdapter
   }
 
   public interface AuthorListener {
-    void onItemClicked(int position);
+    void onAuthorClicked(int position);
 
-    void onLongItemClicked(int position, AuthorItem authorItem, View view);
+    void onAuthorLongClicked(int position, AuthorItem authorItem, View view);
   }
 
   public static class AuthorViewHolder extends RecyclerView.ViewHolder {

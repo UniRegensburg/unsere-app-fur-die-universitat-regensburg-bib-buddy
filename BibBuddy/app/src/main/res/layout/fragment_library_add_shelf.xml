@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_shelf_name"
-        android:text="@string/back"
+        android:text="@string/cancel_short"
         android:theme="@style/Button.Grey" />
 
     <Button

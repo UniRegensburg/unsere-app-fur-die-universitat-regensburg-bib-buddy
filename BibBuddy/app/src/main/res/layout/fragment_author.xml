@@ -2,7 +2,6 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_author"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,17 +31,21 @@
         />
 
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.tsuryo.swipeablerv.SwipeableRecyclerView
         android:id="@+id/author_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
         android:clipToPadding="false"
         android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
+        app:leftBgColor="@color/edit"
+        app:leftImage="@drawable/ic_edit"
+        app:rightBgColor="@color/delete"
+        app:rightImage="@drawable/ic_delete"
         />
 
     <RelativeLayout
@@ -52,19 +55,21 @@
         >
 
         <include
-                layout="@layout/add_button"
-                android:id="@+id/btn_add_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/btn_confirm_author"
-                android:contentDescription="@string/add_author_btn" />
+            android:id="@+id/btn_add_author"
+            layout="@layout/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/btn_confirm_author"
+            android:contentDescription="@string/add_author_btn"
+            />
 
         <include
-                layout="@layout/confirm_button"
-                android:id="@+id/btn_confirm_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true" />
+            android:id="@+id/btn_confirm_author"
+            layout="@layout/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            />
 
     </RelativeLayout>
 
