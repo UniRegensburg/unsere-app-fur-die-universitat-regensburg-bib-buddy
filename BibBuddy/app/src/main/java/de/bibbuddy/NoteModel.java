@@ -8,7 +8,7 @@ import org.jsoup.Jsoup;
 /**
  * NoteModel manages all data of the NoteView.
  *
- * @author Sarah Kurek, Sabrina Freisleben
+ * @author Sarah Kurek, Sabrina Freisleben.
  */
 public class NoteModel {
 
@@ -20,13 +20,12 @@ public class NoteModel {
   }
 
   /**
-   * This method creates a new note object and passes it to the noteDao to add it to the database
-   * as well.
+   * Create a note object and pass it to the noteDao to add it to the database as well.
    *
-   * @param name         name of the note object
-   * @param type         type of the note object
-   * @param text         text of the note object
-   * @param noteFilePath string-value representing the path to a linked noteFile-object
+   * @param name         of the note object.
+   * @param type         of the note object
+   * @param text         of the note object
+   * @param noteFilePath string-value representing the path to a linked noteFile-object.
    */
   public void createNote(String name, int type, String text, String noteFilePath) {
     Note note;
@@ -55,9 +54,9 @@ public class NoteModel {
   }
 
   /**
-   * This method is used to fetch the entire noteList from the database.
+   * Fetch the entire noteItem-list from the database.
    *
-   * @return a list of NoteItems (used for views)
+   * @return a list of all NoteItems from the database.
    */
   public List<NoteItem> getNoteList() {
     List<Note> noteList = noteDao.findAll();
@@ -65,10 +64,10 @@ public class NoteModel {
   }
 
   /**
-   * Method to fetch all notes, that are connected to a specific book, from the database.
+   * Fetch all notes, that are connected to a specific book, from the database.
    *
-   * @param bookId id of the book, whose connected notes are searched for
-   * @return returns a list of NoteItems that are connected to the specific book
+   * @param bookId whose connected notes are searched for.
+   * @return a list of NoteItems whose connected notes are connected to the specific book.
    */
   public List<NoteItem> getNoteListForBook(Long bookId) {
     List<Note> noteList = noteDao.getAllNotesForBook(bookId);
@@ -76,19 +75,19 @@ public class NoteModel {
   }
 
   /**
-   * This method gets the list of all existing notes of the voice-type (int=1).
+   * Get the list of all existing voice notes (noteType=1) from the database.
    *
-   * @return returns the list of voice type note objects.
+   * @return a list of NoteItems created from all voice type note objects from the database.
    */
   public List<Note> getVoiceNoteList() {
     List<Note> noteList = noteDao.findAll();
-    
+
     for (int i = 0; i < noteList.size(); i++) {
       if (noteList.get(i).getType() != 1) {
         noteList.remove(noteList.get(i));
       }
     }
-    
+
     return noteList;
   }
 
@@ -127,11 +126,11 @@ public class NoteModel {
   }
 
   /**
-   * Gets the sorted noteList by sortCriteria.
+   * Get a list of all noteItems from the database sorted by given sortCriteria.
    *
-   * @param sortCriteria sortCriteria of the list
-   * @param noteList     noteList that should be sorted
-   * @return Returns the sorted noteList
+   * @param sortCriteria chosen by the user to sort the list.
+   * @param noteList     to be sorted.
+   * @return the sorted noteList.
    */
   public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
     switch (sortCriteria) {
@@ -160,11 +159,11 @@ public class NoteModel {
   }
 
   /**
-   * Gets the sorted noteList by sortCriteria.
+   * Get the noteList of a book sorted by sortCriteria.
    *
-   * @param sortCriteria sortCriteria of the list
-   * @param bookId       id of the book
-   * @return Returns the sorted noteList
+   * @param sortCriteria currently applied to the list.
+   * @param bookId       id of the book the noteList is linked to.
+   * @return the sorted noteList.
    */
   public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
     List<Note> noteListDb = noteDao.getAllNotesForBook(bookId);
@@ -174,10 +173,10 @@ public class NoteModel {
   }
 
   /**
-   * Gets the sorted noteList by sortCriteria.
+   * Get the noteList for all notes in the database sorted by sortCriteria.
    *
-   * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted noteList
+   * @param sortCriteria currently applied to the list.
+   * @return the sorted noteList.
    */
   public List<NoteItem> getAllSortedNoteList(SortCriteria sortCriteria) {
     List<Note> allNoteList = noteDao.findAll();

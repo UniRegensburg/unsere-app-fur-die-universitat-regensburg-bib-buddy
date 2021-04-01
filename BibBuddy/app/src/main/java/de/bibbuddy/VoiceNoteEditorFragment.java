@@ -25,7 +25,7 @@ import java.util.Date;
 /**
  * The VoiceNoteEditorFragment is responsible for creating and saving voice notes.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class VoiceNoteEditorFragment extends Fragment {
 
@@ -71,7 +71,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     }
     newAudio = new File(filePath);
 
-    setupOnClickListeners();
+    setupOnClickListener();
 
     return view;
   }
@@ -91,6 +91,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
+  //Show the VoiceNoteEditorFragment help-element.
   private void handleManualVoiceEditor() {
     Spanned htmlAsString =
         Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
@@ -104,15 +105,16 @@ public class VoiceNoteEditorFragment extends Fragment {
     helpAlert.show();
   }
 
-  private void setupOnClickListeners() {
+  private void setupOnClickListener() {
     View.OnClickListener recordClickListener = v -> {
       v.setSelected(!v.isSelected());
-      onRecord(v.isSelected());
+      record(v.isSelected());
     };
     recordButton.setOnClickListener(recordClickListener);
   }
 
-  private void onRecord(boolean start) {
+  //Start or stop recording depending on the record-button selection.
+  private void record(boolean start) {
     if (start) {
       pulse.startRippleAnimation();
       recordButton.setBackgroundTintList(

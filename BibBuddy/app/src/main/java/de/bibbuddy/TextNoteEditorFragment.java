@@ -87,7 +87,7 @@ public class TextNoteEditorFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
-  //Handle the help-option in the options-menu.
+  //Show the TextNoteEditorFragment help-element.
   private void handleManualTextNoteEditor() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.text_editor_help_text);
