@@ -27,7 +27,7 @@ import org.jsoup.Jsoup;
 /**
  * The TextNoteEditorFragment is responsible for creating and saving text notes.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class TextNoteEditorFragment extends Fragment {
 
