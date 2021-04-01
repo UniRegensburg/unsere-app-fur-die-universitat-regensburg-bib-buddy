@@ -37,7 +37,6 @@ public class NoteDao implements InterfaceNoteDao {
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
                 null, null, null, null);
         c.moveToLast();
-        note.setNoteFileId(c.getLong(0));
 
         ContentValues noteValues = new ContentValues();
         noteValues.put(DatabaseHelper.NAME, note.getName());
@@ -55,13 +54,9 @@ public class NoteDao implements InterfaceNoteDao {
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
                 null, null, null);
         cursor.moveToLast();
-        long id = cursor.getLong(0);
 
         cursor.close();
 
-        note.setId(id);
-        note.setCreateDate(currentTime);
-        note.setModDate(currentTime);
       } catch (SQLiteException ex) {
         return false;
       } finally {
@@ -183,7 +178,7 @@ public class NoteDao implements InterfaceNoteDao {
    *
    * @param bookId id of the book to link
    * @param noteId id of the note to link
-   * @return if linking was successfull
+   * @return true if linking was successful
    */
   public boolean linkNoteWithBook(Long bookId, Long noteId) {
 
