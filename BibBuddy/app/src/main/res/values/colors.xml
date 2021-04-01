@@ -19,5 +19,7 @@
     <!-- Attention colors -->
     <color name="red">#A61C3C</color>
     <color name="green">#78C091</color>
+    <color name="delete">#E61919</color>
+    <color name="edit">#FFEB3B</color>
 
 </resources>
