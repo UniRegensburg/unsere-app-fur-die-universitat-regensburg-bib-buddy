@@ -181,10 +181,9 @@ public class ExportBibTex {
 
   private String getBibNotesFromBook(Book book, NoteDao noteDao) {
     List<Long> notesList = noteDao.getAllNoteIdsForBook(book.getId());
-    NoteTypeLut noteType = NoteTypeLut.TEXT;
     StringBuilder allNotes = new StringBuilder();
 
-    if (!notesList.isEmpty() && noteType.getId() == 1) {
+    if (!notesList.isEmpty()) {
       for (int k = 0; k < notesList.size(); k++) {
         String bookTextNotes = noteDao.findStrippedTextById(notesList.get(k));
         allNotes.append(bookTextNotes);

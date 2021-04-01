@@ -252,6 +252,8 @@ public class NoteDao implements InterfaceNoteDao {
    * @return returns the notes text value
    */
   public String findTextById(Long id) {
+    NoteTypeLut noteType = NoteTypeLut.TEXT;
+
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
