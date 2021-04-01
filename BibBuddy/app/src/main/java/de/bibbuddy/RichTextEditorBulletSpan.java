@@ -10,7 +10,7 @@ import android.text.Spanned;
 import android.text.style.BulletSpan;
 
 /**
- * The RichTextEditorBulletSpan is responsible for the bullets in text notes.
+ * The RichTextEditorBulletSpan is responsible for creating bullet spans in text notes.
  *
  * @author Sabrina Freisleben
  */
@@ -22,10 +22,10 @@ public class RichTextEditorBulletSpan extends BulletSpan {
   private final int bulletGapWidth = 20;
 
   /**
-   * This method is called to write a parcel for the bullet span.
+   * Write a design parcel for bullet spans.
    *
-   * @param dest  A parcel for the bullet settings
-   * @param flags Used Flags for bullet settings
+   * @param dest  parcel to put the bullet settings
+   * @param flags flags for bullet settings
    */
   public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
@@ -35,25 +35,25 @@ public class RichTextEditorBulletSpan extends BulletSpan {
   }
 
   /**
-   * This method is called to fetch the margin between bullet and text.
+   * Fetch the margin between the bullet and the first character of the text.
    *
-   * @return Returns the distance between bullets and texts in line in pixels.
+   * @return the distance between the bullet and the first character in pixels.
    */
   public int getLeadingMargin(boolean first) {
     return 2 * this.bulletRadius + this.bulletGapWidth;
   }
 
   /**
-   * This method is called to draw the leading margin for the bullets.
+   * Draw the leading margin for bullets.
    *
-   * @param c      Canvas to draw on
-   * @param p      Paint used to draw
-   * @param x      X-Coordinate to setup the canvas
-   * @param dir    X-Coordinate to give the canvas a direction to draw (+ or -)
-   * @param top    Y-Coordinate to set the top of the canvas
-   * @param bottom Y-coordinate to set the bottom of the canvas
-   * @param text   Contained text
-   * @param start  Start of the text
+   * @param c      canvas to draw on.
+   * @param p      paint used to draw.
+   * @param x      X-coordinate to setup the canvas.
+   * @param dir    X-coordinate to give the canvas a direction to draw (+ or -).
+   * @param top    Y-coordinate to set the top of the canvas.
+   * @param bottom Y-coordinate to set the bottom of the canvas.
+   * @param text   text content as charSequence.
+   * @param start  first character position of the text.
    */
   public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline,
                                 int bottom, CharSequence text, int start, int end, boolean first,
