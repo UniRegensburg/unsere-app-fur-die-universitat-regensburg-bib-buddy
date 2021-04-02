@@ -252,26 +252,34 @@ public class NoteDao implements InterfaceNoteDao {
    * @return returns the notes text value
    */
   public String findTextById(Long id) {
-    NoteTypeLut noteType = NoteTypeLut.TEXT;
 
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
+    for (NoteTypeLut noteType : NoteTypeLut.values()) {
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-            DatabaseHelper.NOTE_FILE_ID},
-        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-        null, null, null, String.valueOf(1));
+      if (noteType.getId() == 1) {
 
-    String noteText = null;
-    if (cursor.moveToFirst()) {
-      noteText = cursor.getString(3);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
+            new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+                DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+                DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                DatabaseHelper.NOTE_FILE_ID},
+            DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+            null, null, null, String.valueOf(1));
+
+        String noteText = null;
+        if (cursor.moveToFirst()) {
+          noteText = cursor.getString(3);
+        }
+        
+        cursor.close();
+
+        return noteText;
+      }
+
     }
 
-    cursor.close();
-
-    return noteText;
+    return null;
   }
 
   /**
