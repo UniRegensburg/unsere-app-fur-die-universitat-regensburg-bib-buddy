@@ -183,11 +183,9 @@ public class ExportBibTex {
     List<Long> notesList = noteDao.getAllNoteIdsForBook(book.getId());
     StringBuilder allNotes = new StringBuilder();
 
-    if (!notesList.isEmpty()) {
-      for (int k = 0; k < notesList.size(); k++) {
-        String bookTextNotes = noteDao.findStrippedTextById(notesList.get(k));
-        allNotes.append(bookTextNotes);
-      }
+    for (int k = 0; k < notesList.size(); k++) {
+      String bookTextNotes = noteDao.findStrippedTextById(notesList.get(k));
+      allNotes.append(bookTextNotes);
     }
 
     return BibTexKeys.ANNOTE + BibTexKeys.OPENING_CURLY_BRACKET + allNotes
