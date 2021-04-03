@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -76,17 +75,9 @@ public class LibraryFormFragment extends Fragment {
   }
 
   private void setupShelfTextAndHeader() {
-    TextView shelfText = view.findViewById(R.id.library_form_shelf_name);
-
     if (shelfId == 0) {
-      shelfText.setText(getString(R.string.add_new_shelf));
       ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_new_shelf));
     } else {
-      String oldShelfInfo =
-          getString(R.string.shelf) + " \"" + oldShelfName + "\" "
-              + getString(R.string.rename_small);
-
-      shelfText.setText(oldShelfInfo);
       ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.rename_shelf));
 
       EditText editShelfName = view.findViewById(R.id.library_form_shelf_name_input);

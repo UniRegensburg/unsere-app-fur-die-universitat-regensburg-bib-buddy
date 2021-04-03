@@ -45,15 +45,13 @@
     <!-- Library | Add Shelf -->
     <string name="add_shelf">Hinzufügen</string>
     <string name="add_new_shelf">Regal hinzufügen</string>
-    <string name="input_shelf_name">Regalnamen eingeben</string>
+    <string name="shelf_name">Regalname</string>
     <string name="invalid_name">Bitte gib einen Namen für das Regal an.</string>
     <string name="name_exists">Sorry, den Namen gibt\'s schon!</string>
     <string name="shelf_added">Ok, wir haben das Regal hinzugefügt.</string>
     <string name="add_shelf_tooltip">Ein neues Regal anlegen.</string>
 
     <!-- Library | Rename Shelf -->
-    <string name="shelf">Regal</string>
-    <string name="rename_small">umbenennen</string>
     <string name="rename_shelf">Regal umbenennen</string>
     <string name="renamed_shelf">Ok, wir haben das Regal umbenannt.</string>
 
