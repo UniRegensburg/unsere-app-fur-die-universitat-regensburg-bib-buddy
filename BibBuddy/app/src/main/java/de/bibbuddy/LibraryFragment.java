@@ -318,23 +318,31 @@ public class LibraryFragment extends Fragment
 
     bundle.putStringArray(LibraryKeys.SHELF_NAMES, getAllShelfNames());
     bundle.putString(LibraryKeys.SHELF_NAME, selectedShelfItems.get(0).getName());
+
+    Long currentShelfId = selectedShelfItems.get(0).getId();
+
+    bundle.putLong(LibraryKeys.SHELF_ID, currentShelfId);
+
     return bundle;
   }
 
   private void handleRenameShelf() {
-    LibraryRenameShelfFragment fragment =
-        new LibraryRenameShelfFragment(new LibraryRenameShelfFragment.RenameShelfLibraryListener() {
+    LibraryFormFragment libraryFormFragment =
+        new LibraryFormFragment(new LibraryFormFragment.ChangeShelfListener() {
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
-            deselectLibraryItems();
             adapter.notifyDataSetChanged();
+            Toast.makeText(context, getString(R.string.renamed_shelf), Toast.LENGTH_SHORT).show();
           }
         });
 
-    fragment.setArguments(createRenameShelfBundle());
-    fragment
-        .show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_RENAME_SHELF);
+    libraryFormFragment.setArguments(createRenameShelfBundle());
+    requireActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, libraryFormFragment,
+                 LibraryKeys.FRAGMENT_LIBRARY_FORM)
+        .addToBackStack(null)
+        .commit();
   }
 
   private void deselectLibraryItems() {
@@ -419,27 +427,22 @@ public class LibraryFragment extends Fragment
   }
 
   private void handleAddShelf() {
-    LibraryAddShelfFragment fragment =
-        new LibraryAddShelfFragment(new LibraryAddShelfFragment.AddShelfLibraryListener() {
+    LibraryFormFragment libraryFormFragment =
+        new LibraryFormFragment(new LibraryFormFragment.ChangeShelfListener() {
           @Override
           public void onShelfAdded(String name, Long shelfId) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
-            deselectLibraryItems();
+            Toast.makeText(context, getString(R.string.shelf_added), Toast.LENGTH_SHORT).show();
           }
         });
 
-    fragment.setArguments(createAddShelfBundle());
-    fragment.show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_ADD_NAME);
-  }
-
-  private void closeAddShelfFragment() {
-    LibraryAddShelfFragment fragment =
-        (LibraryAddShelfFragment) getActivity().getSupportFragmentManager()
-            .findFragmentById(R.id.fragment_container_add_shelf);
-    if (fragment != null) {
-      fragment.closeFragment();
-    }
+    libraryFormFragment.setArguments(createAddShelfBundle());
+    requireActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, libraryFormFragment,
+                 LibraryKeys.FRAGMENT_LIBRARY_FORM)
+        .addToBackStack(null)
+        .commit();
   }
 
   private void updateEmptyView(List<ShelfItem> libraryList) {
@@ -483,17 +486,13 @@ public class LibraryFragment extends Fragment
 
   @Override
   public void onShelfClicked(int position) {
-    closeAddShelfFragment();
-
     LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
-    ((MainActivity) getActivity()).updateHeaderFragment(libraryItem.getName());
+    ((MainActivity) requireActivity()).updateHeaderFragment(libraryItem.getName());
     updateBookListView(libraryItem);
   }
 
   @Override
   public void onShelfLongClicked(int position, ShelfItem shelfItem, View v) {
-    closeAddShelfFragment();
-
     if (v.isSelected()) {
       v.setSelected(false);
       selectedShelfItems.remove(shelfItem);
