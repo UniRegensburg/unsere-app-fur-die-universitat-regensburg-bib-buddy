@@ -158,7 +158,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     Long currentTime = new Date().getTime();
     String fileName =
         getString(R.string.voice_note_name) + DateConverter.convertDateToString(currentTime);
-    noteModel.createNote(fileName, 1, "", newAudio.getPath());
+    noteModel.createNote(fileName, NoteTypeLut.AUDIO, "", newAudio.getPath());
     noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
     Toast.makeText(requireActivity(), getString(R.string.voice_note_saved), Toast.LENGTH_SHORT)
         .show();

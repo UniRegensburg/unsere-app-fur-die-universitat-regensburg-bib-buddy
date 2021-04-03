@@ -94,20 +94,19 @@ public class NoteRecyclerViewAdapter
   @Override
   public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
     NoteItem noteItem = noteList.get(position);
-    int image = noteItem.getImage();
 
     setupBasicCardView(holder, position);
-    if (noteItem.getImage() == R.drawable.microphone) {
+
+    if (noteItem.getType() == NoteTypeLut.AUDIO) {
       setupAudioElements(holder, noteItem);
     }
 
     holder.itemView.setOnClickListener(v -> {
-      if (getSelectedNoteItems().size() > 0) {
+      if (!getSelectedNoteItems().isEmpty()) {
         v.setSelected(!v.isSelected());
       } else {
-        if (image == R.drawable.document) {
+        if (noteItem.getType() == NoteTypeLut.TEXT) {
           TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-
           nextFrag.setArguments(createNoteBundle(noteItem));
 
           activity.getSupportFragmentManager().beginTransaction()
@@ -138,15 +137,18 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupBasicCardView(NotesViewHolder holder, int position) {
+    holder.itemView.findViewById(R.id.voice_note_layout).setVisibility(View.GONE);
+
     NoteItem noteItem = noteList.get(position);
     holder.getModDateView().setText(noteItem.getModDateStr());
-    holder.getNameView().setText(noteItem.getName());
+    holder.getNameView().setText(noteItem.getDisplayName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
         noteItem.getImage()));
   }
 
   private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
     holder.itemView.findViewById(R.id.voice_note_layout).setVisibility(View.VISIBLE);
+
     ImageButton playButton = holder.getPlayNoteButton();
     playButtons.add(playButton);
     playButton.setVisibility(View.VISIBLE);

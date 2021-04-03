@@ -8,8 +8,13 @@ package de.bibbuddy;
  */
 public class NoteAudioItem extends NoteItem {
 
-  public NoteAudioItem(Long modDate, String name, Long id, Long bookId) {
-    super(modDate, name, R.drawable.microphone, id, bookId);
+  public NoteAudioItem(Note note, Long bookId) {
+    super(note, R.drawable.microphone, bookId);
+  }
+
+  @Override
+  public String getDisplayName() {
+    return "";
   }
 
 }

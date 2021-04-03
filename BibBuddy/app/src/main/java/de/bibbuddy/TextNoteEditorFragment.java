@@ -127,7 +127,7 @@ public class TextNoteEditorFragment extends Fragment {
       if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
-        noteModel.createNote(name, 0, text, "");
+        noteModel.createNote(name, NoteTypeLut.TEXT, text, "");
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
     }
