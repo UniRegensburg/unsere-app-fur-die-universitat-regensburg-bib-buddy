@@ -83,8 +83,8 @@ public class LibraryFormFragment extends Fragment {
       ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_new_shelf));
     } else {
       String oldShelfInfo =
-          getString(R.string.shelf) + " \"" + oldShelfName + "\" " +
-              getString(R.string.rename_small);
+          getString(R.string.shelf) + " \"" + oldShelfName + "\" "
+              + getString(R.string.rename_small);
 
       shelfText.setText(oldShelfInfo);
       ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.rename_shelf));
