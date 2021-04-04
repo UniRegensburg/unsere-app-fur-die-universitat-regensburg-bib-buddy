@@ -7,7 +7,7 @@ package de.bibbuddy;
  */
 public enum NoteTypeLut {
 
-  TEXT(1), IMAGE(2), AUDIO(3), OTHER(4);
+  TEXT(0), AUDIO(1), IMAGE(2), OTHER(3);
 
   private final int id;
 
