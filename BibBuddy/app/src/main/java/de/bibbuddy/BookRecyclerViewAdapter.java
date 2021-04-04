@@ -49,7 +49,7 @@ public class BookRecyclerViewAdapter
                                                                    int viewType) {
     this.parent = parent;
 
-    return new BookRecyclerViewAdapter.BookViewHolder(
+    return new BookViewHolder(
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_view_item_book, parent, false));
   }
@@ -77,9 +77,9 @@ public class BookRecyclerViewAdapter
       @Override
       public void onClick(View v) {
         if (getSelectedBookItems().size() > 0) {
-          listener.onLongItemClicked(position, bookItem, v);
+          listener.onBookLongClicked(position, bookItem, v);
         } else {
-          listener.onItemClicked(position);
+          listener.onBookClicked(position);
         }
       }
     });
@@ -91,7 +91,7 @@ public class BookRecyclerViewAdapter
           return false;
         }
 
-        listener.onLongItemClicked(position, bookItem, v);
+        listener.onBookLongClicked(position, bookItem, v);
         return true;
       }
     });
@@ -100,6 +100,10 @@ public class BookRecyclerViewAdapter
   @Override
   public int getItemCount() {
     return bookList.size();
+  }
+
+  public BookItem getBookItem(int position) {
+    return bookList.get(position);
   }
 
   /**
@@ -121,13 +125,13 @@ public class BookRecyclerViewAdapter
     return selectedItems;
   }
 
-  public interface BookListener { // create an interface
-    void onItemClicked(int position); // create callback function
+  public interface BookListener {
+    void onBookClicked(int position);
 
-    void onLongItemClicked(int position, BookItem bookItem, View v);
+    void onBookLongClicked(int position, BookItem bookItem, View v);
   }
 
-  public class BookViewHolder extends RecyclerView.ViewHolder {
+  public static class BookViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView textTitleView;
     private final ImageView imageBookView;

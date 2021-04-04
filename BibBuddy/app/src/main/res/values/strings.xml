@@ -29,6 +29,7 @@
     <string name="add">+</string>
     <string name="ok">Ok</string>
     <string name="cancel">Abbrechen</string>
+    <string name="cancel_short">Abbr.</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
     <string name="change">Ändern</string>
@@ -37,6 +38,8 @@
     <string name="error">Fehler</string>
     <string name="delete_warning">Das können wir <b>nicht rückgängig</b> machen!</string>
     <string name="delete_question">löschen?</string>
+    <string name="finally_delete">wirklich löschen?</string>
+    <string name="delete_counter_msg">mit insgesamt</string>
 
     <!-- Library -->
     <!-- Library | Add Shelf -->
@@ -55,8 +58,8 @@
     <!-- Library | Delete Shelf -->
     <string name="delete_shelf">Regal löschen</string>
     <string name="delete_shelves">Regale löschen</string>
-    <string name="delete_shelf_message">Willst du dieses Regal und seine Inhalte wirklich löschen?</string>
-    <string name="delete_shelves_message">Willst du diese Regale und deren Inhalte wirklich löschen?</string>
+    <string name="delete_shelf_message">Willst du das Regal </string>
+    <string name="delete_shelves_message">Willst du die Regale </string>
     <string name="deleted_shelf">Ok, wir haben das Regal gelöscht.</string>
     <string name="deleted_shelves">Ok, wir haben die Regale gelöscht.</string>
 
@@ -87,8 +90,10 @@
     <string name="delete_books">Bücher löschen</string>
     <string name="deleted_book">Ok, wir haben das Buch gelöscht.</string>
     <string name="deleted_books">Ok, wir haben die Bücher gelöscht.</string>
-    <string name="delete_book_message">Willst du dieses Buch und deine Notizen wirklich löschen?</string>
-    <string name="delete_books_message">Willst du diese Bücher und deine Notizen wirklich löschen?</string>
+    <!-- TODO -->
+    <string name="delete_book_message">Willst du das Buch </string>
+    <string name="delete_books_message">Willst du die Bücher </string>
+    <string name="delete_book_notes">mit folgenden Notizen </string>
 
     <!-- Book | Help -->
     <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
@@ -129,8 +134,8 @@
     <string name="delete_authors">Autoren löschen</string>
     <string name="deleted_author">Ok, wir haben den Autor gelöscht.</string>
     <string name="deleted_authors">Ok, wir haben die Autoren gelöscht.</string>
-    <string name="delete_author_message">Willst du diesen Autor wirklich löschen?</string>
-    <string name="delete_authors_message">Willst du diese Autoren wirklich löschen?</string>
+    <string name="delete_author_message">Willst du den Autor </string>
+    <string name="delete_authors_message">Willst du die Autoren </string>
 
     <!-- Book Form | Help -->
     <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
@@ -173,6 +178,7 @@
 
     <!-- Note -->
     <string name="note">Notiz</string>
+    <string name="notes">Notizen</string>
 
     <!-- Note | Add note -->
     <string name="add_note">Notiz hinzufügen</string>
@@ -186,8 +192,8 @@
     <string name="delete_notes">Notizen löschen</string>
     <string name="deleted_note">Ok, wir haben die Notiz gelöscht.</string>
     <string name="deleted_notes">Ok, wir haben die Notizen gelöscht.</string>
-    <string name="delete_note_message">Willst du diese Notiz wirklich löschen?</string>
-    <string name="delete_notes_message">Willst du diese Notizen wirklich löschen?</string>
+    <string name="delete_note_message">Willst du die Notiz </string>
+    <string name="delete_notes_message">Willst du die Notizen </string>
 
     <!-- Note | Help -->
     <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den <b>+-Button</b>
