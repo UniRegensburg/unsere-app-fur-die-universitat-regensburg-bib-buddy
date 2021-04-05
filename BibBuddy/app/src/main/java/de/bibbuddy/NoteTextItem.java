@@ -21,7 +21,6 @@ public class NoteTextItem extends NoteItem {
   public NoteTextItem(Note note, Long bookId) {
     super(note, R.drawable.document, bookId);
 
-
     String name = note.getName();
     name = Jsoup.parse(name).text();
 
