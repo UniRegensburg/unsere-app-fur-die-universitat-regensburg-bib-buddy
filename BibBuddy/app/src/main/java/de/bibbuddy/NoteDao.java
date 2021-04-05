@@ -40,7 +40,7 @@ public class NoteDao implements InterfaceNoteDao {
 
         ContentValues noteValues = new ContentValues();
         noteValues.put(DatabaseHelper.NAME, note.getName());
-        noteValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
+        noteValues.put(DatabaseHelper.TYPE, note.getType().getId());
         noteValues.put(DatabaseHelper.TEXT, note.getText());
         noteValues.put(DatabaseHelper.CREATE_DATE, currentTime);
         noteValues.put(DatabaseHelper.MOD_DATE, currentTime);
@@ -282,7 +282,7 @@ public class NoteDao implements InterfaceNoteDao {
     return new Note(
         Long.parseLong(cursor.getString(0)), // Id
         cursor.getString(1), // Name
-        Integer.parseInt(cursor.getString(2)), // Type
+        NoteTypeLut.valueOf(Integer.parseInt(cursor.getString(2))), // Type
         cursor.getString(3), // Text
         Long.parseLong(cursor.getString(4)), // Create date
         Long.parseLong(cursor.getString(5)), // Mod date

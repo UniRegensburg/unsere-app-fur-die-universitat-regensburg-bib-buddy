@@ -3,7 +3,7 @@ package de.bibbuddy;
 import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
-import org.jsoup.Jsoup;
+import java.util.stream.Collectors;
 
 /**
  * NoteModel manages all data of the NoteView.
@@ -27,7 +27,7 @@ public class NoteModel {
    * @param text         of the note object.
    * @param noteFilePath string-value representing the path to a linked noteFile-object.
    */
-  public void createNote(String name, int type, String text, String noteFilePath) {
+  public void createNote(String name, NoteTypeLut type, String text, String noteFilePath) {
     Note note;
     if (noteFilePath.equals("")) {
       note = new Note(name, type, text);
@@ -81,14 +81,9 @@ public class NoteModel {
    */
   public List<Note> getVoiceNoteList() {
     List<Note> noteList = noteDao.findAll();
-
-    for (int i = 0; i < noteList.size(); i++) {
-      if (noteList.get(i).getType() != 1) {
-        noteList.remove(noteList.get(i));
-      }
-    }
-
-    return noteList;
+    return noteList.stream()
+        .filter(n -> n.getType() == NoteTypeLut.AUDIO)
+        .collect(Collectors.toList());
   }
 
   public String getNoteFilePath(Long id) {
@@ -99,22 +94,12 @@ public class NoteModel {
     List<NoteItem> noteItemList = new ArrayList<>();
 
     for (Note note : noteList) {
-      Long noteId = note.getId();
-      Long modDate = note.getModDate();
-      String name = "";
-
-      if (note.getType() == 0) {
-        name = note.getName();
-        name = Jsoup.parse(name).text();
-
-        if (name.length() > 20) {
-          name = name.substring(0, 20) + " ...";
-        }
+      if (note.getType() == NoteTypeLut.TEXT) {
         noteItemList
-            .add(new NoteTextItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
-      } else if (note.getType() == 1) {
+            .add(new NoteTextItem(note, noteDao.findBookIdByNoteId(note.getId())));
+      } else if (note.getType() == NoteTypeLut.AUDIO) {
         noteItemList
-            .add(new NoteAudioItem(modDate, name, noteId, noteDao.findBookIdByNoteId(noteId)));
+            .add(new NoteAudioItem(note, noteDao.findBookIdByNoteId(note.getId())));
       }
     }
 

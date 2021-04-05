@@ -1,5 +1,7 @@
 package de.bibbuddy;
 
+import java.util.stream.Stream;
+
 /**
  * Look up table for the note type.
  *
@@ -11,6 +13,13 @@ public enum NoteTypeLut {
 
   private final int id;
 
+  static NoteTypeLut valueOf(int id) {
+    return Stream.of(NoteTypeLut.values())
+      .filter(e -> e.getId() == id)
+      .findFirst()
+      .orElseThrow(IllegalArgumentException::new);
+  }
+
   NoteTypeLut(int id) {
     this.id = id;
   }
@@ -18,4 +27,5 @@ public enum NoteTypeLut {
   public int getId() {
     return id;
   }
+
 }

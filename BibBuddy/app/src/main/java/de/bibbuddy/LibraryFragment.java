@@ -68,7 +68,7 @@ public class LibraryFragment extends Fragment
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
 
-    sortCriteria = ((MainActivity) getActivity()).getSortCriteria();
+    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
 
     setupRecyclerView();
     setupAddShelfBtn();
@@ -76,7 +76,7 @@ public class LibraryFragment extends Fragment
     ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_library));
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
 
     setFunctionsToolbar();
@@ -94,8 +94,8 @@ public class LibraryFragment extends Fragment
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
 
     sortBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -107,7 +107,7 @@ public class LibraryFragment extends Fragment
 
   private void setFunctionsToolbar() {
 
-    ((MainActivity) getActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         checkEmptyLibrary();
@@ -150,7 +150,7 @@ public class LibraryFragment extends Fragment
         break;
 
       case R.id.menu_imprint:
-        ((MainActivity) getActivity()).openImprint();
+        ((MainActivity) requireActivity()).openImprint();
         break;
 
       default:
@@ -191,7 +191,7 @@ public class LibraryFragment extends Fragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
             LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
@@ -346,7 +346,7 @@ public class LibraryFragment extends Fragment
   }
 
   private void deselectLibraryItems() {
-    SwipeableRecyclerView shelfListView = getView().findViewById(R.id.library_recycler_view);
+    SwipeableRecyclerView shelfListView = requireView().findViewById(R.id.library_recycler_view);
     for (int i = 0; i < shelfListView.getChildCount(); i++) {
       shelfListView.getChildAt(i).setSelected(false);
     }
@@ -360,7 +360,7 @@ public class LibraryFragment extends Fragment
           @Override
           public void onSortedSelected(SortCriteria newSortCriteria) {
             sortCriteria = newSortCriteria;
-            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
+            ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
             sortLibraryList();
           }
         });
@@ -465,7 +465,7 @@ public class LibraryFragment extends Fragment
     BookFragment fragment = new BookFragment();
     fragment.setArguments(createShelfBundle(libraryItem));
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment)
         .setReorderingAllowed(true)
         .addToBackStack(null)
@@ -508,7 +508,7 @@ public class LibraryFragment extends Fragment
         exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
 
     Intent shareLibraryIntent =
-        ShareCompat.IntentBuilder.from(getActivity())
+        ShareCompat.IntentBuilder.from(requireActivity())
             .setStream(contentUri)
             .setType("text/*")
             .getIntent()

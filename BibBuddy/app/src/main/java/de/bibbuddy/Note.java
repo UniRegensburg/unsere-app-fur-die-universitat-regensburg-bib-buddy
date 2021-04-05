@@ -8,7 +8,7 @@ package de.bibbuddy;
 public class Note {
 
   private final String name;
-  private final Integer type;
+  private final NoteTypeLut type;
   private final String text;
   private Long id;
   private Long createDate;
@@ -23,7 +23,7 @@ public class Note {
    * @param type type of the note object (text, voice or picture)
    * @param text text content of the note object (as long as it is a type "text")
    */
-  public Note(String name, Integer type, String text) {
+  public Note(String name, NoteTypeLut type, String text) {
     this.name = name;
     this.type = type;
     this.text = text;
@@ -36,7 +36,7 @@ public class Note {
    * @param type         type of the note object (text, voice or picture)
    * @param noteFilePath path to the file of the note object
    */
-  public Note(String name, Integer type, String text, String noteFilePath) {
+  public Note(String name, NoteTypeLut type, String text, String noteFilePath) {
     this.name = name;
     this.type = type;
     this.text = text;
@@ -55,7 +55,7 @@ public class Note {
    * @param modDate    modification date of the note object
    * @param noteFileId id of the noteFile object contained in the note object
    */
-  public Note(Long id, String name, Integer type, String text, Long createDate, Long modDate,
+  public Note(Long id, String name, NoteTypeLut type, String text, Long createDate, Long modDate,
               Long noteFileId) {
     this.id = id;
     this.name = name;
@@ -74,7 +74,7 @@ public class Note {
     return name;
   }
 
-  public Integer getType() {
+  public NoteTypeLut getType() {
     return type;
   }
 
