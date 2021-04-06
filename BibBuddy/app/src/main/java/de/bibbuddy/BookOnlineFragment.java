@@ -6,14 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 /**
@@ -87,11 +85,11 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
         handleAddBook(book, authors);
       } else {
         Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-            Toast.LENGTH_LONG).show();
+                       Toast.LENGTH_LONG).show();
       }
     } else {
       Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
     }
   }
 
@@ -106,15 +104,12 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
   @Override
   public void onBookAdded(Book book, List<Author> authorList) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity().runOnUiThread(new Runnable() {
-      public void run() {
-        Toast.makeText(requireActivity(), getString(R.string.added_book),
-            Toast.LENGTH_SHORT).show();
-      }
-    });
+    requireActivity()
+        .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
+                                            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }
@@ -123,11 +118,9 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     searchFieldText = view.findViewById(R.id.search_input);
     searchFieldText.setHint(R.string.add_book_online_text);
 
-    searchFieldText.setOnKeyListener(new View.OnKeyListener() {
-      public boolean onKey(View v, int keyCode, KeyEvent event) {
-        handleSearchInput(keyCode, event);
-        return true;
-      }
+    searchFieldText.setOnKeyListener((v, keyCode, event) -> {
+      handleSearchInput(keyCode, event);
+      return true;
     });
   }
 

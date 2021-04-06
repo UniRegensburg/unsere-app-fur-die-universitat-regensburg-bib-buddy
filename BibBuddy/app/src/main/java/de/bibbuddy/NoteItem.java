@@ -15,9 +15,9 @@ public abstract class NoteItem implements SortableItem {
   /**
    * Constructor to set up a NoteItem for view/UI usages.
    *
-   * @param note    the note
-   * @param image   id for the drawable resource of the note type icon
-   * @param bookId  id of the book that the note is connected to
+   * @param note   the note
+   * @param image  id for the drawable resource of the note type icon
+   * @param bookId id of the book that the note is connected to
    */
   public NoteItem(Note note, int image, Long bookId) {
     this.note = note;

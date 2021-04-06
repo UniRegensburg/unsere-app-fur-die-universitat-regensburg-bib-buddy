@@ -4,7 +4,7 @@ import org.jsoup.Jsoup;
 
 /**
  * The SearchItem is responsible for holding the information of the search view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of LibraryItem.
  *
  * @author Claudia Schönherr
  */

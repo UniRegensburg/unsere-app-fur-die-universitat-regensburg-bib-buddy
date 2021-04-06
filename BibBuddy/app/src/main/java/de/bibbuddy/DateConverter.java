@@ -20,7 +20,7 @@ public class DateConverter {
   public static String convertDateToString(Long date) {
     Date newDate = new Date(date);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy' 'HH:mm",
-        Locale.getDefault());
+                                                             Locale.getDefault());
     return simpleDateFormat.format(newDate) + " Uhr";
   }
 

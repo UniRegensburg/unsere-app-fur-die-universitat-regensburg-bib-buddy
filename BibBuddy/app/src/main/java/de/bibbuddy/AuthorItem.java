@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 /**
  * The AuthorItem is responsible for holding the information of the author view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of LibraryItem.
  *
  * @author Sarah Kurek
  */

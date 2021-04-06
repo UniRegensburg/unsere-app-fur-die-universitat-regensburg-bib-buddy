@@ -58,7 +58,7 @@ public class LibraryModel {
   /**
    * Gets the current libraryList.
    *
-   * @return Returns the current libraryList
+   * @return the current libraryList
    */
   public List<ShelfItem> getCurrentLibraryList() {
     return libraryList;
@@ -68,7 +68,7 @@ public class LibraryModel {
    * Gets the libraryList of the current parentId of the shelf.
    *
    * @param parentId parentId of the shelf (is deprecated)
-   * @return Returns the libraryList of the given id
+   * @return the libraryList of the given id
    */
   public List<ShelfItem> getLibraryList(Long parentId) {
     currentShelfId = parentId;
@@ -93,7 +93,7 @@ public class LibraryModel {
    * Gets the selected shelf at the current position.
    *
    * @param position position of the clicked item
-   * @return Returns the clicked ShelfItem
+   * @return the clicked ShelfItem
    */
   public ShelfItem getSelectedLibraryItem(int position) {
     return libraryList.get(position);
@@ -102,7 +102,7 @@ public class LibraryModel {
   /**
    * Gets the current id of the shelf.
    *
-   * @return Returns the currentShelfId
+   * @return the currentShelfId
    */
   public Long getShelfId() {
     return currentShelfId;
@@ -208,7 +208,7 @@ public class LibraryModel {
    * Gets the sorted search result list by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted shelves
+   * @return the sorted shelves
    */
   public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria) {
     sortLibraryList(sortCriteria);
@@ -220,7 +220,7 @@ public class LibraryModel {
    * Gets the sorted libraryList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted libraryList
+   * @return the sorted libraryList
    */
   public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria,
                                               List<ShelfItem> libraryList) {

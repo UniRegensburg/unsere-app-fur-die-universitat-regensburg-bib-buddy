@@ -106,17 +106,13 @@ public class Author {
     return modDate;
   }
 
-  public void setModDate(Long modDate) {
-    this.modDate = modDate;
-  }
-
   /**
    * Method to copy an author object.
    */
   public Author clone() {
 
     return new Author(copyLong(id), firstName, lastName, title, copyLong(createDate),
-        copyLong(modDate));
+                      copyLong(modDate));
   }
 
   public Author getCache() {
@@ -132,10 +128,13 @@ public class Author {
     if (this == obj) {
       return true;
     }
+
     if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
+
     Author author = (Author) obj;
+
     return Objects.equals(id, author.id)
         && Objects.equals(firstName, author.firstName)
         && Objects.equals(lastName, author.lastName)

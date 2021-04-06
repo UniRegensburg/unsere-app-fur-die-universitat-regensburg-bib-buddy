@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 /**
  * The ShelfItem is responsible for holding the information of the shelf view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of LibraryItem.
  *
  * @author Claudia Schönherr
  */

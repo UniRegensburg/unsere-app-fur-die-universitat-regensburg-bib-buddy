@@ -44,21 +44,14 @@ public class LibraryRecyclerViewAdapter
   @Override
   public LibraryRecyclerViewAdapter.LibraryViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                          int viewType) {
-    // RecyclerView calls this method whenever it needs to create a new ViewHolder.
-    // The method creates and initializes the ViewHolder and its associated View,
-    // but does not fill in the view's contents—the ViewHolder
-    // has not yet been bound to specific data.
-
     this.parent = parent;
 
     return new LibraryViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.list_view_item_library, parent, false));
+                                     .inflate(R.layout.list_view_item_library, parent, false));
   }
 
   @Override
   public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view
-    // with that element
     ShelfItem shelfItem = libraryList.get(position);
 
     holder.getTextView().setText(shelfItem.getName());
@@ -70,27 +63,21 @@ public class LibraryRecyclerViewAdapter
     int noteCount = shelfItem.getNoteCount();
     holder.getTextNoteCount().setText(getNoteString(noteCount));
 
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (getSelectedLibraryItems().size() > 0) {
-          listener.onShelfLongClicked(position, shelfItem, v);
-        } else {
-          listener.onShelfClicked(position);
-        }
+    holder.itemView.setOnClickListener(v -> {
+      if (getSelectedLibraryItems().size() > 0) {
+        listener.onShelfLongClicked(position, shelfItem, v);
+      } else {
+        listener.onShelfClicked(position);
       }
     });
 
-    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        if (position == RecyclerView.NO_POSITION) {
-          return false;
-        }
-
-        listener.onShelfLongClicked(position, shelfItem, v);
-        return true;
+    holder.itemView.setOnLongClickListener(v -> {
+      if (position == RecyclerView.NO_POSITION) {
+        return false;
       }
+
+      listener.onShelfLongClicked(position, shelfItem, v);
+      return true;
     });
   }
 
@@ -126,16 +113,14 @@ public class LibraryRecyclerViewAdapter
   /**
    * This method fetches the number of items selected in the recyclerView.
    *
-   * @return returns the selected recyclerView items.
+   * @return the selected recyclerView items.
    */
   public List<LibraryItem> getSelectedLibraryItems() {
     List<LibraryItem> selectedItems = new ArrayList<>();
 
-    if (parent != null) {
-      for (int i = 0; i < parent.getChildCount(); i++) {
-        if (parent.getChildAt(i).isSelected()) {
-          selectedItems.add(libraryList.get(i));
-        }
+    for (int i = 0; i < parent.getChildCount(); i++) {
+      if (parent.getChildAt(i).isSelected()) {
+        selectedItems.add(libraryList.get(i));
       }
     }
 

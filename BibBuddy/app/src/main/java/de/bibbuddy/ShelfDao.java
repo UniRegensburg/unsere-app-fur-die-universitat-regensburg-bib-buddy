@@ -34,7 +34,6 @@ public class ShelfDao implements InterfaceShelfDao {
       contentValues.put(DatabaseHelper.SHELF_ID, shelf.getShelfId());
 
       Long id = db.insert(DatabaseHelper.TABLE_NAME_SHELF, null, contentValues);
-
       shelf.setId(id);
 
     } catch (SQLiteException ex) {
@@ -263,7 +262,7 @@ public class ShelfDao implements InterfaceShelfDao {
    * Finds all shelf names which contain the searchInput.
    *
    * @param searchInput searchInput of the user
-   * @return Returns a list of shelves which have the searchInput in the name
+   * @return a list of shelves which have the searchInput in the name
    */
   public List<Shelf> findShelvesByName(String searchInput) {
     List<Shelf> shelfList = new ArrayList<>();
