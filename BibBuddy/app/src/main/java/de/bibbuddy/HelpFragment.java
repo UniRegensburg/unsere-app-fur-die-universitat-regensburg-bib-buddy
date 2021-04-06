@@ -6,12 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * Fragment for the user manuals.
@@ -19,30 +17,21 @@ import androidx.fragment.app.FragmentManager;
  * @author Sarah Kurek
  */
 public class HelpFragment extends Fragment {
-  private View view;
-  private String manualText;
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
-
     Bundle bundle = this.getArguments();
-    manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
+    String manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
 
-    view = inflater.inflate(R.layout.fragment_help, container, false);
+    View view = inflater.inflate(R.layout.fragment_help, container, false);
 
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.headerHelp));
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.headerHelp));
+    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
@@ -52,18 +41,6 @@ public class HelpFragment extends Fragment {
     manualView.setText(styledText);
 
     return view;
-  }
-
-  /**
-   * Closes the HelpFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
 }

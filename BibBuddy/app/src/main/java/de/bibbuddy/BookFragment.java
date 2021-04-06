@@ -108,6 +108,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       public void handleOnBackPressed() {
         if (selectedBookItems.isEmpty()) {
           closeFragment();
+          remove();
         } else {
           deselectBookItems();
         }
@@ -490,7 +491,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
 
   private void checkStoragePermission() {
     // if the permissions are granted
-    if (ContextCompat.checkSelfPermission(getContext(),
+    if (ContextCompat.checkSelfPermission(requireContext(),
         Manifest.permission.READ_EXTERNAL_STORAGE)
         == PackageManager.PERMISSION_GRANTED) {
 
@@ -665,7 +666,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   }
 
   private void deselectBookItems() {
-    SwipeableRecyclerView bookListView = getView().findViewById(R.id.book_recycler_view);
+    SwipeableRecyclerView bookListView = requireView().findViewById(R.id.book_recycler_view);
     for (int i = 0; i < bookListView.getChildCount(); i++) {
       bookListView.getChildAt(i).setSelected(false);
     }

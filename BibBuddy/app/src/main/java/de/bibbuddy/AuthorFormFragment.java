@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,7 +23,6 @@ public class AuthorFormFragment extends Fragment {
   private final boolean isNewAuthor;
   private int redColor;
   private int greenColor;
-  private BottomNavigationView bottomNavigationView;
 
   /**
    * Constructor that sets the author to empty when it is newly created.
@@ -43,25 +41,20 @@ public class AuthorFormFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
 
     // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_author_form, container, false);
 
     setInputText(view);
 
-    bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
+    BottomNavigationView bottomNavigationView =
+        requireActivity().findViewById(R.id.bottom_navigation);
     bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);
     setupAddAuthorBtnListener(view);
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     return view;
   }
@@ -91,11 +84,11 @@ public class AuthorFormFragment extends Fragment {
   private void handleAuthorInput() {
     boolean validInput = true;
 
-    EditText authorTitleInput = getView().findViewById(R.id.author_form_title_input);
+    EditText authorTitleInput = requireView().findViewById(R.id.author_form_title_input);
     authorTitleInput.setBackgroundColor(greenColor);
     author.setTitle(authorTitleInput.getText().toString());
 
-    EditText authorFirstNameInput = getView().findViewById(R.id.author_form_first_name_input);
+    EditText authorFirstNameInput = requireView().findViewById(R.id.author_form_first_name_input);
     String authorFirstName = authorFirstNameInput.getText().toString();
     if (authorFirstName.isEmpty()) {
       authorFirstNameInput.setBackgroundColor(redColor);
@@ -105,7 +98,7 @@ public class AuthorFormFragment extends Fragment {
       author.setFirstName(authorFirstName);
     }
 
-    EditText authorLastNameInput = getView().findViewById(R.id.author_form_last_name_input);
+    EditText authorLastNameInput = requireView().findViewById(R.id.author_form_last_name_input);
     String authorLastName = authorLastNameInput.getText().toString();
     if (authorLastName.isEmpty()) {
       authorLastNameInput.setBackgroundColor(redColor);

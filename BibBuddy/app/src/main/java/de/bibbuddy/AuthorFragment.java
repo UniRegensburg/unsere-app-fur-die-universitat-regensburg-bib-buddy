@@ -54,6 +54,7 @@ public class AuthorFragment extends Fragment
       public void handleOnBackPressed() {
         if (selectedAuthorItems.isEmpty()) {
           closeFragment();
+          remove();
         } else {
           deselectAuthorItems();
         }
@@ -68,9 +69,9 @@ public class AuthorFragment extends Fragment
     recyclerView.setAdapter(adapter);
     recyclerView.setListener(this);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
+    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
+    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     BottomNavigationView bottomNavigationView =
         requireActivity().findViewById(R.id.bottom_navigation);
@@ -114,7 +115,7 @@ public class AuthorFragment extends Fragment
         break;
 
       case R.id.menu_imprint:
-        ((MainActivity) getActivity()).openImprint();
+        ((MainActivity) requireActivity()).openImprint();
         break;
 
       default:
@@ -213,7 +214,7 @@ public class AuthorFragment extends Fragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, helpFragment,
             LibraryKeys.FRAGMENT_HELP_VIEW)
         .addToBackStack(null)
@@ -221,7 +222,7 @@ public class AuthorFragment extends Fragment
   }
 
   private void deselectAuthorItems() {
-    SwipeableRecyclerView authorListView = getView().findViewById(R.id.author_recycler_view);
+    SwipeableRecyclerView authorListView = requireView().findViewById(R.id.author_recycler_view);
     for (int i = 0; i < authorListView.getChildCount(); i++) {
       authorListView.getChildAt(i).setSelected(false);
     }
@@ -262,7 +263,7 @@ public class AuthorFragment extends Fragment
           }
         });
 
-    getActivity().getSupportFragmentManager().beginTransaction()
+    requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, authorFormFragment)
         .setReorderingAllowed(true)
         .addToBackStack(null)

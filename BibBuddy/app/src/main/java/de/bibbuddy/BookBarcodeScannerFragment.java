@@ -10,7 +10,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -20,7 +19,6 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.IOException;
 import java.util.List;
 
@@ -43,12 +41,6 @@ public class BookBarcodeScannerFragment extends Fragment
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
 
     View view = inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
 
@@ -69,7 +61,7 @@ public class BookBarcodeScannerFragment extends Fragment
         .setBarcodeFormats(Barcode.ISBN | Barcode.EAN_13)
         .build();
 
-    cameraSource = new CameraSource.Builder(getContext(), barcodeDetector)
+    cameraSource = new CameraSource.Builder(requireContext(), barcodeDetector)
         .setRequestedPreviewSize(1920, 1080)
         .setAutoFocusEnabled(true)
         .build();
@@ -202,7 +194,7 @@ public class BookBarcodeScannerFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
-    setupDetectorsAndSources(getView());
+    setupDetectorsAndSources(requireView());
   }
 
 }

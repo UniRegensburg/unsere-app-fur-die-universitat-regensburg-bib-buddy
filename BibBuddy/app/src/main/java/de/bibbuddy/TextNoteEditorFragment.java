@@ -48,6 +48,7 @@ public class TextNoteEditorFragment extends Fragment {
       public void handleOnBackPressed() {
         saveNote();
         closeFragment();
+        remove();
       }
     });
 

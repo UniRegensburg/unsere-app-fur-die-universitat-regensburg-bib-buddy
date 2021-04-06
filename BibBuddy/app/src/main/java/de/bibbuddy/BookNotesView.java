@@ -89,10 +89,11 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-        if (adapter.getSelectedNoteItems().size() > 0) {
-          deselectNoteItems();
-        } else {
+        if (adapter.getSelectedNoteItems().isEmpty()) {
           closeFragment();
+          remove();
+        } else {
+          deselectNoteItems();
         }
       }
     });

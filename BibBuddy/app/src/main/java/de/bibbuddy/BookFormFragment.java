@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -49,12 +48,6 @@ public class BookFormFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
 
     // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
@@ -77,8 +70,8 @@ public class BookFormFragment extends Fragment {
         ((MainActivity) requireActivity())
             .setVisibilityImportShareButton(View.GONE, View.GONE);
 
-        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
-        ((MainActivity) getActivity()).setVisibilitySortButton(false);
+        ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.change_book));
+        ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
         ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
 
@@ -223,7 +216,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleIsbn() {
-    EditText isbnInput = getView().findViewById(R.id.book_form_isbn_input);
+    EditText isbnInput = requireView().findViewById(R.id.book_form_isbn_input);
     String isbn = isbnInput.getText().toString();
 
     if (DataValidation.isValidIsbn10or13(isbn)) {
@@ -236,7 +229,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleTitle() {
-    EditText titleInput = getView().findViewById(R.id.book_form_title_input);
+    EditText titleInput = requireView().findViewById(R.id.book_form_title_input);
     String title = titleInput.getText().toString();
 
     if (!DataValidation.isStringEmpty(title)) {
@@ -249,7 +242,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleSubtitle() {
-    EditText subtitleInput = getView().findViewById(R.id.book_form_subtitle_input);
+    EditText subtitleInput = requireView().findViewById(R.id.book_form_subtitle_input);
     subtitleInput.setBackgroundColor(greenColor);
 
     String subtitle = subtitleInput.getText().toString();
@@ -259,7 +252,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handlePubYear() {
-    EditText pubYearInput = getView().findViewById(R.id.book_form_pub_year_input);
+    EditText pubYearInput = requireView().findViewById(R.id.book_form_pub_year_input);
     String pubYear = pubYearInput.getText().toString();
 
     boolean validPubYear = DataValidation.isValidYear(pubYear);
@@ -277,7 +270,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handlePublisher() {
-    EditText publisherInput = getView().findViewById(R.id.book_form_publisher_input);
+    EditText publisherInput = requireView().findViewById(R.id.book_form_publisher_input);
     publisherInput.setBackgroundColor(greenColor);
 
     String publisher = publisherInput.getText().toString();
@@ -287,7 +280,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleEdition() {
-    EditText editionInput = getView().findViewById(R.id.book_form_edition_input);
+    EditText editionInput = requireView().findViewById(R.id.book_form_edition_input);
     editionInput.setBackgroundColor(greenColor);
 
     String edition = editionInput.getText().toString();
@@ -297,7 +290,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleAddInfos() {
-    EditText addInfosInput = getView().findViewById(R.id.book_form_add_infos_input);
+    EditText addInfosInput = requireView().findViewById(R.id.book_form_add_infos_input);
     addInfosInput.setBackgroundColor(greenColor);
 
     String addInfos = addInfosInput.getText().toString();

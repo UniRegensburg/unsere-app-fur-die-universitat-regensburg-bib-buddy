@@ -58,6 +58,7 @@ public class LibraryFragment extends Fragment
       public void handleOnBackPressed() {
         if (selectedShelfItems.isEmpty()) {
           closeFragment();
+          remove();
         } else {
           deselectLibraryItems();
         }

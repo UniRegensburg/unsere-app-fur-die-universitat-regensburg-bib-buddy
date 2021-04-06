@@ -6,14 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 /**
@@ -32,22 +29,15 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
     view = inflater.inflate(R.layout.fragment_book_online, container, false);
-
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
-
     setupSearchInput();
 
     Bundle bundle = this.getArguments();
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
 
