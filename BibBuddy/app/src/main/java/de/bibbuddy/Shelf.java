@@ -15,11 +15,11 @@ public class Shelf {
   /**
    * Constructor with all its variables.
    *
-   * @param id id of the shelf
-   * @param name name of the shelf
+   * @param id         id of the shelf
+   * @param name       name of the shelf
    * @param createDate date on which shelf was added to the database
-   * @param modDate date on which shelf was last modified in the database
-   * @param shelfId id of parent shelf
+   * @param modDate    date on which shelf was last modified in the database
+   * @param shelfId    id of parent shelf
    */
   public Shelf(Long id, String name, Long createDate, Long modDate, Long shelfId) {
     this.id = id;
@@ -33,10 +33,10 @@ public class Shelf {
   }
 
   /**
-   * Constructor without id, create_date and mod_date, because its automatically set in the
+   * Constructor without id, create_date and mod_date, because it's automatically set in the
    * database.
    *
-   * @param name name of the shelf
+   * @param name    name of the shelf
    * @param shelfId id of parent shelf
    */
   public Shelf(String name, Long shelfId) {
@@ -60,20 +60,8 @@ public class Shelf {
     this.name = name;
   }
 
-  public Long getCreateDate() {
-    return createDate;
-  }
-
-  public void setCreateDate(Long createDate) {
-    this.createDate = createDate;
-  }
-
   public Long getModDate() {
     return modDate;
-  }
-
-  public void setModDate(Long modDate) {
-    this.modDate = modDate;
   }
 
   public Long getShelfId() {

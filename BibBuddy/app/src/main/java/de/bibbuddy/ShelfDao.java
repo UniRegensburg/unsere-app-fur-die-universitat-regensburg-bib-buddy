@@ -33,7 +33,7 @@ public class ShelfDao implements InterfaceShelfDao {
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
       contentValues.put(DatabaseHelper.SHELF_ID, shelf.getShelfId());
 
-      long id = db.insert(DatabaseHelper.TABLE_NAME_SHELF, null, contentValues);
+      Long id = db.insert(DatabaseHelper.TABLE_NAME_SHELF, null, contentValues);
 
       shelf.setId(id);
 
@@ -54,7 +54,7 @@ public class ShelfDao implements InterfaceShelfDao {
                              new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
                                  DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
                                  DatabaseHelper.SHELF_ID},
-                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+                             DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)},
                              null, null, null, String.valueOf(1));
 
     Shelf shelf = null;
@@ -76,22 +76,19 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
 
-  // get all shelves in a list view
+  // Gets all shelves in a list view
   @Override
   public List<Shelf> findAll() {
     List<Shelf> shelfList = new ArrayList<Shelf>();
-    // Select All Query
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
-    // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);
 
-        // Adding shelf to list
         shelfList.add(shelf);
       } while (cursor.moveToNext());
     }
@@ -102,7 +99,7 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
 
-  // delete single shelf entry
+  // Deletes single shelf entry
   @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -134,7 +131,6 @@ public class ShelfDao implements InterfaceShelfDao {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
-    // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);
@@ -144,7 +140,7 @@ public class ShelfDao implements InterfaceShelfDao {
         } else {
           shelf.setShelfId(Long.parseLong(cursor.getString(4)));
         }
-        // Adding shelf to list
+
         shelfList.add(shelf);
       } while (cursor.moveToNext());
     }

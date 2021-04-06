@@ -2,7 +2,6 @@ package de.bibbuddy;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 
 /**
  * The SortDialog class is the UI for sorting items.
@@ -12,7 +11,7 @@ import android.content.DialogInterface;
 public class SortDialog extends AlertDialog.Builder {
 
   private final SortDialogListener listener;
-  private Context context;
+  private final Context context;
 
   private SortCriteria sortCriteria;
 
@@ -29,12 +28,6 @@ public class SortDialog extends AlertDialog.Builder {
     setupDialog();
   }
 
-  protected SortDialog(Context context, int themeResId,
-                       SortDialogListener listener) {
-    super(context, themeResId);
-    this.listener = listener;
-  }
-
   private void setupDialog() {
     int checkedItem = SortCriteria.getCriteriaNum(sortCriteria);
 
@@ -43,21 +36,12 @@ public class SortDialog extends AlertDialog.Builder {
         context.getString(R.string.sort_mod_date_oldest),
         context.getString(R.string.sort_name_ascending),
         context.getString(R.string.sort_name_descending)
-        };
+    };
 
-    setSingleChoiceItems(sortChoices, checkedItem, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int choice) {
-        handleSelectedSortChoice(choice);
-      }
-    });
+    setSingleChoiceItems(sortChoices, checkedItem,
+                         (dialog, choice) -> handleSelectedSortChoice(choice));
 
-    setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int choice) {
-        listener.onSortedSelected(sortCriteria);
-      }
-    });
+    setNegativeButton(R.string.ok, (dialog, choice) -> listener.onSortedSelected(sortCriteria));
   }
 
   private void handleSelectedSortChoice(int choice) {
@@ -72,7 +56,6 @@ public class SortDialog extends AlertDialog.Builder {
 
       case 2:
         sortCriteria = SortCriteria.NAME_ASCENDING;
-
         break;
 
       case 3:

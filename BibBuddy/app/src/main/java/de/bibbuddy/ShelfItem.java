@@ -7,8 +7,8 @@ package de.bibbuddy;
  * @author Claudia Schönherr
  */
 public class ShelfItem extends LibraryItem {
-  private int bookCount;
-  private int noteCount;
+  private final int bookCount;
+  private final int noteCount;
 
   /**
    * Constructor for a ShelfItem.
