@@ -43,8 +43,8 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
       @Override
       public void handleOnBackPressed() {
         if (adapter.getSelectedNoteItems().isEmpty()) {
-          closeFragment();
           remove();
+          closeFragment();
         } else {
           deselectNoteItems();
         }

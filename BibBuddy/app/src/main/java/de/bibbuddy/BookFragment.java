@@ -107,8 +107,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
       @Override
       public void handleOnBackPressed() {
         if (selectedBookItems.isEmpty()) {
-          closeFragment();
           remove();
+          closeFragment();
         } else {
           deselectBookItems();
         }
@@ -571,13 +571,12 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     BookItem bookItem = bookModel.getSelectedBookItem(position);
 
     BookNotesView fragment = new BookNotesView();
+    fragment.setArguments(createBookBundle(bookItem));
     requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, fragment)
         .setReorderingAllowed(true)
         .addToBackStack(null)
         .commit();
-
-    fragment.setArguments(createBookBundle(bookItem));
   }
 
   private void updateEmptyView(List<BookItem> bookList) {

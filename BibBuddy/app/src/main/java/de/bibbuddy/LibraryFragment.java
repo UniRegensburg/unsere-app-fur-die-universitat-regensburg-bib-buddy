@@ -57,8 +57,8 @@ public class LibraryFragment extends Fragment
       @Override
       public void handleOnBackPressed() {
         if (selectedShelfItems.isEmpty()) {
-          closeFragment();
           remove();
+          closeFragment();
         } else {
           deselectLibraryItems();
         }

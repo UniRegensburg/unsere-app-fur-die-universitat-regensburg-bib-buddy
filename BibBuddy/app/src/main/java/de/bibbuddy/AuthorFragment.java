@@ -53,8 +53,8 @@ public class AuthorFragment extends Fragment
       @Override
       public void handleOnBackPressed() {
         if (selectedAuthorItems.isEmpty()) {
-          closeFragment();
           remove();
+          closeFragment();
         } else {
           deselectAuthorItems();
         }
