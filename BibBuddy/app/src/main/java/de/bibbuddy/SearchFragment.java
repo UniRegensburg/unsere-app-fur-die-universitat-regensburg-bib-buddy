@@ -196,12 +196,11 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
   private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-                                           newSortCriteria -> {
-                                             sortCriteria = newSortCriteria;
-                                             ((MainActivity) requireActivity())
-                                                 .setSortCriteria(newSortCriteria);
-                                             sortResultList();
-                                           });
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortResultList();
+        });
 
     sortDialog.show();
   }
@@ -222,11 +221,10 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         getString(R.string.filter_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-                                             (dialog, choice, isChecked) -> {
-                                               filterCriteria[choice] = isChecked;
-                                               ((MainActivity) requireActivity())
-                                                   .setFilterCriteria(choice, isChecked);
-                                             });
+        (dialog, choice, isChecked) -> {
+          filterCriteria[choice] = isChecked;
+          ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
+        });
 
     selectFilterCriteria.setNegativeButton(R.string.ok, (dialog, choice) -> {
       if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {

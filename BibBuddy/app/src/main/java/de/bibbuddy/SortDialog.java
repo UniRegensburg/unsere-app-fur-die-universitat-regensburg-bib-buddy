@@ -39,7 +39,7 @@ public class SortDialog extends AlertDialog.Builder {
         };
 
     setSingleChoiceItems(sortChoices, checkedItem,
-                         (dialog, choice) -> handleSelectedSortChoice(choice));
+        (dialog, choice) -> handleSelectedSortChoice(choice));
 
     setNegativeButton(R.string.ok, (dialog, choice) -> listener.onSortedSelected(sortCriteria));
   }
