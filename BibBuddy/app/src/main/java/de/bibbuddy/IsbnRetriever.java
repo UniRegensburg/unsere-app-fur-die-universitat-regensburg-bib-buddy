@@ -17,7 +17,7 @@ public class IsbnRetriever implements Runnable {
 
   private final String isbn;
   private Book book = null;
-  private List<Author> authors = new ArrayList<Author>();
+  private List<Author> authors = new ArrayList<>();
 
   /**
    * The IsbnRetriever class connects to the API and returns metadata for an ISBN.
@@ -65,9 +65,8 @@ public class IsbnRetriever implements Runnable {
   }
 
   private List<Author> createAuthors(Document xmlMetadata) {
-    List<Author> authors = new ArrayList<Author>();
     AuthorRetriever authorRetriever = new AuthorRetriever();
-    authors = authorRetriever.extractAuthors(xmlMetadata);
+    List<Author> authors = authorRetriever.extractAuthors(xmlMetadata);
     return authors;
   }
 

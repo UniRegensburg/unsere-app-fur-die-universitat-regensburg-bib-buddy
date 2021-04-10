@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookBarcodeScannerFragment extends Fragment
+public class BookBarcodeScannerFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
@@ -50,8 +50,10 @@ public class BookBarcodeScannerFragment extends Fragment
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     setupDetectorsAndSources(view);
-    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
 
     return view;
   }
@@ -154,11 +156,7 @@ public class BookBarcodeScannerFragment extends Fragment
 
   private void handleAddBook(Book book, List<Author> authors) {
     BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
-
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
-        .addToBackStack(null)
-        .commit();
+    showFragment(bookFormFragment, LibraryKeys.FRAGMENT_BOOK);
   }
 
   @Override
@@ -174,15 +172,6 @@ public class BookBarcodeScannerFragment extends Fragment
     });
 
     closeFragment();
-  }
-
-  private void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   @Override

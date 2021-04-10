@@ -24,11 +24,12 @@ public class HomeFragment extends Fragment {
 
     view = inflater.inflate(R.layout.fragment_home, container, false);
 
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
 
-    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_home));
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_home);
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_home));
+    mainActivity.updateNavigationFragment(R.id.navigation_home);
 
     return view;
   }

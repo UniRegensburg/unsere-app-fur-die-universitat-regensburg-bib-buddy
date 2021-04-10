@@ -17,7 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  *
  * @author Sarah Kurek
  */
-public class AuthorFormFragment extends Fragment {
+public class AuthorFormFragment extends BackStackFragment {
   private final AuthorFormFragment.ChangeAuthorListener listener;
   private final Author author;
   private final boolean isNewAuthor;
@@ -111,15 +111,6 @@ public class AuthorFormFragment extends Fragment {
     if (validInput) {
       listener.onAuthorChanged(author, isNewAuthor);
       closeFragment();
-    }
-  }
-
-  private void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
     }
   }
 

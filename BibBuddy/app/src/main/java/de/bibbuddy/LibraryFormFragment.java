@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  *
  * @author Claudia Schönherr
  */
-public class LibraryFormFragment extends Fragment {
+public class LibraryFormFragment extends BackStackFragment {
   private final ChangeShelfListener listener;
   private int redColor;
   private int greenColor;
@@ -49,12 +49,10 @@ public class LibraryFormFragment extends Fragment {
 
       setupShelfTextAndHeader();
 
-      ((MainActivity) requireActivity())
-          .setVisibilityImportShareButton(View.GONE, View.GONE);
-
-      ((MainActivity) requireActivity()).setVisibilitySortButton(false);
-
-      ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+      MainActivity mainActivity = (MainActivity) requireActivity();
+      mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+      mainActivity.setVisibilitySortButton(false);
+      mainActivity.updateNavigationFragment(R.id.navigation_library);
 
     }
 
@@ -67,10 +65,12 @@ public class LibraryFormFragment extends Fragment {
   }
 
   private void setupShelfTextAndHeader() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
     if (shelfId == 0) {
-      ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_new_shelf));
+      mainActivity.updateHeaderFragment(getString(R.string.add_new_shelf));
     } else {
-      ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.rename_shelf));
+      mainActivity.updateHeaderFragment(getString(R.string.rename_shelf));
 
       EditText editShelfName = view.findViewById(R.id.library_form_shelf_name_input);
       editShelfName.setText(oldShelfName);
@@ -115,18 +115,6 @@ public class LibraryFormFragment extends Fragment {
     }
 
     closeFragment();
-  }
-
-  /**
-   * Closes the LibraryFormFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   public interface ChangeShelfListener {

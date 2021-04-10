@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Sabrina Freisleben
  */
-public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Listener {
+public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
   public static List<NoteItem> noteList;
   private static NoteModel noteModel;
@@ -35,51 +35,38 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
   private SortCriteria sortCriteria;
   private TextView emptyListView;
 
+  @Override
+  protected void onBackPressed() {
+    if (adapter.getSelectedNoteItems().isEmpty()) {
+      closeFragment();
+    } else {
+      deselectNoteItems();
+    }
+  }
+
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        if (adapter.getSelectedNoteItems().isEmpty()) {
-          remove();
-          closeFragment();
-        } else {
-          deselectNoteItems();
-        }
-      }
-    });
+    enableBackPressedHandler();
 
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
     noteModel = new NoteModel(getContext());
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
     noteList = noteModel.getNoteList();
-    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
+    sortCriteria = mainActivity.getSortCriteria();
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
 
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_notes);
+    mainActivity.updateNavigationFragment(R.id.navigation_notes);
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
-    ((MainActivity) requireActivity())
-        .setVisibilityImportShareButton(View.GONE, View.GONE);
     setupSortBtn();
     setHasOptionsMenu(true);
     setupRecyclerView(view);
 
     return view;
-  }
-
-  /**
-   * Closes the NotesFragment.
-   */
-  private void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   @Override
@@ -186,11 +173,7 @@ public class NotesFragment extends Fragment implements SwipeLeftRightCallback.Li
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void setupRecyclerView(View view) {

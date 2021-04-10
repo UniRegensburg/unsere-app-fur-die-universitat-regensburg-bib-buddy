@@ -29,7 +29,7 @@ import org.jsoup.Jsoup;
  *
  * @author Sabrina Freisleben.
  */
-public class TextNoteEditorFragment extends Fragment {
+public class TextNoteEditorFragment extends BackStackFragment {
 
   private ImageView formatArrow;
   private View view;
@@ -40,35 +40,21 @@ public class TextNoteEditorFragment extends Fragment {
   private View formatOptions;
 
   @Override
+  protected void onBackPressed() {
+    saveNote();
+    closeFragment();
+  }
+
+  @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        saveNote();
-        remove();
-        closeFragment();
-      }
-    });
-
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_notes);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+    mainActivity.updateNavigationFragment(R.id.navigation_notes);
 
     setHasOptionsMenu(true);
-  }
-
-  /**
-   * Close the TextNoteEditorFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   @Override
@@ -98,11 +84,7 @@ public class TextNoteEditorFragment extends Fragment {
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   //Save the current text as note-object.
@@ -125,7 +107,7 @@ public class TextNoteEditorFragment extends Fragment {
     }
 
     if (rawText.length() != 0) {
-      if (getArguments().size() == 2) {
+      if (getArguments() != null && getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
         noteModel.createNote(name, NoteTypeLut.TEXT, text, "");
@@ -138,6 +120,8 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    enableBackPressedHandler();
+
     noteModel = new NoteModel(getContext());
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     richTextEditor = view.findViewById(R.id.editor);
@@ -147,7 +131,7 @@ public class TextNoteEditorFragment extends Fragment {
       adjustFormatToolbarVisibility();
     });
 
-    if (!getArguments().isEmpty()) {
+    if (getArguments() != null && !getArguments().isEmpty()) {
       bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
       if (getArguments().size() == 2) {
         Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);

@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Sarah Kurek, Luis Moßburger
  */
-public class BookFormFragment extends Fragment {
+public class BookFormFragment extends BackStackFragment {
   private final ChangeBookListener listener;
   private List<Author> authorList = new ArrayList<>();
   private boolean validInput;
@@ -53,12 +53,14 @@ public class BookFormFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
     Bundle bundle = this.getArguments();
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
     if (bundle != null) {
       Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
       Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
       if (bookId == 0) { // add new book
-        ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_book));
+        mainActivity.updateHeaderFragment(getString(R.string.add_book));
       } else { // edit existing book
         BookModel model = new BookModel(getContext(), shelfId);
         book = model.getBookById(bookId);
@@ -67,20 +69,16 @@ public class BookFormFragment extends Fragment {
           authorList.addAll(model.getAuthorList(bookId));
         }
 
-        ((MainActivity) requireActivity())
-            .setVisibilityImportShareButton(View.GONE, View.GONE);
-
-        ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.change_book));
-        ((MainActivity) requireActivity()).setVisibilitySortButton(false);
-
-        ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
-
+        mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+        mainActivity.updateHeaderFragment(getString(R.string.change_book));
+        mainActivity.setVisibilitySortButton(false);
+        mainActivity.updateNavigationFragment(R.id.navigation_library);
       }
 
       setInputText(view);
       setupAddAuthorBtnListener(view);
     } else if (this.book != null) {
-      ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.add_book));
+      mainActivity.updateHeaderFragment(getString(R.string.add_book));
       setInputText(view);
       setupAddAuthorBtnListener(view);
     }
@@ -123,7 +121,6 @@ public class BookFormFragment extends Fragment {
 
   private String convertAuthorListToString(List<Author> authorList) {
     StringBuilder authors = new StringBuilder();
-    authorList.size();
 
     int counter = 1;
     for (Author author : authorList) {
@@ -141,19 +138,6 @@ public class BookFormFragment extends Fragment {
 
     return authors.toString();
   }
-
-  /**
-   * Closes the BookFormFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
-  }
-
 
   private void setupAddBookBtnListener(View view) {
     FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
@@ -186,10 +170,7 @@ public class BookFormFragment extends Fragment {
           }
         });
 
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, authorFragment, LibraryKeys.FRAGMENT_AUTHOR)
-        .addToBackStack(null)
-        .commit();
+    showFragment(authorFragment, LibraryKeys.FRAGMENT_AUTHOR);
   }
 
   private void handleUserInput() {

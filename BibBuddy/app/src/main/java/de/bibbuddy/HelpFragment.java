@@ -23,15 +23,15 @@ public class HelpFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
+    View view = inflater.inflate(R.layout.fragment_help, container, false);
+
     Bundle bundle = this.getArguments();
     String manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-
-    View view = inflater.inflate(R.layout.fragment_help, container, false);
-
-    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.headerHelp));
-    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.updateHeaderFragment(getString(R.string.headerHelp));
+    mainActivity.setVisibilitySortButton(false);
 
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,

@@ -27,7 +27,7 @@ import java.util.Date;
  *
  * @author Sabrina Freisleben.
  */
-public class VoiceNoteEditorFragment extends Fragment {
+public class VoiceNoteEditorFragment extends BackStackFragment {
 
   private NoteModel noteModel;
   private Long bookId;
@@ -42,9 +42,11 @@ public class VoiceNoteEditorFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((MainActivity) requireActivity())
-        .setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
+
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
     setHasOptionsMenu(true);
   }
 
@@ -53,8 +55,7 @@ public class VoiceNoteEditorFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable
                                Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_voice_note_editor, container,
-        false);
+    View view = inflater.inflate(R.layout.fragment_voice_note_editor, container,false);
     noteModel = new NoteModel(requireContext());
     pulse = view.findViewById(R.id.ripple_animation);
     recordButton = view.findViewById(R.id.record_button);
@@ -100,8 +101,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
-    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
-    });
+    helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> { });
     helpAlert.show();
   }
 

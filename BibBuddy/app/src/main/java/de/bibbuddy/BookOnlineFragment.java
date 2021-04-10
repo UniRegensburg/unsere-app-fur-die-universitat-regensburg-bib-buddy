@@ -18,7 +18,8 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookOnlineFragment extends Fragment implements BookFormFragment.ChangeBookListener {
+public class BookOnlineFragment extends BackStackFragment
+        implements BookFormFragment.ChangeBookListener {
 
   private View view;
 
@@ -36,24 +37,12 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
     Bundle bundle = this.getArguments();
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
-
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
 
     return view;
-  }
-
-  /**
-   * Closes the BookOnlineFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   private void handleIsbnInput() {
@@ -87,11 +76,7 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
   private void handleAddBook(Book book, List<Author> authors) {
     BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
-
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
-        .addToBackStack(null)
-        .commit();
+    showFragment(bookFormFragment, LibraryKeys.FRAGMENT_BOOK);
   }
 
   @Override
@@ -115,18 +100,21 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
     searchFieldText.setOnKeyListener(new View.OnKeyListener() {
       public boolean onKey(View v, int keyCode, KeyEvent event) {
-        handleSearchInput(keyCode, event);
-        return true;
+        if (event.getAction() != KeyEvent.ACTION_UP) {
+          return false;
+        }
+
+        switch (keyCode) {
+          case KeyEvent.KEYCODE_NUMPAD_ENTER:
+          case KeyEvent.KEYCODE_ENTER:
+              handleIsbnInput();
+              return true;
+
+          default:
+            return false;
+        }
       }
     });
-  }
-
-  private void handleSearchInput(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_ENTER) {
-      if (event.getAction() != KeyEvent.ACTION_DOWN) {
-        handleIsbnInput();
-      }
-    }
   }
 
 }

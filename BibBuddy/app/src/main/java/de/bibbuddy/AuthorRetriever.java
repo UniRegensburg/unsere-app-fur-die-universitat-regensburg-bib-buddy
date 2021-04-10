@@ -63,7 +63,7 @@ public class AuthorRetriever {
   private List<Author> makeAuthorList(NodeList authors) {
     String url;
     Element autEl;
-    List<Author> authorArray = new ArrayList<Author>();
+    List<Author> authorArray = new ArrayList<>();
 
     Thread thread;
     ApiReader apiReader;
