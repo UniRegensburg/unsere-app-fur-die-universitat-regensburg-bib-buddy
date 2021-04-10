@@ -53,6 +53,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
   private Context context;
 
   private BookModel bookModel;
+  private NoteModel noteModel;
+
   private BookRecyclerViewAdapter adapter;
   private List<BookItem> selectedBookItems;
 
@@ -128,6 +130,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     bookModel = new BookModel(getContext(), shelfId);
+    noteModel = new NoteModel(getContext());
 
     List<BookItem> bookList;
     bookList = bookModel.getBookList(shelfId);
@@ -422,7 +425,7 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
           importBibTex.parseBibItem(nonRedundantBibItems.get(i));
           book = importBibTex.importBook();
           addImportedBook(book, importBibTex.parseAuthorNames());
-          importBibTex.importBibNote(noteDao, book);
+          importBibTex.importBibNote(noteModel, book);
         }
 
       }
