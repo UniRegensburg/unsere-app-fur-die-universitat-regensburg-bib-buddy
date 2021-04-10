@@ -17,18 +17,14 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -360,8 +356,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
     adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(),
-            bookNotesViewModel.getBookNoteList(bookId),
-            bookNotesViewModel.getNoteModel());
+        bookNotesViewModel.getBookNoteList(bookId),
+        bookNotesViewModel.getNoteModel());
 
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);

@@ -11,11 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import java.util.Collections;
@@ -51,11 +48,12 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     enableBackPressedHandler();
 
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
-    MainActivity mainActivity = (MainActivity) requireActivity();
 
     noteModel = new NoteModel(getContext());
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
     noteList = noteModel.getNoteList();
+
+    MainActivity mainActivity = (MainActivity) requireActivity();
     sortCriteria = mainActivity.getSortCriteria();
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
 

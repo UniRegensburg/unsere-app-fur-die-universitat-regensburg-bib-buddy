@@ -9,8 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import java.util.List;
 
 /**
@@ -19,7 +17,7 @@ import java.util.List;
  * @author Claudia Schönherr, Luis Moßburger
  */
 public class BookOnlineFragment extends BackStackFragment
-        implements BookFormFragment.ChangeBookListener {
+    implements BookFormFragment.ChangeBookListener {
 
   private View view;
 
@@ -107,8 +105,8 @@ public class BookOnlineFragment extends BackStackFragment
         switch (keyCode) {
           case KeyEvent.KEYCODE_NUMPAD_ENTER:
           case KeyEvent.KEYCODE_ENTER:
-              handleIsbnInput();
-              return true;
+            handleIsbnInput();
+            return true;
 
           default:
             return false;

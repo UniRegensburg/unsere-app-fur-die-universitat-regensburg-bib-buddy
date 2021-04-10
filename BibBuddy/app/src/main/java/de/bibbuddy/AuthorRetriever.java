@@ -48,7 +48,7 @@ public class AuthorRetriever {
         xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
         xmlMetadata.getElementsByTagName("dcterms:creator"), // "creator"
         xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
-        };
+    };
 
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {

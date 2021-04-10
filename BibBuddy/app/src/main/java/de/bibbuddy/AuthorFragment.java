@@ -12,11 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
@@ -37,7 +34,12 @@ public class AuthorFragment extends BackStackFragment
   private View view;
   private Context context;
   private AuthorRecyclerViewAdapter adapter;
-  private List<AuthorItem> selectedAuthorItems = new ArrayList<>();
+  private final List<AuthorItem> selectedAuthorItems = new ArrayList<>();
+
+  public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
+    this.authorList = new ArrayList<>(authorList);
+    this.listener = listener;
+  }
 
   @Override
   protected void onBackPressed() {
@@ -46,11 +48,6 @@ public class AuthorFragment extends BackStackFragment
     } else {
       deselectAuthorItems();
     }
-  }
-
-  public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
-    this.authorList = new ArrayList<>(authorList);
-    this.listener = listener;
   }
 
   @Nullable

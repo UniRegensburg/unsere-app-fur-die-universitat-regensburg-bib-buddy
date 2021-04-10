@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -29,8 +28,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -47,52 +44,48 @@ import java.util.List;
  */
 public class BookFragment extends BackStackFragment implements BookRecyclerViewAdapter.BookListener,
     BookFormFragment.ChangeBookListener, SwipeLeftRightCallback.Listener {
+  private final List<BookItem> selectedBookItems = new ArrayList<>();
   private Long shelfId;
   private String shelfName;
   private View view;
   private Context context;
-
   private BookModel bookModel;
   private BookRecyclerViewAdapter adapter;
-  private List<BookItem> selectedBookItems = new ArrayList<>();
-
   private BookDao bookDao;
   private NoteDao noteDao;
-
   private SortCriteria sortCriteria;
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
+  private final ActivityResultLauncher<Intent> filePickerActivityResultLauncher =
+      registerForActivityResult(
+          new ActivityResultContracts.StartActivityForResult(),
+          new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+              if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
 
-  private final ActivityResultLauncher<Intent> filePickerActivityResultLauncher = registerForActivityResult(
-      new ActivityResultContracts.StartActivityForResult(),
-      new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-          if (result.getResultCode() == Activity.RESULT_OK) {
-            Intent data = result.getData();
+                if (data != null) {
+                  Uri uri = data.getData();
 
-            if (data != null) {
-              Uri uri = data.getData();
-
-              if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
-                handleImport(uri);
-              } else {
-                showDialogNonBibFile();
+                  if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
+                    handleImport(uri);
+                  } else {
+                    showDialogNonBibFile();
+                  }
+                }
               }
             }
-          }
-        }
-      });
-
+          });
   private final ActivityResultLauncher<String> requestPermissionLauncher =
       registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
         if (isGranted) {
           filePicker();
         } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT).show();
+          Toast.makeText(getContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT)
+              .show();
         }
       });
-
 
   @Override
   protected void onBackPressed() {
@@ -125,15 +118,13 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     bookModel = new BookModel(getContext(), shelfId);
-
-    List<BookItem> bookList = bookModel.getBookList(shelfId);
-
     bookDao = bookModel.getBookDao();
     noteDao = bookModel.getNoteDao();
 
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
     importBibTex = new ImportBibTex(context);
 
+    List<BookItem> bookList = bookModel.getBookList(shelfId);
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);

@@ -35,7 +35,7 @@ public class HelpFragment extends Fragment {
 
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
-                                             null, null);
+        null, null);
 
     TextView manualView = view.findViewById(R.id.manual_text);
     manualView.setText(styledText);
