@@ -1,9 +1,7 @@
 package de.bibbuddy;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,21 +62,17 @@ public class SearchFragment extends BackStackFragment
     setupRecyclerView();
     setupFilterButton();
     setHasOptionsMenu(true);
+
     setupSortBtn();
 
     return view;
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
 
-    sortBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSortSearch();
-      }
-    });
+    sortBtn.setOnClickListener(v -> handleSortSearch());
   }
 
   @Override
@@ -96,7 +90,7 @@ public class SearchFragment extends BackStackFragment
         break;
 
       case R.id.menu_imprint:
-        ((MainActivity) getActivity()).openImprint();
+        ((MainActivity) requireActivity()).openImprint();
         break;
 
       default:
@@ -141,29 +135,22 @@ public class SearchFragment extends BackStackFragment
   private void setupFilterButton() {
     ImageButton filterBtn = view.findViewById(R.id.filter_btn);
 
-    filterBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSearchFilter();
-      }
-    });
+    filterBtn.setOnClickListener(v -> handleSearchFilter());
 
   }
 
   private void setupSearchInput() {
     searchInput = view.findViewById(R.id.search_input);
 
-    searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-      @Override
-      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (!(event == null || event.getAction() != KeyEvent.ACTION_DOWN)) {
-          String searchText = searchInput.getText().toString();
-          ((MainActivity) requireActivity()).setSearchText(searchText);
-          searchItems(searchText);
-        }
+    searchInput.setOnEditorActionListener((v, actionId, event) -> {
 
-        return false;
+      if (!(event == null || event.getAction() != KeyEvent.ACTION_DOWN)) {
+        String searchText = searchInput.getText().toString();
+        ((MainActivity) requireActivity()).setSearchText(searchText);
+        searchItems(searchText);
       }
+
+      return false;
     });
   }
 
@@ -190,13 +177,10 @@ public class SearchFragment extends BackStackFragment
 
   private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
-            sortResultList();
-          }
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortResultList();
         });
 
     sortDialog.show();
@@ -218,20 +202,14 @@ public class SearchFragment extends BackStackFragment
         getString(R.string.filter_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-        new DialogInterface.OnMultiChoiceClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
-            filterCriteria[choice] = isChecked;
-            ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
-          }
+        (dialog, choice, isChecked) -> {
+          filterCriteria[choice] = isChecked;
+          ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
         });
 
-    selectFilterCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int choice) {
-        if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
-          filterItems();
-        }
+    selectFilterCriteria.setNegativeButton(R.string.ok, (dialog, choice) -> {
+      if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
+        filterItems();
       }
     });
 
@@ -267,7 +245,7 @@ public class SearchFragment extends BackStackFragment
   public void onItemClicked(int position) {
     SearchItem searchItem = searchModel.getSelectedSearchItem(position);
 
-    ((MainActivity) getActivity()).updateHeaderFragment(searchItem.getName());
+    ((MainActivity) requireActivity()).updateHeaderFragment(searchItem.getName());
 
     SearchItemType searchItemType = searchItem.getItemType();
 
@@ -275,7 +253,7 @@ public class SearchFragment extends BackStackFragment
       openShelf(searchItem);
     } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
       openBook(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
+    } else if (searchItemType == SearchItemType.SEARCH_NOTE) {
       openTextNote(searchItem);
     }
 
@@ -293,6 +271,7 @@ public class SearchFragment extends BackStackFragment
   private void openShelf(SearchItem searchItem) {
     BookFragment fragment = new BookFragment();
     fragment.setArguments(createShelfBundle(searchItem));
+
     showFragment(fragment);
   }
 
@@ -310,6 +289,7 @@ public class SearchFragment extends BackStackFragment
   private void openBook(SearchItem searchItem) {
     BookNotesView fragment = new BookNotesView();
     fragment.setArguments(createBookBundle(searchItem));
+
     showFragment(fragment);
   }
 
@@ -326,6 +306,7 @@ public class SearchFragment extends BackStackFragment
   private void openTextNote(SearchItem searchItem) {
     TextNoteEditorFragment fragment = new TextNoteEditorFragment();
     fragment.setArguments(createNoteBundle(searchItem));
+
     showFragment(fragment);
   }
 

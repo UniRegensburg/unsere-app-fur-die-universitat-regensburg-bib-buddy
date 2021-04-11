@@ -151,10 +151,6 @@ public class Book {
     this.addInfo = addInfo;
   }
 
-  public Long getCreateDate() {
-    return createDate;
-  }
-
   public void setCreateDate(Long createDate) {
     this.createDate = createDate;
   }

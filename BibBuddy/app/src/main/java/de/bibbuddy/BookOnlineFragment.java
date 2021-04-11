@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import java.util.List;
 
 /**
@@ -64,11 +66,11 @@ public class BookOnlineFragment extends BackStackFragment
         handleAddBook(book, authors);
       } else {
         Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-            Toast.LENGTH_LONG).show();
+                       Toast.LENGTH_LONG).show();
       }
     } else {
       Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
     }
   }
 
@@ -79,15 +81,12 @@ public class BookOnlineFragment extends BackStackFragment
 
   @Override
   public void onBookAdded(Book book, List<Author> authorList) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity().runOnUiThread(new Runnable() {
-      public void run() {
-        Toast.makeText(requireActivity(), getString(R.string.added_book),
-            Toast.LENGTH_SHORT).show();
-      }
-    });
+    requireActivity()
+        .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
+                                            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }

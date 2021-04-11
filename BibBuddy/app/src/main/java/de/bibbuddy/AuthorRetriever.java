@@ -22,9 +22,6 @@ import org.xml.sax.InputSource;
  */
 public class AuthorRetriever {
 
-  private final String autApiUrl = "https://d-nb.info/gnd/";
-  private final String autApiParam = "/about/marcxml";
-
   private static Document loadXmlFromString(String xml) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
@@ -41,8 +38,6 @@ public class AuthorRetriever {
    * @author Luis Moßburger
    */
   public List<Author> extractAuthors(Document xmlMetadata) {
-    List<Author> authors;
-    NodeList authorList = null;
     NodeList[] relevantPersons = {
         xmlMetadata.getElementsByTagName("marcrel:aut"), // "authors"
         xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
@@ -50,51 +45,50 @@ public class AuthorRetriever {
         xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
     };
 
+    NodeList authorList = null;
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {
         authorList = persons;
       }
     }
 
-    authors = makeAuthorList(authorList);
-    return authors;
+    return makeAuthorList(authorList);
   }
 
   private List<Author> makeAuthorList(NodeList authors) {
-    String url;
-    Element autEl;
     List<Author> authorArray = new ArrayList<>();
+    Document xmlMetadata;
 
-    Thread thread;
-    ApiReader apiReader;
-    Document xmlMetadata = null;
+    if (authors == null) {
+      return authorArray;
+    }
 
-    if (authors != null) {
-      for (int i = 0; i < authors.getLength(); i++) {
+    for (int i = 0; i < authors.getLength(); i++) {
 
-        // read from API with isbn (Thread)
-        autEl = (Element) authors.item(i);
-        url = autEl.getAttribute("rdf:resource");
-        apiReader = new ApiReader(this.autApiUrl + url.split("/gnd/")[1] + this.autApiParam);
-        thread = new Thread(apiReader);
-        thread.start();
+      // read from API with isbn (Thread)
+      Element authorEl = (Element) authors.item(i);
+      String url = authorEl.getAttribute("rdf:resource");
+      String autApiUrl = "https://d-nb.info/gnd/";
+      String autApiParam = "/about/marcxml";
+      ApiReader apiReader = new ApiReader(autApiUrl + url.split("/gnd/")[1] + autApiParam);
+      Thread thread = new Thread(apiReader);
+      thread.start();
 
+      try {
+        thread.join();
+      } catch (Exception e) {
+        // TODO logging instead of System.out.println(e);
+      }
+
+      // retrieve metadata that was saved
+      String metadata = apiReader.getMetadata();
+      if (metadata != null) {
+        // parse xml
         try {
-          thread.join();
+          xmlMetadata = loadXmlFromString(metadata);
+          authorArray.add(constructAuthor(xmlMetadata));
         } catch (Exception e) {
-          System.out.println(e);
-        }
-
-        // retrieve metadata that was saved
-        String metadata = apiReader.getMetadata();
-        if (metadata != null) {
-          // parse xml
-          try {
-            xmlMetadata = loadXmlFromString(metadata);
-            authorArray.add(constructAuthor(xmlMetadata));
-          } catch (Exception e) {
-            System.out.println(e);
-          }
+          // TODO logging instead of System.out.println(e);
         }
       }
     }
@@ -126,8 +120,9 @@ public class AuthorRetriever {
       } else {
         author = new Author(authorName, " ");
       }
+
     } catch (Exception e) {
-      System.out.println(e);
+      // TODO logging instead of System.out.println(e);
     }
 
     return author;

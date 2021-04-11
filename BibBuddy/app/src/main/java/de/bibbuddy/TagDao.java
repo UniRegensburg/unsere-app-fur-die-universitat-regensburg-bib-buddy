@@ -28,9 +28,9 @@ public class TagDao implements InterfaceTagDao {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.NAME, tag.getName());
 
-      long id = db.insert(DatabaseHelper.TABLE_NAME_TAG, null, contentValues);
-
+      Long id = db.insert(DatabaseHelper.TABLE_NAME_TAG, null, contentValues);
       tag.setId(id);
+
     } catch (
     SQLiteException ex) {
       return false;
@@ -42,13 +42,13 @@ public class TagDao implements InterfaceTagDao {
   }
 
 
-  // get single tag entry
+  // Gets single tag entry
   @Override
   public Tag findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_TAG, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.NAME}, DatabaseHelper._ID + "=?",
+        DatabaseHelper.NAME}, DatabaseHelper._ID + " = ?",
         new String[] {String.valueOf(id)}, null, null, null, null);
 
     Tag tag = null;
@@ -66,11 +66,11 @@ public class TagDao implements InterfaceTagDao {
   }
 
 
-  // get all tags in a list view
+  // Gets all tags in a list view
   @Override
   public List<Tag> findAll() {
     List<Tag> tagList = new ArrayList<Tag>();
-    // Select All Query
+
     String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_TAG;
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -92,7 +92,7 @@ public class TagDao implements InterfaceTagDao {
     return tagList;
   }
 
-  // delete single tag entry
+  // Deletes single tag entry
   @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();

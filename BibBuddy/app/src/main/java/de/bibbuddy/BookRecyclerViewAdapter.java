@@ -31,7 +31,6 @@ public class BookRecyclerViewAdapter
    * @param bookList bookList of the current books
    * @param listener listener for the interface and callback of the books
    * @param context  context is required for the BookRecyclerViewAdapter texts (getNoteString)
-   * @author Claudia Schönherr
    */
   public BookRecyclerViewAdapter(List<BookItem> bookList, BookListener listener, Context context) {
     this.bookList = bookList;
@@ -81,27 +80,21 @@ public class BookRecyclerViewAdapter
       holder.getTextBookYear().setVisibility(View.GONE);
     }
 
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (getSelectedBookItems().size() > 0) {
-          listener.onBookLongClicked(position, bookItem, v);
-        } else {
-          listener.onBookClicked(position);
-        }
+    holder.itemView.setOnClickListener(v -> {
+      if (getSelectedBookItems().size() > 0) {
+        listener.onBookLongClicked(position, bookItem, v);
+      } else {
+        listener.onBookClicked(position);
       }
     });
 
-    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        if (position == RecyclerView.NO_POSITION) {
-          return false;
-        }
-
-        listener.onBookLongClicked(position, bookItem, v);
-        return true;
+    holder.itemView.setOnLongClickListener(v -> {
+      if (position == RecyclerView.NO_POSITION) {
+        return false;
       }
+
+      listener.onBookLongClicked(position, bookItem, v);
+      return true;
     });
   }
 
@@ -117,16 +110,14 @@ public class BookRecyclerViewAdapter
   /**
    * This method fetches the number of items selected in the recyclerView.
    *
-   * @return returns the selected recyclerView items.
+   * @return the selected recyclerView items
    */
   public List<BookItem> getSelectedBookItems() {
     List<BookItem> selectedItems = new ArrayList<>();
 
-    if (parent != null) {
-      for (int i = 0; i < parent.getChildCount(); i++) {
-        if (parent.getChildAt(i).isSelected()) {
-          selectedItems.add(bookList.get(i));
-        }
+    for (int i = 0; i < parent.getChildCount(); i++) {
+      if (parent.getChildAt(i).isSelected()) {
+        selectedItems.add(bookList.get(i));
       }
     }
 
@@ -151,10 +142,10 @@ public class BookRecyclerViewAdapter
      * Custom ViewHolder constructor to setup its basic view.
      *
      * @param itemView View of the BookRecyclerView-item.
-     * @author Claudia Schönherr
      */
     public BookViewHolder(@NonNull View itemView) {
       super(itemView);
+
       textTitleView = itemView.findViewById(R.id.book_title);
       imageBookView = itemView.findViewById(R.id.person_icon);
       textBookAuthors = itemView.findViewById(R.id.book_authors);

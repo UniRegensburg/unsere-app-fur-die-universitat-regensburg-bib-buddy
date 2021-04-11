@@ -34,9 +34,11 @@ public class AuthorDao implements InterfaceAuthorDao {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
+
       if (!isNullOrEmpty(author.getTitle())) {
         contentValues.put(DatabaseHelper.TITLE, author.getTitle());
       }
+
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
@@ -56,9 +58,8 @@ public class AuthorDao implements InterfaceAuthorDao {
    * Method to update an existing author.
    *
    * @param author author object
-   * @return true if author is updated successfully
    */
-  public boolean update(Author author) {
+  public void update(Author author) {
     Long currentTime = new Date().getTime();
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -74,16 +75,13 @@ public class AuthorDao implements InterfaceAuthorDao {
           DatabaseHelper._ID + " = ?",
           new String[] {String.valueOf(author.getId())});
 
-    } catch (SQLiteException ex) {
-      return false;
     } finally {
       db.close();
     }
 
-    return true;
   }
 
-  // get single author entry
+  // Gets single author entry
   @Override
   public Author findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -91,9 +89,8 @@ public class AuthorDao implements InterfaceAuthorDao {
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR, new String[] {DatabaseHelper._ID,
         DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
         DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
-        DatabaseHelper._ID + "=?",
+        DatabaseHelper._ID + " = ?",
         new String[] {String.valueOf(id)}, null, null, null, null);
-
 
     Author author = null;
     if (cursor.moveToFirst()) {
@@ -104,10 +101,10 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   /**
-   * Find an existing author by its title, first and last name.
+   * Finds an existing author by its title, first and last name.
    *
-   * @param authorToFind The author containing the data to search for.
-   * @return If found, the author (with its database ID), else null.
+   * @param authorToFind The author containing the data to search for
+   * @return if found, the author (with its database ID), else null
    */
   public Author findByTitleAndFullName(Author authorToFind) {
     List<String> params = new ArrayList<>();
@@ -152,22 +149,20 @@ public class AuthorDao implements InterfaceAuthorDao {
     }
   }
 
-  // get all authors in a list view
+  // Gets all authors in a list view
   @Override
   public List<Author> findAll() {
     List<Author> authorList = new ArrayList<Author>();
-    // Select All Query
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
-    // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
         Author author = createAuthorData(cursor);
 
-        // Adding author to list
         authorList.add(author);
       } while (cursor.moveToNext());
     }
@@ -177,7 +172,7 @@ public class AuthorDao implements InterfaceAuthorDao {
     return authorList;
   }
 
-  // delete single author entry
+  // Deletes single author entry
   @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();

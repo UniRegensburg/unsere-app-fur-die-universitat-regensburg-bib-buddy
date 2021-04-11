@@ -26,20 +26,17 @@ public class ApiReader implements Runnable {
    * @author Luis Moßburger
    */
   public void run() {
-    URL metadataUrl;
-    BufferedReader in;
-    String metadata = "";
-    System.out.println(url);
-
     try {
-      metadataUrl = new URL(url);
-      in = new BufferedReader(new InputStreamReader(metadataUrl.openStream()));
-      metadata = in.lines().collect(Collectors.joining());
-      in.close();
-      this.metadata = metadata;
+      URL metadataUrl = new URL(url);
+
+      try (
+          BufferedReader in = new BufferedReader(new InputStreamReader(metadataUrl.openStream()))) {
+
+        this.metadata = in.lines().collect(Collectors.joining());
+      }
     } catch (Exception e) {
-      System.out.println("*** ERROR ***");
-      System.out.println(e);
+      // TODO logging instead of System.out.println("*** ERROR ***");
+      // TODO logging instead of System.out.println(e);
     }
   }
 
