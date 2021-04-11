@@ -65,7 +65,7 @@
 
     <!-- Library | Help -->
     <string name="library_help">Mit dem <b>+-Button</b> kannst du ein neues Regal anlegen, in dem du
-        Bücher und Notizen speichern kannst! Mehr Infos gibt's rechts oben unter "Hilfe".</string>
+        Bücher und Notizen speichern kannst! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
 
     <!-- Book -->
@@ -95,7 +95,7 @@
 
     <!-- Book | Help -->
     <string name="book_help">Mit dem <b>+-Button</b> können wir per ISBN ein Buch für dich finden -
-        oder du gibst die Daten selbst ein! Mehr Infos gibt's rechts oben unter "Hilfe".</string>
+        oder du gibst die Daten selbst ein! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
 
     <!-- Book Form -->
@@ -133,32 +133,7 @@
 
     <!-- Book Form | Help -->
     <string name="author_help">Mit dem <b>+-Button</b> kannst du einen neuen Autor hinzufügen! Mehr
-        Infos gibt's rechts oben unter "Hilfe".</string>
-    <string name="author_help_text">
-        <![CDATA[
-        <h1><u>Hilfe zu den Autoren</u></h1>
-        <p>Sie befinden sich in der Authorensansicht. Hier können Sie neue Autoren anlegen,
-        bestehende anpassen oder löschen</p>
-
-        <h2>Anlegen eines neuen Autors/h2>
-        <p>Einen neuen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
-        dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
-        einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
-        gespeichert.
-
-        <h2>Autordaten ändern</h2>
-        <p>Um die Daten eines Autors zu ändern, klicken Sie diesen an und sie gelangen zum
-        Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
-        Zurück-Button werden die Daten automatisch gespeicheert.<br><br>
-
-        <h2>Autor(en) löschen</h2>
-        <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie
-        dann oben rechts auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass
-        Sie die ausgewählten Autoren endgültig löschen wollen.<br><br>
-        <u><b>Achtung!</b></u> Die Daten können nicht wieder hergestellt werden. <br><br>
-
-        ]]>
-    </string>
+        Infos gibt\'s rechts oben unter "Hilfe".</string>
 
 
     <!-- Barcode Scanner -->
@@ -188,7 +163,7 @@
 
     <!-- Note | Help -->
     <string name="note_list_help">Mit dem <b>+-Button</b> kannst du eine Text- oder Audionotiz
-        anlegen, die dann hier erscheinen! Mehr Infos gibt's rechts oben unter "Hilfe".</string>
+        anlegen, die dann hier erscheinen! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
     <!-- Note Editor Text -->
     <!-- Note Editor Text | Items -->
@@ -214,6 +189,16 @@
     <string name="library_icon">Library_Icon</string>
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
+
+
+    <!-- Voice Note Editor -->
+    <string name="voice_note_name">Sprachnotiz vom </string>
+    <string name="default_played_timer">00:00</string>
+    <string name="record_permission_needed">Erlaubnis zur Aufnahme erforderlich</string>
+    <string name="record_permission_alert_msg">
+        Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
+    </string>
+    <string name="voice_note_saved">Ok, wir haben die Sprachnotiz gespeichert.</string>
 
     <!-- Export -->
     <!-- Export | Permission -->
@@ -335,6 +320,32 @@
         <p>Sie können ein Backup Ihrer Daten in Form einer Datenbankdatei ertsellen, indem Sie oben
         rechts auf das Menü klicken und <b>Backup</b> wählen. So werden alle Ihre Daten und
         in einer Datei (.db) exportiert.</p>
+        ]]>
+    </string>
+
+    <string name="author_help_text">
+        <![CDATA[
+        <h1><u>Hilfe zu den Autoren</u></h1>
+        <p>Sie befinden sich in der Authorensansicht. Hier können Sie neue Autoren anlegen,
+        bestehende anpassen oder löschen</p>
+
+        <h2>Anlegen eines neuen Autors/h2>
+        <p>Einen neuen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
+        dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
+        einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
+        gespeichert.
+
+        <h2>Autordaten ändern</h2>
+        <p>Um die Daten eines Autors zu ändern, klicken Sie diesen an und sie gelangen zum
+        Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
+        Zurück-Button werden die Daten automatisch gespeicheert.<br><br>
+
+        <h2>Autor(en) löschen</h2>
+        <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie
+        dann oben rechts auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass
+        Sie die ausgewählten Autoren endgültig löschen wollen.<br><br>
+        <u><b>Achtung!</b></u> Die Daten können nicht wieder hergestellt werden. <br><br>
+
         ]]>
     </string>
 
@@ -515,14 +526,5 @@
 
         ]]>
     </string>
-
-    <!-- Voice Note Editor -->
-    <string name="voice_note_name">Sprachnotiz vom </string>
-    <string name="default_played_timer">00:00</string>
-    <string name="record_permission_needed">Erlaubnis zur Aufnahme erforderlich</string>
-    <string name="record_permission_alert_msg">
-        Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
-    </string>
-    <string name="voice_note_saved">Ok, wir haben die Sprachnotiz gespeichert.</string>
 
 </resources>
