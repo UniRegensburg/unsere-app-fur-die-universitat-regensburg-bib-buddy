@@ -366,7 +366,7 @@ public class NoteDao implements InterfaceNoteDao {
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(NoteTypeLut.TEXT.getId()),
         String.valueOf(bookId)
-      });
+        });
 
     List<Long> noteIds = new ArrayList<>();
     if (cursor.moveToFirst()) {
