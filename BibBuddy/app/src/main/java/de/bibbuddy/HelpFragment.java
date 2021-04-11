@@ -31,11 +31,6 @@ public class HelpFragment extends DialogFragment {
     Bundle bundle = this.getArguments();
     String manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.updateHeaderFragment(getString(R.string.headerHelp));
-    mainActivity.setVisibilitySortButton(false);
-
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
         null, null);
