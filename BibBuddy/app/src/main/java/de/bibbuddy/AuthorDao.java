@@ -103,8 +103,8 @@ public class AuthorDao implements InterfaceAuthorDao {
   /**
    * Finds an existing author by its title, first and last name.
    *
-   * @param authorToFind The author containing the data to search for.
-   * @return If found, the author (with its database ID), else null
+   * @param authorToFind The author containing the data to search for
+   * @return if found, the author (with its database ID), else null
    */
   public Author findByTitleAndFullName(Author authorToFind) {
     List<String> params = new ArrayList<>();

@@ -59,14 +59,13 @@ public class NoteModel {
    * @return a list of all NoteItems from the database
    */
   public List<NoteItem> getNoteList() {
-    List<Note> noteList = noteDao.findAll();
-    return createItemList(noteList);
+    return createItemList(noteDao.findAll());
   }
 
   /**
    * Fetches all notes, that are connected to a specific book, from the database.
    *
-   * @param bookId whose connected notes are searched for.
+   * @param bookId whose connected notes are searched for
    * @return a list of NoteItems whose connected notes are connected to the specific book
    */
   public List<NoteItem> getNoteListForBook(Long bookId) {
@@ -81,6 +80,7 @@ public class NoteModel {
    */
   public List<Note> getVoiceNoteList() {
     List<Note> noteList = noteDao.findAll();
+
     return noteList.stream()
         .filter(n -> n.getType() == NoteTypeLut.AUDIO)
         .collect(Collectors.toList());
@@ -113,8 +113,8 @@ public class NoteModel {
   /**
    * Gets a list of all noteItems from the database sorted by given sortCriteria.
    *
-   * @param sortCriteria chosen by the user to sort the list.
-   * @param noteList     to be sorted.
+   * @param sortCriteria chosen by the user to sort the list
+   * @param noteList     to be sorted
    * @return the sorted noteList
    */
   public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
@@ -146,8 +146,8 @@ public class NoteModel {
   /**
    * Gets the noteList of a book sorted by sortCriteria.
    *
-   * @param sortCriteria currently applied to the list.
-   * @param bookId       id of the book the noteList is linked to.
+   * @param sortCriteria currently applied to the list
+   * @param bookId       id of the book the noteList is linked to
    * @return the sorted noteList
    */
   public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
@@ -160,7 +160,7 @@ public class NoteModel {
   /**
    * Gets the noteList for all notes in the database sorted by sortCriteria.
    *
-   * @param sortCriteria currently applied to the list.
+   * @param sortCriteria currently applied to the list
    * @return the sorted noteList
    */
   public List<NoteItem> getAllSortedNoteList(SortCriteria sortCriteria) {
