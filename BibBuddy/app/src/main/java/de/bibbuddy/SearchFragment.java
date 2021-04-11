@@ -181,9 +181,11 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
       @Override
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        String searchText = searchInput.getText().toString();
-        ((MainActivity) requireActivity()).setSearchText(searchText);
-        searchItems(searchText);
+        if (!(event == null || event.getAction() != KeyEvent.ACTION_DOWN)) {
+          String searchText = searchInput.getText().toString();
+          ((MainActivity) requireActivity()).setSearchText(searchText);
+          searchItems(searchText);
+        }
 
         return false;
       }
@@ -198,6 +200,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
     updateSearchResultList(searchText);
+    Toast.makeText(context, R.string.search_done, Toast.LENGTH_SHORT).show();
   }
 
   private void updateSearchResultList(String searchInputStr) {
