@@ -21,7 +21,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -240,7 +239,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     String[] filterChoices = {
         getString(R.string.filter_shelf),
         getString(R.string.filter_book),
-        getString(R.string.filter_note) };
+        getString(R.string.filter_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
         new DialogInterface.OnMultiChoiceClickListener() {
@@ -283,7 +282,8 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     helpFragment.setArguments(bundle);
 
-    helpFragment.show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
 

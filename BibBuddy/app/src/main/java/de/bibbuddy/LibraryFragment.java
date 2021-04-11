@@ -191,7 +191,8 @@ public class LibraryFragment extends Fragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    helpFragment.show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   @Override
@@ -336,7 +337,7 @@ public class LibraryFragment extends Fragment
     libraryFormFragment.setArguments(createRenameShelfBundle());
     requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, libraryFormFragment,
-                 LibraryKeys.FRAGMENT_LIBRARY_FORM)
+            LibraryKeys.FRAGMENT_LIBRARY_FORM)
         .addToBackStack(null)
         .commit();
   }
@@ -436,7 +437,7 @@ public class LibraryFragment extends Fragment
     libraryFormFragment.setArguments(createAddShelfBundle());
     requireActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.fragment_container_view, libraryFormFragment,
-                 LibraryKeys.FRAGMENT_LIBRARY_FORM)
+            LibraryKeys.FRAGMENT_LIBRARY_FORM)
         .addToBackStack(null)
         .commit();
   }
