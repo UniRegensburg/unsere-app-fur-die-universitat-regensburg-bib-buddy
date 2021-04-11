@@ -74,7 +74,7 @@ public class BookOnlineFragment extends BackStackFragment
 
   private void handleAddBook(Book book, List<Author> authors) {
     BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
-    showFragment(bookFormFragment, LibraryKeys.FRAGMENT_BOOK);
+    showFragment(bookFormFragment);
   }
 
   @Override

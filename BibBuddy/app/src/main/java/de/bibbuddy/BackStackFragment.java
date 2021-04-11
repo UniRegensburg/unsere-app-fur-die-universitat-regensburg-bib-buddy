@@ -38,7 +38,12 @@ public class BackStackFragment extends Fragment {
 
   protected void closeFragment() {
     disableBackPressedHandler();
-    requireActivity().onBackPressed();
+
+    if (isAdded()) {
+      requireActivity().onBackPressed();
+    } else {
+      getParentFragmentManager().popBackStack();
+    }
   }
 
   protected void enableBackPressedHandler() {
