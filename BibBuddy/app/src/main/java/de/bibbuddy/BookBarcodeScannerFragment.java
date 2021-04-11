@@ -10,7 +10,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -29,7 +28,7 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookBarcodeScannerFragment extends Fragment
+public class BookBarcodeScannerFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
@@ -42,12 +41,6 @@ public class BookBarcodeScannerFragment extends Fragment
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
 
     View view = inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
 
@@ -57,8 +50,10 @@ public class BookBarcodeScannerFragment extends Fragment
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     setupDetectorsAndSources(view);
-    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.isbn_scan));
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
 
     return view;
   }
@@ -155,11 +150,7 @@ public class BookBarcodeScannerFragment extends Fragment
 
   private void handleAddBook(Book book, List<Author> authors) {
     BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
-
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
-        .addToBackStack(null)
-        .commit();
+    showFragment(bookFormFragment, LibraryKeys.FRAGMENT_BOOK);
   }
 
   @Override
@@ -174,15 +165,6 @@ public class BookBarcodeScannerFragment extends Fragment
     closeFragment();
   }
 
-  private void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
-  }
-
   @Override
   public void onPause() {
     super.onPause();
@@ -192,7 +174,7 @@ public class BookBarcodeScannerFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
-    setupDetectorsAndSources(getView());
+    setupDetectorsAndSources(requireView());
   }
 
 }
