@@ -299,12 +299,13 @@
         <h2>Regalnamen ändern</h2>
         <p>Mit einem längeren Klick auf ein Regal kannst du im Menü oben rechts "Ändern" wählen und
         anschließend im Formular den Namen ändern. Wenn du doch nicht speichern willst, einfach
-        "Zurück" drücken.</p>
+        "Zurück" drücken. Alternativ kannst du das Regal auch nach rechts ziehen.</p>
 
         <h2>Regal löschen</h2>
         <p>Mit einem längeren Klick auf ein oder mehrere Regale kannst du diese auswählen und im
-        Menü oben rechts "Löschen" wählen, um sie zu entfernen. Wir fragen sicherheitshalber
-        nochmal nach, danach sind die Regale aber endgültig gelöscht, also Vorsichtig!</p>
+        Menü oben rechts "Löschen" wählen, um sie zu entfernen. Alternativ kannst du ein Regal
+        auch nach links ziehen, um es zu löschen. Wir fragen sicherheitshalber nochmal nach, danach
+        sind die Regale aber endgültig gelöscht, also Vorsichtig!</p>
         ]]>
     </string>
 
@@ -315,16 +316,18 @@
 
         <h2>Autor anlegen</h2>
         <p>Mit dem <b>+-Button</b> kannst du einen neuen Autor anlegen. Im Formular kannst du
-        Titel, Vor- und Nachnamen des Autors eingeben und abspeichern.
+        Titel, Vor- und Nachnamen des Autors eingeben und abspeichern.</p>
 
         <h2>Autor ändern</h2>
         <p>Mit einem Klick auf einen Autor kannst du seine Daten im Formular ändern. Mit dem
-        "Zurück"-Button werden die Daten automatisch abgespeichert.
+        "Zurück"-Button werden die Daten automatisch abgespeichert. Alternativ kannst du den Autor
+        auch nach rechts ziehen.</p>
 
         <h2>Autoren löschen</h2>
         <p>Mit einem längeren Klick können ein oder mehrere Autoren ausgewählt und im Menü rechts
-        oben über "Löschen" entfernt werden. Wir fragen sicherheitshalber nochmal nach, danach sind
-        die Autoren aber endgültig gelöscht, also Vorsicht!</p>
+        oben über "Löschen" entfernt werden. Alternativ kannst du den Autor auch nach links ziehen.
+        Wir fragen sicherheitshalber nochmal nach, danach sind die Autoren aber endgültig gelöscht,
+        also Vorsicht!</p>
         ]]>
     </string>
 
@@ -347,12 +350,14 @@
         <h2>Buchdaten ändern</h2>
         <p>Nachdem du ein Buch mit einem längeren Klick ausgewählt hast kannst du im oberen rechten
         Menü "Ändern" wählen. Das Formular mit allen Buchdaten öffnet sich und du kannst Daten
-        ändern, bevor du bestätigst. Mit dem "Zurück"-Button werden die Daten nicht gespeichert.</p>
+        ändern, bevor du bestätigst. Mit dem "Zurück"-Button werden die Daten nicht gespeichert.
+        Alternativ kannst du das Buch auch nach rechts ziehen, um es zu bearbeiten.</p>
 
         <h2>Buch löschen</h2>
         <p>Nachdem du ein oder mehrere Bücher mit einem längeren Klick ausgewählt hast, kannst du
-        im oberen rechten Menü "Löschen" auswählen. Wir fragen sicherheitshalber nochmal nach, aber
-        dann sind die Bücher endgültig gelöscht, also Vorsicht!</p>
+        im oberen rechten Menü "Löschen" auswählen. Alternativ kannst du das Buch auch nach links
+        ziehen. Wir fragen sicherheitshalber nochmal nach, aber dann sind die Bücher endgültig
+        gelöscht, also Vorsicht!</p>
 
         <h2>Daten exportieren</h2>
         <p>Mit dem "Share"-Button oben rechts kannst du alle Daten exportieren und in WhatsApp &
@@ -377,8 +382,9 @@
 
         <h2>Notiz löschen</h2>
         <p>Mit einem längeren Klick kannst du ein oder mehrere Notizen auswählen und diese im Menü
-        oben rechts über "Löschen" entfernen. Wir fragen sicherheitshalber nochmal nach, dann sind
-        die Notizen aber endgültig gelöscht, also Vorsicht.</p>
+        oben rechts über "Löschen" entfernen. Alternativ kannst du die Notiz auch nach links
+        ziehen. Wir fragen sicherheitshalber nochmal nach, dann sind die Notizen aber endgültig
+        gelöscht, also Vorsicht.</p>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -440,8 +446,9 @@
 
         <h2>Notizen löschen</h2>
         <p>Mit einem längeren Klick kannst du eine oder mehrere Notizen auswählen und über "Löschen"
-        im Menü rechts oben entfernen. Einmal fragen wir sicherheitshalber nach, danach sind die
-        gewählten Notizen aber wirklich weg, also Vorsicht!</p>
+        im Menü rechts oben entfernen. Alternativ kannst du die Notiz auch nach links ziehen.
+        Einmal fragen wir sicherheitshalber nach, danach sind die gewählten Notizen aber wirklich
+        weg, also Vorsicht!</p>
         ]]>
     </string>
 
