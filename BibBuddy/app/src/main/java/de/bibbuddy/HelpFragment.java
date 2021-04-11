@@ -10,15 +10,16 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 /**
  * Fragment for the user manuals.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Luis Moßburger
  */
-public class HelpFragment extends Fragment {
+public class HelpFragment extends DialogFragment {
   private View view;
   private String manualText;
 
@@ -37,12 +38,7 @@ public class HelpFragment extends Fragment {
     Bundle bundle = this.getArguments();
     manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-
     view = inflater.inflate(R.layout.fragment_help, container, false);
-
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.headerHelp));
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
 
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
