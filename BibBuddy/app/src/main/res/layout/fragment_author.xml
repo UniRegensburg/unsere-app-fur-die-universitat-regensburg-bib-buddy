@@ -39,9 +39,9 @@
         android:paddingRight="15dp"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
-        app:leftBgColor="@color/edit"
+        app:leftBgColor="@color/yellow"
         app:leftImage="@drawable/ic_edit"
-        app:rightBgColor="@color/delete"
+        app:rightBgColor="@color/red"
         app:rightImage="@drawable/ic_delete"
         />
 

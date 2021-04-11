@@ -36,9 +36,9 @@
         android:orientation="vertical"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
-        app:rightBgColor="@color/delete"
+        app:rightBgColor="@color/red"
         app:rightImage="@drawable/ic_delete"
-        app:leftBgColor="@color/edit"
+        app:leftBgColor="@color/yellow"
         app:leftImage="@drawable/ic_edit"/>
 
     <include
