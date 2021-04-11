@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * The DateConverter is responsible for converting the date.
@@ -18,17 +19,9 @@ public class DateConverter {
    */
   public static String convertDateToString(Long date) {
     Date newDate = new Date(date);
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
-    String dateStr = simpleDateFormat.format(newDate);
-    String day = dateStr.substring(8, 10);
-    String month = dateStr.substring(5, 7);
-    String year = dateStr.substring(0, 4);
-    String time = dateStr.substring(11, 16);
-
-    dateStr = day + "." + month + "." + year + " " + time + " Uhr";
-
-    return dateStr;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy' 'HH:mm",
+        Locale.getDefault());
+    return simpleDateFormat.format(newDate) + " Uhr";
   }
 
 }

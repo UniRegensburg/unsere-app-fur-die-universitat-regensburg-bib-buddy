@@ -20,15 +20,12 @@ import androidx.fragment.app.Fragment;
 import com.skyfishjy.library.RippleBackground;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * The VoiceNoteEditorFragment is responsible for creating and saving voice notes.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class VoiceNoteEditorFragment extends Fragment {
 
@@ -74,7 +71,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     }
     newAudio = new File(filePath);
 
-    setupOnClickListeners();
+    setupOnClickListener();
 
     return view;
   }
@@ -94,6 +91,7 @@ public class VoiceNoteEditorFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
+  //Show the VoiceNoteEditorFragment help-element.
   private void handleManualVoiceEditor() {
     Spanned htmlAsString =
         Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
@@ -107,15 +105,16 @@ public class VoiceNoteEditorFragment extends Fragment {
     helpAlert.show();
   }
 
-  private void setupOnClickListeners() {
+  private void setupOnClickListener() {
     View.OnClickListener recordClickListener = v -> {
       v.setSelected(!v.isSelected());
-      onRecord(v.isSelected());
+      record(v.isSelected());
     };
     recordButton.setOnClickListener(recordClickListener);
   }
 
-  private void onRecord(boolean start) {
+  //Start or stop recording depending on the record-button selection.
+  private void record(boolean start) {
     if (start) {
       pulse.startRippleAnimation();
       recordButton.setBackgroundTintList(
@@ -156,24 +155,13 @@ public class VoiceNoteEditorFragment extends Fragment {
   }
 
   private void saveNote() {
-    String fileName = getString(R.string.voice_note_name) + getDate();
-    noteModel.createNote(fileName, 1, "", newAudio.getPath());
+    Long currentTime = new Date().getTime();
+    String fileName =
+        getString(R.string.voice_note_name) + DateConverter.convertDateToString(currentTime);
+    noteModel.createNote(fileName, NoteTypeLut.AUDIO, "", newAudio.getPath());
     noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
     Toast.makeText(requireActivity(), getString(R.string.voice_note_saved), Toast.LENGTH_SHORT)
         .show();
-  }
-
-  private String getDate() {
-    Date d = Calendar.getInstance().getTime();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-        Locale.getDefault());
-    String string = simpleDateFormat.format(d);
-    String day = string.substring(8, 10);
-    String month = string.substring(5, 7);
-    String year = string.substring(0, 4);
-    string = day + "." + month + "." + year;
-
-    return string;
   }
 
   @Override

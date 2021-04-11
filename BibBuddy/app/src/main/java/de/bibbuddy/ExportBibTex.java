@@ -151,46 +151,46 @@ public class ExportBibTex {
     return BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
 
         + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
 
         + getBibAuthorNames(bookId, bookDao)
 
         + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
 
         + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
 
         + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
 
         + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + '\n'
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
 
         + getBibNotesFromBook(book, noteDao)
 
-        + BibTexKeys.YEAR + book.getPubYear() + '\n' + BibTexKeys.CLOSING_CURLY_BRACKET
-        + '\n' + '\n';
+        + BibTexKeys.YEAR + book.getPubYear() + "\n" + BibTexKeys.CLOSING_CURLY_BRACKET
+        + "\n" + "\n";
 
   }
 
   private String getBibKey(Book book) {
     // remove whitespaces from book's title
-    return book.getTitle().replaceAll("\\s+", "") + "," + '\n';
+    return book.getTitle().replaceAll("\\s+", "") + "," + "\n";
   }
 
   private String getBibNotesFromBook(Book book, NoteDao noteDao) {
-    List<Long> notesList = noteDao.getAllNoteIdsForBook(book.getId());
+    List<Long> notesList = noteDao.getTextNoteIdsForBook(book.getId());
     StringBuilder allNotes = new StringBuilder();
 
-    if (!notesList.isEmpty()) {
-      for (int k = 0; k < notesList.size(); k++) {
-        String bookTextNotes = noteDao.findStrippedTextById(notesList.get(k));
-        allNotes.append(bookTextNotes);
-      }
+    for (int i = 0; i < notesList.size(); i++) {
+      String bookTextNotes = noteDao.findStrippedTextById(notesList.get(i));
+      allNotes.append(bookTextNotes);
     }
 
-    return "annote={" + allNotes + "}," + '\n';
+    return BibTexKeys.ANNOTE + BibTexKeys.OPENING_CURLY_BRACKET + allNotes
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n";
+
   }
 
   private String getBibAuthorNames(Long bookId, BookDao bookDao) {
@@ -204,7 +204,7 @@ public class ExportBibTex {
           .append(authorsList.get(i).getFirstName());
 
       if (i < authorsList.size() - 1) {
-        authorNames.append(" and ");
+        authorNames.append(BibTexKeys.AND_MULTIPLE_AUTHORS);
       }
     }
 
@@ -212,7 +212,9 @@ public class ExportBibTex {
       authorNames = new StringBuilder();
     }
 
-    return "author={" + authorNames + "}," + '\n';
+    return BibTexKeys.AUTHOR + BibTexKeys.OPENING_CURLY_BRACKET + authorNames
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n";
+
   }
 
   /**

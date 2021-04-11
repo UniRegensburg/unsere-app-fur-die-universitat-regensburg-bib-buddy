@@ -25,13 +25,13 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 
 /**
- * The TextNoteEditorFragment is responsible for the note in the text editor.
+ * The TextNoteEditorFragment is responsible for creating, editing and saving text notes.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class TextNoteEditorFragment extends Fragment {
 
-  ImageView formatArrow;
+  private ImageView formatArrow;
   private View view;
   private RichTextEditor richTextEditor;
   private Note note;
@@ -42,6 +42,7 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
@@ -50,17 +51,15 @@ public class TextNoteEditorFragment extends Fragment {
       }
     });
 
-    ((MainActivity) requireActivity())
-        .setVisibilityImportShareButton(View.GONE, View.GONE);
+    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     ((MainActivity) requireActivity()).setVisibilitySortButton(false);
-
     ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_notes);
 
     setHasOptionsMenu(true);
   }
 
   /**
-   * Closes the TextNoteEditorFragment.
+   * Close the TextNoteEditorFragment.
    */
   public void closeFragment() {
     FragmentManager fragmentManager = getParentFragmentManager();
@@ -83,11 +82,12 @@ public class TextNoteEditorFragment extends Fragment {
     if (item.getItemId() == R.id.menu_help_texteditor) {
       handleManualTextNoteEditor();
     } else if (item.getItemId() == R.id.menu_imprint) {
-      ((MainActivity) getActivity()).openImprint();
+      ((MainActivity) requireActivity()).openImprint();
     }
     return super.onOptionsItemSelected(item);
   }
 
+  //Show the TextNoteEditorFragment help-element.
   private void handleManualTextNoteEditor() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.text_editor_help_text);
@@ -104,9 +104,9 @@ public class TextNoteEditorFragment extends Fragment {
         .commit();
   }
 
-
+  //Save the current text as note-object.
   private void saveNote() {
-    String text = Html.toHtml(richTextEditor.getText(), Html.TO_HTML_PARAGRAPH_LINES_INDIVIDUAL);
+    String text = Html.toHtml(richTextEditor.getText(), Html.FROM_HTML_MODE_LEGACY);
     String rawText = Jsoup.parse(text).text();
     String[] lines = text.split("\\n");
     String name = "";
@@ -117,7 +117,6 @@ public class TextNoteEditorFragment extends Fragment {
     for (String line : lines) {
       String rawLine = Jsoup.parse(line).text();
       matcher = pattern.matcher(rawLine);
-
       if (matcher.find()) {
         name = rawLine;
         break;
@@ -125,12 +124,10 @@ public class TextNoteEditorFragment extends Fragment {
     }
 
     if (rawText.length() != 0) {
-      assert getArguments() != null;
-
       if (getArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
-        noteModel.createNote(name, 0, text, "");
+        noteModel.createNote(name, NoteTypeLut.TEXT, text, "");
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
     }
@@ -140,63 +137,70 @@ public class TextNoteEditorFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    noteModel = new NoteModel(getContext());
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     richTextEditor = view.findViewById(R.id.editor);
     formatArrow = view.findViewById(R.id.formatArrow);
     formatArrow.setOnClickListener(v -> {
       formatOptions = view.findViewById(R.id.scroll_view);
-      slideUpOrDown();
+      adjustFormatToolbarVisibility();
     });
-    noteModel = new NoteModel(getContext());
-    if (getArguments() != null) {
+
+    if (!getArguments().isEmpty()) {
       bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
       if (getArguments().size() == 2) {
         Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);
         note = noteModel.getNoteById(noteId);
-        richTextEditor.setText(Html.fromHtml(note.getText(), 33));
+        String text = note.getText();
+        text = text.replace("align=\"center\"", "style=\"text-align:center;\"");
+        text = text.replace("align=\"right\"", "style=\"text-align:end;\"");
+        richTextEditor.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
       }
     }
+
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
+
     return view;
   }
 
   /**
-   * Method to perform an upside-down animation for the deletePanel.
+   * Show or hide the text format toolbar depending on if it is shown yet.
    */
-  public void slideUpOrDown() {
-    if (!formatOptionsAreShown()) {
+  public void adjustFormatToolbarVisibility() {
+    if (!formatToolbarIsShown()) {
       formatOptions.setVisibility(View.VISIBLE);
       formatArrow.setImageResource(R.drawable.format_up);
-      setupUndo();
-      setupRedo();
-      setupBold();
-      setupItalic();
-      setupUnderline();
-      setupStrikeThrough();
-      setupBullet();
-      setupQuote();
-      setupAlignment();
-    } else if (formatOptionsAreShown()) {
-      hideFormatOptions();
+      setupUndoOption();
+      setupRedoOption();
+      setupBoldOption();
+      setupItalicOption();
+      setupUnderlineOption();
+      setupStrikeThroughOption();
+      setupBulletOption();
+      setupQuoteOption();
+      setupAlignmentOptions();
+    } else {
+      hideFormatToolbar();
     }
   }
 
-  private void hideFormatOptions() {
+  private void hideFormatToolbar() {
     formatOptions.setVisibility(View.GONE);
     formatArrow.setImageResource(R.drawable.format_down);
   }
 
-  private boolean formatOptionsAreShown() {
+  private boolean formatToolbarIsShown() {
     return formatOptions.getVisibility() == View.VISIBLE;
   }
 
-  private void highlightSelectedItem(View view) {
-    hideFormatOptions();
+  private void highlightSelectedToolbarItem(View view) {
+    hideFormatToolbar();
     view.setSelected(!view.isSelected());
   }
 
-  private void setupUndo() {
+  private void setupUndoOption() {
     ImageButton undo = view.findViewById(R.id.action_undo);
+
     undo.setOnClickListener(v -> {
       richTextEditor.undo();
       backgroundColorChange(undo);
@@ -209,18 +213,20 @@ public class TextNoteEditorFragment extends Fragment {
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }
 
-  private void setupRedo() {
+  private void setupRedoOption() {
     ImageButton redo = view.findViewById(R.id.action_redo);
+
     redo.setOnClickListener(v -> {
       richTextEditor.redo();
       backgroundColorChange(redo);
     });
   }
 
-  private void setupBold() {
+  private void setupBoldOption() {
     ImageButton bold = view.findViewById(R.id.action_bold);
+
     bold.setOnClickListener(v -> {
-      highlightSelectedItem(bold);
+      highlightSelectedToolbarItem(bold);
       richTextEditor.bold(bold.isSelected());
     });
 
@@ -230,22 +236,25 @@ public class TextNoteEditorFragment extends Fragment {
     });
   }
 
-  private void setupItalic() {
+  private void setupItalicOption() {
     ImageButton italic = view.findViewById(R.id.action_italic);
+
     italic.setOnClickListener(v -> {
-      highlightSelectedItem(italic);
+      highlightSelectedToolbarItem(italic);
       richTextEditor.italic(italic.isSelected());
     });
+
     italic.setOnLongClickListener(v -> {
       Toast.makeText(getContext(), R.string.toast_italic, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
 
-  private void setupUnderline() {
+  private void setupUnderlineOption() {
     ImageButton underline = view.findViewById(R.id.action_underline);
+
     underline.setOnClickListener(v -> {
-      highlightSelectedItem(underline);
+      highlightSelectedToolbarItem(underline);
       richTextEditor.underline(underline.isSelected());
     });
 
@@ -255,43 +264,49 @@ public class TextNoteEditorFragment extends Fragment {
     });
   }
 
-  private void setupStrikeThrough() {
+  private void setupStrikeThroughOption() {
     ImageButton strikeThrough = view.findViewById(R.id.action_strikeThrough);
+
     strikeThrough.setOnClickListener(v -> {
-      highlightSelectedItem(strikeThrough);
+      highlightSelectedToolbarItem(strikeThrough);
       richTextEditor.strikeThrough(strikeThrough.isSelected());
     });
+
     strikeThrough.setOnLongClickListener(v -> {
       Toast.makeText(getContext(), R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
 
-  private void setupBullet() {
+  private void setupBulletOption() {
     ImageButton bullet = view.findViewById(R.id.action_insert_bullets);
+
     bullet.setOnClickListener(v -> {
-      highlightSelectedItem(bullet);
+      highlightSelectedToolbarItem(bullet);
       richTextEditor.bullet(bullet.isSelected());
     });
+
     bullet.setOnLongClickListener(v -> {
       Toast.makeText(getContext(), R.string.toast_bullet, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
 
-  private void setupQuote() {
+  private void setupQuoteOption() {
     ImageButton quote = view.findViewById(R.id.action_quote);
+
     quote.setOnClickListener(v -> {
-      highlightSelectedItem(quote);
+      highlightSelectedToolbarItem(quote);
       richTextEditor.quote(quote.isSelected());
     });
+
     quote.setOnLongClickListener(v -> {
       Toast.makeText(getContext(), R.string.toast_quote, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
 
-  private void setupAlignment() {
+  private void setupAlignmentOptions() {
     ImageButton alignLeft = view.findViewById(R.id.action_alignLeft);
     ImageButton alignRight = view.findViewById(R.id.action_alignRight);
     ImageButton alignCenter = view.findViewById(R.id.action_alignCenter);
@@ -310,7 +325,7 @@ public class TextNoteEditorFragment extends Fragment {
 
     alignRight.setOnClickListener(v -> {
       richTextEditor.alignRight();
-      highlightSelectedItem(alignRight);
+      highlightSelectedToolbarItem(alignRight);
       deselectOtherAlignment(alignCenter);
     });
 
@@ -321,7 +336,7 @@ public class TextNoteEditorFragment extends Fragment {
 
     alignCenter.setOnClickListener(v -> {
       richTextEditor.alignCenter();
-      highlightSelectedItem(alignCenter);
+      highlightSelectedToolbarItem(alignCenter);
       deselectOtherAlignment(alignRight);
     });
 
@@ -333,7 +348,7 @@ public class TextNoteEditorFragment extends Fragment {
 
   private void deselectOtherAlignment(ImageButton align) {
     if (align.isSelected()) {
-      highlightSelectedItem(align);
+      highlightSelectedToolbarItem(align);
     }
   }
 

@@ -19,8 +19,7 @@ public class LibraryKeys {
 
   public static final String AUTHOR_ID = "author_id";
 
-  public static final String DIALOG_FRAGMENT_ADD_NAME = "dialog_add_shelf";
-  public static final String DIALOG_FRAGMENT_RENAME_SHELF = "dialog_rename_shelf";
+  public static final String FRAGMENT_LIBRARY_FORM = "fragment_library_form";
   public static final String FRAGMENT_LIBRARY = "fragment_library";
   public static final String FRAGMENT_BOOK = "fragment_book";
   public static final String FRAGMENT_BARCODE_SCANNER = "fragment_barcode_scanner";
