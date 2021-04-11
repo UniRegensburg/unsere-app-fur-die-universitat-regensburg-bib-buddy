@@ -64,10 +64,8 @@
     <string name="deleted_shelves">Ok, wir haben die Regale gelöscht.</string>
 
     <!-- Library | Help -->
-    <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>. Danach
-        geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern und zu
-        diesen Notizen schreiben. Für weitere Informationen öffnen Sie das Menü rechts oben und
-        klicken Sie auf <b>Hilfe</b>. </string>
+    <string name="library_help">Mit dem <b>+-Button</b> kannst du ein neues Regal anlegen, in dem du
+        Bücher und Notizen speichern kannst! Mehr Infos gibt's rechts oben unter "Hilfe".</string>
 
 
     <!-- Book -->
@@ -96,12 +94,8 @@
     <string name="delete_book_notes">mit folgenden Notizen </string>
 
     <!-- Book | Help -->
-    <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
-        öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
-            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch
-        erfolgreich angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem
-        Buch erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie
-        auf <b>Hilfe</b>.</string>
+    <string name="book_help">Mit dem <b>+-Button</b> können wir per ISBN ein Buch für dich finden -
+        oder du gibst die Daten selbst ein! Mehr Infos gibt's rechts oben unter "Hilfe".</string>
 
 
     <!-- Book Form -->
@@ -138,11 +132,8 @@
     <string name="delete_authors_message">Willst du die Autoren </string>
 
     <!-- Book Form | Help -->
-    <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
-        Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
-        eingeben können. Wurde der Autor erfolgreich angelegt, wird er in der Liste angezeigt.
-        Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
+    <string name="author_help">Mit dem <b>+-Button</b> kannst du einen neuen Autor hinzufügen! Mehr
+        Infos gibt's rechts oben unter "Hilfe".</string>
     <string name="author_help_text">
         <![CDATA[
         <h1><u>Hilfe zu den Autoren</u></h1>
@@ -196,13 +187,8 @@
     <string name="delete_notes_message">Willst du die Notizen </string>
 
     <!-- Note | Help -->
-    <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den <b>+-Button</b>
-        und wähle Sie dann die Notizart (Text, Audio oder Bild) aus. Daraufhin öffnet sich ein
-        Texteditor, in welchen Sie Ihre Notiz eintippen können. Die erste Zeile der Notiz wird als
-        Notizname gesetzt, darunter folgt der Text. Bei Klicken auf den internen Zurück-Button wird
-        die Notiz gespeichert. Sie ist dann unter dem jeweiligen Buch und in der gesamten Notizliste
-        zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
+    <string name="note_list_help">Mit dem <b>+-Button</b> kannst du eine Text- oder Audionotiz
+        anlegen, die dann hier erscheinen! Mehr Infos gibt's rechts oben unter "Hilfe".</string>
 
     <!-- Note Editor Text -->
     <!-- Note Editor Text | Items -->
@@ -537,6 +523,6 @@
     <string name="record_permission_alert_msg">
         Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="voice_note_saved">Die Sprachnotiz wurde gespeichert.</string>
+    <string name="voice_note_saved">Ok, wir haben die Sprachnotiz gespeichert.</string>
 
 </resources>
