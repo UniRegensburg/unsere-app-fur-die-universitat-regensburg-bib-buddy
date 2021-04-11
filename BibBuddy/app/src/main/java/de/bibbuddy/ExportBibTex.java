@@ -244,9 +244,9 @@ public class ExportBibTex {
   /**
    * Writes a temporary BibTex file.
    *
-   * @param context        the context of the used fragment
-   * @param content        the content of temporary BibTeX file
-   * @return               the temporary file as URI
+   * @param context the context of the used fragment
+   * @param content the content of temporary BibTeX file
+   * @return the temporary file as URI
    */
   public Uri writeTemporaryBibFile(Context context, String content) {
 

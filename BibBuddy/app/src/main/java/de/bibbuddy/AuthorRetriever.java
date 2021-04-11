@@ -48,7 +48,7 @@ public class AuthorRetriever {
         xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
         xmlMetadata.getElementsByTagName("dcterms:creator"), // "creator"
         xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
-        };
+    };
 
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {
@@ -63,7 +63,7 @@ public class AuthorRetriever {
   private List<Author> makeAuthorList(NodeList authors) {
     String url;
     Element autEl;
-    List<Author> authorArray = new ArrayList<Author>();
+    List<Author> authorArray = new ArrayList<>();
 
     Thread thread;
     ApiReader apiReader;
