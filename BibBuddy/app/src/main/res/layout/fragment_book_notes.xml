@@ -72,11 +72,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/view_book"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
+        android:layout_marginHorizontal="40dp"
         android:text="@string/book_help"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
         android:visibility="gone"
         />
 
@@ -84,18 +82,14 @@
         android:id="@+id/book_notes_coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view_book"
-        android:layout_marginHorizontal="20dp"
-        >
+        android:layout_below="@+id/view_book">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/book_notes_nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:paddingStart="35dp"
-            android:paddingEnd="35dp"
-            >
+            android:paddingHorizontal="20dp">
 
             <com.tsuryo.swipeablerv.SwipeableRecyclerView
                 android:id="@+id/book_notes_recycler_view"
