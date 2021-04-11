@@ -105,7 +105,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
        * Receives a barcode ISBN, hands the ISBN over to the API.
        */
       @Override
-      public void receiveDetections(Detector.Detections<Barcode> detections) {
+      public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
         final SparseArray<Barcode> barcodes = detections.getDetectedItems();
         if (barcodes.size() != 0) {
           barcodeDetector.release();
@@ -136,21 +136,15 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       if (book != null) {
         handleAddBook(book, authors);
       } else {
-        requireActivity().runOnUiThread(new Runnable() {
-          public void run() {
-            Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-                Toast.LENGTH_SHORT).show();
-          }
-        });
+        requireActivity().runOnUiThread(
+            () -> Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+                                 Toast.LENGTH_SHORT).show());
       }
     } else {
 
-      requireActivity().runOnUiThread(new Runnable() {
-        public void run() {
-          Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-              Toast.LENGTH_SHORT).show();
-        }
-      });
+      requireActivity()
+          .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
+                                              Toast.LENGTH_SHORT).show());
     }
   }
 
@@ -161,15 +155,12 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
   @Override
   public void onBookAdded(Book book, List<Author> authorList) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity().runOnUiThread(new Runnable() {
-      public void run() {
-        Toast.makeText(requireActivity(), getString(R.string.added_book),
-            Toast.LENGTH_SHORT).show();
-      }
-    });
+    requireActivity()
+        .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
+                                            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }

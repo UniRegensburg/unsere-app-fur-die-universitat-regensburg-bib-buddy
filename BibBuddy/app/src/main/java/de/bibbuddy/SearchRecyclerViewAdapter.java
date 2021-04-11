@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
-import org.jsoup.Jsoup;
 
 /**
  * The SearchRecyclerViewAdapter provides a binding from the libraryList to the view
@@ -38,10 +37,6 @@ public class SearchRecyclerViewAdapter
   @Override
   public SearchRecyclerViewAdapter.SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                        int viewType) {
-    // RecyclerView calls this method whenever it needs to create a new ViewHolder.
-    // The method creates and initializes the ViewHolder and its associated View,
-    // but does not fill in the view's contents—the ViewHolder
-    // has not yet been bound to specific data.
 
     return new SearchViewHolder(LayoutInflater.from(parent.getContext())
                                     .inflate(R.layout.list_view_item_search, parent, false));
@@ -49,26 +44,13 @@ public class SearchRecyclerViewAdapter
 
   @Override
   public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view
-    // with that element
     SearchItem searchItem = searchResultList.get(position);
 
-    String name = Jsoup.parse(searchItem.getName()).text();
-    if (name.length() > 40) {
-      name = name.substring(0, 35) + " ...";
-    }
-
-    holder.getTextView().setText(name);
+    holder.getTextView().setText(searchItem.getDisplayName());
     holder.getImageView().setImageResource(searchItem.getImage());
     holder.getModDateView().setText(searchItem.getModDateStr());
 
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        listener.onItemClicked(position);
-      }
-    });
-
+    holder.itemView.setOnClickListener(v -> listener.onItemClicked(position));
   }
 
   @Override
@@ -113,10 +95,6 @@ public class SearchRecyclerViewAdapter
 
     public TextView getModDateView() {
       return modDateView;
-    }
-
-    public void setImageView(int image) {
-      this.imageView.setImageResource(image);
     }
 
   }

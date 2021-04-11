@@ -12,9 +12,11 @@ import java.util.List;
 
 public class AuthorRecyclerViewAdapter
     extends RecyclerView.Adapter<AuthorRecyclerViewAdapter.AuthorViewHolder> {
+
   private final AuthorRecyclerViewAdapter.AuthorListener listener;
   private final AuthorAdapterDataObserver dataObserver = new AuthorAdapterDataObserver();
   private final List<Author> authorList;
+
   private List<AuthorItem> authorItemList;
   private ViewGroup parent;
 
@@ -28,6 +30,7 @@ public class AuthorRecyclerViewAdapter
                                    List<Author> authorList) {
     this.listener = listener;
     this.authorList = authorList;
+
     updateAuthorItemList();
   }
 
@@ -74,27 +77,21 @@ public class AuthorRecyclerViewAdapter
     holder.getImageAuthorView().setImageResource(authorItem.getImage());
     holder.getTextTitleView().setText(authorItem.getTitle());
 
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (getSelectedAuthorItems().size() > 0) {
-          listener.onAuthorLongClicked(position, authorItem, v);
-        } else {
-          listener.onAuthorClicked(position);
-        }
+    holder.itemView.setOnClickListener(v -> {
+      if (getSelectedAuthorItems().size() > 0) {
+        listener.onAuthorLongClicked(position, authorItem, v);
+      } else {
+        listener.onAuthorClicked(position);
       }
     });
 
-    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        if (position == RecyclerView.NO_POSITION) {
-          return false;
-        }
-
-        listener.onAuthorLongClicked(position, authorItem, v);
-        return true;
+    holder.itemView.setOnLongClickListener(v -> {
+      if (position == RecyclerView.NO_POSITION) {
+        return false;
       }
+
+      listener.onAuthorLongClicked(position, authorItem, v);
+      return true;
     });
   }
 
@@ -110,16 +107,14 @@ public class AuthorRecyclerViewAdapter
   /**
    * This method fetches the number of items selected in the recyclerView.
    *
-   * @return returns the selected recyclerView items.
+   * @return the selected recyclerView items
    */
   public List<AuthorItem> getSelectedAuthorItems() {
     List<AuthorItem> selectedItems = new ArrayList<>();
 
-    if (parent != null) {
-      for (int i = 0; i < parent.getChildCount(); i++) {
-        if (parent.getChildAt(i).isSelected()) {
-          selectedItems.add(authorItemList.get(i));
-        }
+    for (int i = 0; i < parent.getChildCount(); i++) {
+      if (parent.getChildAt(i).isSelected()) {
+        selectedItems.add(authorItemList.get(i));
       }
     }
 

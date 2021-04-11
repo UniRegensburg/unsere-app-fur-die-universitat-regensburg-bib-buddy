@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 /**
  * The BookItem is responsible for holding the information of the book view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of the LibraryItem.
  *
  * @author Claudia Schönherr
  */
@@ -27,7 +27,7 @@ public class BookItem extends LibraryItem {
     this.authors = authors;
     this.noteCount = noteCount;
   }
-  
+
   public int getYear() {
     return year;
   }
