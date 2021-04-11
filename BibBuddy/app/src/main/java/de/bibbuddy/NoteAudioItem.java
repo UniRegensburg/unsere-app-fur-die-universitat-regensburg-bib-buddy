@@ -9,7 +9,7 @@ package de.bibbuddy;
 public class NoteAudioItem extends NoteItem {
 
   public NoteAudioItem(Note note, Long bookId) {
-    super(note, R.drawable.microphone, bookId);
+    super(note, R.drawable.audionote, bookId);
   }
 
   @Override
