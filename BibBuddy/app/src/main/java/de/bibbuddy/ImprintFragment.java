@@ -20,26 +20,18 @@ import androidx.fragment.app.FragmentManager;
  */
 public class ImprintFragment extends Fragment {
 
-  private View view;
-
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
+    View view = inflater.inflate(R.layout.fragment_imprint, container, false);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
+    MainActivity mainActivity = (MainActivity) getActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
-    view = inflater.inflate(R.layout.fragment_imprint, container, false);
-
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.header_imprint));
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    mainActivity.updateHeaderFragment(getString(R.string.header_imprint));
+    mainActivity.setVisibilitySortButton(false);
 
     // style text
     Spanned styledText =
@@ -50,18 +42,6 @@ public class ImprintFragment extends Fragment {
     imprintView.setText(styledText);
 
     return view;
-  }
-
-  /**
-   * Closes the HelpFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
 }

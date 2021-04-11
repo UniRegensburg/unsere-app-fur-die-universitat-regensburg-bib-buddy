@@ -7,15 +7,15 @@ package de.bibbuddy;
  */
 public class Book {
 
-  private Long id = Long.valueOf(0);
-  private String isbn = new String();
-  private String title = new String();
-  private String subtitle = new String();
+  private Long id = 0L;
+  private String isbn = "";
+  private String title = "";
+  private String subtitle = "";
   private Integer pubYear;
-  private String publisher = new String();
-  private String volume = new String();
-  private String edition = new String();
-  private String addInfo = new String();
+  private String publisher = "";
+  private String volume = "";
+  private String edition = "";
+  private String addInfo = "";
   private Long createDate;
   private Long modDate;
 
@@ -55,14 +55,14 @@ public class Book {
    * Constructor without the parameters id, creation_date and mod_date, because they are
    * automatically set in the database.
    *
-   * @param isbn       isbn of the book
-   * @param title      book title
-   * @param subtitle   book subtitle
-   * @param pubYear    publication year of the book
-   * @param publisher  publisher of the book
-   * @param volume     volume of the book
-   * @param edition    edition of the book
-   * @param addInfo    additional information to the book
+   * @param isbn      isbn of the book
+   * @param title     book title
+   * @param subtitle  book subtitle
+   * @param pubYear   publication year of the book
+   * @param publisher publisher of the book
+   * @param volume    volume of the book
+   * @param edition   edition of the book
+   * @param addInfo   additional information to the book
    */
   public Book(String isbn, String title, String subtitle, Integer pubYear,
               String publisher, String volume, String edition, String addInfo) {

@@ -32,14 +32,14 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
-public class LibraryFragment extends Fragment
+public class LibraryFragment extends BackStackFragment
     implements LibraryRecyclerViewAdapter.LibraryListener, SwipeLeftRightCallback.Listener {
 
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private List<ShelfItem> selectedShelfItems;
+  private List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
   private BookDao bookDao;
   private NoteDao noteDao;
@@ -47,55 +47,55 @@ public class LibraryFragment extends Fragment
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
 
+  @Override
+  protected void onBackPressed() {
+    if (selectedShelfItems.isEmpty()) {
+      closeFragment();
+    } else {
+      deselectLibraryItems();
+    }
+  }
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        if (selectedShelfItems.isEmpty()) {
-          closeFragment();
-        } else {
-          deselectLibraryItems();
-        }
-      }
-    });
+    enableBackPressedHandler();
 
     // Called to have the fragment instantiate its user interface view.
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
 
-    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    sortCriteria = mainActivity.getSortCriteria();
 
     setupRecyclerView();
     setupAddShelfBtn();
 
-    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_library));
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     setupSortBtn();
-
     setFunctionsToolbar();
-
     setHasOptionsMenu(true);
 
-    selectedShelfItems = new ArrayList<ShelfItem>();
+    selectedShelfItems.clear();
     bookDao = libraryModel.getBookDao();
     noteDao = libraryModel.getNoteDao();
+
     String fileName = "library_export_BibBuddy";
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
-
 
     return view;
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
+    mainActivity.setVisibilitySortButton(true);
 
     sortBtn.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -106,7 +106,6 @@ public class LibraryFragment extends Fragment
   }
 
   private void setFunctionsToolbar() {
-
     ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
@@ -114,18 +113,6 @@ public class LibraryFragment extends Fragment
       }
     });
 
-  }
-
-  /**
-   * Closes the LibraryFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   @Override
@@ -187,7 +174,6 @@ public class LibraryFragment extends Fragment
     String htmlAsString = getString(R.string.library_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
@@ -317,7 +303,6 @@ public class LibraryFragment extends Fragment
     bundle.putString(LibraryKeys.SHELF_NAME, selectedShelfItems.get(0).getName());
 
     Long currentShelfId = selectedShelfItems.get(0).getId();
-
     bundle.putLong(LibraryKeys.SHELF_ID, currentShelfId);
 
     return bundle;
@@ -335,11 +320,8 @@ public class LibraryFragment extends Fragment
         });
 
     libraryFormFragment.setArguments(createRenameShelfBundle());
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, libraryFormFragment,
-            LibraryKeys.FRAGMENT_LIBRARY_FORM)
-        .addToBackStack(null)
-        .commit();
+
+    showFragment(libraryFormFragment, LibraryKeys.FRAGMENT_LIBRARY_FORM);
   }
 
   private void deselectLibraryItems() {
@@ -435,11 +417,8 @@ public class LibraryFragment extends Fragment
         });
 
     libraryFormFragment.setArguments(createAddShelfBundle());
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, libraryFormFragment,
-            LibraryKeys.FRAGMENT_LIBRARY_FORM)
-        .addToBackStack(null)
-        .commit();
+
+    showFragment(libraryFormFragment, LibraryKeys.FRAGMENT_LIBRARY_FORM);
   }
 
   private void updateEmptyView(List<ShelfItem> libraryList) {
@@ -462,11 +441,7 @@ public class LibraryFragment extends Fragment
     BookFragment fragment = new BookFragment();
     fragment.setArguments(createShelfBundle(libraryItem));
 
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
+    showFragment(fragment);
   }
 
   private Bundle createShelfBundle(LibraryItem libraryItem) {

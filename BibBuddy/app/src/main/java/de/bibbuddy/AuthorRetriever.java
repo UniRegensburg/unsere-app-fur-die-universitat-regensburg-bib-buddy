@@ -48,7 +48,7 @@ public class AuthorRetriever {
         xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
         xmlMetadata.getElementsByTagName("dcterms:creator"), // "creator"
         xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
-        };
+    };
 
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {
@@ -63,7 +63,7 @@ public class AuthorRetriever {
   private List<Author> makeAuthorList(NodeList authors) {
     String url;
     Element autEl;
-    List<Author> authorArray = new ArrayList<Author>();
+    List<Author> authorArray = new ArrayList<>();
 
     Thread thread;
     ApiReader apiReader;
@@ -113,8 +113,19 @@ public class AuthorRetriever {
       Object exprResult = expr.evaluate(xmlMetadata, XPathConstants.NODESET);
       NodeList authorNameWrapper = (NodeList) exprResult;
       String authorName = authorNameWrapper.item(0).getTextContent();
-      // MARCXML datafield "100" subfield code "a" is always in this form: Lastname, First Name
-      author = new Author(authorName.split(",")[1].trim(), authorName.split(",")[0].trim());
+
+      // MARCXML datafield "100" subfield code "a" normally is in this form: Lastname, First Name
+      // In some cases, the person has a "Eigenname", like "Marc Aurel" and therefore no comma
+      // In that case, we split by the last space in the name
+      if (authorName.contains(",")) {
+        author = new Author(authorName.split(",")[1].trim(), authorName.split(",")[0].trim());
+      } else if (authorName.contains(" ")) {
+        int posOfLastSpace = authorName.lastIndexOf(" ");
+        author = new Author(authorName.substring(0, posOfLastSpace).trim(),
+            authorName.substring(posOfLastSpace).trim());
+      } else {
+        author = new Author(authorName, " ");
+      }
     } catch (Exception e) {
       System.out.println(e);
     }
