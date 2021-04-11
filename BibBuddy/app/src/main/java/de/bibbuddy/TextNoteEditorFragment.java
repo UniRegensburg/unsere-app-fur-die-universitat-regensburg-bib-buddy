@@ -126,6 +126,8 @@ public class TextNoteEditorFragment extends Fragment {
         noteModel.createNote(name, NoteTypeLut.TEXT, text, "");
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
+      Toast.makeText(requireActivity(), getString(R.string.text_note_saved), Toast.LENGTH_SHORT)
+          .show();
     }
   }
 

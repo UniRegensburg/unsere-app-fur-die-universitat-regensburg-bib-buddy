@@ -35,7 +35,7 @@
     <string name="change">Ändern</string>
     <string name="backup">Backup</string>
     <string name="confirm">Bestätigen</string>
-    <string name="error">Fehler</string>
+    <string name="error">Entschuldigung, da ist ein Fehler passiert.</string>
     <string name="delete_warning">Das können wir <b>nicht rückgängig</b> machen!</string>
     <string name="delete_question">löschen?</string>
     <string name="finally_delete">wirklich löschen?</string>
@@ -122,6 +122,7 @@
     <!-- Book Form | Change authors -->
     <string name="change_author">Autor ändern</string>
     <string name="add_author">Autor hinzufügen</string>
+    <string name="changed_author">Ok, wir haben den Autor gespeichert.</string>
 
     <!-- Book Form | Delete authors -->
     <string name="delete_author">Autor löschen</string>
@@ -181,6 +182,7 @@
     <string name="toast_alignRight">Rechtsbündig</string>
     <string name="toast_alignCenter">Zentriert</string>
     <string name="delete_notification">Ok, wir haben die Notiz gelöscht.</string>
+    <string name="text_note_saved">Ok, wir haben die Textnotiz gespeichert.</string>
 
     <!-- Note Editor Text | Content Descriptions -->
     <string name="slidebar_left">Slidebar_Left</string>
@@ -207,7 +209,7 @@
         Hey, wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
     <string name="storage_permission_denied">Zugriff verweigert :(</string>
-    <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
+    <string name="exported_file_stored_in">Ok, wir haben die Datei gespeichert unter:</string>
 
     <!-- Export | Menu -->
     <string name="export_library">Bibliothek exportieren (BibTeX)</string>
@@ -233,9 +235,7 @@
 
     <!-- Sharing -->
     <string name="share_file">BibTeX-Datei teilen:</string>
-    <string name="exception_failed_temp_file">
-        Das Schreiben der temporären Datei ist fehlgeschlagen:
-    </string>
+    <string name="exception_failed_temp_file">Sorry, wir konnten die Datei nicht speichern.</string>
 
 
     <!-- Search -->

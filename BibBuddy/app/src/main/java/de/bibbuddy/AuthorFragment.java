@@ -118,7 +118,7 @@ public class AuthorFragment extends Fragment
         break;
 
       default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -256,6 +256,8 @@ public class AuthorFragment extends Fragment
 
             authorList.add(author);
             adapter.notifyDataSetChanged();
+
+            Toast.makeText(context, getString(R.string.changed_author), Toast.LENGTH_SHORT).show();
           }
         });
 
