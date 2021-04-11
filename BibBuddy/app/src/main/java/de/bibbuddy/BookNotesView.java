@@ -381,6 +381,14 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
 
     TextView bookYear = view.findViewById(R.id.book_year);
     bookYear.setText(String.valueOf(book.getPubYear()));
+
+    if (bookAuthors.getText().equals("")) {
+      bookAuthors.setVisibility(View.GONE);
+    }
+
+    if (bookYear.getText().equals("0")) {
+      bookYear.setVisibility(View.GONE);
+    }
   }
 
   private void setupRecyclerView(Long bookId) {

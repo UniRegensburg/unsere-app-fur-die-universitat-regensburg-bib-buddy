@@ -50,7 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/book_authors"
                 android:layout_marginStart="10dp"
-                android:layout_marginBottom="5dp"
                 android:layout_toEndOf="@+id/person_icon"
                 android:textSize="14dp"
                 android:textColor="@color/black" />
@@ -63,7 +62,7 @@
             android:layout_height="20dp"
             android:layout_below="@+id/book_year"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/person_icon"
             android:contentDescription="@string/description_note"
             android:src="@drawable/pen" />
@@ -74,6 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/book_year"
             android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/image_book_note"
             android:padding="2dp"
             android:text="@string/navigation_notes"
