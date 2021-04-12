@@ -267,21 +267,6 @@ public class NoteDao implements InterfaceNoteDao {
     return noteText;
   }
 
-  /**
-   * This method gets text string of a specific note without formatting xml tags.
-   *
-   * @param id id of the note to look for
-   * @return returns the notes text value without formatting texts
-   */
-  public String findStrippedTextById(Long id) {
-    return findTextById(id).replaceAll(
-        "(<p dir=\"ltr\"( style=\"margin-top:0; margin-bottom:0;\")?>|</p>|"
-            + "<div align=\"right\"  >|<div align=\"center\"  >|</div>|"
-            + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
-            + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
-        "");
-  }
-
   private Note createNoteData(Cursor cursor) {
 
     return new Note(
@@ -364,9 +349,9 @@ public class NoteDao implements InterfaceNoteDao {
         + " n ON (n." + DatabaseHelper._ID + " = lnk." + DatabaseHelper.NOTE_ID + ")"
         + " WHERE n." + DatabaseHelper.TYPE + " = ? AND lnk." + DatabaseHelper.BOOK_ID + "= ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(NoteTypeLut.TEXT.getId()),
-        String.valueOf(bookId)
-        });
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {
+        String.valueOf(NoteTypeLut.TEXT.getId()),
+        String.valueOf(bookId) });
 
     List<Long> noteIds = new ArrayList<>();
     if (cursor.moveToFirst()) {

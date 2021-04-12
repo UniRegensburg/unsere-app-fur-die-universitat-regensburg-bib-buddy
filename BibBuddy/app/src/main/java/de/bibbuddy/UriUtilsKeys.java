@@ -1,7 +1,7 @@
 package de.bibbuddy;
 
 /**
- * Constants used in the UriUtility class.
+ * Constants used in the UriUtils class.
  *
  * @author Silvia Ivanova
  */

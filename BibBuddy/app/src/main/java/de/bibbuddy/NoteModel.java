@@ -20,6 +20,31 @@ public class NoteModel {
   }
 
   /**
+   * This method gets the Ids of all notes for a given book.
+   *
+   * @param id      id of a book
+   * @return        a list with the Ids of all text notes
+   */
+  public List<Long> getTextNoteIdsForBook(Long id) {
+    return noteDao.getTextNoteIdsForBook(id);
+  }
+
+  /**
+   * This method gets text string of a specific note without formatting xml tags.
+   *
+   * @param id   id of the note to look for
+   * @return     returns the notes text value without formatting texts
+   */
+  public String findStrippedTextById(Long id) {
+    return noteDao.findTextById(id).replaceAll(
+        "(<p dir=\"ltr\"( style=\"margin-top:0; margin-bottom:0;\")?>|</p>|"
+            + "<div align=\"right\"  >|<div align=\"center\"  >|</div>|"
+            + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
+            + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
+        "");
+  }
+
+  /**
    * Creates a note object and pass it to the noteDao to add it to the database as well.
    *
    * @param name         of the note object.
