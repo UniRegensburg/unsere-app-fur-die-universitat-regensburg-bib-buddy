@@ -1,7 +1,7 @@
 package de.bibbuddy;
 
 /**
- * SearchSortCriteria enum for the sorting criteria for the search.
+ * SortCriteria enum for sorting lists.
  *
  * @author Claudia Schönherr
  */

@@ -70,10 +70,6 @@ public class LibraryItem implements SortableItem {
     return id;
   }
 
-  public Long getParentId() {
-    return parentId;
-  }
-
   @Override
   public Long getModDate() {
     return modDate;

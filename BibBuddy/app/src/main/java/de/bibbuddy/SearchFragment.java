@@ -1,9 +1,7 @@
 package de.bibbuddy;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +27,8 @@ import java.util.List;
  *
  * @author Claudia Schönherr
  */
-public class SearchFragment extends Fragment implements SearchRecyclerViewAdapter.SearchListener {
+public class SearchFragment extends BackStackFragment
+        implements SearchRecyclerViewAdapter.SearchListener {
 
   private View view;
   private Context context;
@@ -47,63 +45,34 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
 
     view = inflater.inflate(R.layout.fragment_search, container, false);
     context = view.getContext();
 
-    ((MainActivity) requireActivity()).updateHeaderFragment(getString(R.string.navigation_search));
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_search);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_search));
+    mainActivity.updateNavigationFragment(R.id.navigation_search);
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
+    sortCriteria = mainActivity.getSortCriteria();
+    filterCriteria = mainActivity.getFilterCriteria();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
     setupSearchInput();
     setupRecyclerView();
     setupFilterButton();
-
     setHasOptionsMenu(true);
 
-    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
-    filterCriteria = ((MainActivity) requireActivity()).getFilterCriteria();
-
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
     setupSortBtn();
 
     return view;
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = getActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) getActivity()).setVisibilitySortButton(true);
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
+    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
 
-    sortBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSortSearch();
-      }
-    });
-  }
-
-  /**
-   * Closes the SearchFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
+    sortBtn.setOnClickListener(v -> handleSortSearch());
   }
 
   @Override
@@ -121,7 +90,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
         break;
 
       case R.id.menu_imprint:
-        ((MainActivity) getActivity()).openImprint();
+        ((MainActivity) requireActivity()).openImprint();
         break;
 
       default:
@@ -166,27 +135,19 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   private void setupFilterButton() {
     ImageButton filterBtn = view.findViewById(R.id.filter_btn);
 
-    filterBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSearchFilter();
-      }
-    });
+    filterBtn.setOnClickListener(v -> handleSearchFilter());
 
   }
 
   private void setupSearchInput() {
     searchInput = view.findViewById(R.id.search_input);
 
-    searchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-      @Override
-      public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        String searchText = searchInput.getText().toString();
-        ((MainActivity) requireActivity()).setSearchText(searchText);
-        searchItems(searchText);
+    searchInput.setOnEditorActionListener((v, actionId, event) -> {
+      String searchText = searchInput.getText().toString();
+      ((MainActivity) requireActivity()).setSearchText(searchText);
+      searchItems(searchText);
 
-        return false;
-      }
+      return false;
     });
   }
 
@@ -212,13 +173,10 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
   private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            ((MainActivity) getActivity()).setSortCriteria(newSortCriteria);
-            sortResultList();
-          }
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortResultList();
         });
 
     sortDialog.show();
@@ -237,23 +195,17 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     String[] filterChoices = {
         getString(R.string.filter_shelf),
         getString(R.string.filter_book),
-        getString(R.string.filter_note) };
+        getString(R.string.filter_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-        new DialogInterface.OnMultiChoiceClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int choice, boolean isChecked) {
-            filterCriteria[choice] = isChecked;
-            ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
-          }
+        (dialog, choice, isChecked) -> {
+          filterCriteria[choice] = isChecked;
+          ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
         });
 
-    selectFilterCriteria.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int choice) {
-        if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
-          filterItems();
-        }
+    selectFilterCriteria.setNegativeButton(R.string.ok, (dialog, choice) -> {
+      if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
+        filterItems();
       }
     });
 
@@ -280,11 +232,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
 
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-                 LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
 
@@ -292,7 +240,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
   public void onItemClicked(int position) {
     SearchItem searchItem = searchModel.getSelectedSearchItem(position);
 
-    ((MainActivity) getActivity()).updateHeaderFragment(searchItem.getName());
+    ((MainActivity) requireActivity()).updateHeaderFragment(searchItem.getName());
 
     SearchItemType searchItemType = searchItem.getItemType();
 
@@ -300,7 +248,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
       openShelf(searchItem);
     } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
       openBook(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
+    } else if (searchItemType == SearchItemType.SEARCH_NOTE) {
       openTextNote(searchItem);
     }
 
@@ -319,11 +267,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     BookFragment fragment = new BookFragment();
     fragment.setArguments(createShelfBundle(searchItem));
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
+    showFragment(fragment);
   }
 
   private Bundle createBookBundle(SearchItem searchItem) {
@@ -341,11 +285,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     BookNotesView fragment = new BookNotesView();
     fragment.setArguments(createBookBundle(searchItem));
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
+    showFragment(fragment);
   }
 
   private Bundle createNoteBundle(SearchItem searchItem) {
@@ -362,10 +302,7 @@ public class SearchFragment extends Fragment implements SearchRecyclerViewAdapte
     TextNoteEditorFragment fragment = new TextNoteEditorFragment();
     fragment.setArguments(createNoteBundle(searchItem));
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .addToBackStack(null)
-        .commit();
+    showFragment(fragment);
   }
 
 }
