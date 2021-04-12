@@ -132,8 +132,8 @@ public class ImportBibTex {
   private void removeEqualSignFromBibTag(String line) {
     for (String bibTag : bibTags) {
 
-      if (line.contains("=") && line.contains(bibTag)) {
-        line = line.replaceFirst("\\s*=\\s*", "=");
+      if (line.contains(BibTexKeys.EQUAL_SIGN) && line.contains(bibTag)) {
+        line = line.replaceFirst("\\s*=\\s*", BibTexKeys.EQUAL_SIGN);
       }
 
     }
@@ -243,15 +243,19 @@ public class ImportBibTex {
   private void getAuthorNames(String authorNames, List<Author> authors) {
 
     // if the names are comma separated
-    if (authorNames.contains(", ")) {
-      String[] authorName = authorNames.split(", ");
+    if (authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
+      String[] authorName =
+          authorNames.split(BibTexKeys.COMMA_SEPARATOR + " ");
       authors.add(new Author(authorName[1], authorName[0], ""));
     }
 
     // if the names are whitespace separated
-    if (authorNames.contains(" ") && !authorNames.contains(", ")) {
+    if (authorNames.contains(" ")
+        && !authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
+
       String[] currentAuthorsNames = authorNames.split(" ", 2);
       authors.add(new Author(currentAuthorsNames[1], currentAuthorsNames[0], ""));
+
     }
 
   }

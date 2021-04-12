@@ -32,14 +32,6 @@ public class LibraryModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
-  public BookDao getBookDao() {
-    return bookDao;
-  }
-
-  public NoteDao getNoteDao() {
-    return noteDao;
-  }
-
   /**
    * Adds a new book to the bookList and database.
    *

@@ -34,12 +34,34 @@ public class BookModel {
     this.noteDao = new NoteDao(databaseHelper);
   }
 
-  public BookDao getBookDao() {
-    return bookDao;
+  /**
+   * Gets all books from the databse.
+   *
+   * @return a list with objects of the class Book
+   */
+  public List<Book> getAllBooks() {
+    return bookDao.findAllBooks();
   }
 
-  public NoteDao getNoteDao() {
-    return noteDao;
+  /**
+   * Gets all books for a shelf with given id.
+   *
+   * @param id       id of a shelf
+   * @return         a list from type Book
+   *                 with all books from a given shelf
+   */
+  public List<Book> getAllBooksForShelf(Long id) {
+    return bookDao.getAllBooksForShelf(id);
+  }
+
+  /**
+   * Gets all book Ids from a shelf with given ID.
+   *
+   * @param id    id of a shelf
+   * @return      a list with all book ids from a given shelf
+   */
+  public List<Long> getAllBookIdsForShelf(Long id) {
+    return bookDao.getAllBookIdsForShelf(id);
   }
 
   private String convertAuthorListToString(List<Author> authorList) {
