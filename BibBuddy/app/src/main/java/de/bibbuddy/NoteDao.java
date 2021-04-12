@@ -250,12 +250,12 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-                                 DatabaseHelper.NOTE_FILE_ID},
-                             DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
-                             null, null, null, String.valueOf(1));
+        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+            DatabaseHelper.NOTE_FILE_ID},
+        DatabaseHelper._ID + "=?", new String[] {String.valueOf(id)},
+        null, null, null, String.valueOf(1));
 
     String noteText = null;
     if (cursor.moveToFirst()) {
@@ -274,7 +274,12 @@ public class NoteDao implements InterfaceNoteDao {
    * @return returns the notes text value without formatting texts
    */
   public String findStrippedTextById(Long id) {
-    return findTextById(id).replaceAll("<.*?>", "");
+    return findTextById(id).replaceAll(
+        "(<p dir=\"ltr\"( style=\"margin-top:0; margin-bottom:0;\")?>|</p>|"
+            + "<div align=\"right\"  >|<div align=\"center\"  >|</div>|"
+            + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
+            + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
+        "");
   }
 
   private Note createNoteData(Cursor cursor) {

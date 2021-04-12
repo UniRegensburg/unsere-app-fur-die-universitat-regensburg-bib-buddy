@@ -12,11 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
@@ -29,7 +26,7 @@ import java.util.List;
  *
  * @author Sarah Kurek, Luis Moßburger
  */
-public class AuthorFragment extends Fragment
+public class AuthorFragment extends BackStackFragment
     implements AuthorRecyclerViewAdapter.AuthorListener, SwipeLeftRightCallback.Listener {
 
   private final ChangeAuthorListListener listener;
@@ -37,11 +34,20 @@ public class AuthorFragment extends Fragment
   private View view;
   private Context context;
   private AuthorRecyclerViewAdapter adapter;
-  private List<AuthorItem> selectedAuthorItems;
+  private final List<AuthorItem> selectedAuthorItems = new ArrayList<>();
 
   public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
     this.authorList = new ArrayList<>(authorList);
     this.listener = listener;
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (selectedAuthorItems.isEmpty()) {
+      closeFragment();
+    } else {
+      deselectAuthorItems();
+    }
   }
 
   @Nullable
@@ -49,16 +55,7 @@ public class AuthorFragment extends Fragment
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        if (selectedAuthorItems.isEmpty()) {
-          closeFragment();
-        } else {
-          deselectAuthorItems();
-        }
-      }
-    });
+    enableBackPressedHandler();
 
     view = inflater.inflate(R.layout.fragment_author, container, false);
     context = view.getContext();
@@ -68,15 +65,15 @@ public class AuthorFragment extends Fragment
     recyclerView.setAdapter(adapter);
     recyclerView.setListener(this);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_author_btn));
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.updateHeaderFragment(getString(R.string.add_author_btn));
+    mainActivity.setVisibilitySortButton(false);
 
-    BottomNavigationView bottomNavigationView =
-        requireActivity().findViewById(R.id.bottom_navigation);
+    BottomNavigationView bottomNavigationView = mainActivity.findViewById(R.id.bottom_navigation);
     bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
-    selectedAuthorItems = new ArrayList<>();
+    selectedAuthorItems.clear();
     updateEmptyView();
 
     setHasOptionsMenu(true);
@@ -114,7 +111,7 @@ public class AuthorFragment extends Fragment
         break;
 
       case R.id.menu_imprint:
-        ((MainActivity) getActivity()).openImprint();
+        ((MainActivity) requireActivity()).openImprint();
         break;
 
       default:
@@ -163,7 +160,6 @@ public class AuthorFragment extends Fragment
 
   private String convertAuthorListToString(List<AuthorItem> authorList) {
     StringBuilder authors = new StringBuilder();
-    authorList.size();
 
     int counter = 1;
     for (AuthorItem author : authorList) {
@@ -213,15 +209,11 @@ public class AuthorFragment extends Fragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void deselectAuthorItems() {
-    SwipeableRecyclerView authorListView = getView().findViewById(R.id.author_recycler_view);
+    SwipeableRecyclerView authorListView = requireView().findViewById(R.id.author_recycler_view);
     for (int i = 0; i < authorListView.getChildCount(); i++) {
       authorListView.getChildAt(i).setSelected(false);
     }
@@ -262,20 +254,7 @@ public class AuthorFragment extends Fragment
           }
         });
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, authorFormFragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
-  }
-
-  private void closeFragment() {
-    FragmentManager manager = getParentFragmentManager();
-    if (manager.getBackStackEntryCount() > 0) {
-      manager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
+    showFragment(authorFormFragment);
   }
 
   private void confirmAuthorsBtnListener(View view) {

@@ -1,14 +1,17 @@
 package de.bibbuddy;
 
+import org.jsoup.Jsoup;
+
 /**
  * The SearchItem is responsible for holding the information of the search view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of LibraryItem.
  *
  * @author Claudia Schönherr
  */
 public class SearchItem extends LibraryItem {
 
   private final SearchItemType itemType;
+  private final String displayName;
 
   /**
    * Constructor of a SearchItem.
@@ -23,10 +26,21 @@ public class SearchItem extends LibraryItem {
     super(name, image, id, null, modDate);
 
     this.itemType = itemType;
+
+    String itemName = Jsoup.parse(name).text();
+    if (itemName.length() > 25) {
+      itemName = itemName.substring(0, 25) + " ...";
+    }
+
+    this.displayName = itemName;
   }
 
   public SearchItemType getItemType() {
     return itemType;
+  }
+
+  public String getDisplayName() {
+    return displayName;
   }
 
 }

@@ -17,15 +17,12 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import java.util.Collections;
@@ -36,20 +33,28 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
-public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Listener {
+public class BookNotesView extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
   private View view;
   private Context context;
   private BookNotesViewModel bookNotesViewModel;
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
-  private List<NoteItem> selectedNoteItems;
   private ActivityResultLauncher<String> requestPermissionLauncher;
 
   private BookDao bookDao;
   private NoteDao noteDao;
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
+
+  @Override
+  protected void onBackPressed() {
+    if (adapter.getSelectedNoteItems().isEmpty()) {
+      closeFragment();
+    } else {
+      deselectNoteItems();
+    }
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -72,11 +77,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
             VoiceNoteEditorFragment nextFrag = new VoiceNoteEditorFragment();
             nextFrag.setArguments(bundle);
 
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, nextFrag,
-                    LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
-                .addToBackStack(null)
-                .commit();
+            showFragment(nextFrag, LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR);
           }
         });
   }
@@ -86,25 +87,16 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        if (adapter.getSelectedNoteItems().size() > 0) {
-          deselectNoteItems();
-        } else {
-          closeFragment();
-        }
-      }
-    });
+    enableBackPressedHandler();
 
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
-    sortCriteria = ((MainActivity) requireActivity()).getSortCriteria();
-
     bookNotesViewModel = new BookNotesViewModel(context);
 
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
-    ((MainActivity) requireActivity()).setVisibilityImportShareButton(View.GONE, View.VISIBLE);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    sortCriteria = mainActivity.getSortCriteria();
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
@@ -124,23 +116,11 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     setupSortBtn();
     setHasOptionsMenu(true);
     setupAddButton();
-    updateBookNoteList(selectedNoteItems);
+    updateBookNoteList(adapter.getNoteList());
     setFunctionsToolbar();
     fillBookData();
 
     return view;
-  }
-
-  /**
-   * Closes the BookNotesViewFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   private void setupSortBtn() {
@@ -292,11 +272,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
+    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void setupAddButton() {
@@ -312,12 +288,7 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
         TextNoteEditorFragment textFrag = new TextNoteEditorFragment();
         textFrag.setArguments(bundle);
 
-        requireActivity().getSupportFragmentManager().beginTransaction()
-            .replace(R.id.fragment_container_view, textFrag,
-                LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-            .addToBackStack(null)
-            .commit();
-
+        showFragment(textFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR);
       } else {
         checkRecordPermission();
       }
@@ -337,18 +308,12 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
       VoiceNoteEditorFragment voiceFrag = new VoiceNoteEditorFragment();
       voiceFrag.setArguments(bundle);
 
-      requireActivity().getSupportFragmentManager().beginTransaction()
-          .replace(R.id.fragment_container_view, voiceFrag,
-              LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR)
-          .addToBackStack(null)
-          .commit();
-
+      showFragment(voiceFrag, LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR);
     } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
       showAudioRecordRequest();
 
     } else {
-      requestPermissionLauncher.launch(
-          Manifest.permission.RECORD_AUDIO);
+      requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
     }
   }
 
@@ -388,16 +353,15 @@ public class BookNotesView extends Fragment implements SwipeLeftRightCallback.Li
   }
 
   private void setupRecyclerView(Long bookId) {
-    selectedNoteItems = bookNotesViewModel.getBookNoteList(bookId);
-
     SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
-    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(), selectedNoteItems,
+    adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(),
+        bookNotesViewModel.getBookNoteList(bookId),
         bookNotesViewModel.getNoteModel());
 
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
-    updateEmptyView(selectedNoteItems);
+    updateEmptyView(adapter.getNoteList());
   }
 
   private void updateEmptyView(List<NoteItem> noteList) {

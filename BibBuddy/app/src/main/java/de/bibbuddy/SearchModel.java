@@ -83,7 +83,7 @@ public class SearchModel {
     for (Note note : noteList) {
       searchResultList.add(
           new SearchItem(note.getName(), R.drawable.document, note.getId(), note.getModDate(),
-                         SearchItemType.SEARCH_TEXT_NOTE));
+                         SearchItemType.SEARCH_NOTE));
     }
   }
 

@@ -2,13 +2,13 @@ package de.bibbuddy;
 
 /**
  * The ShelfItem is responsible for holding the information of the shelf view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of LibraryItem.
  *
  * @author Claudia Schönherr
  */
 public class ShelfItem extends LibraryItem {
-  private int bookCount;
-  private int noteCount;
+  private final int bookCount;
+  private final int noteCount;
 
   /**
    * Constructor for a ShelfItem.
