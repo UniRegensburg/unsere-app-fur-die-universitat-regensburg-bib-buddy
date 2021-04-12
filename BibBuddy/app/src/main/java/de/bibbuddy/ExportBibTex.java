@@ -100,6 +100,7 @@ public class ExportBibTex {
     Book book = bookModel.getBookById(bookId);
 
     return BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
+        + BibTexKeys.COMMA_SEPARATOR + "\n"
 
         + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
         + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
@@ -128,7 +129,7 @@ public class ExportBibTex {
   private String getBibKey(Book book) {
     // remove whitespaces from book's title
     return book.getTitle().replaceAll("\\s+",
-        "") + "," + "\n";
+        "");
   }
 
   private String getBibNotesFromBook(Book book, NoteModel noteModel) {
@@ -152,7 +153,8 @@ public class ExportBibTex {
     StringBuilder authorNames = new StringBuilder();
 
     for (int i = 0; i < authorsList.size(); i++) {
-      authorNames.append(authorsList.get(i).getLastName()).append(", ")
+      authorNames.append(authorsList.get(i).getLastName())
+          .append(BibTexKeys.COMMA_SEPARATOR + " ")
           .append(authorsList.get(i).getFirstName());
 
       if (i < authorsList.size() - 1) {
@@ -174,7 +176,7 @@ public class ExportBibTex {
    *
    * @param context the context of the used fragment
    * @param content the content of temporary BibTeX file
-   * @return        the temporary file as URI
+   * @return the temporary file as URI
    */
   public Uri writeTemporaryBibFile(Context context, String content) {
 

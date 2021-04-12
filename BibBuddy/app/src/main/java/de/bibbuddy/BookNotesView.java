@@ -107,8 +107,9 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     bookModel = new BookModel(requireContext(), getShelfId());
     noteModel = new NoteModel(requireContext());
 
-    String fileName = (bookModel.getBookById(bookId).getTitle()
-        + bookModel.getBookById(bookId).getPubYear())
+    Book book = bookModel.getBookById(bookId);
+
+    String fileName = (book.getTitle() + book.getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(fileName);
 
@@ -125,6 +126,7 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
   private Long getShelfId() {
     Bundle bundle = this.getArguments();
+    assert bundle != null;
     return bundle.getLong(LibraryKeys.SHELF_ID);
   }
 
