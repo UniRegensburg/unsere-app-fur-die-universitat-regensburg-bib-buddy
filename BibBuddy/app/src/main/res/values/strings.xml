@@ -35,7 +35,7 @@
     <string name="change">Ändern</string>
     <string name="backup">Backup</string>
     <string name="confirm">Bestätigen</string>
-    <string name="error">Entschuldigung, da ist ein Fehler passiert.</string>
+    <string name="error">Entschuldigung, leider ist ein Fehler aufgetreten.</string>
     <string name="delete_warning">Das können wir <b>nicht rückgängig</b> machen!</string>
     <string name="delete_question">löschen?</string>
     <string name="finally_delete">wirklich löschen?</string>
@@ -164,7 +164,7 @@
 
     <!-- Note | Help -->
     <string name="note_list_help">Mit dem <b>+-Button</b> kannst du eine Text- oder Audionotiz
-        anlegen, die dann hier erscheinen! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
+        anlegen, die dann hier erscheint! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
     <!-- Note Editor Text -->
     <!-- Note Editor Text | Items -->
@@ -294,12 +294,12 @@
         <h2>Regal anlegen</h2>
         <p>Mit dem <b>+-Button</b> kannst du ein neues Regal angelegen und im Formular den Namen
         dafür angeben - wenn du doch nicht willst, einfach "Zurück" drücken.
-        Das neue Regal zeigen wir dann (wenn du gespeichert hast) in der Liste.</p>
+        Das neue Regal zeigen wir dann (wenn du es gespeichert hast) in der Liste an.</p>
 
         <h2>Regalnamen ändern</h2>
         <p>Mit einem längeren Klick auf ein Regal kannst du im Menü oben rechts "Ändern" wählen und
-        anschließend im Formular den Namen ändern. Wenn du doch nicht speichern willst, einfach
-        "Zurück" drücken. Alternativ kannst du das Regal auch nach rechts ziehen.</p>
+        anschließend im Formular den Namen ändern. Wenn du diesen doch nicht speichern willst,
+        einfach "Zurück" drücken. Alternativ kannst du das Regal auch nach rechts ziehen.</p>
 
         <h2>Regal löschen</h2>
         <p>Mit einem längeren Klick auf ein oder mehrere Regale kannst du diese auswählen und im
@@ -348,10 +348,11 @@
         kannst.</p>
 
         <h2>Buchdaten ändern</h2>
-        <p>Nachdem du ein Buch mit einem längeren Klick ausgewählt hast kannst du im oberen rechten
-        Menü "Ändern" wählen. Das Formular mit allen Buchdaten öffnet sich und du kannst Daten
-        ändern, bevor du bestätigst. Mit dem "Zurück"-Button werden die Daten nicht gespeichert.
-        Alternativ kannst du das Buch auch nach rechts ziehen, um es zu bearbeiten.</p>
+        <p>Nachdem du ein Buch mit einem längeren Klick ausgewählt hast, kannst du im oberen
+        rechten Menü "Ändern" wählen. Das Formular mit allen Buchdaten öffnet sich und du kannst
+        die Daten ändern und dann ie Änderungen bestätigen. Mit Klick auf den "Zurück"-Button
+        werden die Daten nicht gespeichert. Alternativ kannst du das Buch auch nach rechts ziehen,
+        um es zu bearbeiten.</p>
 
         <h2>Buch löschen</h2>
         <p>Nachdem du ein oder mehrere Bücher mit einem längeren Klick ausgewählt hast, kannst du
@@ -360,8 +361,8 @@
         gelöscht, also Vorsicht!</p>
 
         <h2>Daten exportieren</h2>
-        <p>Mit dem "Share"-Button oben rechts kannst du alle Daten exportieren und in WhatsApp &
-        Co. teilen. Dabei exportieren wir alle Regale bzw. Bücher und Notizen.</p>
+        <p>Mit dem "Share"-Button oben rechts kannst du alle Daten exportieren und per E-Mail,
+        WhatsApp &amp; Co. teilen. Dabei exportieren wir alle Regale bzw. Bücher und Notizen.</p>
         ]]>
     </string>
 
@@ -373,9 +374,10 @@
 
         <h2>Notiz anlegen</h2>
         <p>Mit dem <b>+-Button</b> kannst du eine Text- oder Sprachnotiz anlegen.<br><br>
-        Je nachdem öffnet sich dann der Text- oder Spracheditor - wir speichern jeweils automatisch
-        wenn du den "Zurück"-Button drückst und zeigen die Notiz dann in der Liste. Bei einer
-        Textnotiz zeigen wir die erste Zeile jeweils als "Name" der Notiz in Listen an.</p>
+        Je nachdem öffnet sich dann der Text- oder Spracheditor. Wir speichern die Daten jeweils
+        automatisch, wenn du den "Zurück"-Button drückst und zeigen die Notiz dann in der Liste.
+        Bei einer Textnotiz zeigen wir die erste Zeile jeweils als "Name" der Notiz in Listen an.
+        </p>
 
         <h2>Notiz ändern</h2>
         <p>Mit einem Klick kannst du eine gespeicherte Textnotiz nochmal im Texteditor ändern.</p>
@@ -384,7 +386,7 @@
         <p>Mit einem längeren Klick kannst du ein oder mehrere Notizen auswählen und diese im Menü
         oben rechts über "Löschen" entfernen. Alternativ kannst du die Notiz auch nach links
         ziehen. Wir fragen sicherheitshalber nochmal nach, dann sind die Notizen aber endgültig
-        gelöscht, also Vorsicht.</p>
+        gelöscht, also Vorsicht!</p>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -423,13 +425,13 @@
 
         <h2>Sprachnotiz aufnehmen</h2>
         <p>Mit einem Klick auf das <b>Mikrofon</b> starten wir die Aufnahme und du kannst loslegen.
-        Stoppen kannst du mit einem zweiten Klick auf den Button oder mit dem "Zurück"-Button. In
+        Stoppen kannst du sie mit erneutem Klick auf den Button oder mit dem "Zurück"-Button. In
         beiden Fällen speichern wir die Aufnahme sofort für dich.</p>
 
         <h2>Sprachnotiz abspielen</h2>
         <p>Alle Sprachnotizen können direkt von der Liste aus abgespielt werden. Benutz dafür die
-        "Abspielen"-, "Pausieren"- und "Stoppen"-Buttons. Mit der Leiste in der Mitte kannst du die
-        richtige Stelle direkt anspringen.</p>
+        "Abspielen"-, "Pausieren"- und "Stoppen"-Buttons. Mit der Leiste in der Mitte kannst du
+        direkt zur richtigen Stelle navigieren.</p>
         ]]>
     </string>
 
@@ -440,9 +442,9 @@
         importiert hast.</p>
 
         <h2>Notiz bearbeiten</h2>
-        <p>Eine Notiz kannst du mit einem Klick im Texteditor bearbeiten. Der Titel, der für die
-        Notiz angezeigt wird ist übrigens jeweils die erste Zeile. Mit dem "Zurück"-Button speichern
-        wir die Notiz automatisch für dich.</p>
+        <p>Eine Notiz kannst du per Klick auf diese im Texteditor bearbeiten. Der Titel, der für
+        die Notiz angezeigt wird ist jeweils die erste Zeile des Notiztextes. Mit dem "Zurück"-
+        Button speichern wir die Notiz automatisch für dich.</p>
 
         <h2>Notizen löschen</h2>
         <p>Mit einem längeren Klick kannst du eine oder mehrere Notizen auswählen und über "Löschen"
@@ -459,7 +461,7 @@
         gespeichert hast.</p>
 
         <h2>Sortieren</h2>
-        <p>Suchergebnisse kannst du nach  \"Name\" oder  \"Datum\" sortieren, natürlich
+        <p>Suchergebnisse kannst du nach  "Name" oder "Datum" sortieren, natürlich
         jeweils absteigend oder aufsteigend.</p>
 
         <h2>Filtern</h2>
