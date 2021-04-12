@@ -171,7 +171,8 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void setupRecyclerView(View view) {

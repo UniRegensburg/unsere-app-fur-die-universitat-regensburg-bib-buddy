@@ -35,7 +35,7 @@
     <string name="change">Ändern</string>
     <string name="backup">Backup</string>
     <string name="confirm">Bestätigen</string>
-    <string name="error">Fehler</string>
+    <string name="error">Entschuldigung, leider ist ein Fehler aufgetreten.</string>
     <string name="delete_warning">Das können wir <b>nicht rückgängig</b> machen!</string>
     <string name="delete_question">löschen?</string>
     <string name="finally_delete">wirklich löschen?</string>
@@ -64,10 +64,8 @@
     <string name="deleted_shelves">Ok, wir haben die Regale gelöscht.</string>
 
     <!-- Library | Help -->
-    <string name="library_help">Um ein neues Regal anzulegen, drücken Sie den <b>+-Button</b>. Danach
-        geben Sie einen Namen ein. In dem Regal können Sie anschließend Ihre Bücher speichern und zu
-        diesen Notizen schreiben. Für weitere Informationen öffnen Sie das Menü rechts oben und
-        klicken Sie auf <b>Hilfe</b>. </string>
+    <string name="library_help">Mit dem <b>+-Button</b> kannst du ein neues Regal anlegen, in dem du
+        Bücher und Notizen speichern kannst! Mehr Infos gibt\'s rechts oben unter \"Hilfe\".</string>
 
 
     <!-- Book -->
@@ -96,12 +94,8 @@
     <string name="delete_book_notes">mit folgenden Notizen </string>
 
     <!-- Book | Help -->
-    <string name="book_help">Um ein neues Buches hinzuzufügen, drücken Sie den <b>+-Button</b>. Es
-        öffnet sich ein Menü, in welchem Sie zwischen <b>Buch mittels ISBN suchen</b>, <b>arcode des
-            Buches einscannen</b> und <b>Buch manuell eingeben</b> wählen können. Wurde das Buch
-        erfolgreich angelegt, wird es mit seinen Metadaten angezeigt. Nun können Sie Notizen zu dem
-        Buch erstellen. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie
-        auf <b>Hilfe</b>.</string>
+    <string name="book_help">Mit dem <b>+-Button</b> können wir per ISBN ein Buch für dich finden -
+        oder du gibst die Daten selbst ein! Mehr Infos gibt\'s rechts oben unter \"Hilfe\".</string>
 
 
     <!-- Book Form -->
@@ -128,6 +122,7 @@
     <!-- Book Form | Change authors -->
     <string name="change_author">Autor ändern</string>
     <string name="add_author">Autor hinzufügen</string>
+    <string name="changed_author">Ok, wir haben den Autor gespeichert.</string>
 
     <!-- Book Form | Delete authors -->
     <string name="delete_author">Autor löschen</string>
@@ -138,36 +133,8 @@
     <string name="delete_authors_message">Willst du die Autoren </string>
 
     <!-- Book Form | Help -->
-    <string name="author_help">Um einen neuen Autor hinzuzufügen, drücken Sie den <b>+-Button</b>.
-        Es öffnet sich ein Eingabeform, in die sie den Titel, Vornamen und Nachnamen des Autors
-        eingeben können. Wurde der Autor erfolgreich angelegt, wird er in der Liste angezeigt.
-        Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
-    <string name="author_help_text">
-        <![CDATA[
-        <h1><u>Hilfe zu den Autoren</u></h1>
-        <p>Sie befinden sich in der Authorensansicht. Hier können Sie neue Autoren anlegen,
-        bestehende anpassen oder löschen</p>
-
-        <h2>Anlegen eines neuen Autors/h2>
-        <p>Einen neuen Autor können Sie mit Klicken auf den <b>+-Button</b> angelegen.Sie gelangen
-        dann zu einem Eingabeformular, in welchem Sie den Titel, Vor- und Nachnamen des Autors
-        einegeben können. Durch Klick auf den internen Zurück-Button wird dieser automatisch
-        gespeichert.
-
-        <h2>Autordaten ändern</h2>
-        <p>Um die Daten eines Autors zu ändern, klicken Sie diesen an und sie gelangen zum
-        Eingabeformular. Hier können Sie die Daten anpassen. Durch Klicken auf den internen
-        Zurück-Button werden die Daten automatisch gespeicheert.<br><br>
-
-        <h2>Autor(en) löschen</h2>
-        <p>Wählen Sie einen oder mehrere Autoren aus, indem Sie diese gedrückt halten. Klicken Sie
-        dann oben rechts auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass
-        Sie die ausgewählten Autoren endgültig löschen wollen.<br><br>
-        <u><b>Achtung!</b></u> Die Daten können nicht wieder hergestellt werden. <br><br>
-
-        ]]>
-    </string>
+    <string name="author_help">Mit dem <b>+-Button</b> kannst du einen neuen Autor hinzufügen! Mehr
+        Infos gibt\'s rechts oben unter \"Hilfe\".</string>
 
 
     <!-- Barcode Scanner -->
@@ -196,13 +163,8 @@
     <string name="delete_notes_message">Willst du die Notizen </string>
 
     <!-- Note | Help -->
-    <string name="note_list_help"> Um eine neue Notiz hinzuzufügen, drücke Sie den <b>+-Button</b>
-        und wähle Sie dann die Notizart (Text, Audio oder Bild) aus. Daraufhin öffnet sich ein
-        Texteditor, in welchen Sie Ihre Notiz eintippen können. Die erste Zeile der Notiz wird als
-        Notizname gesetzt, darunter folgt der Text. Bei Klicken auf den internen Zurück-Button wird
-        die Notiz gespeichert. Sie ist dann unter dem jeweiligen Buch und in der gesamten Notizliste
-        zu finden. Für weitere Informationen öffnen Sie das Menü rechts oben und klicken Sie auf
-        <b>Hilfe</b>.</string>
+    <string name="note_list_help">Mit dem <b>+-Button</b> kannst du eine Text- oder Audionotiz
+        anlegen, die dann hier erscheint! Mehr Infos gibt\'s rechts oben unter \"Hilfe\".</string>
 
     <!-- Note Editor Text -->
     <!-- Note Editor Text | Items -->
@@ -220,6 +182,7 @@
     <string name="toast_alignRight">Rechtsbündig</string>
     <string name="toast_alignCenter">Zentriert</string>
     <string name="delete_notification">Ok, wir haben die Notiz gelöscht.</string>
+    <string name="text_note_saved">Ok, wir haben die Textnotiz gespeichert.</string>
 
     <!-- Note Editor Text | Content Descriptions -->
     <string name="slidebar_left">Slidebar_Left</string>
@@ -229,6 +192,16 @@
     <string name="format_options">Format Options</string>
     <string name="format_arrow">Format Arrow</string>
 
+
+    <!-- Voice Note Editor -->
+    <string name="voice_note_name">Sprachnotiz vom </string>
+    <string name="default_played_timer">00:00</string>
+    <string name="record_permission_needed">Erlaubnis zur Aufnahme erforderlich</string>
+    <string name="record_permission_alert_msg">
+        Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
+    </string>
+    <string name="voice_note_saved">Ok, wir haben die Sprachnotiz gespeichert.</string>
+
     <!-- Export -->
     <!-- Export | Permission -->
     <string name="storage_permission_needed">Zugriff erforderlich</string>
@@ -236,7 +209,7 @@
         Hey, wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
     <string name="storage_permission_denied">Zugriff verweigert :(</string>
-    <string name="exported_file_stored_in">Exportierte Datei ist gespeichert unter:</string>
+    <string name="exported_file_stored_in">Ok, wir haben die Datei gespeichert unter:</string>
 
     <!-- Export | Menu -->
     <string name="export_library">Bibliothek exportieren (BibTeX)</string>
@@ -262,13 +235,12 @@
 
     <!-- Sharing -->
     <string name="share_file">BibTeX-Datei teilen:</string>
-    <string name="exception_failed_temp_file">
-        Das Schreiben der temporären Datei ist fehlgeschlagen:
-    </string>
+    <string name="exception_failed_temp_file">Sorry, wir konnten die Datei nicht speichern.</string>
 
 
     <!-- Search -->
-    <string name="search">Suchen...</string>
+    <string name="search">Wir suchen...</string>
+    <string name="search_done">Erledigt!</string>
     <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
     <string name="search_invalid_name">Hey, bitte gib einen Suchbegriff ein, bevor wir loslegen.</string>
     <string name="search_empty">Sorry, dazu konnten wir nichts finden.</string>
@@ -291,10 +263,10 @@
     <!-- Imprint Fragment -->
     <string name="header_imprint">Impressum</string>
     <string name="imprint"><![CDATA[
-        <h1><u>Impressum zur App "Bib Buddy"</u></h1>
-        <p>Die App "Bib Buddy" ist ein akademisches Softwareprojekt im Rahmen des Kurses "Advanced
-        Software Engineering" an der Universität Regensburg im Wintersemester 2020/2021. Geleitet
-        wird der Kurs von Alexander Bazo.</p>
+        <h1><u>Impressum zur App &quot;Bib Buddy&quot;</u></h1>
+        <p>Die App &quot;Bib Buddy&quot; ist ein akademisches Softwareprojekt im Rahmen des Kurses
+        &quot;Advanced Software Engineering&quot; an der Universität Regensburg im Wintersemester
+        2020/2021. Geleitet wurde der Kurs von Alexander Bazo.</p>
 
         <h2>Mitwirkende</h2>
         <p>An der Entwicklung der App sind Sabrina Freisleben, Silvia Ivanova, Sarah Kurek, Luis
@@ -303,7 +275,7 @@
 
         <h2>Verwendung von Icons</h2>
         <p>Für diese App werden mehrere Icon-Packs nachgenutzt, die unter der Flaticon License mit
-        Attribution frei zur Verfügung gestellt wurden.</p>
+        Attribution frei zur Verfügung gestellt wurden und teilweise leicht bearbeitet wurden.</p>
 
         <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from
         <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
@@ -316,117 +288,107 @@
 
     <string name="library_help_text">
         <![CDATA[
-        <h1><u>Hilfe zur Bibliothek</u></h1>
-        <p>Sie befinden sich in der Bibliotheksansicht. Hier werden alle Ihre angelegten Regale
-        angezeigt, in die Sie Ihre Bücher und Notizen speichern können.</p>
+        <h1>HILFE ZUR BIBLIOTHEK</h1>
+        <p>In der Bibliothek werden all deine Regale mit ihren Büchern und Notizen angezeigt.</p>
 
-        <h2>Anlegen eines neuen Regal</h2>
-        <p>Ein neues Regal können Sie mit Klicken auf den <b>+-Button</b> angelegen. Geben Sie
-        anschließend den Name für das Regal ein und bestätigen Sie diesen per Klick auf den Button
-        <b>Hinzufügen</b>. <br>
-        Danach erscheint das neu angelegte Regal in der Übersicht. Mit Klick auf <b>Zurück</b>
-        gelangen Sie zur Übersicht ohne das Regal zu speichern.</p>
+        <h2>Regal anlegen</h2>
+        <p>Mit dem <b>+-Button</b> kannst du ein neues Regal angelegen und im Formular den Namen
+        dafür angeben - wenn du doch nicht willst, einfach &quot;Zurück&quot; drücken.
+        Das neue Regal zeigen wir dann (wenn du es gespeichert hast) in der Liste an.</p>
 
         <h2>Regalnamen ändern</h2>
-        <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
-        das Menü und wählen Sie <b>Umbenennen</b> aus. Es erscheint ein Eingabefeld, in welchem Sie
-        den Namen ändern können, indem Sie die Änderung mit Klick auf den Button bestätigen.<br><br>
-        Wenn Sie auf <b>Zurück</b> gehen werden die Änderungen nicht gespeichert und Sie gelangen
-        zurück zur Übersicht. <br><br>
-
-        <b>Beachten</b> Sie, dass nur ein Regal ausgewählt sein darf, um dieses zu ändern.</p>
+        <p>Mit einem längeren Klick auf ein Regal kannst du im Menü oben rechts &quot;Ändern&quot;
+        wählen und anschließend im Formular den Namen ändern. Wenn du diesen doch nicht speichern
+        willst, einfach &quot;Zurück&quot; drücken. Alternativ kannst du das Regal auch nach rechts
+        ziehen.</p>
 
         <h2>Regal löschen</h2>
-        <p>Wählen Sie ein Regal aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
-        das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass Sie das Regal
-        endgültig löschen wollen.<br><br>
-        <u><b>Achtung!</b></u> Das Regal wird samt seinen enthaltenen Büchern und
-        Notizen gelöscht und kann nicht wieder hergestellt werden. <br><br>
-        Wenn Sie mehrere Regale gleichzeitig löschen wollen, wählen Sie mehrere Regale aus und
-        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+        <p>Mit einem längeren Klick auf ein oder mehrere Regale kannst du diese auswählen und im
+        Menü oben rechts &quot;Löschen&quot; wählen, um sie zu entfernen. Alternativ kannst du ein
+        Regal auch nach links ziehen, um es zu löschen. Wir fragen sicherheitshalber nochmal nach,
+        danach sind die Regale aber endgültig gelöscht, also Vorsichtig!</p>
+        ]]>
+    </string>
 
-        <h2>Backup von Daten</h2>
-        <p>Sie können ein Backup Ihrer Daten in Form einer Datenbankdatei ertsellen, indem Sie oben
-        rechts auf das Menü klicken und <b>Backup</b> wählen. So werden alle Ihre Daten und
-        in einer Datei (.db) exportiert.</p>
+    <string name="author_help_text">
+        <![CDATA[
+        <h1>HILFE ZU DEN AUTOREN</h1>
+        <p>Hier können neue Autoren angelegt, geändert oder gelöscht werden.</p>
+
+        <h2>Autor anlegen</h2>
+        <p>Mit dem <b>+-Button</b> kannst du einen neuen Autor anlegen. Im Formular kannst du
+        Titel, Vor- und Nachnamen des Autors eingeben und abspeichern.</p>
+
+        <h2>Autor ändern</h2>
+        <p>Mit einem Klick auf einen Autor kannst du seine Daten im Formular ändern. Mit dem
+        &quot;Zurück&quot;-Button werden die Daten automatisch abgespeichert. Alternativ kannst du
+        den Autor auch nach rechts ziehen.</p>
+
+        <h2>Autoren löschen</h2>
+        <p>Mit einem längeren Klick können ein oder mehrere Autoren ausgewählt und im Menü rechts
+        oben über &quot;Löschen&quot; entfernt werden. Alternativ kannst du den Autor auch nach
+        links ziehen. Wir fragen sicherheitshalber nochmal nach, danach sind die Autoren aber
+        endgültig gelöscht, also Vorsicht!</p>
         ]]>
     </string>
 
     <string name="book_help_text">
         <![CDATA[
-        <h1><u>Hilfe zu den Büchern</u></h1>
-        <p>Sie befinden sich in der Ansicht des ausgewählten Regals. Hier werden alle Ihre
-        angelegten Bücher dieses Regals angezeigt. Zu den Büchern können Sie Ihre Notizen anlegen.
-        </p>
+        <h1>HILFE ZU DEN BÜCHERN</h1>
+        <p>In einem Regal siehst du alle Bücher, die du dort gespeichert hast - zu diesen kannst du
+        dann Notizen anlegen.</p>
 
-        <h2>Anlegen eines neuen Buches</h2>
-        <p>Ein neues Buch kann mit Klicken auf den <b>+-Button</b> angelegt werden. Anschließend
-        erschient ein Auswahlmenü, wo Sie zwischen <b>Manuell Hinzufügen</b>, <b>Im Online-Katalog
-        suchen</b> oder <b>Barcode scannen</b> wählen können. <br><br>
+        <h2>Buch anlegen</h2>
+        <p>Mit dem <b>+-Button</b> können wir ein neues Buch für die per ISBN finden oder du gibst
+        die Daten selbst ein.<br><br>
 
-        Beim manuellen Hinzufügen erscheint ein Eingabeformular, in welchem Sie die Buchdaten
-        händisch eingeben können.<br>
-        Bei der Suche im Katalog können Sie durch Eingabe der ISBN des Buches den Katalog nach dem
-        entsprechenden Buch durchsuchen, dieses dann auswählen. Die Daten werden automatisch
-        übernommen. <br>
-        Haben Sie das Scannen des Barcodes ausgewählt, öffnet sich der Scanner. Halten Sie nun das
-        Handy über den Barcode. Die Buchdaten werden automatisch erfasst und gespeichert.<br><br>
-        Das neu anlegte Buch ist anschließend in der Übersicht unter dem entsprechenden Regal zu
-        finden.</p>
+        Beim manuellen Hinzufügen erscheint ein Eingabeformular, in dem du mehrere Felder ausfüllen
+        kannst. Per ISBN übernehmen wir die Daten automatisch aus dem Katalog der Bibliotheken aus
+        Bayern, Berlin und Brandenburg (&quot;B3Kat&quot;) - entweder, indem du die ISBN händisch
+        eingibst oder den Barcode der ISBN scannst. Die Daten zeigen wir dir nochmal, bevor du sie
+        speichern kannst.</p>
 
         <h2>Buchdaten ändern</h2>
-        <p>Wählen Sie ein Buch aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
-        das Menü und wählen Sie <b>Bearbeiten</b> aus. Es erscheint ein Formular, in welchem Sie die
-        Buchdaten manuell ändern können. Bestätigen Sie die Änderung mit Klick auf den Button. Wenn
-        Sie auf <b>Zurück</b> gehen gelangen Sie zurück zur Übersicht. Die Änderungen werden dann
-        nicht gespeichert. Beachten Sie, dass nur ein Buch ausgewählt sein darf, um dieses
-        zu ändern.</p>
+        <p>Nachdem du ein Buch mit einem längeren Klick ausgewählt hast, kannst du im oberen
+        rechten Menü &quot;Ändern&quot; wählen. Das Formular mit allen Buchdaten öffnet sich und du
+        kannst die Daten ändern und dann ie Änderungen bestätigen. Mit Klick auf den
+        &quot;Zurück&quot;-Button werden die Daten nicht gespeichert. Alternativ kannst du das Buch
+        auch nach rechts ziehen, um es zu bearbeiten.</p>
 
         <h2>Buch löschen</h2>
-        <p>Wählen Sie ein Buch aus, indem Sie es gedrückt halten. Klicken Sie dann oben rechts auf
-        das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie anschließend, dass Sie das Buch
-        endgültig löschen wollen. <br><br>
-        <u><b>Achtung!</b></u> Das Buch wird samt seinen angelegten Notizen gelöscht und kann nicht
-        wieder hergestellt werden. <br><br>
-        Wenn Sie mehrere Bücher gleichzeitig löschen wollen, wählen Sie mehrere Bücher aus und
-        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+        <p>Nachdem du ein oder mehrere Bücher mit einem längeren Klick ausgewählt hast, kannst du
+        im oberen rechten Menü &quot;Löschen&quot; auswählen. Alternativ kannst du das Buch auch
+        nach links ziehen. Wir fragen sicherheitshalber nochmal nach, aber dann sind die Bücher
+        endgültig gelöscht, also Vorsicht!</p>
 
-        <h2>Export von Daten</h2>
-        <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
-        <b>Export</b> wählen. So werden alle Ihre Bücher und Notizen inklusive der Regalstruktur
-        exportiert.</p>
+        <h2>Daten exportieren</h2>
+        <p>Mit dem &quot;Share&quot;-Button oben rechts kannst du alle Daten exportieren und per
+        E-Mail, WhatsApp &amp; Co. teilen. Dabei exportieren wir alle Regale bzw. Bücher und
+        Notizen.</p>
         ]]>
     </string>
 
     <string name="book_note_help_text">
         <![CDATA[
-        <h1><u>Hilfe zu den Notizen</u></h1>
-        <p>Sie befinden sich in der Ansicht des ausgewählten Buches. Hier werden alle Ihre
-        angelegten Notizen zu diesem Buch angezeigt.</p>
+        <h1>HILFE ZU DEN NOTIZEN</h1>
+        <p>Hier werden alle Notizen angezeigt, die du für ein Buch angelegt oder importiert hast.
+        </p>
 
-        <h2>Anlegen einer neuen Notiz</h2>
-        <p>Eine neue Notiz kann mit Klicken auf den <b>+-Button</b> angelegt werden. Anschließend
-        erschient ein Auswahlmenü, wo Sie zwischen <b>Textnotiz</b>, <b>Bild</b> oder <b>Audio</b>
-        wählen können. <br><br>
-        Wenn Sie Textnotiz auswählen, öffnet sich ein Texteditor. Hier können Sie die Notiz
-        eintippen. Beim Klicken auf den internen Zurück-Button wird die Notiz automatisch
-        gespeichert. Die erste Zeile wird dabei als Name der Notiz gesetzt. <br><br>
-        Die neu anlegte Notiz ist anschließend in der Übersicht unter dem entsprechenden Buch zu
-        finden und in der Gesamtübersicht.</p>
+        <h2>Notiz anlegen</h2>
+        <p>Mit dem <b>+-Button</b> kannst du eine Text- oder Sprachnotiz anlegen.<br><br>
+        Je nachdem öffnet sich dann der Text- oder Spracheditor. Wir speichern die Daten jeweils
+        automatisch, wenn du den &quot;Zurück&quot;-Button drückst und zeigen die Notiz dann in der
+        Liste. Bei einer Textnotiz zeigen wir die erste Zeile jeweils als &quot;Name&quot; der
+        Notiz in Listen an.</p>
 
-        <h2>Notiz bearbeiten/ändern</h2>
-        <p>Um eine bestehende Notiz zu bearbeiten klicken Sie diese an. Es öffnet sich der
-        Texteditor und Sie können den Namen der Notiz in der ersten Zeile sowie den nachfolgenden
-        Text ändern.</p>
+        <h2>Notiz ändern</h2>
+        <p>Mit einem Klick kannst du eine gespeicherte Textnotiz nochmal im Texteditor ändern.</p>
 
         <h2>Notiz löschen</h2>
-        <p>Wählen Sie ein Notiz aus, indem Sie diese gedrückt halten. Klicken Sie dann oben rechts
-        auf das Menü und wählen Sie <b>Löschen</b> aus. Bestätigen Sie dann, dass Sie das Buch
-        endgültig löschen wollen. <br><br>
-        <u><b>Achtung!</b></u> Die Notiz wird endgültig gelöscht und kann nicht wieder hergestellt
-        werden.<br><br>
-        Wenn Sie mehrere Notizen gleichzeitg löschen wollen, wählen Sie mehrere Notizen aus und
-        klicken Sie dann auf <b>Löschen</b> im Menü.</p>
+        <p>Mit einem längeren Klick kannst du ein oder mehrere Notizen auswählen und diese im Menü
+        oben rechts über &quot;Löschen&quot; entfernen. Alternativ kannst du die Notiz auch nach
+        links ziehen. Wir fragen sicherheitshalber nochmal nach, dann sind die Notizen aber
+        endgültig gelöscht, also Vorsicht!</p>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -437,106 +399,77 @@
 
     <string name="text_editor_help_text">
         <![CDATA[
-        <h1><u>Hilfe zum Texteditor</u></h1>
-        <p>Sie befinden sich im Texteditor. Hier können Sie die ausgewählte Notiz bearbeiten bzw.
-        eine neue Notiz erstellen.</p>
+        <h1>HILFE ZUM TEXTEDITOR</h1>
+        <p>Im Texteditor kannst du eine Notiz schreiben und formatieren.</p>
 
         <h2>Notiz schreiben</h2>
-        <p>In das Textfeld können Sie Ihre Notiz eintippen. Die erste Zeile wird als Name der
-        Notiz gespeichert.</p>
+        <p>Im Textfeld kannst du eingeben, was dir durch den Kopf geht - die erste Zeile zeigen wir
+        dabei als &quot;Name&quot; der Notiz in allen Listen an.</p>
 
         <h2>Text formatieren</h2>
-        <p>Sie können den Textstil ändern, indem Sie oben rechts auf den Pfeil klicken. Es öffnet
-        sich ein Auswahlleiste mit Buttons zum formatieren Ihres Textes. <br><br>
-
-        Sie können den Text fett <b>(B)</b>, kursiv <b>(I)</b>, unterstrichen <b>(U)</b> oder
-        durchgestrichen <b>(S)</b> gestalten. Wenn Sie auf den Button drücken wird der nachfolgende
-        Text entsprechend hervorgehoben. Um die Hervorhebung zu beenden, klicken Sie erneut auf den
-        entsprechenden Button. Wenn Sie mehrere Hervorhebungstile gleichzeitig benötigen, klicken
-        Sie alle entsprechenden Buttons an.<br><br>
-
-        Mit dem <b>Zurück-Pfeil</b> links in der Leiste können Sie Ihre Änderungen rückgängig machen
-        und mit dem daneben befindlichen <b>Vorwärts-Pfeil</b> diese wieder herstellen.<br><br>
-
-        Die Leiste ist scrollbar, sodass man durch Wischen oder Klicken auf die Pfeile zu weiteren
-        Items gelangt. Mit dem <b>Listen</b>-Button, kann man eine Aufzählung starten und mit den
-        Button in Form von <b>Anführungszeichen</b> ein Zitat schreiben.</p>
+        <p>Deinen Text kannst du mit dem Text-Menü rechts oben anpassen. Alle üblichen
+        Formatierungen, wie fett, kursiv, unter- und durchstreichen, Listen oder Ausrichten stehen
+        zur Verfügung - natürlich auch mehrere gleichzeitig, dafür einfach mehrere auswählen (am
+        besten mal nach links und rechts ziehen, nicht alle Möglichkeiten tauchen sofort auf!).
+        Mit den Zurück- und Vorwärts-Pfeilen im Menü kannst du Änderungen rückgängig machen oder
+        wiederherstellen.</p>
 
         <h2>Notiz speichern</h2>
-        <p>Sobald Sie auf den internen Zurück-Buttons Ihres Handys drücken, wird die Notiz
-        automatisch gespeichert. Sie befindet sich dann in der Übersicht des jeweiligen Buches oder
-        in der Gesamtübersicht der Notizen.</p>
+        <p>Mit dem &quot;Zurück&quot;-Button speichern wir die Notiz automatisch für dich und
+        zeigen sie in der jeweiligen Liste an.</p>
         ]]>
     </string>
 
     <string name="voice_editor_help_text">
         <![CDATA[
-        <h1><u>Hilfe zum Spracheditor</u></h1>
-        <br>
+        <h1>HILFE ZUM SPRACHEDITOR</h1>
+        <p>Im Spracheditor kannst du Audioaufnahmen zu einem Buch machen.</p>
+
         <h2>Sprachnotiz aufnehmen</h2>
-        <p>Sie befinden sich im Spracheditor. Hier können Sie eine neue Sprachnotiz erstellen.</p>
-        <br>
-        <p>Klicken Sie auf den <b>Aufnahme-Button</b> mit dem Mikrofon und fangen Sie an zu
-        sprechen. Sie können die Aufnahme stoppen, indem Sie den Aufnahme-Button erneut klicken oder
-        den Editor verlassen. Beim <b>Stoppen</b> der Aufnahme wird diese auch <b>gespeichert</b>.</p>
-        <br>
+        <p>Mit einem Klick auf das <b>Mikrofon</b> starten wir die Aufnahme und du kannst loslegen.
+        Stoppen kannst du sie mit erneutem Klick auf den Button oder mit dem &quot;Zurück&quot;-
+        Button. In beiden Fällen speichern wir die Aufnahme sofort für dich.</p>
+
         <h2>Sprachnotiz abspielen</h2>
-        <p>Sie können die Sprachnotiz anhören, indem Sie eine der <b>Notizlisten</b> öffnen und
-        entsprechende Buttons für das Abspielen, Pausieren und Stoppen bzw. die jeweilige
-        Suchleiste nutzen.</p>
+        <p>Alle Sprachnotizen können direkt von der Liste aus abgespielt werden. Benutz dafür die
+        &quot;Abspielen&quot;-, &quot;Pausieren&quot;- und &quot;Stoppen&quot;-Buttons. Mit der
+        Leiste in der Mitte kannst du direkt zur richtigen Stelle navigieren.</p>
         ]]>
     </string>
 
     <string name="note_list_help_text">
         <![CDATA[
-        <h1><u>Hilfe zur gesamten Notizübersicht</u></h1>
-        <p>Sie befinden sich in Notizübersicht. Hier werden alle Ihre angelegten Notizen angezeigt.
-        </p>
+        <h1>HILFE ZUR NOTIZÜBERSICHT</h1>
+        <p>In der Notizübersicht kannst du alle Notizen sehen, die du angelegt oder
+        importiert hast.</p>
 
         <h2>Notiz bearbeiten</h2>
-        <p>Um eine bestehende Notiz zu bearbeiten klicken Sie diese in der Liste an. Es öffnet sich
-        der Texteditor und Sie können den Namen der Notiz in der ersten Zeile sowie den
-        nachfolgenden Text ändern. Die Änderungen werden automatisch gespeichert, sobald Sie auf den
-        internen Zurück-Button Ihres Handys klicken.</p>
+        <p>Eine Notiz kannst du per Klick auf diese im Texteditor bearbeiten. Der Titel, der für
+        die Notiz angezeigt wird ist jeweils die erste Zeile des Notiztextes. Mit dem
+        &quot;Zurück&quot;-Button speichern wir die Notiz automatisch für dich.</p>
 
-        <h2>Notiz löschen</h2>
-        <p>Wenn Sie eine Notiz löschen wollen, halten Sie diese gedrückt und wischen Sie sie nach
-        links. Sie können das Löschen rückgängig machen, indem Sie sofort im Anschluss auf
-        <b>Rückgängig</b> klicken.<br><br>
-        <u><b>Achtung!</b></u> Sobald die Notiz endgültig gelöscht wurde, kann diese nicht wieder
-        hergestellt werden.</p>
-
-        <h2>Export von Daten</h2>
-        <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
-        <b>Export</b> wählen. So werden alle Ihre Bücher und Notizen inklusive der Regalstruktur
-        exportiert.</p>
+        <h2>Notizen löschen</h2>
+        <p>Mit einem längeren Klick kannst du eine oder mehrere Notizen auswählen und über
+        &quot;Löschen&quot; im Menü rechts oben entfernen. Alternativ kannst du die Notiz auch nach
+        links ziehen. Einmal fragen wir sicherheitshalber nach, danach sind die gewählten Notizen
+        aber wirklich weg, also Vorsicht!</p>
         ]]>
     </string>
 
     <string name="search_help_text">
         <![CDATA[
-        <h1><u>Hilfe zur Suche</u></h1>
-        <p>Sie befinden sich in der Suche. Hier können Sie nach Regalen, Büchern und Notizen suchen.
-        </p>
+        <h1>HILFE ZUR SUCHE</h1>
+        <p>In der Suche kannst du nach Regalen, Büchern und Notizen suchen, die du in unserer App
+        gespeichert hast.</p>
 
         <h2>Sortieren</h2>
-        <p>Sie können ihre Suchergebnisse nach  \"Name\" oder  \"Änderungsdatum\" sortieren.
-        Dabei können Sie die Ergebnisse absteigend oder aufsteigend anordnen lassen.</p>
+        <p>Suchergebnisse kannst du nach  &quot;Name&quot; oder &quot;Datum&quot; sortieren,
+        natürlich jeweils absteigend oder aufsteigend.</p>
 
         <h2>Filtern</h2>
-        <p>Sie können ihre Suchergebnisse nach Regalen, Büchern und Notizen filtern.
-        Klicken Sie dazu die entsprechenden Optionen im Menü an.</p>
-
+        <p>Suchergebnisse kannst du für einen besseren Überblick nach Regalen,
+        Büchern und Notizen filtern.</p>
         ]]>
     </string>
-
-    <!-- Voice Note Editor -->
-    <string name="voice_note_name">Sprachnotiz vom </string>
-    <string name="default_played_timer">00:00</string>
-    <string name="record_permission_needed">Erlaubnis zur Aufnahme erforderlich</string>
-    <string name="record_permission_alert_msg">
-        Hey, wir brauchen zuerst Zugriff auf das Mikrofon - bitte erlauben und nochmal versuchen!
-    </string>
-    <string name="voice_note_saved">Die Sprachnotiz wurde gespeichert.</string>
 
 </resources>

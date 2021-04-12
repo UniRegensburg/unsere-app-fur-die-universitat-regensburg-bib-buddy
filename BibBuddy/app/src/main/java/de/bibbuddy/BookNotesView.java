@@ -272,7 +272,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void setupAddButton() {
@@ -350,6 +351,14 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
     TextView bookYear = view.findViewById(R.id.book_year);
     bookYear.setText(String.valueOf(book.getPubYear()));
+
+    if (bookAuthors.getText().equals("")) {
+      bookAuthors.setVisibility(View.GONE);
+    }
+
+    if (bookYear.getText().equals("0")) {
+      bookYear.setVisibility(View.GONE);
+    }
   }
 
   private void setupRecyclerView(Long bookId) {

@@ -51,7 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/search_part"
             android:layout_marginTop="60dp"
+            android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="40dp"
             android:text="@string/search_empty"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="gone" />
@@ -60,7 +62,7 @@
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+            android:layout_marginTop="60dp"
             android:layout_gravity="bottom"
             android:clipToPadding="false"
             android:orientation="vertical"

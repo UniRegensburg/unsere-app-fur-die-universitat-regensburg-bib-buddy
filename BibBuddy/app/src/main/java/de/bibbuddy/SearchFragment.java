@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -143,9 +144,12 @@ public class SearchFragment extends BackStackFragment
     searchInput = view.findViewById(R.id.search_input);
 
     searchInput.setOnEditorActionListener((v, actionId, event) -> {
-      String searchText = searchInput.getText().toString();
-      ((MainActivity) requireActivity()).setSearchText(searchText);
-      searchItems(searchText);
+
+      if (!(event == null || event.getAction() != KeyEvent.ACTION_DOWN)) {
+        String searchText = searchInput.getText().toString();
+        ((MainActivity) requireActivity()).setSearchText(searchText);
+        searchItems(searchText);
+      }
 
       return false;
     });
@@ -159,6 +163,7 @@ public class SearchFragment extends BackStackFragment
 
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
     updateSearchResultList(searchText);
+    Toast.makeText(context, R.string.search_done, Toast.LENGTH_SHORT).show();
   }
 
   private void updateSearchResultList(String searchInputStr) {
@@ -232,7 +237,8 @@ public class SearchFragment extends BackStackFragment
 
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
 

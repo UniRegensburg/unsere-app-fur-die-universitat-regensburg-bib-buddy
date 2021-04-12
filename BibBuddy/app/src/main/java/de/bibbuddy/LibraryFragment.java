@@ -177,7 +177,8 @@ public class LibraryFragment extends BackStackFragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   @Override

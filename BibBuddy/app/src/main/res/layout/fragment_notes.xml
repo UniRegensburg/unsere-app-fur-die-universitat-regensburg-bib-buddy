@@ -11,7 +11,10 @@
         android:id="@+id/empty_notes_list_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="40dp"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone" />
@@ -36,7 +39,7 @@
                 android:orientation="vertical"
                 android:scrollbars="vertical"
                 app:layoutManager="LinearLayoutManager"
-                app:rightBgColor="@color/delete"
+                app:rightBgColor="@color/red"
                 app:rightImage="@drawable/ic_delete" />
 
 

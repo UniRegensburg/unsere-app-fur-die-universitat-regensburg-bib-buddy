@@ -509,7 +509,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private Bundle createBookBundle(LibraryItem item) {

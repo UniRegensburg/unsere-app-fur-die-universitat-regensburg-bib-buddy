@@ -261,8 +261,7 @@ public class ExportBibTex {
       fileWriter.close();
 
     } catch (Exception e) {
-      Toast.makeText(context,
-          context.getString(R.string.exception_failed_temp_file) + e.toString(),
+      Toast.makeText(context, context.getString(R.string.exception_failed_temp_file),
           Toast.LENGTH_LONG).show();
     }
 

@@ -17,9 +17,8 @@
     <color name="gray_dark">#737EAB</color>
 
     <!-- Attention colors -->
-    <color name="red">#A61C3C</color>
+    <color name="red">#C02146</color>
     <color name="green">#78C091</color>
-    <color name="delete">#E61919</color>
-    <color name="edit">#FFEB3B</color>
+    <color name="yellow">#FFBF46</color>
 
 </resources>
