@@ -65,7 +65,7 @@
 
     <!-- Library | Help -->
     <string name="library_help">Mit dem <b>+-Button</b> kannst du ein neues Regal anlegen, in dem du
-        Bücher und Notizen speichern kannst! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
+        Bücher und Notizen speichern kannst! Mehr Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
 
 
     <!-- Book -->
@@ -95,7 +95,7 @@
 
     <!-- Book | Help -->
     <string name="book_help">Mit dem <b>+-Button</b> können wir per ISBN ein Buch für dich finden -
-        oder du gibst die Daten selbst ein! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
+        oder du gibst die Daten selbst ein! Mehr Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
 
 
     <!-- Book Form -->
@@ -134,7 +134,7 @@
 
     <!-- Book Form | Help -->
     <string name="author_help">Mit dem <b>+-Button</b> kannst du einen neuen Autor hinzufügen! Mehr
-        Infos gibt\'s rechts oben unter "Hilfe".</string>
+        Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
 
 
     <!-- Barcode Scanner -->
@@ -164,7 +164,7 @@
 
     <!-- Note | Help -->
     <string name="note_list_help">Mit dem <b>+-Button</b> kannst du eine Text- oder Audionotiz
-        anlegen, die dann hier erscheint! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
+        anlegen, die dann hier erscheint! Mehr Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
 
     <!-- Note Editor Text -->
     <!-- Note Editor Text | Items -->
@@ -263,10 +263,10 @@
     <!-- Imprint Fragment -->
     <string name="header_imprint">Impressum</string>
     <string name="imprint"><![CDATA[
-        <h1><u>Impressum zur App "Bib Buddy"</u></h1>
-        <p>Die App "Bib Buddy" ist ein akademisches Softwareprojekt im Rahmen des Kurses "Advanced
-        Software Engineering" an der Universität Regensburg im Wintersemester 2020/2021. Geleitet
-        wird der Kurs von Alexander Bazo.</p>
+        <h1><u>Impressum zur App &quot;Bib Buddy&quot;</u></h1>
+        <p>Die App &quot;Bib Buddy&quot; ist ein akademisches Softwareprojekt im Rahmen des Kurses
+        &quot;Advanced Software Engineering&quot; an der Universität Regensburg im Wintersemester
+        2020/2021. Geleitet wurde der Kurs von Alexander Bazo.</p>
 
         <h2>Mitwirkende</h2>
         <p>An der Entwicklung der App sind Sabrina Freisleben, Silvia Ivanova, Sarah Kurek, Luis
@@ -293,19 +293,20 @@
 
         <h2>Regal anlegen</h2>
         <p>Mit dem <b>+-Button</b> kannst du ein neues Regal angelegen und im Formular den Namen
-        dafür angeben - wenn du doch nicht willst, einfach "Zurück" drücken.
+        dafür angeben - wenn du doch nicht willst, einfach &quot;Zurück&quot; drücken.
         Das neue Regal zeigen wir dann (wenn du es gespeichert hast) in der Liste an.</p>
 
         <h2>Regalnamen ändern</h2>
-        <p>Mit einem längeren Klick auf ein Regal kannst du im Menü oben rechts "Ändern" wählen und
-        anschließend im Formular den Namen ändern. Wenn du diesen doch nicht speichern willst,
-        einfach "Zurück" drücken. Alternativ kannst du das Regal auch nach rechts ziehen.</p>
+        <p>Mit einem längeren Klick auf ein Regal kannst du im Menü oben rechts &quot;Ändern&quot;
+        wählen und anschließend im Formular den Namen ändern. Wenn du diesen doch nicht speichern
+        willst, einfach &quot;Zurück&quot; drücken. Alternativ kannst du das Regal auch nach rechts
+        ziehen.</p>
 
         <h2>Regal löschen</h2>
         <p>Mit einem längeren Klick auf ein oder mehrere Regale kannst du diese auswählen und im
-        Menü oben rechts "Löschen" wählen, um sie zu entfernen. Alternativ kannst du ein Regal
-        auch nach links ziehen, um es zu löschen. Wir fragen sicherheitshalber nochmal nach, danach
-        sind die Regale aber endgültig gelöscht, also Vorsichtig!</p>
+        Menü oben rechts &quot;Löschen&quot; wählen, um sie zu entfernen. Alternativ kannst du ein
+        Regal auch nach links ziehen, um es zu löschen. Wir fragen sicherheitshalber nochmal nach,
+        danach sind die Regale aber endgültig gelöscht, also Vorsichtig!</p>
         ]]>
     </string>
 
@@ -320,14 +321,14 @@
 
         <h2>Autor ändern</h2>
         <p>Mit einem Klick auf einen Autor kannst du seine Daten im Formular ändern. Mit dem
-        "Zurück"-Button werden die Daten automatisch abgespeichert. Alternativ kannst du den Autor
-        auch nach rechts ziehen.</p>
+        &quot;Zurück&quot;-Button werden die Daten automatisch abgespeichert. Alternativ kannst du
+        den Autor auch nach rechts ziehen.</p>
 
         <h2>Autoren löschen</h2>
         <p>Mit einem längeren Klick können ein oder mehrere Autoren ausgewählt und im Menü rechts
-        oben über "Löschen" entfernt werden. Alternativ kannst du den Autor auch nach links ziehen.
-        Wir fragen sicherheitshalber nochmal nach, danach sind die Autoren aber endgültig gelöscht,
-        also Vorsicht!</p>
+        oben über &quot;Löschen&quot; entfernt werden. Alternativ kannst du den Autor auch nach
+        links ziehen. Wir fragen sicherheitshalber nochmal nach, danach sind die Autoren aber
+        endgültig gelöscht, also Vorsicht!</p>
         ]]>
     </string>
 
@@ -343,26 +344,27 @@
 
         Beim manuellen Hinzufügen erscheint ein Eingabeformular, in dem du mehrere Felder ausfüllen
         kannst. Per ISBN übernehmen wir die Daten automatisch aus dem Katalog der Bibliotheken aus
-        Bayern, Berlin und Brandenburg ("B3Kat") - entweder, indem du die ISBN händisch eingibst
-        oder den Barcode der ISBN scannst. Die Daten zeigen wir dir nochmal, bevor du sie speichern
-        kannst.</p>
+        Bayern, Berlin und Brandenburg (&quot;B3Kat&quot;) - entweder, indem du die ISBN händisch
+        eingibst oder den Barcode der ISBN scannst. Die Daten zeigen wir dir nochmal, bevor du sie
+        speichern kannst.</p>
 
         <h2>Buchdaten ändern</h2>
         <p>Nachdem du ein Buch mit einem längeren Klick ausgewählt hast, kannst du im oberen
-        rechten Menü "Ändern" wählen. Das Formular mit allen Buchdaten öffnet sich und du kannst
-        die Daten ändern und dann ie Änderungen bestätigen. Mit Klick auf den "Zurück"-Button
-        werden die Daten nicht gespeichert. Alternativ kannst du das Buch auch nach rechts ziehen,
-        um es zu bearbeiten.</p>
+        rechten Menü &quot;Ändern&quot; wählen. Das Formular mit allen Buchdaten öffnet sich und du
+        kannst die Daten ändern und dann ie Änderungen bestätigen. Mit Klick auf den
+        &quot;Zurück&quot;-Button werden die Daten nicht gespeichert. Alternativ kannst du das Buch
+        auch nach rechts ziehen, um es zu bearbeiten.</p>
 
         <h2>Buch löschen</h2>
         <p>Nachdem du ein oder mehrere Bücher mit einem längeren Klick ausgewählt hast, kannst du
-        im oberen rechten Menü "Löschen" auswählen. Alternativ kannst du das Buch auch nach links
-        ziehen. Wir fragen sicherheitshalber nochmal nach, aber dann sind die Bücher endgültig
-        gelöscht, also Vorsicht!</p>
+        im oberen rechten Menü &quot;Löschen&quot; auswählen. Alternativ kannst du das Buch auch
+        nach links ziehen. Wir fragen sicherheitshalber nochmal nach, aber dann sind die Bücher
+        endgültig gelöscht, also Vorsicht!</p>
 
         <h2>Daten exportieren</h2>
-        <p>Mit dem "Share"-Button oben rechts kannst du alle Daten exportieren und per E-Mail,
-        WhatsApp &amp; Co. teilen. Dabei exportieren wir alle Regale bzw. Bücher und Notizen.</p>
+        <p>Mit dem &quot;Share&quot;-Button oben rechts kannst du alle Daten exportieren und per
+        E-Mail, WhatsApp &amp; Co. teilen. Dabei exportieren wir alle Regale bzw. Bücher und
+        Notizen.</p>
         ]]>
     </string>
 
@@ -375,18 +377,18 @@
         <h2>Notiz anlegen</h2>
         <p>Mit dem <b>+-Button</b> kannst du eine Text- oder Sprachnotiz anlegen.<br><br>
         Je nachdem öffnet sich dann der Text- oder Spracheditor. Wir speichern die Daten jeweils
-        automatisch, wenn du den "Zurück"-Button drückst und zeigen die Notiz dann in der Liste.
-        Bei einer Textnotiz zeigen wir die erste Zeile jeweils als "Name" der Notiz in Listen an.
-        </p>
+        automatisch, wenn du den &quot;Zurück&quot;-Button drückst und zeigen die Notiz dann in der
+        Liste. Bei einer Textnotiz zeigen wir die erste Zeile jeweils als &quot;Name&quot; der
+        Notiz in Listen an.</p>
 
         <h2>Notiz ändern</h2>
         <p>Mit einem Klick kannst du eine gespeicherte Textnotiz nochmal im Texteditor ändern.</p>
 
         <h2>Notiz löschen</h2>
         <p>Mit einem längeren Klick kannst du ein oder mehrere Notizen auswählen und diese im Menü
-        oben rechts über "Löschen" entfernen. Alternativ kannst du die Notiz auch nach links
-        ziehen. Wir fragen sicherheitshalber nochmal nach, dann sind die Notizen aber endgültig
-        gelöscht, also Vorsicht!</p>
+        oben rechts über &quot;Löschen&quot; entfernen. Alternativ kannst du die Notiz auch nach
+        links ziehen. Wir fragen sicherheitshalber nochmal nach, dann sind die Notizen aber
+        endgültig gelöscht, also Vorsicht!</p>
 
         <h2>Export von Daten</h2>
         <p>Sie können alle Ihre Daten exportieren, indem Sie oben rechts auf das Menü klicken und
@@ -402,7 +404,7 @@
 
         <h2>Notiz schreiben</h2>
         <p>Im Textfeld kannst du eingeben, was dir durch den Kopf geht - die erste Zeile zeigen wir
-        dabei als "Name" der Notiz in allen Listen an.</p>
+        dabei als &quot;Name&quot; der Notiz in allen Listen an.</p>
 
         <h2>Text formatieren</h2>
         <p>Deinen Text kannst du mit dem Text-Menü rechts oben anpassen. Alle üblichen
@@ -413,8 +415,8 @@
         wiederherstellen.</p>
 
         <h2>Notiz speichern</h2>
-        <p>Mit dem "Zurück"-Button speichern wir die Notiz automatisch für dich und zeigen sie in
-        der jeweiligen Liste an.</p>
+        <p>Mit dem &quot;Zurück&quot;-Button speichern wir die Notiz automatisch für dich und
+        zeigen sie in der jeweiligen Liste an.</p>
         ]]>
     </string>
 
@@ -425,13 +427,13 @@
 
         <h2>Sprachnotiz aufnehmen</h2>
         <p>Mit einem Klick auf das <b>Mikrofon</b> starten wir die Aufnahme und du kannst loslegen.
-        Stoppen kannst du sie mit erneutem Klick auf den Button oder mit dem "Zurück"-Button. In
-        beiden Fällen speichern wir die Aufnahme sofort für dich.</p>
+        Stoppen kannst du sie mit erneutem Klick auf den Button oder mit dem &quot;Zurück&quot;-
+        Button. In beiden Fällen speichern wir die Aufnahme sofort für dich.</p>
 
         <h2>Sprachnotiz abspielen</h2>
         <p>Alle Sprachnotizen können direkt von der Liste aus abgespielt werden. Benutz dafür die
-        "Abspielen"-, "Pausieren"- und "Stoppen"-Buttons. Mit der Leiste in der Mitte kannst du
-        direkt zur richtigen Stelle navigieren.</p>
+        &quot;Abspielen&quot;-, &quot;Pausieren&quot;- und &quot;Stoppen&quot;-Buttons. Mit der
+        Leiste in der Mitte kannst du direkt zur richtigen Stelle navigieren.</p>
         ]]>
     </string>
 
@@ -443,14 +445,14 @@
 
         <h2>Notiz bearbeiten</h2>
         <p>Eine Notiz kannst du per Klick auf diese im Texteditor bearbeiten. Der Titel, der für
-        die Notiz angezeigt wird ist jeweils die erste Zeile des Notiztextes. Mit dem "Zurück"-
-        Button speichern wir die Notiz automatisch für dich.</p>
+        die Notiz angezeigt wird ist jeweils die erste Zeile des Notiztextes. Mit dem
+        &quot;Zurück&quot;-Button speichern wir die Notiz automatisch für dich.</p>
 
         <h2>Notizen löschen</h2>
-        <p>Mit einem längeren Klick kannst du eine oder mehrere Notizen auswählen und über "Löschen"
-        im Menü rechts oben entfernen. Alternativ kannst du die Notiz auch nach links ziehen.
-        Einmal fragen wir sicherheitshalber nach, danach sind die gewählten Notizen aber wirklich
-        weg, also Vorsicht!</p>
+        <p>Mit einem längeren Klick kannst du eine oder mehrere Notizen auswählen und über
+        &quot;Löschen&quot; im Menü rechts oben entfernen. Alternativ kannst du die Notiz auch nach
+        links ziehen. Einmal fragen wir sicherheitshalber nach, danach sind die gewählten Notizen
+        aber wirklich weg, also Vorsicht!</p>
         ]]>
     </string>
 
@@ -461,8 +463,8 @@
         gespeichert hast.</p>
 
         <h2>Sortieren</h2>
-        <p>Suchergebnisse kannst du nach  "Name" oder "Datum" sortieren, natürlich
-        jeweils absteigend oder aufsteigend.</p>
+        <p>Suchergebnisse kannst du nach  &quot;Name&quot; oder &quot;Datum&quot; sortieren,
+        natürlich jeweils absteigend oder aufsteigend.</p>
 
         <h2>Filtern</h2>
         <p>Suchergebnisse kannst du für einen besseren Überblick nach Regalen,
