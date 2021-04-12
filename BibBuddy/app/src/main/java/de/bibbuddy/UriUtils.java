@@ -243,7 +243,7 @@ public class UriUtils {
 
       try {
         return getDataColumn(context, ContentUris.withAppendedId(Uri.parse(contentUriPrefix),
-            Long.valueOf(id)), null, null);
+            Long.parseLong(id)), null, null);
 
       } catch (NumberFormatException e) {
         return uri.getPath().replaceFirst(UriUtilsKeys.PREFIX_DOCUMENT_RAW, "")

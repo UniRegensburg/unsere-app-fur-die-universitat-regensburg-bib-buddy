@@ -36,6 +36,7 @@ import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The BookFragment is responsible for the current books of a shelf in the library.
@@ -53,8 +54,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private NoteModel noteModel;
 
   private BookRecyclerViewAdapter adapter;
-  private BookDao bookDao;
-  private NoteDao noteDao;
+
   private SortCriteria sortCriteria;
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
@@ -70,7 +70,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
                 if (data != null) {
                   Uri uri = data.getData();
 
-                  if (importBibTex.isBibFile(UriUtils.getFullUriPath(context, uri))) {
+                  if (importBibTex.isBibFile(
+                      Objects.requireNonNull(UriUtils.getFullUriPath(context, uri)))) {
                     handleImport(uri);
                   } else {
                     showDialogNonBibFile();
@@ -125,10 +126,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     List<BookItem> bookList;
     bookList = bookModel.getBookList(shelfId);
 
-    bookDao = bookModel.getBookDao();
-    noteDao = bookModel.getNoteDao();
-
-    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
+    exportBibTex = new ExportBibTex(shelfName);
     importBibTex = new ImportBibTex(context);
 
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
@@ -364,16 +362,13 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void checkEmptyShelf() {
-    if (bookDao.getAllBooksForShelf(shelfId).isEmpty()) {
+    if (bookModel.getAllBooksForShelf(shelfId).isEmpty()) {
       AlertDialog.Builder alertDialogEmptyShelf = new AlertDialog.Builder(getContext());
       alertDialogEmptyShelf.setTitle(R.string.empty_shelf);
       alertDialogEmptyShelf.setMessage(R.string.empty_shelf_description);
 
       alertDialogEmptyShelf.setPositiveButton(R.string.ok,
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+          (dialog, which) -> {
           });
 
       alertDialogEmptyShelf.create().show();
@@ -426,13 +421,11 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private String readBibFile(Uri uri) {
+
     try {
 
-      if (importBibTex.readTextFromUri(uri) != null) {
-        return importBibTex.readTextFromUri(uri);
-      } else {
-        return null;
-      }
+      importBibTex.readTextFromUri(uri);
+      return importBibTex.readTextFromUri(uri);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -657,8 +650,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void shareShelfBibIntent() {
 
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
-        exportBibTex.getBibDataFromShelf(shelfId, bookDao, noteDao));
+    String bibContent =
+        exportBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
+
+    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, bibContent);
 
     Intent shareShelfIntent =
         ShareCompat.IntentBuilder.from(requireActivity())
