@@ -6,41 +6,33 @@ package de.bibbuddy;
  *
  * @author Sarah Kurek
  */
-public class NoteItem implements SortableItem {
+public abstract class NoteItem implements SortableItem {
 
-  private final Long modDate;
-  private final String name;
+  private final Note note;
   private final int image;
-  private final Long id;
   private final Long bookId;
-  private final String modDateStr;
 
   /**
    * Constructor to set up a NoteItem for view/UI usages.
    *
-   * @param modDate string-value of the modification date of the note
-   * @param name    name of the note
-   * @param image   id for the drawable resource of the note type icon
-   * @param id      id of the note
-   * @param bookId  id of the book that the note is connected to
+   * @param note   the note
+   * @param image  id for the drawable resource of the note type icon
+   * @param bookId id of the book that the note is connected to
    */
-  public NoteItem(Long modDate, String name, int image, Long id, Long bookId) {
-    this.modDate = modDate;
-    this.modDateStr = DateConverter.convertDateToString(modDate);
-    this.name = name;
+  public NoteItem(Note note, int image, Long bookId) {
+    this.note = note;
     this.image = image;
-    this.id = id;
     this.bookId = bookId;
   }
 
   @Override
   public Long getModDate() {
-    return modDate;
+    return note.getModDate();
   }
 
   @Override
   public String getName() {
-    return name;
+    return note.getName();
   }
 
   public int getImage() {
@@ -48,7 +40,11 @@ public class NoteItem implements SortableItem {
   }
 
   public Long getId() {
-    return id;
+    return note.getId();
+  }
+
+  public NoteTypeLut getType() {
+    return note.getType();
   }
 
   public Long getBookId() {
@@ -56,7 +52,9 @@ public class NoteItem implements SortableItem {
   }
 
   public String getModDateStr() {
-    return modDateStr;
+    return DateConverter.convertDateToString(getModDate());
   }
+
+  public abstract String getDisplayName();
 
 }

@@ -17,7 +17,6 @@ public class BookModel {
   private final Long shelfId;
 
   private List<BookItem> bookList;
-  private List<AuthorItem> authorItemList;
 
   /**
    * Constructor for a BookModel.
@@ -28,6 +27,7 @@ public class BookModel {
 
   public BookModel(Context context, Long shelfId) {
     this.shelfId = shelfId;
+
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.bookDao = new BookDao(databaseHelper);
     this.authorDao = new AuthorDao(databaseHelper);
@@ -51,12 +51,15 @@ public class BookModel {
 
     boolean savedAuthor = false;
     for (Author author : authorList) {
+
       if (savedAuthor) {
         authors.append(", ");
       }
+
       if (author.getTitle() != null) {
         authors.append(author.getTitle()).append(" ");
       }
+
       authors.append(author.getFirstName()).append(" ").append(author.getLastName());
       savedAuthor = true;
     }
@@ -101,7 +104,7 @@ public class BookModel {
    * Gets the bookList of the current shelfId.
    *
    * @param shelfId shelfId of the given shelf
-   * @return Returns the bookList of the current shelfId
+   * @return the bookList of the current shelfId
    */
   public List<BookItem> getBookList(Long shelfId) {
     bookList = new ArrayList<>();
@@ -183,16 +186,8 @@ public class BookModel {
     return bookList.get(position);
   }
 
-  public AuthorItem getSelectedAuthorItem(int position) {
-    return authorItemList.get(position);
-  }
-
   public Book getBookById(Long id) {
     return bookDao.findById(id);
-  }
-
-  public Author getAuthorById(Long id) {
-    return authorDao.findById(id);
   }
 
   private void sortBookList(SortCriteria sortCriteria) {
@@ -223,7 +218,7 @@ public class BookModel {
    * Gets the sorted bookList by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted bookList
+   * @return the sorted bookList
    */
   public List<BookItem> getSortedBookList(SortCriteria sortCriteria) {
     sortBookList(sortCriteria);
@@ -236,7 +231,7 @@ public class BookModel {
    *
    * @param sortCriteria sortCriteria of the list
    * @param bookList     bookList that should be sorted
-   * @return Returns the sorted bookList
+   * @return the sorted bookList
    */
   public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {
     this.bookList = bookList;

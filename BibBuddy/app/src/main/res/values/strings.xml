@@ -44,8 +44,8 @@
     <!-- Library -->
     <!-- Library | Add Shelf -->
     <string name="add_shelf">Hinzufügen</string>
-    <string name="add_new_shelf">Neues Regal</string>
-    <string name="input_shelf_name">Regalnamen eingeben</string>
+    <string name="add_new_shelf">Regal hinzufügen</string>
+    <string name="shelf_name">Regalname</string>
     <string name="invalid_name">Bitte gib einen Namen für das Regal an.</string>
     <string name="name_exists">Sorry, den Namen gibt\'s schon!</string>
     <string name="shelf_added">Ok, wir haben das Regal hinzugefügt.</string>

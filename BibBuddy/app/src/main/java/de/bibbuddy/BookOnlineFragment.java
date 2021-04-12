@@ -6,14 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.List;
 
 /**
@@ -21,7 +18,8 @@ import java.util.List;
  *
  * @author Claudia Schönherr, Luis Moßburger
  */
-public class BookOnlineFragment extends Fragment implements BookFormFragment.ChangeBookListener {
+public class BookOnlineFragment extends BackStackFragment
+    implements BookFormFragment.ChangeBookListener {
 
   private View view;
 
@@ -32,38 +30,19 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
     view = inflater.inflate(R.layout.fragment_book_online, container, false);
-
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-        closeFragment();
-      }
-    });
-
     setupSearchInput();
 
     Bundle bundle = this.getArguments();
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    ((MainActivity) getActivity()).setVisibilityImportShareButton(View.GONE, View.GONE);
-    ((MainActivity) getActivity()).setVisibilitySortButton(false);
-
-    ((MainActivity) requireActivity()).updateNavigationFragment(R.id.navigation_library);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
 
     return view;
-  }
-
-  /**
-   * Closes the BookOnlineFragment.
-   */
-  public void closeFragment() {
-    FragmentManager fragmentManager = getParentFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
-    } else {
-      requireActivity().onBackPressed();
-    }
   }
 
   private void handleIsbnInput() {
@@ -87,34 +66,27 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
         handleAddBook(book, authors);
       } else {
         Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-            Toast.LENGTH_LONG).show();
+                       Toast.LENGTH_LONG).show();
       }
     } else {
       Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
     }
   }
 
   private void handleAddBook(Book book, List<Author> authors) {
     BookFormFragment bookFormFragment = new BookFormFragment(this, book, authors);
-
-    requireActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, bookFormFragment, LibraryKeys.FRAGMENT_BOOK)
-        .addToBackStack(null)
-        .commit();
+    showFragment(bookFormFragment);
   }
 
   @Override
   public void onBookAdded(Book book, List<Author> authorList) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(getContext()));
+    BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity().runOnUiThread(new Runnable() {
-      public void run() {
-        Toast.makeText(requireActivity(), getString(R.string.added_book),
-            Toast.LENGTH_SHORT).show();
-      }
-    });
+    requireActivity()
+        .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
+                                            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }
@@ -125,18 +97,21 @@ public class BookOnlineFragment extends Fragment implements BookFormFragment.Cha
 
     searchFieldText.setOnKeyListener(new View.OnKeyListener() {
       public boolean onKey(View v, int keyCode, KeyEvent event) {
-        handleSearchInput(keyCode, event);
-        return true;
+        if (event.getAction() != KeyEvent.ACTION_UP) {
+          return false;
+        }
+
+        switch (keyCode) {
+          case KeyEvent.KEYCODE_NUMPAD_ENTER:
+          case KeyEvent.KEYCODE_ENTER:
+            handleIsbnInput();
+            return true;
+
+          default:
+            return false;
+        }
       }
     });
-  }
-
-  private void handleSearchInput(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_ENTER) {
-      if (event.getAction() != KeyEvent.ACTION_DOWN) {
-        handleIsbnInput();
-      }
-    }
   }
 
 }

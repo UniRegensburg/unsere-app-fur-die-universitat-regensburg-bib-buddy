@@ -278,7 +278,7 @@ public class ImportBibTex {
         && !bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
 
       Note note = new Note(bibTagValue.get(BibTexKeys.BOOK_TITLE)
-          + " " + bibTagValue.get(BibTexKeys.AUTHOR), 0,
+          + " " + bibTagValue.get(BibTexKeys.AUTHOR), NoteTypeLut.TEXT,
           bibTagValue.get(BibTexKeys.ANNOTE));
 
       noteDao.create(note);

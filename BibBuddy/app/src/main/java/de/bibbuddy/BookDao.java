@@ -34,8 +34,10 @@ public class BookDao implements InterfaceBookDao {
 
       ContentValues contentValues = createBookContentValues(book);
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
+
       long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
       book.setId(id);
+
     } catch (SQLiteException ex) {
       return false;
     } finally {
@@ -61,12 +63,12 @@ public class BookDao implements InterfaceBookDao {
     }
 
     authorDao.createOrUpdateAuthors(authorList);
-    List<Long> authorIds = authorList.stream().map(a -> a.getId()).collect(Collectors.toList());
+    List<Long> authorIds = authorList.stream().map(Author::getId).collect(Collectors.toList());
 
     linkBookWithAuthors(bookId, authorIds);
   }
 
-  // get a single book entry by id
+  // Gets a single book entry by id
   @Override
   public Book findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -79,7 +81,7 @@ public class BookDao implements InterfaceBookDao {
                                  DatabaseHelper.VOLUME, DatabaseHelper.EDITION,
                                  DatabaseHelper.ADD_INFOS,
                                  DatabaseHelper.CREATE_DATE,
-                                 DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + "=?",
+                                 DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + " = ?",
                              new String[] {String.valueOf(id)}, null, null, null, null);
 
     Book book = null;
@@ -93,16 +95,15 @@ public class BookDao implements InterfaceBookDao {
   }
 
 
-  // get all books in a list view
+  // Gets all books in a list view
   @Override
   public List<Book> findAll() {
     List<Book> bookList = new ArrayList<Book>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
-    // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
         bookList.add(createBookData(cursor));
@@ -116,7 +117,7 @@ public class BookDao implements InterfaceBookDao {
   }
 
 
-  // delete single book entry
+  // Deletes single book entry
   @Override
   @Deprecated
   public void delete(Long id) {
@@ -247,8 +248,8 @@ public class BookDao implements InterfaceBookDao {
 
   private void deleteAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
     db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.BOOK_ID + " = ?"
-            + " AND " + DatabaseHelper.AUTHOR_ID + " = ?",
-        new String[] {bookId.toString(), authorId.toString()});
+                  + " AND " + DatabaseHelper.AUTHOR_ID + " = ?",
+              new String[] {bookId.toString(), authorId.toString()});
   }
 
   /**
@@ -260,7 +261,7 @@ public class BookDao implements InterfaceBookDao {
   public List<Long> getAllBookIdsForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> bookIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
         + DatabaseHelper.SHELF_ID + " = ?";
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
@@ -304,7 +305,7 @@ public class BookDao implements InterfaceBookDao {
   public List<Long> getAllAuthorIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
     List<Long> authorIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
         + DatabaseHelper.BOOK_ID + " = ?";
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
@@ -407,8 +408,8 @@ public class BookDao implements InterfaceBookDao {
 
     try {
       dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
-          DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(book.getId())});
+                                            DatabaseHelper._ID + " = ?",
+                                            new String[] {String.valueOf(book.getId())});
     } finally {
       db.close();
     }
@@ -418,7 +419,7 @@ public class BookDao implements InterfaceBookDao {
     }
 
     authorDao.createOrUpdateAuthors(authorList);
-    List<Long> authorIds = authorList.stream().map(a -> a.getId()).collect(Collectors.toList());
+    List<Long> authorIds = authorList.stream().map(Author::getId).collect(Collectors.toList());
     linkBookWithAuthors(book.getId(), authorIds);
   }
 
@@ -429,12 +430,11 @@ public class BookDao implements InterfaceBookDao {
    */
   public List<Book> findAllBooks() {
     List<Book> bookList = new ArrayList<Book>();
-    // Select All Query
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK;
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_BOOK;
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
-    // looping through all rows and adding to list
     if (cursor.moveToFirst()) {
       do {
         Book book = new Book();
@@ -454,9 +454,9 @@ public class BookDao implements InterfaceBookDao {
         bookList.add(book);
       } while (cursor.moveToNext());
     }
-    
+
     cursor.close();
-    
+
     return bookList;
   }
 
@@ -464,7 +464,7 @@ public class BookDao implements InterfaceBookDao {
    * Method that finds the shelfId of a book in the database.
    *
    * @param id id of the book
-   * @return Returns the shelfId of the book
+   * @return the shelfId of the book
    */
   public Long findShelfIdByBook(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();

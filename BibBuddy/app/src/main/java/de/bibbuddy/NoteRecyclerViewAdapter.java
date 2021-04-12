@@ -35,11 +35,11 @@ public class NoteRecyclerViewAdapter
 
   private final MainActivity activity;
   private final NoteModel noteModel;
-  private final ArrayList<MediaPlayer> mediaPlayers;
-  private final ArrayList<ImageButton> playButtons;
-  private final ArrayList<ImageButton> stopButtons;
-  private final ArrayList<ProgressBar> progressBars;
-  private final ArrayList<SeekBarListener> seekBarListeners;
+  private final List<MediaPlayer> mediaPlayers = new ArrayList<>();
+  private final List<ImageButton> playButtons = new ArrayList<>();
+  private final List<ImageButton> stopButtons = new ArrayList<>();
+  private final List<ProgressBar> progressBars = new ArrayList<>();
+  private final List<SeekBarListener> seekBarListeners = new ArrayList<>();
   private List<NoteItem> noteList;
   private ViewGroup parent;
   private int mediaPlayerPosition;
@@ -48,28 +48,15 @@ public class NoteRecyclerViewAdapter
   /**
    * Adapter constructor to connect a NoteList with the activity.
    *
-   * @param activity Base activity
-   * @param noteList List of notes as noteList content for the adapter
+   * @param activity  Base activity
+   * @param noteList  The note list.
+   * @param noteModel The note model.
    */
   public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
                                  NoteModel noteModel) {
     this.activity = activity;
     this.noteList = noteList;
     this.noteModel = noteModel;
-
-    this.mediaPlayers = new ArrayList<>();
-    this.playButtons = new ArrayList<>();
-    this.stopButtons = new ArrayList<>();
-    this.progressBars = new ArrayList<>();
-    this.seekBarListeners = new ArrayList<>();
-
-    noteList.sort((o1, o2) -> {
-      if (o1.getModDate() == null || o2.getModDate() == null) {
-        return 0;
-      }
-      return o1.getModDate().compareTo(o2.getModDate());
-    });
-    Collections.reverse(noteList);
   }
 
   @NonNull
@@ -94,20 +81,19 @@ public class NoteRecyclerViewAdapter
   @Override
   public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
     NoteItem noteItem = noteList.get(position);
-    int image = noteItem.getImage();
 
     setupBasicCardView(holder, position);
-    if (noteItem.getImage() == R.drawable.microphone) {
+
+    if (noteItem.getType() == NoteTypeLut.AUDIO) {
       setupAudioElements(holder, noteItem);
     }
 
     holder.itemView.setOnClickListener(v -> {
-      if (getSelectedNoteItems().size() > 0) {
+      if (!getSelectedNoteItems().isEmpty()) {
         v.setSelected(!v.isSelected());
       } else {
-        if (image == R.drawable.document) {
+        if (noteItem.getType() == NoteTypeLut.TEXT) {
           TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-
           nextFrag.setArguments(createNoteBundle(noteItem));
 
           activity.getSupportFragmentManager().beginTransaction()
@@ -138,15 +124,18 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupBasicCardView(NotesViewHolder holder, int position) {
+    holder.itemView.findViewById(R.id.voice_note_layout).setVisibility(View.GONE);
+
     NoteItem noteItem = noteList.get(position);
     holder.getModDateView().setText(noteItem.getModDateStr());
-    holder.getNameView().setText(noteItem.getName());
+    holder.getNameView().setText(noteItem.getDisplayName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
         noteItem.getImage()));
   }
 
   private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
     holder.itemView.findViewById(R.id.voice_note_layout).setVisibility(View.VISIBLE);
+
     ImageButton playButton = holder.getPlayNoteButton();
     playButtons.add(playButton);
     playButton.setVisibility(View.VISIBLE);

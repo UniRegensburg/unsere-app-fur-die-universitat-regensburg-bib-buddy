@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * NoteDao contains all sql queries related to Note.
  *
- * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger
+ * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger, Silvia Ivanova
  */
 public class NoteDao implements InterfaceNoteDao {
 
@@ -40,7 +40,7 @@ public class NoteDao implements InterfaceNoteDao {
 
         ContentValues noteValues = new ContentValues();
         noteValues.put(DatabaseHelper.NAME, note.getName());
-        noteValues.put(DatabaseHelper.TYPE, note.getType()); // LUT !?
+        noteValues.put(DatabaseHelper.TYPE, note.getType().getId());
         noteValues.put(DatabaseHelper.TEXT, note.getText());
         noteValues.put(DatabaseHelper.CREATE_DATE, currentTime);
         noteValues.put(DatabaseHelper.MOD_DATE, currentTime);
@@ -275,7 +275,8 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public String findStrippedTextById(Long id) {
     return findTextById(id).replaceAll(
-        "(<p dir=\"ltr\" style=\"margin-top:0; margin-bottom:0;\">|</p>|"
+        "(<p dir=\"ltr\"( style=\"margin-top:0; margin-bottom:0;\")?>|</p>|"
+            + "<div align=\"right\"  >|<div align=\"center\"  >|</div>|"
             + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
             + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
         "");
@@ -286,7 +287,7 @@ public class NoteDao implements InterfaceNoteDao {
     return new Note(
         Long.parseLong(cursor.getString(0)), // Id
         cursor.getString(1), // Name
-        Integer.parseInt(cursor.getString(2)), // Type
+        NoteTypeLut.valueOf(Integer.parseInt(cursor.getString(2))), // Type
         cursor.getString(3), // Text
         Long.parseLong(cursor.getString(4)), // Create date
         Long.parseLong(cursor.getString(5)), // Mod date
@@ -348,4 +349,34 @@ public class NoteDao implements InterfaceNoteDao {
     return bookId;
   }
 
+  /**
+   * Gets all text notes of a book by the bookId.
+   *
+   * @param bookId id of the book
+   * @return a list of all text noteIds of a book
+   */
+  public List<Long> getTextNoteIdsForBook(Long bookId) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT lnk." + DatabaseHelper.NOTE_ID + " FROM "
+        + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " lnk JOIN "
+        + DatabaseHelper.TABLE_NAME_NOTE
+        + " n ON (n." + DatabaseHelper._ID + " = lnk." + DatabaseHelper.NOTE_ID + ")"
+        + " WHERE n." + DatabaseHelper.TYPE + " = ? AND lnk." + DatabaseHelper.BOOK_ID + "= ?";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(NoteTypeLut.TEXT.getId()),
+        String.valueOf(bookId)
+        });
+
+    List<Long> noteIds = new ArrayList<>();
+    if (cursor.moveToFirst()) {
+      do {
+        noteIds.add(Long.parseLong(cursor.getString(0)));
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+
+    return noteIds;
+  }
 }
