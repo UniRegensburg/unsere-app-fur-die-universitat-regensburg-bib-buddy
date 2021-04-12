@@ -129,8 +129,8 @@ public class BookFragment extends Fragment implements BookRecyclerViewAdapter.Bo
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    bookModel = new BookModel(getContext(), shelfId);
-    noteModel = new NoteModel(getContext());
+    bookModel = new BookModel(requireContext(), shelfId);
+    noteModel = new NoteModel(requireContext());
 
     List<BookItem> bookList;
     bookList = bookModel.getBookList(shelfId);
