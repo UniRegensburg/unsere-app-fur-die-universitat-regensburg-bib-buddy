@@ -13,12 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +134,6 @@ public class SearchFragment extends BackStackFragment
     ImageButton filterBtn = view.findViewById(R.id.filter_btn);
 
     filterBtn.setOnClickListener(v -> handleSearchFilter());
-
   }
 
   private void setupSearchInput() {
@@ -200,7 +196,7 @@ public class SearchFragment extends BackStackFragment
     String[] filterChoices = {
         getString(R.string.filter_shelf),
         getString(R.string.filter_book),
-        getString(R.string.filter_note)};
+        getString(R.string.filter_text_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
         (dialog, choice, isChecked) -> {
@@ -254,7 +250,7 @@ public class SearchFragment extends BackStackFragment
       openShelf(searchItem);
     } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
       openBook(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_NOTE) {
+    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
       openTextNote(searchItem);
     }
 

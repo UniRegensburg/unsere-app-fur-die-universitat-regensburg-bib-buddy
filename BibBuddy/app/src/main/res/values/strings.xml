@@ -258,7 +258,7 @@
     <string name="filter_to">Filtern nach</string>
     <string name="filter_shelf">Regale</string>
     <string name="filter_book">Bücher</string>
-    <string name="filter_note">Notizen</string>
+    <string name="filter_text_note">Textnotizen</string>
 
     <!-- Imprint Fragment -->
     <string name="header_imprint">Impressum</string>
