@@ -131,7 +131,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
     importBibTex = new ImportBibTex(context);
 
-    List<BookItem> bookList = bookModel.getBookList(shelfId);
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
