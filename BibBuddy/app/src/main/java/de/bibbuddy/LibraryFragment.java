@@ -138,7 +138,7 @@ public class LibraryFragment extends BackStackFragment
   private void checkEmptyLibrary() {
     // if no shelf or no books
     if (libraryModel.getCurrentLibraryList().isEmpty() || bookModel.getAllBooks().isEmpty()) {
-      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
       alertDialogEmptyLib.setTitle(R.string.empty_library);
       alertDialogEmptyLib.setMessage(R.string.empty_library_description);
 
@@ -327,7 +327,7 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void setupRecyclerView() {
-    libraryModel = new LibraryModel(getContext());
+    libraryModel = new LibraryModel(requireContext());
     List<ShelfItem> libraryList = libraryModel
         .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
 
