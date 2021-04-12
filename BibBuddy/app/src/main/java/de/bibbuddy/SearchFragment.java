@@ -159,7 +159,6 @@ public class SearchFragment extends BackStackFragment
 
     Toast.makeText(context, R.string.search, Toast.LENGTH_SHORT).show();
     updateSearchResultList(searchText);
-    Toast.makeText(context, R.string.search_done, Toast.LENGTH_SHORT).show();
   }
 
   private void updateSearchResultList(String searchInputStr) {

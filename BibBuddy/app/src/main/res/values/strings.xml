@@ -240,7 +240,6 @@
 
     <!-- Search -->
     <string name="search">Wir suchen...</string>
-    <string name="search_done">Erledigt!</string>
     <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
     <string name="search_invalid_name">Hey, bitte gib einen Suchbegriff ein, bevor wir loslegen.</string>
     <string name="search_empty">Sorry, dazu konnten wir nichts finden.</string>
