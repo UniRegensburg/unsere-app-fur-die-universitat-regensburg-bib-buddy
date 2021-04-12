@@ -65,7 +65,7 @@
 
     <!-- Library | Help -->
     <string name="library_help">Mit dem <b>+-Button</b> kannst du ein neues Regal anlegen, in dem du
-        Bücher und Notizen speichern kannst! Mehr Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
+        Bücher und Notizen speichern kannst! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
 
     <!-- Book -->
@@ -95,7 +95,7 @@
 
     <!-- Book | Help -->
     <string name="book_help">Mit dem <b>+-Button</b> können wir per ISBN ein Buch für dich finden -
-        oder du gibst die Daten selbst ein! Mehr Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
+        oder du gibst die Daten selbst ein! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
 
     <!-- Book Form -->
@@ -134,7 +134,7 @@
 
     <!-- Book Form | Help -->
     <string name="author_help">Mit dem <b>+-Button</b> kannst du einen neuen Autor hinzufügen! Mehr
-        Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
+        Infos gibt\'s rechts oben unter "Hilfe".</string>
 
 
     <!-- Barcode Scanner -->
@@ -164,7 +164,7 @@
 
     <!-- Note | Help -->
     <string name="note_list_help">Mit dem <b>+-Button</b> kannst du eine Text- oder Audionotiz
-        anlegen, die dann hier erscheint! Mehr Infos gibt\'s rechts oben unter &quot;Hilfe&quot;.</string>
+        anlegen, die dann hier erscheint! Mehr Infos gibt\'s rechts oben unter "Hilfe".</string>
 
     <!-- Note Editor Text -->
     <!-- Note Editor Text | Items -->
