@@ -269,20 +269,23 @@ public class ImportBibTex {
   /** Adds the parsed BibTeX value for a note into the
    * Database and links the created note with a book.
    *
-   * @param noteDao  object of the NoteDao class
-   *                 responsible for adding note into the Database
-   * @param book     the corresponding book of the imported note
+   * @param noteModel  object of the NoteModel class
+   *                   responsible for adding a note into the
+   *                   Database through the class NoteDao
+   * @param book       the corresponding book of the imported note
    */
-  public void importBibNote(NoteDao noteDao, Book book) {
+  public void importBibNote(NoteModel noteModel, Book book) {
+
     if (bibTagValue.containsKey(BibTexKeys.ANNOTE)
         && !bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
 
-      Note note = new Note(bibTagValue.get(BibTexKeys.BOOK_TITLE)
-          + " " + bibTagValue.get(BibTexKeys.AUTHOR), NoteTypeLut.TEXT,
-          bibTagValue.get(BibTexKeys.ANNOTE));
+      noteModel.createNote(bibTagValue.get(BibTexKeys.ANNOTE),
+          NoteTypeLut.TEXT, bibTagValue.get(BibTexKeys.ANNOTE),
+          "");
 
-      noteDao.create(note);
-      noteDao.linkNoteWithBook(book.getId(), note.getId());
+      noteModel.linkNoteWithBook(book.getId(),
+          noteModel.getLastNote().getId());
+
     }
 
   }

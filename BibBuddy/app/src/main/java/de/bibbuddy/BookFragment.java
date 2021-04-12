@@ -50,6 +50,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private View view;
   private Context context;
   private BookModel bookModel;
+  private NoteModel noteModel;
+
   private BookRecyclerViewAdapter adapter;
   private BookDao bookDao;
   private NoteDao noteDao;
@@ -117,14 +119,18 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    bookModel = new BookModel(getContext(), shelfId);
+    bookModel = new BookModel(requireContext(), shelfId);
+    noteModel = new NoteModel(requireContext());
+
+    List<BookItem> bookList;
+    bookList = bookModel.getBookList(shelfId);
+
     bookDao = bookModel.getBookDao();
     noteDao = bookModel.getNoteDao();
 
     exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, shelfName);
     importBibTex = new ImportBibTex(context);
 
-    List<BookItem> bookList = bookModel.getBookList(shelfId);
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
@@ -390,7 +396,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
           importBibTex.parseBibItem(nonRedundantBibItems.get(i));
           book = importBibTex.importBook();
           addImportedBook(book, importBibTex.parseAuthorNames());
-          importBibTex.importBibNote(noteDao, book);
+          importBibTex.importBibNote(noteModel, book);
         }
 
       }
