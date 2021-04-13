@@ -79,11 +79,11 @@ public class SearchModel {
   }
 
   private void searchNotes(String searchInput) {
-    List<Note> noteList = noteDao.findNotesByName(searchInput);
+    List<Note> noteList = noteDao.findTextNotesByName(searchInput);
     for (Note note : noteList) {
       searchResultList.add(
           new SearchItem(note.getName(), R.drawable.document, note.getId(), note.getModDate(),
-                         SearchItemType.SEARCH_NOTE));
+                         SearchItemType.SEARCH_TEXT_NOTE));
     }
   }
 
