@@ -1,7 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_home"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-</RelativeLayout>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fragment_library"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="75dp"
+        >
+
+    <TextView
+            android:id="@+id/welcome_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:text="Hey, willkommen zurück!"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
+
+    <com.tsuryo.swipeablerv.SwipeableRecyclerView
+            android:id="@+id/home_books_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:scrollbars="vertical"
+            app:layoutManager="LinearLayoutManager"
+            app:leftBgColor="@color/yellow"
+            app:leftImage="@drawable/ic_edit"
+            app:rightBgColor="@color/red"
+            app:rightImage="@drawable/ic_delete"
+            />
+
+    <TextView
+            android:id="@+id/home_books_list_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="40dp"
+            android:text="@string/empty_list"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone"
+            />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
