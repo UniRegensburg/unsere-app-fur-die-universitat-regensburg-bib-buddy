@@ -497,7 +497,7 @@ public class BookDao implements InterfaceBookDao {
 
     String selectQuery =
         "SELECT " + DatabaseHelper.NAME + " FROM " + DatabaseHelper.TABLE_NAME_SHELF
-            + " WHERE " + DatabaseHelper.SHELF_ID + " = ? LIMIT 1";
+            + " WHERE " + DatabaseHelper._ID + " = ? LIMIT 1";
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
 
