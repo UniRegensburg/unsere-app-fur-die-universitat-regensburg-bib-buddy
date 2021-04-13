@@ -42,7 +42,10 @@
     <string name="delete_counter_msg">mit insgesamt</string>
 
     <!-- Home -->
-    <string name="welcome">Hey, willkommen zurück!</string>
+    <string name="welcome_1">Hey, willkommen zurück!</string>
+    <string name="welcome_2">Hi, schön dich zu sehen!</string>
+    <string name="welcome_3">Willkommen zurück!</string>
+    <string name="welcome_4">Hallo, alles bereit!</string>
     <string name="start_here">Mach gleich da weiter, wo du aufgehört hast.</string>
 
     <!-- Home | Help -->

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The HomeFragment is responsible for welcoming the user and displaying recently used books.
@@ -45,6 +46,7 @@ public class HomeFragment extends BackStackFragment
 
     mainActivity.updateHeaderFragment(getString(R.string.navigation_home));
     mainActivity.updateNavigationFragment(R.id.navigation_home);
+    updateWelcomeMessage();
 
     bookModel = new BookModel(context, 1L);
     dbHelper = new DatabaseHelper(context);
@@ -124,6 +126,25 @@ public class HomeFragment extends BackStackFragment
     }
 
     return bookItemList;
+  }
+
+  private void updateWelcomeMessage() {
+    TextView welcomeMessage = view.findViewById(R.id.welcome_msg);
+
+    switch(ThreadLocalRandom.current().nextInt(1, 5)) {
+      case 2:
+        welcomeMessage.setText(R.string.welcome_2);
+        break;
+      case 3:
+        welcomeMessage.setText(R.string.welcome_3);
+        break;
+      case 4:
+        welcomeMessage.setText(R.string.welcome_4);
+        break;
+      default:
+        welcomeMessage.setText(R.string.welcome_1);
+    }
+
   }
 
 }
