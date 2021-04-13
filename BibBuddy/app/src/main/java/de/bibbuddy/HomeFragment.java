@@ -131,7 +131,7 @@ public class HomeFragment extends BackStackFragment
   private void updateWelcomeMessage() {
     TextView welcomeMessage = view.findViewById(R.id.welcome_msg);
 
-    switch(ThreadLocalRandom.current().nextInt(1, 5)) {
+    switch (ThreadLocalRandom.current().nextInt(1, 5)) {
       case 2:
         welcomeMessage.setText(R.string.welcome_2);
         break;
