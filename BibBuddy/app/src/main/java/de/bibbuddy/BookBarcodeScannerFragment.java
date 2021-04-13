@@ -3,6 +3,7 @@ package de.bibbuddy;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -13,8 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -30,6 +29,8 @@ import java.util.List;
  */
 public class BookBarcodeScannerFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
+
+  private static final String TAG = BookBarcodeScannerFragment.class.getSimpleName();
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
   private SurfaceView surfaceView;
@@ -79,9 +80,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
             ActivityCompat.requestPermissions(requireActivity(), new
                 String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
           }
-
         } catch (IOException e) {
-          e.printStackTrace();
+          Log.e(TAG, e.toString(), e);
         }
       }
 
@@ -126,7 +126,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       try {
         thread.join();
       } catch (Exception e) {
-        e.printStackTrace();
+        Log.e(TAG, e.toString(), e);
       }
 
       // retrieve metadata that was saved

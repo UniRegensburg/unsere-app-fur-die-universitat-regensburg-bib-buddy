@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
  * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
  */
 public class AuthorDao implements InterfaceAuthorDao {
+
+  private static final String TAG = AuthorDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
 
@@ -45,8 +48,10 @@ public class AuthorDao implements InterfaceAuthorDao {
       long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
       author.setId(id);
 
-    } catch (SQLiteException ex) {
+    } catch (SQLiteException e) {
+      Log.e(TAG, e.toString(), e);
       return false;
+
     } finally {
       db.close();
     }
@@ -75,6 +80,8 @@ public class AuthorDao implements InterfaceAuthorDao {
           DatabaseHelper._ID + " = ?",
           new String[] {String.valueOf(author.getId())});
 
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
     } finally {
       db.close();
     }
@@ -271,6 +278,9 @@ public class AuthorDao implements InterfaceAuthorDao {
       }
 
       return cursor.getInt(0);
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
+      return 0;
     } finally {
       cursor.close();
     }

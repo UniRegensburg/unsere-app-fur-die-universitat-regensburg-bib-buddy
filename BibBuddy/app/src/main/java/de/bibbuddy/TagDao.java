@@ -31,8 +31,7 @@ public class TagDao implements InterfaceTagDao {
       Long id = db.insert(DatabaseHelper.TABLE_NAME_TAG, null, contentValues);
       tag.setId(id);
 
-    } catch (
-    SQLiteException ex) {
+    } catch (SQLiteException ex) {
       return false;
     } finally {
       db.close();
