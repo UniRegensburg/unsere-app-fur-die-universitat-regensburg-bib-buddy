@@ -486,6 +486,32 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
+   * Method that finds the shelf name of a book in the database.
+   *
+   * @param id id of the book
+   * @return the shelf name of the book
+   */
+  public String findShelfNameByBook(Long id) {
+    Long shelfId = findShelfIdByBook(id);
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.NAME + " FROM " + DatabaseHelper.TABLE_NAME_SHELF
+            + " WHERE " + DatabaseHelper.SHELF_ID + " = ? LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
+
+    String shelfName = "";
+    if (cursor.moveToFirst()) {
+      shelfName = cursor.getString(0);
+    }
+
+    cursor.close();
+
+    return shelfName;
+  }
+
+  /**
    * Method that finds an amount of last modified books.
    *
    * @param amount amount of books to retrieve

@@ -7,14 +7,14 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 
 public class BookModel {
   private final BookDao bookDao;
   private final AuthorDao authorDao;
   private final NoteDao noteDao;
-  private final Long shelfId;
+  private Long shelfId;
 
   private List<BookItem> bookList;
 
@@ -210,6 +210,10 @@ public class BookModel {
 
   public Book getBookById(Long id) {
     return bookDao.findById(id);
+  }
+
+  public void setShelfId(Long shelfId) {
+    this.shelfId = shelfId;
   }
 
   private void sortBookList(SortCriteria sortCriteria) {
