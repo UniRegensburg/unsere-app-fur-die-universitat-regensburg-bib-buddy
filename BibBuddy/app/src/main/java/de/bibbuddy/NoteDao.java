@@ -1,5 +1,7 @@
 package de.bibbuddy;
 
+import static android.text.Html.escapeHtml;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -66,7 +68,7 @@ public class NoteDao implements InterfaceNoteDao {
     return true;
   }
 
-  // get single note entry
+  // Gets single note entry
   @Override
   public Note findById(long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -115,17 +117,16 @@ public class NoteDao implements InterfaceNoteDao {
     return path;
   }
 
-  // get all notes in a list view
+  // Gets all notes in a list view
   @Override
   public List<Note> findAll() {
-    List<Note> noteList = new ArrayList<>();
-    // Select All Query
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_NOTE;
-
     SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_NOTE;
+
     Cursor cursor = db.rawQuery(selectQuery, null);
 
-    // looping through all rows and adding to list
+    List<Note> noteList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Note note = createNoteData(cursor);
@@ -138,7 +139,7 @@ public class NoteDao implements InterfaceNoteDao {
     return noteList;
   }
 
-  // delete single note entry
+  // Deletes single note entry
   @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -150,8 +151,6 @@ public class NoteDao implements InterfaceNoteDao {
 
     db.close();
   }
-
-  //Update a single note selected by given id
 
   /**
    * This method updates a note object within database selected by its id.
@@ -204,13 +203,13 @@ public class NoteDao implements InterfaceNoteDao {
    */
   public List<Long> getAllNoteIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    List<Long> noteIds = new ArrayList<>();
 
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
         + DatabaseHelper.BOOK_ID + " = ?";
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
 
+    List<Long> noteIds = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         noteIds.add(Long.parseLong(cursor.getString(2)));
@@ -221,9 +220,6 @@ public class NoteDao implements InterfaceNoteDao {
 
     return noteIds;
   }
-
-
-  // get all Notes for a book with a list of noteIds
 
   /**
    * This method gets a list of all notes that are connected to a specific book.
@@ -237,6 +233,7 @@ public class NoteDao implements InterfaceNoteDao {
     for (Long id : noteIds) {
       noteList.add(findById(id));
     }
+
     return noteList;
   }
 
@@ -287,19 +284,21 @@ public class NoteDao implements InterfaceNoteDao {
    * @return returns a list of notes which have the searchInput in the name
    */
   public List<Note> findTextNotesByName(String searchInput) {
-    List<Note> noteList = new ArrayList<>();
+    searchInput = escapeHtml(searchInput);
 
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    String selectQuery = "SELECT note.* FROM " + DatabaseHelper.TABLE_NAME_NOTE
-        + " note JOIN " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
-        + " lnk ON (note." + DatabaseHelper._ID + " = lnk." + DatabaseHelper.NOTE_ID + ")"
-        + " WHERE note." + DatabaseHelper.TYPE + " = ? AND note."
-        + DatabaseHelper.NAME + " LIKE '%" + searchInput + "%'";
+    String selectQuery = "SELECT n.* FROM " + DatabaseHelper.TABLE_NAME_NOTE
+        + " n JOIN " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
+        + " lnk ON (n." + DatabaseHelper._ID + " = lnk." + DatabaseHelper.NOTE_ID + ")"
+        + " WHERE n." + DatabaseHelper.TYPE + " = ? AND (n."
+        + DatabaseHelper.NAME + " LIKE '%" + searchInput + "%'"
+        + " OR n." + DatabaseHelper.TEXT + " LIKE '%" + searchInput + "%')";
 
     Cursor cursor = db.rawQuery(selectQuery,
                                 new String[] {String.valueOf(NoteTypeLut.TEXT.getId())});
 
+    List<Note> noteList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Note note = createNoteData(cursor);
