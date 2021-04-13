@@ -25,8 +25,8 @@ import java.util.List;
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
-  public static List<NoteItem> noteList;
-  private static NoteModel noteModel;
+  public List<NoteItem> noteList;
+  public NoteModel noteModel;
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
@@ -193,8 +193,9 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilitySortButton(true);
+    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> sortNotes());
   }
 

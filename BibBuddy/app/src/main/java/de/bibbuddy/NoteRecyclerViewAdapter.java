@@ -19,7 +19,6 @@ import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -254,13 +253,13 @@ public class NoteRecyclerViewAdapter
     return noteList.size();
   }
 
+  public List<NoteItem> getNoteList() {
+    return noteList;
+  }
+
   public void setNoteList(List<NoteItem> noteList) {
     this.noteList = noteList;
     notifyDataSetChanged();
-  }
-
-  public List<NoteItem> getNoteList() {
-    return noteList;
   }
 
   /**
