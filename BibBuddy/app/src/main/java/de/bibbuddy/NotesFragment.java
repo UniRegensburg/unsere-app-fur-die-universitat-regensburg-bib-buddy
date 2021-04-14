@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,10 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -26,12 +28,10 @@ import java.util.List;
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
-  private MainActivity mainActivity;
-  private Context context;
-
   public List<NoteItem> noteList;
   public NoteModel noteModel;
 
+  private MainActivity mainActivity;
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
@@ -55,9 +55,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
 
     mainActivity = (MainActivity) requireActivity();
-    context = requireContext();
-
-    noteModel = new NoteModel(requireContext());
+    noteModel = new NoteModel(mainActivity);
     noteList = noteModel.getNoteList();
     sortCriteria = mainActivity.getSortCriteria();
 
@@ -160,9 +158,9 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     adapter.setNoteList(noteList);
 
     if (!itemsToDelete.isEmpty()) {
-      Toast.makeText(context, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
     } else {
-      Toast.makeText(context, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }
 
     deselectNoteItems();
