@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.content.Context;
+import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -25,10 +26,10 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * NoteRecyclerViewAdapter provides a binding from the noteList to the view
- * that is displayed within the RecyclerView of the NotesFragment.
+ * NoteRecyclerViewAdapter provides a binding from a note-list to a corresponding
+ * RecyclerView-list.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class NoteRecyclerViewAdapter
     extends RecyclerView.Adapter<NoteRecyclerViewAdapter.NotesViewHolder> {
@@ -40,17 +41,18 @@ public class NoteRecyclerViewAdapter
   private final List<ImageButton> stopButtons = new ArrayList<>();
   private final List<ProgressBar> progressBars = new ArrayList<>();
   private final List<SeekBarListener> seekBarListeners = new ArrayList<>();
+
   private List<NoteItem> noteList;
   private ViewGroup parent;
   private int mediaPlayerPosition;
   private boolean paused;
 
   /**
-   * Adapter constructor to connect a NoteList with the activity.
+   * Constructor to connect a NoteList with a MainActivity.
    *
-   * @param activity  Base activity
-   * @param noteList  The note list.
-   * @param noteModel The note model.
+   * @param activity  instance of MainActivity.
+   * @param noteList  of NoteItems.
+   * @param noteModel model for handling Note-objects.
    */
   public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
                                  NoteModel noteModel) {
@@ -71,19 +73,17 @@ public class NoteRecyclerViewAdapter
     return new NotesViewHolder(itemView);
   }
 
-
   /**
-   * Method to setup the custom ViewHolder components for notes.
+   * Method to set up custom ViewHolder components for Notes.
    *
-   * @param holder   custom ViewHolder instance
-   * @param position adapterPosition of the viewHolder-item
+   * @param holder   custom ViewHolder instance.
+   * @param position within the adapter for the viewHolder-item.
    */
   @Override
   public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
     NoteItem noteItem = noteList.get(position);
 
     setupBasicCardView(holder, position);
-
     if (noteItem.getType() == NoteTypeLut.AUDIO) {
       setupAudioElements(holder, noteItem);
     }
@@ -124,9 +124,10 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupBasicCardView(NotesViewHolder holder, int position) {
+    NoteItem noteItem = noteList.get(position);
+
     holder.itemView.findViewById(R.id.voice_note_layout).setVisibility(View.GONE);
 
-    NoteItem noteItem = noteList.get(position);
     holder.getModDateView().setText(noteItem.getModDateStr());
     holder.getNameView().setText(noteItem.getDisplayName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
@@ -180,7 +181,7 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, SeekBarCompat progressBar,
-                                         ImageButton playButton,
+                                        ImageButton playButton,
                                          ImageButton stopButton,
                                          NoteItem noteItem, SeekBarListener seekBarListener) {
     mediaPlayer.setOnCompletionListener(mp -> {
@@ -192,23 +193,7 @@ public class NoteRecyclerViewAdapter
     });
 
     playButton.setOnClickListener(v -> {
-      ImageButton button = (ImageButton) v;
-      if (v.isSelected()) {
-        if (paused) {
-          mediaPlayerPosition = mediaPlayer.getCurrentPosition();
-          mediaPlayer.seekTo(mediaPlayerPosition);
-          mediaPlayer.start();
-          button.setImageResource(R.drawable.pause);
-        } else {
-          mediaPlayer.pause();
-          button.setImageResource(R.drawable.play);
-        }
-        paused = !paused;
-      } else {
-        resetPlayers();
-        startAudio(mediaPlayer, button, noteItem, seekBarListener);
-        stopButton.setClickable(true);
-      }
+      playOrPause(v, mediaPlayer, stopButton, noteItem, seekBarListener);
       progressBar.setEnabled(true);
     });
 
@@ -216,6 +201,29 @@ public class NoteRecyclerViewAdapter
       resetPlayers();
       paused = false;
     });
+  }
+
+  private void playOrPause(View v, MediaPlayer mediaPlayer, ImageButton stopButton,
+                       NoteItem noteItem, SeekBarListener seekBarListener){
+    ImageButton button = (ImageButton) v;
+
+    if (v.isSelected()) {
+      if (paused) {
+        mediaPlayerPosition = mediaPlayer.getCurrentPosition();
+        mediaPlayer.seekTo(mediaPlayerPosition);
+        mediaPlayer.start();
+        button.setImageResource(R.drawable.pause);
+      } else {
+        mediaPlayer.pause();
+        button.setImageResource(R.drawable.play);
+      }
+      paused = !paused;
+    } else {
+      resetPlayers();
+      startAudio(mediaPlayer, button, noteItem, seekBarListener);
+      stopButton.setClickable(true);
+    }
+
   }
 
   private void resetPlayers() {
@@ -226,6 +234,7 @@ public class NoteRecyclerViewAdapter
       stopButtons.get(i).setClickable(false);
       setSelection(playButtons.get(i), false, R.drawable.play);
     }
+
     paused = false;
   }
 
@@ -264,9 +273,9 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * This method fetches the items selected in the recyclerView.
+   * Fetch the selected items of the RecyclerView.
    *
-   * @return returns the selected recyclerView items.
+   * @return the selected RecyclerView items.
    */
   public List<NoteItem> getSelectedNoteItems() {
     List<NoteItem> selectedNotes = new ArrayList<>();
@@ -283,11 +292,12 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * Custom ViewHolder to fit the RecyclerView's cardViews.
+   * Custom ViewHolder to hold the CardViews of the RecyclerView.
    */
   public static class NotesViewHolder extends RecyclerView.ViewHolder {
 
     public final TextView modDate;
+
     private final TextView name;
     private final ImageView type;
     private final ImageButton play;
@@ -298,12 +308,13 @@ public class NoteRecyclerViewAdapter
     private final TextView totalTime;
 
     /**
-     * Custom ViewHolder constructor to setup its basic view.
+     * Constructor to set up the Note-CardView.
      *
-     * @param itemView View of the RecyclerView-item.
+     * @param itemView view of the corresponding RecyclerView-item.
      */
     public NotesViewHolder(View itemView) {
       super(itemView);
+      
       modDate = itemView.findViewById(R.id.note_mod_date);
       name = itemView.findViewById(R.id.note_name);
       type = itemView.findViewById(R.id.note_type);
