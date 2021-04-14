@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,8 @@ import java.util.List;
  * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger, Silvia Ivanova
  */
 public class NoteDao implements InterfaceNoteDao {
+
+  private static final String TAG = NoteDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
 
@@ -34,6 +37,7 @@ public class NoteDao implements InterfaceNoteDao {
         } else {
           noteFileValues.put(DatabaseHelper.FILE, note.getNoteFilePath());
         }
+
         db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFileValues);
         Cursor c =
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
@@ -60,7 +64,9 @@ public class NoteDao implements InterfaceNoteDao {
         cursor.close();
 
       } catch (SQLiteException ex) {
+        Log.e(TAG, ex.toString(), ex);
         return false;
+
       } finally {
         db.close();
       }
@@ -189,6 +195,7 @@ public class NoteDao implements InterfaceNoteDao {
       db.insert(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, null, contentValues);
 
     } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
       return false;
     }
 

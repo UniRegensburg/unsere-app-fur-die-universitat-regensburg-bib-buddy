@@ -5,6 +5,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,8 @@ import java.util.Date;
  * @author Sabrina Freisleben.
  */
 public class VoiceNoteEditorFragment extends BackStackFragment {
+
+  private static final String TAG = VoiceNoteEditorFragment.class.getSimpleName();
 
   private NoteModel noteModel;
   private Long bookId;
@@ -141,9 +144,10 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
 
     try {
       recorder.prepare();
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
+
     recorder.start();
   }
 

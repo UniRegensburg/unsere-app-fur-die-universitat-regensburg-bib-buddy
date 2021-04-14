@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.core.content.FileProvider;
 import java.io.File;
@@ -17,6 +18,8 @@ import java.util.List;
  */
 
 public class ExportBibTex {
+
+  private static final String TAG = ExportBibTex.class.getSimpleName();
 
   private final String fileName;
 
@@ -184,15 +187,15 @@ public class ExportBibTex {
     File file = new File(context.getCacheDir(), fullFileName);
 
     try {
-
       FileWriter fileWriter = new FileWriter(file);
       fileWriter.append(content);
       fileWriter.flush();
       fileWriter.close();
-
-    } catch (Exception e) {
+    } catch (Exception ex) {
       Toast.makeText(context, context.getString(R.string.exception_failed_temp_file),
           Toast.LENGTH_LONG).show();
+
+      Log.e(TAG, ex.toString(), ex);
     }
 
     File parentFile = new File(context.getCacheDir(), "");
