@@ -12,20 +12,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import app.minimize.com.seek_bar_compat.SeekBarCompat;
 
 /**
  * NoteRecyclerViewAdapter provides a binding from a note-list to a corresponding
