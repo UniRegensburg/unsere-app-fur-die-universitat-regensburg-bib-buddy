@@ -75,7 +75,7 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * Method to set up custom ViewHolder components for Notes.
+   * Set up custom ViewHolder components for Notes.
    *
    * @param holder   custom ViewHolder instance.
    * @param position within the adapter for the viewHolder-item.
