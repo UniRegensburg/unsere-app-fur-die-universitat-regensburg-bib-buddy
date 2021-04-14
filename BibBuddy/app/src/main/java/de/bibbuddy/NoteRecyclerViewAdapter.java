@@ -314,7 +314,7 @@ public class NoteRecyclerViewAdapter
      */
     public NotesViewHolder(View itemView) {
       super(itemView);
-      
+
       modDate = itemView.findViewById(R.id.note_mod_date);
       name = itemView.findViewById(R.id.note_name);
       type = itemView.findViewById(R.id.note_type);
