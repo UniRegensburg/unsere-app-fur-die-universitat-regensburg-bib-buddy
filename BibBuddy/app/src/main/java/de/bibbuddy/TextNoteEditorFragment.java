@@ -50,7 +50,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mainActivity  = (MainActivity) requireActivity();
+    mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
