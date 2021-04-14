@@ -38,10 +38,10 @@ public class IsbnRetriever implements Runnable {
   }
 
   /**
-   * Extract a field from an xmlDocument.
+   * Extract a field from a xmlDocument.
    *
    * @param xmlMetadata which contains the field.
-   * @param fieldName   that should be extracted
+   * @param fieldName   that should be extracted.
    */
   private String getField(Document xmlMetadata, String fieldName) {
     String value = "";
@@ -85,7 +85,7 @@ public class IsbnRetriever implements Runnable {
     String apiUrl = "https://lod.b3kat.de/";
     String isbnApi = apiUrl + "data/isbn/%s" + apiXmlParameter;
 
-    // Read from API with ISBN
+    // Read from API with ISBN.
     ApiReader apiReader = new ApiReader(String.format(isbnApi, this.isbn));
     Thread thread = new Thread(apiReader);
     thread.start();
@@ -96,7 +96,7 @@ public class IsbnRetriever implements Runnable {
       Log.e(TAG, ex.toString(), ex);
     }
 
-    // Retrieve metadata that was saved
+    // Retrieve metadata that was saved.
     String metadata = apiReader.getMetadata();
     if (metadata != null) {
       try {

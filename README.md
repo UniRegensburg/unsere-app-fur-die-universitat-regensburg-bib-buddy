@@ -7,10 +7,10 @@ Bib Buddy offers a platform for concentrated literary work. For that, we create 
 Bib Buddy offers the possibility to retrieve data for books by scanning their barcodes, typing their ISBNs or simply adding the data manually in a form. All books can be structured in shelves in your personal library inside the app. Naturally, that library is searchable.
 
 ### Your thoughts
-To support with mobile literature work, we offer to save notes relating to a book either in textual form, with your usual formatting options (text style, alignment...) or in auditory form to quickly store a thought in your app.
+To support mobile literature work, the app offers to save notes relating to a book either in textual form, with your usual formatting options (text style, alignment...) or in auditory form to quickly store a thought in your app.
 
 ### Sharing
-Bib Buddy can share your data and notes about a book, a complete shelf or even your whole library as a bibTeX file. This file can be imported from Zotero or other literature software so you can make the best out of the thoughts you gathered within the app!
+With Bib Buddy you can share your data and notes about a book, a complete shelf or even your whole library as a bibTeX file. This file can be imported from Zotero or other literature software so you can make the best out of the thoughts you gathered within the app!
 
 ## Team
 Bib Buddy is developed by Sabrina Freisleben (@xSabrina), Silvia Ivanova (@silvia-ivanova-github-rep), Sarah Kurek (@SarahKurek), Luis Moßburger (@luismossburger) and Claudia Schönherr (@claudia3).<br><br>
