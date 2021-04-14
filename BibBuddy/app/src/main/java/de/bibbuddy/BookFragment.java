@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,7 +46,10 @@ import java.util.Objects;
  */
 public class BookFragment extends BackStackFragment implements BookRecyclerViewAdapter.BookListener,
     BookFormFragment.ChangeBookListener, SwipeLeftRightCallback.Listener {
+
+  private static final String TAG = BookFragment.class.getSimpleName();
   private final List<BookItem> selectedBookItems = new ArrayList<>();
+
   private Long shelfId;
   private String shelfName;
   private View view;
@@ -423,12 +427,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private String readBibFile(Uri uri) {
 
     try {
-
       importBibTex.readTextFromUri(uri);
       return importBibTex.readTextFromUri(uri);
-
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
     return null;

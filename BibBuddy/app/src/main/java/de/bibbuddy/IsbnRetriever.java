@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.util.Log;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,8 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 public class IsbnRetriever implements Runnable {
+
+  private static final String TAG = IsbnRetriever.class.getSimpleName();
   private final String isbn;
 
   private Book book = null;
@@ -39,12 +42,11 @@ public class IsbnRetriever implements Runnable {
 
     try {
       value = xmlMetadata.getElementsByTagName(fieldName).item(0).getTextContent();
-    } catch (Exception e) {
+    } catch (Exception ex) {
       // exception for publication year, which needs an int
       if (fieldName.equals("dcterms:issued")) {
         value = "0";
       }
-      // TODO logging instead of e.printStackTrace();
     }
 
     return value;
@@ -82,8 +84,8 @@ public class IsbnRetriever implements Runnable {
 
     try {
       thread.join();
-    } catch (Exception e) {
-      // TODO logging instead of System.out.println(e);
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
     // retrieve metadata that was saved
@@ -92,8 +94,8 @@ public class IsbnRetriever implements Runnable {
       // parse xml
       try {
         xmlMetadata = loadXmlFromString(metadata);
-      } catch (Exception e) {
-        // TODO logging instead of System.out.println(e);
+      } catch (Exception ex) {
+        Log.e(TAG, ex.toString(), ex);
       }
 
       // extract url
@@ -109,8 +111,8 @@ public class IsbnRetriever implements Runnable {
 
       try {
         thread.join();
-      } catch (Exception e) {
-        // TODO logging instead of System.out.println(e);
+      } catch (Exception ex) {
+        Log.e(TAG, ex.toString(), ex);
       }
 
       // retrieve metadata that was saved
@@ -119,8 +121,8 @@ public class IsbnRetriever implements Runnable {
         // parse xml
         try {
           xmlMetadata = loadXmlFromString(metadata);
-        } catch (Exception e) {
-          // TODO logging instead of System.out.println(e);
+        } catch (Exception ex) {
+          Log.e(TAG, ex.toString(), ex);
         }
 
         // create record & authors

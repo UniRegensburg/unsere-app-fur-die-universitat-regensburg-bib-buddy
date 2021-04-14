@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
  * @author Sarah Kurek, Claudia Schönherr
  */
 public class ShelfDao implements InterfaceShelfDao {
+
+  private static final String TAG = ShelfDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
 
@@ -37,7 +40,9 @@ public class ShelfDao implements InterfaceShelfDao {
       shelf.setId(id);
 
     } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
       return false;
+
     } finally {
       db.close();
     }

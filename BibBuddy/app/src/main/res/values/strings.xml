@@ -88,7 +88,7 @@
     <string name="delete_books">Bücher löschen</string>
     <string name="deleted_book">Ok, wir haben das Buch gelöscht.</string>
     <string name="deleted_books">Ok, wir haben die Bücher gelöscht.</string>
-    <!-- TODO -->
+
     <string name="delete_book_message">Willst du das Buch </string>
     <string name="delete_books_message">Willst du die Bücher </string>
     <string name="delete_book_notes">mit folgenden Notizen </string>
