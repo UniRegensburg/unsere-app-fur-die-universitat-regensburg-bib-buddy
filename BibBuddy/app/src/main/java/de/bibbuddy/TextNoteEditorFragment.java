@@ -93,7 +93,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Save the current text as note-object.
+   * Save the current text as Note object.
    */
   private void saveNote() {
     String text = Html.toHtml(richTextEditor.getText(), Html.FROM_HTML_MODE_LEGACY);
