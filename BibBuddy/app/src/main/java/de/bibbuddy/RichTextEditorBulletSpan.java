@@ -10,13 +10,14 @@ import android.text.Spanned;
 import android.text.style.BulletSpan;
 
 /**
- * The RichTextEditorBulletSpan is responsible for styling bullet spans in text notes.
+ * RichTextEditorBulletSpan is responsible for styling bullet spans in text notes.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class RichTextEditorBulletSpan extends BulletSpan {
 
   private static Path bulletPath = null;
+
   private final int bulletColor = Color.BLACK;
   private final int bulletRadius = 10;
   private final int bulletGapWidth = 20;
@@ -58,9 +59,11 @@ public class RichTextEditorBulletSpan extends BulletSpan {
   public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline,
                                 int bottom, CharSequence text, int start, int end, boolean first,
                                 Layout l) {
+
     if (((Spanned) text).getSpanStart(this) == start) {
       p.setColor(this.bulletColor);
       p.setStyle(Paint.Style.FILL);
+
       if (c.isHardwareAccelerated()) {
         if (bulletPath == null) {
           bulletPath = new Path();
@@ -75,6 +78,7 @@ public class RichTextEditorBulletSpan extends BulletSpan {
         c.drawCircle((float) (x + dir * this.bulletRadius), (float) (top + bottom) / 2.0F,
             (float) this.bulletRadius, p);
       }
+      
       int oldColor = p.getColor();
       p.setColor(oldColor);
       Paint.Style style = p.getStyle();
