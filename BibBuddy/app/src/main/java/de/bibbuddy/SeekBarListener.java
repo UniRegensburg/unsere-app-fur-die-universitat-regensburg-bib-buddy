@@ -5,12 +5,10 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import app.minimize.com.seek_bar_compat.SeekBarCompat;
 
 /**
  * The SeekBarListener is responsible for handling the scrolling through a seekBar in voice notes.
