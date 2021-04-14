@@ -78,7 +78,7 @@ public class RichTextEditorBulletSpan extends BulletSpan {
         c.drawCircle((float) (x + dir * this.bulletRadius), (float) (top + bottom) / 2.0F,
             (float) this.bulletRadius, p);
       }
-      
+
       int oldColor = p.getColor();
       p.setColor(oldColor);
       Paint.Style style = p.getStyle();
