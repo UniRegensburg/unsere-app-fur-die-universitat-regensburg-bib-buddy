@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * NoteRecyclerViewAdapter provides a binding from a note-list to a corresponding
- * RecyclerView-list.
+ * NoteRecyclerViewAdapter provides a binding from a note list to a corresponding
+ * RecyclerView list.
  *
  * @author Sabrina Freisleben.
  */
@@ -53,7 +53,7 @@ public class NoteRecyclerViewAdapter
    *
    * @param activity  instance of MainActivity.
    * @param noteList  of NoteItems.
-   * @param noteModel model for handling Note-objects.
+   * @param noteModel model for handling Note objects.
    */
   public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
                                  NoteModel noteModel) {
@@ -75,10 +75,10 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * Method to set up custom ViewHolder components for Notes.
+   * Set up custom ViewHolder components for Notes.
    *
    * @param holder   custom ViewHolder instance.
-   * @param position within the adapter for the viewHolder-item.
+   * @param position within the adapter for the viewHolder item.
    */
   @Override
   public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
