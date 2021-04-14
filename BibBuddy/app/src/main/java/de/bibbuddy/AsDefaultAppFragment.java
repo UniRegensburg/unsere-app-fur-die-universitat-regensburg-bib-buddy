@@ -3,7 +3,6 @@ package de.bibbuddy;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ShareCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -25,11 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The LibraryFragment is responsible for the shelves in the library.
+ * The AsDefaultAppFragment is related to the LibraryFragment and is used
+ * the BibBuddy-App is selected as default through "Open with"-Window.
  *
- * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
+ * @author Silvia Ivanova
  */
-public class LibraryFragment extends BackStackFragment
+public class AsDefaultAppFragment extends BackStackFragment
     implements LibraryRecyclerViewAdapter.LibraryListener, SwipeLeftRightCallback.Listener {
 
   private View view;
@@ -38,54 +40,58 @@ public class LibraryFragment extends BackStackFragment
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
-  private BookModel bookModel;
-  private NoteModel noteModel;
-
-  private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
+  private ImportBibTex importBibTex;
 
-  @Override
-  protected void onBackPressed() {
-    if (selectedShelfItems.isEmpty()) {
-      closeFragment();
-    } else {
-      deselectLibraryItems();
-    }
-  }
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    enableBackPressedHandler();
-
     // Called to have the fragment instantiate its user interface view.
-    view = inflater.inflate(R.layout.fragment_library, container, false);
+    view = inflater.inflate(R.layout.fragment_default_app, container, false);
     context = view.getContext();
 
     MainActivity mainActivity = (MainActivity) requireActivity();
     sortCriteria = mainActivity.getSortCriteria();
 
+    importBibTex = new ImportBibTex(context);
+
     setupRecyclerView();
     setupAddShelfBtn();
 
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
+    mainActivity.updateHeaderFragment(getString(R.string.header_default_app));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
     setupSortBtn();
-    setFunctionsToolbar();
     setHasOptionsMenu(true);
 
-    selectedShelfItems.clear();
-    bookModel = new BookModel(requireContext(), libraryModel.getShelfId());
-    noteModel = new NoteModel(requireContext());
+    setupDefaultApp();
 
-    String fileName = "library_export_BibBuddy";
-    exportBibTex = new ExportBibTex(fileName);
+    selectedShelfItems.clear();
 
     return view;
+  }
+
+  private void setupDefaultApp() {
+    MainActivity mainActivity = ((MainActivity) requireActivity());
+    Uri uri = mainActivity.getUriDefaultApp();
+    String uriFileName = UriUtils.getUriFileName(mainActivity, uri);
+
+    if (!importBibTex.isBibFile(uriFileName)) {
+      Toast.makeText(context, R.string.import_non_bib_file,
+          Toast.LENGTH_LONG).show();
+      mainActivity.resetIsDefaultApp();
+      onBackPressed();
+    }
+
+  }
+
+  private void removeDefaultFragment() {
+    FragmentManager manager = requireActivity().getSupportFragmentManager();
+    manager.popBackStack();
   }
 
   private void setupSortBtn() {
@@ -95,11 +101,6 @@ public class LibraryFragment extends BackStackFragment
     mainActivity.setVisibilitySortButton(true);
 
     sortBtn.setOnClickListener(v -> handleSortShelf());
-  }
-
-  private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyLibrary());
-
   }
 
   @Override
@@ -135,25 +136,6 @@ public class LibraryFragment extends BackStackFragment
     return super.onOptionsItemSelected(item);
   }
 
-  private void checkEmptyLibrary() {
-    // if no shelf or no books
-    if (libraryModel.getCurrentLibraryList().isEmpty() || bookModel.getAllBooks().isEmpty()) {
-      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
-      alertDialogEmptyLib.setTitle(R.string.empty_library);
-      alertDialogEmptyLib.setMessage(R.string.empty_library_description);
-
-      alertDialogEmptyLib.setPositiveButton(R.string.ok,
-          (dialog, which) -> {
-          });
-
-      alertDialogEmptyLib.create().show();
-
-    } else {
-      shareLibraryBibIntent();
-    }
-
-  }
-
   private void handleManualLibrary() {
     HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.library_help_text);
@@ -174,12 +156,15 @@ public class LibraryFragment extends BackStackFragment
     if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
       renameShelf.setVisible(false);
       deleteShelf.setVisible(false);
+
     } else if (selectedShelfItems.size() != 1) {
       renameShelf.setVisible(false);
       deleteShelf.setVisible(true);
+
     } else {
       renameShelf.setVisible(true);
       deleteShelf.setVisible(true);
+
     }
 
   }
@@ -211,27 +196,27 @@ public class LibraryFragment extends BackStackFragment
             + convertShelfListToString(selectedShelfItems)
             + getString(R.string.delete_counter_msg)
             + getBooksToDeleteNumber(selectedShelfItems)
-            + getString(R.string.and) + getNotesToDeleteNumber(selectedShelfItems) + " "
+            + getString(R.string.add) + getNotesToDeleteNumber(selectedShelfItems) + " "
             + getString(R.string.finally_delete) + " "
             + getString(R.string.delete_warning));
   }
 
   private String convertShelfListToString(List<ShelfItem> shelfList) {
-    StringBuilder shelfs = new StringBuilder();
-
+    StringBuilder shelves = new StringBuilder();
     int counter = 1;
+
     for (ShelfItem shelf : shelfList) {
-      shelfs.append(" \"").append(shelf.getName()).append("\"");
+      shelves.append(" \"").append(shelf.getName()).append("\"");
 
       if (counter != shelfList.size()) {
-        shelfs.append(",");
+        shelves.append(",");
       }
 
-      shelfs.append(" ");
+      shelves.append(" ");
       ++counter;
     }
 
-    return shelfs.toString();
+    return shelves.toString();
   }
 
   private String getBooksToDeleteNumber(List<ShelfItem> shelfList) {
@@ -249,6 +234,7 @@ public class LibraryFragment extends BackStackFragment
 
   private String getNotesToDeleteNumber(List<ShelfItem> shelfList) {
     int notesNumber = 0;
+
     for (ShelfItem shelf : shelfList) {
       notesNumber += shelf.getNoteCount();
     }
@@ -303,6 +289,7 @@ public class LibraryFragment extends BackStackFragment
 
   private void deselectLibraryItems() {
     SwipeableRecyclerView shelfListView = requireView().findViewById(R.id.library_recycler_view);
+
     for (int i = 0; i < shelfListView.getChildCount(); i++) {
       shelfListView.getChildAt(i).setSelected(false);
     }
@@ -323,6 +310,7 @@ public class LibraryFragment extends BackStackFragment
 
   private void sortLibraryList() {
     List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortCriteria);
+
     adapter.setLibraryList(libraryList);
     adapter.notifyDataSetChanged();
   }
@@ -332,7 +320,9 @@ public class LibraryFragment extends BackStackFragment
     List<ShelfItem> libraryList = libraryModel
         .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
 
-    SwipeableRecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
+    SwipeableRecyclerView libraryRecyclerView =
+        view.findViewById(R.id.library_recycler_view);
+
     adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
     libraryRecyclerView.setAdapter(adapter);
     libraryRecyclerView.setListener(this);
@@ -367,6 +357,7 @@ public class LibraryFragment extends BackStackFragment
   private String[] getAllShelfNames() {
     List<ShelfItem> currentLibraryList = libraryModel.getCurrentLibraryList();
     String[] shelfNames = new String[currentLibraryList.size()];
+
     for (int i = 0; i < currentLibraryList.size(); i++) {
       shelfNames[i] = currentLibraryList.get(i).getName();
     }
@@ -407,10 +398,15 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void updateBookListView(LibraryItem libraryItem) {
+    addLibraryFragmentToBackStack();
     BookFragment fragment = new BookFragment();
     fragment.setArguments(createShelfBundle(libraryItem));
-
     showFragment(fragment);
+  }
+
+  private void addLibraryFragmentToBackStack() {
+    Fragment libraryFragment = new LibraryFragment();
+    showFragment(libraryFragment);
   }
 
   private Bundle createShelfBundle(LibraryItem libraryItem) {
@@ -427,35 +423,25 @@ public class LibraryFragment extends BackStackFragment
 
   @Override
   public void onShelfClicked(int position) {
+    removeDefaultFragment();
+
     LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
     ((MainActivity) requireActivity()).updateHeaderFragment(libraryItem.getName());
     updateBookListView(libraryItem);
+
   }
 
   @Override
   public void onShelfLongClicked(int position, ShelfItem shelfItem, View v) {
+
     if (v.isSelected()) {
       v.setSelected(false);
       selectedShelfItems.remove(shelfItem);
+
     } else {
       v.setSelected(true);
       selectedShelfItems.add(shelfItem);
     }
-  }
-
-  private void shareLibraryBibIntent() {
-
-    String content = exportBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
-
-    Intent shareLibraryIntent =
-        ShareCompat.IntentBuilder.from(requireActivity())
-            .setStream(contentUri)
-            .setType("text/*")
-            .getIntent()
-            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-    startActivity(Intent.createChooser(shareLibraryIntent, "SEND"));
 
   }
 

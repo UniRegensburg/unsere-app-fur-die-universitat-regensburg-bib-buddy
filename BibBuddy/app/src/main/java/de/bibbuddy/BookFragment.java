@@ -62,6 +62,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private SortCriteria sortCriteria;
   private ExportBibTex exportBibTex;
   private ImportBibTex importBibTex;
+
   private final ActivityResultLauncher<Intent> filePickerActivityResultLauncher =
       registerForActivityResult(
           new ActivityResultContracts.StartActivityForResult(),
@@ -84,6 +85,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
               }
             }
           });
+
   private final ActivityResultLauncher<String> requestPermissionLauncher =
       registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
         if (isGranted) {
@@ -149,6 +151,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
     setFunctionsToolbar();
 
+    setupDefaultApp();
+
     selectedBookItems.clear();
 
     return view;
@@ -164,6 +168,19 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
         handleSortBook();
       }
     });
+  }
+
+  private void setupDefaultApp() {
+
+    MainActivity mainActivity = ((MainActivity) requireActivity());
+    Uri uri = mainActivity.getUriDefaultApp();
+
+    if (mainActivity.isDefaultApp()) {
+      handleImport(uri);
+      updateBookList(bookModel.getCurrentBookList());
+    }
+    mainActivity.resetIsDefaultApp();
+
   }
 
   private void setupRecyclerView() {

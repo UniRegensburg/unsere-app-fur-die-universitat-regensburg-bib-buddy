@@ -1,9 +1,13 @@
 package de.bibbuddy;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -18,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
   private final String imprintFragmentTag = "imprint";
+  private final String defaultAppFragmentTag = "defaultAppSelected";
+
   public ImageButton importBtn;
   public ImageButton shareBtn;
   public ImageButton sortBtn;
@@ -32,10 +38,14 @@ public class MainActivity extends AppCompatActivity {
   private LibraryFragment libraryFragment;
   private NotesFragment notesFragment;
   private ImprintFragment imprintFragment;
+  private AsDefaultAppFragment defaultAppFragment;
 
   private SortCriteria sortCriteria;
   private boolean[] filterCriteria;
   private String searchText;
+
+  private boolean isDefaultSelected;
+  private Uri uri;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +76,62 @@ public class MainActivity extends AppCompatActivity {
     filterCriteria = new boolean[] {true, true, true};
 
     searchText = "";
+
+    setupDefaultAppSelected();
+  }
+
+  private void setupDefaultAppSelected() {
+    Intent defaultAppIntent = getIntent();
+    String action = defaultAppIntent.getAction();
+
+    resetIsDefaultApp();
+
+    if (action.compareTo(Intent.ACTION_VIEW) == 0) {
+      String scheme = defaultAppIntent.getScheme();
+
+      if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0
+          || scheme.compareTo(ContentResolver.SCHEME_FILE) == 0) {
+
+        isDefaultSelected = true;
+        uri = defaultAppIntent.getData();
+        switchToDefaultAppFragment();
+
+      }
+    }
+
+  }
+
+  /**
+   * Checks if the BubBuddy-App is selected as
+   * default app for opening a certain files.
+   *
+   * @return true if BibBuddy-App is selected as default
+   *         false if BibBuddy-App is not selected as default
+   */
+  public boolean isDefaultApp() {
+    return isDefaultSelected;
+  }
+
+  /**
+   * Gets the Uri from a file when the
+   * BibBuddy-App is selected as default.
+   *
+   * @return Uri of selected file
+   */
+  public Uri getUriDefaultApp() {
+    return uri;
+  }
+
+  public void resetIsDefaultApp() {
+    isDefaultSelected = false;
+  }
+
+  private void switchToDefaultAppFragment() {
+    if (defaultAppFragment == null) {
+      defaultAppFragment = new AsDefaultAppFragment();
+    }
+
+    updateFragment(R.id.fragment_container_view, defaultAppFragment, defaultAppFragmentTag);
   }
 
   private void setupBottomNavigationView() {
@@ -75,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
           if (homeFragment == null) {
             homeFragment = new HomeFragment();
           }
+          resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
           break;
 
@@ -82,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
           if (searchFragment == null) {
             searchFragment = new SearchFragment();
           }
+          resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, searchFragment, searchFragmentTag);
           break;
 
@@ -89,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
           if (libraryFragment == null) {
             libraryFragment = new LibraryFragment();
           }
+          resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, libraryFragment, libraryFragmentTag);
           break;
 
@@ -96,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
           if (notesFragment == null) {
             notesFragment = new NotesFragment();
           }
+          resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, notesFragment, notesFragmentTag);
           break;
 
