@@ -25,7 +25,6 @@ public class HomeFragment extends BackStackFragment
   private View view;
   private Context context;
   private MainActivity mainActivity;
-  private BookDao bookDao;
   private BookModel bookModel;
   private DatabaseHelper dbHelper;
   private int bookAmount;
@@ -49,10 +48,9 @@ public class HomeFragment extends BackStackFragment
 
     bookModel = new BookModel(context, 1L);
     dbHelper = new DatabaseHelper(context);
-    bookDao = new BookDao(dbHelper);
 
     bookAmount = 3;
-    List<Book> bookList = bookDao.findModifiedBooks(bookAmount);
+    List<Book> bookList = bookModel.findModifiedBooks(bookAmount);
     bookItemList = getBookItems(bookList);
 
     adapter = new BookRecyclerViewAdapter(bookItemList, this, getContext());
@@ -99,8 +97,8 @@ public class HomeFragment extends BackStackFragment
     Long currentBookId = item.getId();
     String currentBookTitle = item.getName();
 
-    bundle.putLong(LibraryKeys.SHELF_ID, bookDao.findShelfIdByBook(item.getId()));
-    bundle.putString(LibraryKeys.SHELF_NAME, bookDao.findShelfNameByBook(item.getId()));
+    bundle.putLong(LibraryKeys.SHELF_ID, bookModel.findShelfIdByBook(item.getId()));
+    bundle.putString(LibraryKeys.SHELF_NAME, bookModel.findShelfNameByBook(item.getId()));
 
     bundle.putLong(LibraryKeys.BOOK_ID, currentBookId);
     bundle.putString(LibraryKeys.BOOK_TITLE, currentBookTitle);
@@ -112,14 +110,14 @@ public class HomeFragment extends BackStackFragment
     List<BookItem> bookItemList = new ArrayList<BookItem>();
 
     for (Book book : bookList) {
-      bookModel.setShelfId(bookDao.findShelfIdByBook(book.getId()));
+      bookModel.setShelfId(bookModel.findShelfIdByBook(book.getId()));
 
       bookItemList.add(
           new BookItem(
               book,
-              bookDao.findShelfIdByBook(book.getId()),
+              bookModel.findShelfIdByBook(book.getId()),
               bookModel.getAuthorString(book.getId()),
-              bookDao.countAllNotesForBook(book.getId())
+              bookModel.countAllNotesForBook(book.getId())
           )
       );
     }
