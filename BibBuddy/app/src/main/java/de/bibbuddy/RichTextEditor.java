@@ -479,7 +479,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
    *
    * @param index of the line.
    * @param span  object that should be checked for.
-   * @return true if the line already contains the given span-object.
+   * @return true if the line already contains the given span object.
    */
   private boolean lineContainsFormat(int index, Object span) {
     String[] lines = TextUtils.split(getEditableText().toString(), "\n");
