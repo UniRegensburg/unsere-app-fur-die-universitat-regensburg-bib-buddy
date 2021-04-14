@@ -774,7 +774,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         if (historyList.size() >= historySize) {
           historyList.remove(0);
         }
-        
+
         historyList.add(inputBefore);
         historyCursor = historyList.size();
       }
