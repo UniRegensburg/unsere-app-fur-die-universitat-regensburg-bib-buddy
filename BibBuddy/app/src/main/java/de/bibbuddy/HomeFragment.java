@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 
 /**
  * HomeFragment is responsible for welcoming the user and displaying recently used books.
@@ -21,15 +21,14 @@ import java.util.concurrent.ThreadLocalRandom;
 public class HomeFragment extends BackStackFragment
     implements BookRecyclerViewAdapter.BookListener {
 
+  List<BookItem> bookItemList;
   private View view;
   private Context context;
-
+  private MainActivity mainActivity;
   private BookDao bookDao;
   private BookModel bookModel;
   private DatabaseHelper dbHelper;
-
   private int bookAmount;
-  List<BookItem> bookItemList;
   private BookRecyclerViewAdapter adapter;
 
   @Nullable
@@ -38,9 +37,9 @@ public class HomeFragment extends BackStackFragment
                            @Nullable Bundle savedInstanceState) {
 
     view = inflater.inflate(R.layout.fragment_home, container, false);
-    context = view.getContext();
+    context = requireContext();
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
 
@@ -131,20 +130,22 @@ public class HomeFragment extends BackStackFragment
   private void updateWelcomeMessage() {
     TextView welcomeMessage = view.findViewById(R.id.welcome_msg);
 
-    switch (ThreadLocalRandom.current().nextInt(1, 5)) {
-      case 2:
-        welcomeMessage.setText(R.string.welcome_2);
-        break;
-      case 3:
-        welcomeMessage.setText(R.string.welcome_3);
-        break;
-      case 4:
-        welcomeMessage.setText(R.string.welcome_4);
-        break;
-      default:
-        welcomeMessage.setText(R.string.welcome_1);
+    if (mainActivity.getWelcomeMsg().equals("")) {
+      int randMsg = new Random().nextInt(5);
+      System.out.println(randMsg);
+
+      if (randMsg == 2) {
+        mainActivity.setWelcomeMsg(getString(R.string.welcome_2));
+      } else if (randMsg == 3) {
+        mainActivity.setWelcomeMsg(getString(R.string.welcome_3));
+      } else if (randMsg == 4) {
+        mainActivity.setWelcomeMsg(getString(R.string.welcome_4));
+      } else {
+        mainActivity.setWelcomeMsg(getString(R.string.welcome_1));
+      }
     }
 
+    welcomeMessage.setText(mainActivity.getWelcomeMsg());
   }
 
 }
