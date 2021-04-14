@@ -17,10 +17,8 @@ import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.view.Gravity;
-
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
