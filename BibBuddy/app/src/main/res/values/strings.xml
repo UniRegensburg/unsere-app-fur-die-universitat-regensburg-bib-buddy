@@ -40,6 +40,9 @@
     <string name="delete_question">löschen?</string>
     <string name="finally_delete">wirklich löschen?</string>
     <string name="delete_counter_msg">mit insgesamt</string>
+    <string name="and"> und </string>
+    <string name="one"> einer </string>
+    <string name="of_one"> einem </string>
 
     <!-- Library -->
     <!-- Library | Add Shelf -->
@@ -233,6 +236,10 @@
     <string name="imported_file_name_is">Importiere Datei:</string>
 
 
+    <!-- As Default App Selected -->
+    <string name="header_default_app">BibTeX importieren</string>
+
+    
     <!-- Sharing -->
     <string name="share_file">BibTeX-Datei teilen:</string>
     <string name="exception_failed_temp_file">Sorry, wir konnten die Datei nicht speichern.</string>
