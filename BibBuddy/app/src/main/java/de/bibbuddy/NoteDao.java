@@ -199,6 +199,8 @@ public class NoteDao implements InterfaceNoteDao {
       return false;
     }
 
+    updateBookModified(bookId);
+
     return true;
   }
 
@@ -373,5 +375,23 @@ public class NoteDao implements InterfaceNoteDao {
     cursor.close();
 
     return noteIds;
+  }
+
+  private boolean updateBookModified(Long bookId) {
+
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(DatabaseHelper.MOD_DATE, new Date().getTime());
+
+      db.update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
+          DatabaseHelper._ID + " = ?",
+          new String[] {String.valueOf(bookId)});
+
+    } catch (SQLiteException ex) {
+      return false;
+    }
+
+    return true;
   }
 }
