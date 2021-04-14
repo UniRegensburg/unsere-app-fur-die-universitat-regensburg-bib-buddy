@@ -19,14 +19,16 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The NotesFragment is responsible for the Notes of a Book.
+ * NotesFragment is responsible for the Notes of a Book.
  *
- * @author Sabrina Freisleben
+ * @author Sabrina Freisleben.
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
   public List<NoteItem> noteList;
   public NoteModel noteModel;
+
+  private MainActivity mainActivity;
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
@@ -47,14 +49,13 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
                            @Nullable Bundle savedInstanceState) {
     enableBackPressedHandler();
 
-    View view = inflater.inflate(R.layout.fragment_notes, container, false);
-
-    noteModel = new NoteModel(getContext());
-    notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
+    mainActivity = (MainActivity) requireActivity();
+    noteModel = new NoteModel(mainActivity);
     noteList = noteModel.getNoteList();
-
-    MainActivity mainActivity = (MainActivity) requireActivity();
     sortCriteria = mainActivity.getSortCriteria();
+
+    View view = inflater.inflate(R.layout.fragment_notes, container, false);
+    notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
 
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
@@ -76,25 +77,26 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
-    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
+    deleteNote.setVisible(!adapter.getSelectedNoteItems().isEmpty());
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     long id = item.getItemId();
+
     if (id == R.id.menu_note_list_delete) {
       handleDeleteNote(adapter.getSelectedNoteItems());
     } else if (id == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
     } else if (id == R.id.menu_imprint) {
-      ((MainActivity) requireActivity()).openImprint();
+      mainActivity.openImprint();
     }
 
     return super.onOptionsItemSelected(item);
   }
 
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
-    AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(requireActivity());
+    AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(mainActivity);
     alertDeleteBookNote.setCancelable(false);
 
     if (adapter.getSelectedNoteItems().size() > 1) {
@@ -133,7 +135,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
 
       notes.append(" ");
 
-      ++counter;
+      counter++;
     }
 
     return notes.toString();
@@ -151,11 +153,10 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
 
-    if (itemsToDelete.size() > 0) {
-      Toast.makeText(requireContext(), getString(R.string.deleted_notes), Toast.LENGTH_SHORT)
-          .show();
+    if (!itemsToDelete.isEmpty()) {
+      Toast.makeText(mainActivity, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
     } else {
-      Toast.makeText(requireContext(), getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, getString(R.string.deleted_note), Toast.LENGTH_SHORT).show();
     }
 
     deselectNoteItems();
@@ -163,12 +164,12 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void handleHelpNotesFragment() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.note_list_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
@@ -177,10 +178,12 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
 
   private void setupRecyclerView(View view) {
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
+
     adapter =
-        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList, noteModel);
+        new NoteRecyclerViewAdapter(mainActivity, noteList, noteModel);
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
+
     updateEmptyListView(noteList);
   }
 
@@ -193,17 +196,16 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void setupSortBtn() {
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilitySortButton(true);
     ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
+    mainActivity.setVisibilitySortButton(true);
     sortBtn.setOnClickListener(v -> sortNotes());
   }
 
   private void sortNotes() {
-    SortDialog sortDialog = new SortDialog(getContext(), sortCriteria,
+    SortDialog sortDialog = new SortDialog(mainActivity, sortCriteria,
         newSortCriteria -> {
           sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          mainActivity.setSortCriteria(newSortCriteria);
           sortNoteList();
         });
 

@@ -25,12 +25,13 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 
 /**
- * The TextNoteEditorFragment is responsible for creating, editing and saving text notes.
+ * TextNoteEditorFragment is responsible for creating, editing and saving text notes.
  *
  * @author Sabrina Freisleben.
  */
 public class TextNoteEditorFragment extends BackStackFragment {
 
+  private MainActivity mainActivity;
   private ImageView formatArrow;
   private View view;
   private RichTextEditor richTextEditor;
@@ -49,7 +50,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
@@ -66,29 +67,34 @@ public class TextNoteEditorFragment extends BackStackFragment {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
+
     if (item.getItemId() == R.id.menu_help_texteditor) {
       handleManualTextNoteEditor();
     } else if (item.getItemId() == R.id.menu_imprint) {
-      ((MainActivity) requireActivity()).openImprint();
+      mainActivity.openImprint();
     }
+
     return super.onOptionsItemSelected(item);
   }
 
-  //Show the TextNoteEditorFragment help-element.
+  /**
+   * Show the TextNoteEditorFragment help element.
+   */
   private void handleManualTextNoteEditor() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.text_editor_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
-    helpFragment.setArguments(bundle);
 
+    HelpFragment helpFragment = new HelpFragment();
+    helpFragment.setArguments(bundle);
     helpFragment
-        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
+        .show(mainActivity.getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
-  //Save the current text as note-object.
+  /**
+   * Save the current text as Note object.
+   */
   private void saveNote() {
     String text = Html.toHtml(richTextEditor.getText(), Html.FROM_HTML_MODE_LEGACY);
     String rawText = Jsoup.parse(text).text();
@@ -108,13 +114,14 @@ public class TextNoteEditorFragment extends BackStackFragment {
     }
 
     if (rawText.length() != 0) {
-      if (getArguments() != null && getArguments().size() == 2) {
+      if (requireArguments().size() == 2) {
         noteModel.updateNote(note, name, text);
       } else {
         noteModel.createNote(name, NoteTypeLut.TEXT, text, "");
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
-      Toast.makeText(requireActivity(), getString(R.string.text_note_saved), Toast.LENGTH_SHORT)
+
+      Toast.makeText(mainActivity, getString(R.string.text_note_saved), Toast.LENGTH_SHORT)
           .show();
     }
   }
@@ -123,27 +130,28 @@ public class TextNoteEditorFragment extends BackStackFragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+    view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
+    noteModel = new NoteModel(mainActivity);
+    richTextEditor = view.findViewById(R.id.editor);
+
     enableBackPressedHandler();
 
-    noteModel = new NoteModel(getContext());
-    view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
-    richTextEditor = view.findViewById(R.id.editor);
     formatArrow = view.findViewById(R.id.formatArrow);
     formatArrow.setOnClickListener(v -> {
       formatOptions = view.findViewById(R.id.scroll_view);
       adjustFormatToolbarVisibility();
     });
 
-    if (getArguments() != null && !getArguments().isEmpty()) {
-      bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
-      if (getArguments().size() == 2) {
-        Long noteId = getArguments().getLong(LibraryKeys.NOTE_ID);
-        note = noteModel.getNoteById(noteId);
-        String text = note.getText();
-        text = text.replace("align=\"center\"", "style=\"text-align:center;\"");
-        text = text.replace("align=\"right\"", "style=\"text-align:end;\"");
-        richTextEditor.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
-      }
+    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+
+    if (requireArguments().size() == 2) {
+      Long noteId = requireArguments().getLong(LibraryKeys.NOTE_ID);
+      note = noteModel.getNoteById(noteId);
+
+      String text = note.getText();
+      text = text.replace("align=\"center\"", "style=\"text-align:center;\"");
+      text = text.replace("align=\"right\"", "style=\"text-align:end;\"");
+      richTextEditor.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
     }
 
     richTextEditor.setSelection(richTextEditor.getEditableText().length());
@@ -196,7 +204,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   private void backgroundColorChange(ImageButton button) {
-    button.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray));
+    button.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.gray));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }
@@ -219,7 +227,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     bold.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_bold, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_bold, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -233,7 +241,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     italic.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_italic, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_italic, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -247,7 +255,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     underline.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_underline, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_underline, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -261,7 +269,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     strikeThrough.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -275,7 +283,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     bullet.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_bullet, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_bullet, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -289,7 +297,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     quote.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_quote, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_quote, Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -307,7 +315,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     alignLeft.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_alignLeft, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_alignLeft, Toast.LENGTH_SHORT).show();
       return true;
     });
 
@@ -318,7 +326,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     alignRight.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_alignRight, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_alignRight, Toast.LENGTH_SHORT).show();
       return true;
     });
 
@@ -329,7 +337,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     alignCenter.setOnLongClickListener(v -> {
-      Toast.makeText(getContext(), R.string.toast_alignCenter, Toast.LENGTH_SHORT).show();
+      Toast.makeText(mainActivity, R.string.toast_alignCenter, Toast.LENGTH_SHORT).show();
       return true;
     });
   }

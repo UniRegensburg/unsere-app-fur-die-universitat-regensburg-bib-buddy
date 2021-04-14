@@ -20,6 +20,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   private final MediaPlayer mediaPlayer;
   private final SeekBarCompat progressBar;
   private final TextView playedTime;
+
   private boolean checkProgress = true;
 
   /**
@@ -75,6 +76,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   public void updateProgress() {
     Handler handler = new Handler();
     checkProgress = true;
+
     Runnable r = new Runnable() {
       @Override
       public void run() {
@@ -89,6 +91,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
         }
       }
     };
+
     r.run();
   }
 

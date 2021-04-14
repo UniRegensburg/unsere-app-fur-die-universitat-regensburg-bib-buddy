@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * The VoiceNoteEditorFragment is responsible for creating and saving voice notes.
+ * VoiceNoteEditorFragment is responsible for creating and saving voice notes.
  *
  * @author Sabrina Freisleben.
  */
@@ -31,12 +31,11 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
 
   private static final String TAG = VoiceNoteEditorFragment.class.getSimpleName();
 
+  private MainActivity mainActivity;
   private NoteModel noteModel;
   private Long bookId;
-
   private RippleBackground pulse;
   private ImageButton recordButton;
-
   private MediaRecorder recorder;
   private File newAudio;
   private boolean isRecording = false;
@@ -45,7 +44,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
 
@@ -58,15 +57,13 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
                            @Nullable
                                Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_voice_note_editor, container, false);
-    noteModel = new NoteModel(requireContext());
+    noteModel = new NoteModel(mainActivity);
     pulse = view.findViewById(R.id.ripple_animation);
     recordButton = view.findViewById(R.id.record_button);
 
-    if (getArguments() != null) {
-      bookId = getArguments().getLong(LibraryKeys.BOOK_ID);
-    }
+    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
 
-    String filePath = requireActivity().getExternalCacheDir().getAbsolutePath();
+    String filePath = mainActivity.getExternalCacheDir().getAbsolutePath();
     if (noteModel.getVoiceNoteList().isEmpty()) {
       filePath += "/audio_record_1.mp4";
     } else {
@@ -94,12 +91,14 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     return super.onOptionsItemSelected(item);
   }
 
-  //Show the VoiceNoteEditorFragment help-element.
+  /**
+   * Show the VoiceNoteEditorFragment help element.
+   */
   private void handleManualVoiceEditor() {
     Spanned htmlAsString =
         Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
-    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(requireActivity());
+    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(mainActivity);
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
@@ -113,21 +112,26 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
       v.setSelected(!v.isSelected());
       record(v.isSelected());
     };
+
     recordButton.setOnClickListener(recordClickListener);
   }
 
-  //Start or stop recording depending on the record-button selection.
+  /**
+   * Start or stop recording depending on the record-button selection.
+   *
+   * @param start boolean if the recording should start or not.
+   */
   private void record(boolean start) {
     if (start) {
       pulse.startRippleAnimation();
       recordButton.setBackgroundTintList(
-          ContextCompat.getColorStateList(requireContext(), R.color.gray_light));
+          ContextCompat.getColorStateList(mainActivity, R.color.gray_light));
       isRecording = true;
       startRecording();
     } else {
       pulse.stopRippleAnimation();
       recordButton
-          .setBackgroundTintList(ContextCompat.getColorStateList(requireContext(), R.color.white));
+          .setBackgroundTintList(ContextCompat.getColorStateList(mainActivity, R.color.white));
       isRecording = false;
       stopRecording();
     }
@@ -162,9 +166,11 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     Long currentTime = new Date().getTime();
     String fileName =
         getString(R.string.voice_note_name) + DateConverter.convertDateToString(currentTime);
+
     noteModel.createNote(fileName, NoteTypeLut.AUDIO, "", newAudio.getPath());
     noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
-    Toast.makeText(requireActivity(), getString(R.string.voice_note_saved), Toast.LENGTH_SHORT)
+
+    Toast.makeText(mainActivity, getString(R.string.voice_note_saved), Toast.LENGTH_SHORT)
         .show();
   }
 

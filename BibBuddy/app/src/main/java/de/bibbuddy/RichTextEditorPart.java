@@ -1,8 +1,7 @@
 package de.bibbuddy;
 
 /**
- * The RichTextEditorPart is responsible for fetching parts of the text content of the
- * RichTextEditor.
+ * RichTextEditorPart is responsible for fetching parts of the text content of the RichTextEditor.
  *
  * @author Sabrina Freisleben.
  */
