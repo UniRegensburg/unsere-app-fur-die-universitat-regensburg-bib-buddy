@@ -17,9 +17,9 @@ import org.xml.sax.InputSource;
 
 
 /**
- * The AuthorRetriever class connects to the API and returns authors for a given book.
+ * AuthorRetriever connects to the GND API and returns author data for a given book.
  *
- * @author Luis Moßburger
+ * @author Luis Moßburger.
  */
 public class AuthorRetriever {
 
@@ -34,17 +34,17 @@ public class AuthorRetriever {
   }
 
   /**
-   * Extracts authors from the given xmlDocument and gathers their names from an API.
+   * Extract authors from a xmlDocument and gathers their data from an API.
    *
-   * @param xmlMetadata XML metadata about a book, contains URL to author information
-   * @return list of authors/relevant persons for this book
+   * @param xmlMetadata about a book.
+   * @return list of most relevant persons for this book.
    */
   public List<Author> extractAuthors(Document xmlMetadata) {
     NodeList[] relevantPersons = {
         xmlMetadata.getElementsByTagName("marcrel:aut"), // "authors"
         xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
         xmlMetadata.getElementsByTagName("dcterms:creator"), // "creator"
-        xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
+        xmlMetadata.getElementsByTagName("marcrel:cmp") // "composer"
     };
 
     NodeList authorList = null;
@@ -58,6 +58,12 @@ public class AuthorRetriever {
     return makeAuthorList(authorList);
   }
 
+  /**
+   * Create a list of authors.
+   *
+   * @param authors wrapped in xmlNodes.
+   * @return list of extracted author objects.
+   */
   private List<Author> makeAuthorList(NodeList authors) {
     List<Author> authorArray = new ArrayList<>();
     Document xmlMetadata;
@@ -99,6 +105,12 @@ public class AuthorRetriever {
     return authorArray;
   }
 
+  /**
+   * Create author object from XML data.
+   *
+   * @param xmlMetadata about a person.
+   * @return author object for this person.
+   */
   private Author constructAuthor(Document xmlMetadata) {
     Author author = null;
     XPath xpath = XPathFactory.newInstance().newXPath();
@@ -119,7 +131,7 @@ public class AuthorRetriever {
       } else if (authorName.contains(" ")) {
         int posOfLastSpace = authorName.lastIndexOf(" ");
         author = new Author(authorName.substring(0, posOfLastSpace).trim(),
-                            authorName.substring(posOfLastSpace).trim());
+            authorName.substring(posOfLastSpace).trim());
       } else {
         author = new Author(authorName, " ");
       }

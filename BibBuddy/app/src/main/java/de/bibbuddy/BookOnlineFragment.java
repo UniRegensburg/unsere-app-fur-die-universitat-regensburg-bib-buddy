@@ -13,9 +13,9 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 /**
- * The BookOnlineFragment is responsible for the online search of books.
+ * BookOnlineFragment is responsible for adding a book via ISBN search.
  *
- * @author Claudia Schönherr, Luis Moßburger
+ * @author Claudia Schönherr, Luis Moßburger.
  */
 public class BookOnlineFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
@@ -23,6 +23,7 @@ public class BookOnlineFragment extends BackStackFragment
   private static final String TAG = BookOnlineFragment.class.getSimpleName();
 
   private View view;
+  private MainActivity mainActivity;
 
   private EditText searchFieldText;
   private Long shelfId;
@@ -38,7 +39,7 @@ public class BookOnlineFragment extends BackStackFragment
     Bundle bundle = this.getArguments();
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
     mainActivity.updateNavigationFragment(R.id.navigation_library);
@@ -46,6 +47,9 @@ public class BookOnlineFragment extends BackStackFragment
     return view;
   }
 
+  /**
+   * Retrieve ISBN and data for it from API.
+   */
   private void handleIsbnInput() {
     String textInput = searchFieldText.getText().toString().replaceAll("\\s", "");
 
@@ -60,18 +64,19 @@ public class BookOnlineFragment extends BackStackFragment
         Log.e(TAG, ex.toString(), ex);
       }
 
-      // retrieve metadata that was saved
+      // Retrieve metadata that was saved
       Book book = isbnRetriever.getBook();
       List<Author> authors = isbnRetriever.getAuthors();
+
       if (book != null) {
         handleAddBook(book, authors);
       } else {
-        Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-                       Toast.LENGTH_LONG).show();
+        Toast.makeText(mainActivity, getString(R.string.isbn_not_found),
+            Toast.LENGTH_LONG).show();
       }
     } else {
-      Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-                     Toast.LENGTH_LONG).show();
+      Toast.makeText(mainActivity, getString(R.string.isbn_not_valid),
+          Toast.LENGTH_LONG).show();
     }
   }
 
@@ -85,9 +90,9 @@ public class BookOnlineFragment extends BackStackFragment
     BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity()
-        .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
-                                            Toast.LENGTH_SHORT).show());
+    mainActivity
+        .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.added_book),
+            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }
