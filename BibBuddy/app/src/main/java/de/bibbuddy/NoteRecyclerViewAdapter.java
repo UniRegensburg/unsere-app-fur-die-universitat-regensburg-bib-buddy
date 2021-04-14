@@ -205,7 +205,7 @@ public class NoteRecyclerViewAdapter
   }
 
   private void playOrPause(View v, MediaPlayer mediaPlayer, ImageButton stopButton,
-                       NoteItem noteItem, SeekBarListener seekBarListener){
+                       NoteItem noteItem, SeekBarListener seekBarListener) {
     ImageButton button = (ImageButton) v;
 
     if (v.isSelected()) {
