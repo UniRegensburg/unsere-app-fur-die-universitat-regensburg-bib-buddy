@@ -47,8 +47,6 @@ public class IsbnRetriever implements Runnable {
       if (fieldName.equals("dcterms:issued")) {
         value = "0";
       }
-
-      Log.e(TAG, ex.toString(), ex);
     }
 
     return value;

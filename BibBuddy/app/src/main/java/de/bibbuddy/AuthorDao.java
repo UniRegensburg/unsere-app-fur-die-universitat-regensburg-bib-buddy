@@ -48,8 +48,8 @@ public class AuthorDao implements InterfaceAuthorDao {
       long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
       author.setId(id);
 
-    } catch (SQLiteException e) {
-      Log.e(TAG, e.toString(), e);
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
       return false;
 
     } finally {

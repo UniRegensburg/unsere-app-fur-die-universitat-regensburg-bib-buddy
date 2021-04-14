@@ -80,8 +80,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
             ActivityCompat.requestPermissions(requireActivity(), new
                 String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
           }
-        } catch (IOException e) {
-          Log.e(TAG, e.toString(), e);
+        } catch (IOException ex) {
+          Log.e(TAG, ex.toString(), ex);
         }
       }
 

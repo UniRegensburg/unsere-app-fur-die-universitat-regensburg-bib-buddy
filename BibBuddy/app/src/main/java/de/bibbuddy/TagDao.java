@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
  * @author Sarah Kurek
  */
 public class TagDao implements InterfaceTagDao {
+
+  private static final String TAG = TagDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
 
@@ -32,6 +35,7 @@ public class TagDao implements InterfaceTagDao {
       tag.setId(id);
 
     } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
       return false;
     } finally {
       db.close();
