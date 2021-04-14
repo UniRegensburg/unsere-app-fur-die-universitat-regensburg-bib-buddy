@@ -78,7 +78,7 @@ public class NoteRecyclerViewAdapter
    * Set up custom ViewHolder components for Notes.
    *
    * @param holder   custom ViewHolder instance.
-   * @param position within the adapter for the viewHolder-item.
+   * @param position within the adapter for the viewHolder item.
    */
   @Override
   public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
