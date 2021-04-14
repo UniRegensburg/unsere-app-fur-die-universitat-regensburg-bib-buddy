@@ -90,7 +90,7 @@ public class BookOnlineFragment extends BackStackFragment
     BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity()
+    mainActivity
         .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.added_book),
             Toast.LENGTH_SHORT).show());
 

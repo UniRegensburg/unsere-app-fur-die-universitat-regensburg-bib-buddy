@@ -33,6 +33,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
   private static final String TAG = BookBarcodeScannerFragment.class.getSimpleName();
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
+  private MainActivity mainActivity;
   private SurfaceView surfaceView;
   private CameraSource cameraSource;
   private BarcodeDetector barcodeDetector;
@@ -52,7 +53,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
     setupDetectorsAndSources(view);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity = (MainActivity) requireActivity();
     mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
 
@@ -73,11 +74,11 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       @Override
       public void surfaceCreated(SurfaceHolder holder) {
         try {
-          if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+          if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA)
               == PackageManager.PERMISSION_GRANTED) {
             cameraSource.start(surfaceView.getHolder());
           } else {
-            ActivityCompat.requestPermissions(requireActivity(), new
+            ActivityCompat.requestPermissions(mainActivity, new
                 String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
           }
         } catch (IOException ex) {
@@ -138,14 +139,14 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       if (book != null) {
         handleAddBook(book, authors);
       } else {
-        requireActivity().runOnUiThread(
-            () -> Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
+        mainActivity.runOnUiThread(
+            () -> Toast.makeText(mainActivity, getString(R.string.isbn_not_found),
                 Toast.LENGTH_SHORT).show());
       }
     } else {
 
-      requireActivity()
-          .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
+      mainActivity
+          .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.isbn_not_valid),
               Toast.LENGTH_SHORT).show());
     }
   }
@@ -160,8 +161,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
-    requireActivity()
-        .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
+    mainActivity
+        .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.added_book),
             Toast.LENGTH_SHORT).show());
 
     closeFragment();
