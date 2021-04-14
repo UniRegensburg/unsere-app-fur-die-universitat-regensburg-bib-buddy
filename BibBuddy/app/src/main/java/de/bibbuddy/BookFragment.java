@@ -174,8 +174,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     if (mainActivity.isDefaultApp()) {
       handleImport(uri);
       updateBookList(bookModel.getCurrentBookList());
-      mainActivity.resetIsDefaultApp();
     }
+    mainActivity.resetIsDefaultApp();
 
   }
 

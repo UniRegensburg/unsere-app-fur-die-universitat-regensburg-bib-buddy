@@ -43,23 +43,11 @@ public class AsDefaultAppFragment extends BackStackFragment
   private SortCriteria sortCriteria;
   private ImportBibTex importBibTex;
 
-  @Override
-  protected void onBackPressed() {
-    if (selectedShelfItems.isEmpty()) {
-      closeFragment();
-    } else {
-      deselectLibraryItems();
-    }
-    removeDefaultFragment();
-    addLibraryFragmentToBackStack();
-  }
 
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
-
-    enableBackPressedHandler();
 
     // Called to have the fragment instantiate its user interface view.
     view = inflater.inflate(R.layout.fragment_default_app, container, false);
@@ -73,7 +61,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     setupRecyclerView();
     setupAddShelfBtn();
 
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
+    mainActivity.updateHeaderFragment(getString(R.string.header_default_app));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
@@ -93,33 +81,12 @@ public class AsDefaultAppFragment extends BackStackFragment
     String uriFileName = UriUtils.getUriFileName(mainActivity, uri);
 
     if (!importBibTex.isBibFile(uriFileName)) {
-      showDialogNonBibFile();
+      Toast.makeText(context, R.string.import_non_bib_file,
+          Toast.LENGTH_LONG).show();
       mainActivity.resetIsDefaultApp();
+      onBackPressed();
     }
 
-  }
-
-  private void showDialogNonBibFile() {
-    AlertDialog.Builder nonBibFileAlertDialog = new AlertDialog.Builder(context);
-
-    nonBibFileAlertDialog.setTitle(R.string.import_non_bib_file);
-    nonBibFileAlertDialog.setMessage(R.string.import_non_bib_file_description);
-
-    nonBibFileAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> dialog.dismiss());
-
-    nonBibFileAlertDialog.create().show();
-
-    AlertDialog alertDialog = nonBibFileAlertDialog.create();
-    closeFragmentByAlert(alertDialog);
-  }
-
-  private void closeFragmentByAlert(AlertDialog alertDialog) {
-    if (!alertDialog.isShowing()) {
-      ((MainActivity) requireActivity()).resetIsDefaultApp();
-      removeDefaultFragment();
-      addLibraryFragmentToBackStack();
-    }
   }
 
   private void removeDefaultFragment() {
@@ -229,7 +196,7 @@ public class AsDefaultAppFragment extends BackStackFragment
             + convertShelfListToString(selectedShelfItems)
             + getString(R.string.delete_counter_msg)
             + getBooksToDeleteNumber(selectedShelfItems)
-            + " und " + getNotesToDeleteNumber(selectedShelfItems) + " "
+            + getString(R.string.add) + getNotesToDeleteNumber(selectedShelfItems) + " "
             + getString(R.string.finally_delete) + " "
             + getString(R.string.delete_warning));
   }
@@ -259,7 +226,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     }
 
     if (booksNumber == 1) {
-      return " einem " + getString(R.string.book);
+      return getString(R.string.of_one) + getString(R.string.book);
     }
 
     return " " + booksNumber + " " + getString(R.string.books) + "n";
@@ -273,7 +240,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     }
 
     if (notesNumber == 1) {
-      return " einer " + getString(R.string.note);
+      return getString(R.string.one) + getString(R.string.note);
     }
 
     return " " + notesNumber + " " + getString(R.string.notes);
@@ -439,11 +406,7 @@ public class AsDefaultAppFragment extends BackStackFragment
 
   private void addLibraryFragmentToBackStack() {
     Fragment libraryFragment = new LibraryFragment();
-    FragmentTransaction ft = requireActivity()
-        .getSupportFragmentManager().beginTransaction();
-    ft.replace(R.id.fragment_container_view, libraryFragment);
-    ft.addToBackStack(null);
-    ft.commit();
+    showFragment(libraryFragment);
   }
 
   private Bundle createShelfBundle(LibraryItem libraryItem) {

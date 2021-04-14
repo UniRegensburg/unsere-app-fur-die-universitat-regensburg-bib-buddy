@@ -211,7 +211,7 @@ public class LibraryFragment extends BackStackFragment
             + convertShelfListToString(selectedShelfItems)
             + getString(R.string.delete_counter_msg)
             + getBooksToDeleteNumber(selectedShelfItems)
-            + " und " + getNotesToDeleteNumber(selectedShelfItems) + " "
+            + getString(R.string.and) + getNotesToDeleteNumber(selectedShelfItems) + " "
             + getString(R.string.finally_delete) + " "
             + getString(R.string.delete_warning));
   }
@@ -241,7 +241,7 @@ public class LibraryFragment extends BackStackFragment
     }
 
     if (booksNumber == 1) {
-      return " einem " + getString(R.string.book);
+      return getString(R.string.of_one) + getString(R.string.book);
     }
 
     return " " + booksNumber + " " + getString(R.string.books) + "n";
@@ -254,7 +254,7 @@ public class LibraryFragment extends BackStackFragment
     }
 
     if (notesNumber == 1) {
-      return " einer " + getString(R.string.note);
+      return getString(R.string.one) + getString(R.string.note);
     }
 
     return " " + notesNumber + " " + getString(R.string.notes);
