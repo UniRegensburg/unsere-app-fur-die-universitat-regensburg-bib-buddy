@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * NoteRecyclerViewAdapter provides a binding from a note-list to a corresponding
- * RecyclerView-list.
+ * NoteRecyclerViewAdapter provides a binding from a note list to a corresponding
+ * RecyclerView list.
  *
  * @author Sabrina Freisleben.
  */
