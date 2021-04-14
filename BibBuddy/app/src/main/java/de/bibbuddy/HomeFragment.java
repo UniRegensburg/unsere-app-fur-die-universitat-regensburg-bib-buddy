@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * The HomeFragment is responsible for welcoming the user and displaying recently used books.
+ * HomeFragment is responsible for welcoming the user and displaying recently used books.
  *
- * @author Claudia Schönherr, Luis Moßburger
+ * @author Claudia Schönherr, Luis Moßburger.
  */
 public class HomeFragment extends BackStackFragment
     implements BookRecyclerViewAdapter.BookListener {
@@ -148,4 +148,3 @@ public class HomeFragment extends BackStackFragment
   }
 
 }
-

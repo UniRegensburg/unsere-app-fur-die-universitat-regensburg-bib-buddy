@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger.
  */
 
 public class BookModel {

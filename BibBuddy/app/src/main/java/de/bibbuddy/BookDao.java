@@ -486,10 +486,10 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
-   * Method that finds the shelf name of a book in the database.
+   * Find the shelf name of a book in the database.
    *
-   * @param id id of the book
-   * @return the shelf name of the book
+   * @param id of the book.
+   * @return the shelf name of the book.
    */
   public String findShelfNameByBook(Long id) {
     Long shelfId = findShelfIdByBook(id);
@@ -512,10 +512,10 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
-   * Method that finds an amount of last modified books.
+   * Find an amount of last modified books.
    *
-   * @param amount amount of books to retrieve
-   * @return a list of those books
+   * @param amount of books to retrieve.
+   * @return a list of the retrieved books.
    */
   public List<Book> findModifiedBooks(int amount) {
     List<Book> bookList = new ArrayList<Book>();
@@ -530,7 +530,6 @@ public class BookDao implements InterfaceBookDao {
 
     if (cursor.moveToFirst()) {
       do {
-        // Id, ShelfId, BookId
         bookIds.add(Long.parseLong(cursor.getString(0)));
       } while (cursor.moveToNext());
     }
