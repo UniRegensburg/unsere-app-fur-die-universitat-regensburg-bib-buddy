@@ -5,10 +5,12 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import app.minimize.com.seek_bar_compat.SeekBarCompat;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import app.minimize.com.seek_bar_compat.SeekBarCompat;
 
 /**
  * The SeekBarListener is responsible for handling the scrolling through a seekBar in voice notes.
@@ -20,6 +22,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   private final MediaPlayer mediaPlayer;
   private final SeekBarCompat progressBar;
   private final TextView playedTime;
+
   private boolean checkProgress = true;
 
   /**
@@ -75,6 +78,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   public void updateProgress() {
     Handler handler = new Handler();
     checkProgress = true;
+
     Runnable r = new Runnable() {
       @Override
       public void run() {
@@ -89,6 +93,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
         }
       }
     };
+    
     r.run();
   }
 
