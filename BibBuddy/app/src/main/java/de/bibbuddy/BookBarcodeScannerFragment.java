@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * The BookBarcodeScannerFragment is responsible to scan the ISBN of the book
+ * BookBarcodeScannerFragment is responsible for scanning the ISBN of a book
  * that a user wants to add to a shelf.
  *
- * @author Claudia Schönherr, Luis Moßburger
+ * @author Claudia Schönherr, Luis Moßburger.
  */
 public class BookBarcodeScannerFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
@@ -103,6 +103,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
       /**
        * Receives a barcode ISBN, hands the ISBN over to the API.
+       *
+       * @param detections that were received from the camera.
        */
       @Override
       public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
@@ -138,13 +140,13 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       } else {
         requireActivity().runOnUiThread(
             () -> Toast.makeText(requireActivity(), getString(R.string.isbn_not_found),
-                                 Toast.LENGTH_SHORT).show());
+                Toast.LENGTH_SHORT).show());
       }
     } else {
 
       requireActivity()
           .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.isbn_not_valid),
-                                              Toast.LENGTH_SHORT).show());
+              Toast.LENGTH_SHORT).show());
     }
   }
 
@@ -160,7 +162,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
     requireActivity()
         .runOnUiThread(() -> Toast.makeText(requireActivity(), getString(R.string.added_book),
-                                            Toast.LENGTH_SHORT).show());
+            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }

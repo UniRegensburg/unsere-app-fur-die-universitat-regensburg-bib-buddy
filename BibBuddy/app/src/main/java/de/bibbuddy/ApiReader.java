@@ -13,19 +13,17 @@ public class ApiReader implements Runnable {
   private String metadata = null;
 
   /**
-   * The ApiReader class reads and returns data from the API.
+   * ApiReader reads and returns data from the API.
    *
-   * @param url concrete URL that should be sent to API
-   * @author Luis Moßburger
+   * @param url that should be sent to API.
+   * @author Luis Moßburger.
    */
   ApiReader(String url) {
     this.url = url;
   }
 
   /**
-   * Main method for the Runnable to start - read from API and return.
-   *
-   * @author Luis Moßburger
+   * Read from API and return.
    */
   public void run() {
     try {
