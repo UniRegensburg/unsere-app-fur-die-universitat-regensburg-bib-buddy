@@ -58,6 +58,12 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   private boolean alignmentRight = false;
   private boolean alignmentCenter = false;
 
+  /**
+   * Constructor for the basic RichTextEditor.
+   *
+   * @param context of Fragment or Activity that is including the RichTextEditor.
+   * @param attrs   attributeSet of the RichTextEditor.
+   */
   public RichTextEditor(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(attrs);
