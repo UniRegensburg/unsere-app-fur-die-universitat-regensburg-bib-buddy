@@ -125,8 +125,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
       try {
         thread.join();
-      } catch (Exception e) {
-        Log.e(TAG, e.toString(), e);
+      } catch (Exception ex) {
+        Log.e(TAG, ex.toString(), ex);
       }
 
       // retrieve metadata that was saved
