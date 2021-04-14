@@ -47,8 +47,7 @@ public class BookModel {
    * Gets all books for a shelf with given id.
    *
    * @param id id of a shelf
-   * @return a list from type Book
-   * with all books from a given shelf
+   * @return a list from type Book with all books from a given shelf
    */
   public List<Book> getAllBooksForShelf(Long id) {
     return bookDao.getAllBooksForShelf(id);
