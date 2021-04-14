@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The TextNoteEditorFragment is responsible for creating, editing and saving text notes.
+ * TextNoteEditorFragment is responsible for creating, editing and saving text notes.
  *
  * @author Sabrina Freisleben.
  */
