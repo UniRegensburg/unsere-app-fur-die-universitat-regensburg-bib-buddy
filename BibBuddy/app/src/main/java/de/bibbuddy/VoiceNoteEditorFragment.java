@@ -92,7 +92,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Show the VoiceNoteEditorFragment help-element.
+   * Show the VoiceNoteEditorFragment help element.
    */
   private void handleManualVoiceEditor() {
     Spanned htmlAsString =
