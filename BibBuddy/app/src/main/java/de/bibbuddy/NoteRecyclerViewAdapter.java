@@ -209,6 +209,7 @@ public class NoteRecyclerViewAdapter
     ImageButton button = (ImageButton) v;
 
     if (v.isSelected()) {
+
       if (paused) {
         mediaPlayerPosition = mediaPlayer.getCurrentPosition();
         mediaPlayer.seekTo(mediaPlayerPosition);
@@ -218,7 +219,9 @@ public class NoteRecyclerViewAdapter
         mediaPlayer.pause();
         button.setImageResource(R.drawable.play);
       }
+
       paused = !paused;
+
     } else {
       resetPlayers();
       startAudio(mediaPlayer, button, noteItem, seekBarListener);
