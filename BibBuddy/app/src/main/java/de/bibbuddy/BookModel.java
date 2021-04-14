@@ -7,14 +7,14 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger.
  */
 
 public class BookModel {
   private final BookDao bookDao;
   private final AuthorDao authorDao;
   private final NoteDao noteDao;
-  private final Long shelfId;
+  private Long shelfId;
 
   private List<BookItem> bookList;
 
@@ -46,9 +46,8 @@ public class BookModel {
   /**
    * Gets all books for a shelf with given id.
    *
-   * @param id       id of a shelf
-   * @return         a list from type Book
-   *                 with all books from a given shelf
+   * @param id id of a shelf
+   * @return a list from type Book with all books from a given shelf
    */
   public List<Book> getAllBooksForShelf(Long id) {
     return bookDao.getAllBooksForShelf(id);
@@ -57,8 +56,8 @@ public class BookModel {
   /**
    * Gets all book Ids from a shelf with given ID.
    *
-   * @param id    id of a shelf
-   * @return      a list with all book ids from a given shelf
+   * @param id id of a shelf
+   * @return a list with all book ids from a given shelf
    */
   public List<Long> getAllBookIdsForShelf(Long id) {
     return bookDao.getAllBookIdsForShelf(id);
@@ -134,7 +133,7 @@ public class BookModel {
 
     for (Book book : bookDbList) {
       List<Author> authorList = bookDao.getAllAuthorsForBook(book.getId());
-      int noteCount = bookDao.countAllNotesForBook(book.getId());
+      int noteCount = countAllNotesForBook(book.getId());
 
       bookList.add(new BookItem(book, shelfId, convertAuthorListToString(authorList), noteCount));
     }
@@ -212,6 +211,10 @@ public class BookModel {
     return bookDao.findById(id);
   }
 
+  public void setShelfId(Long shelfId) {
+    this.shelfId = shelfId;
+  }
+
   private void sortBookList(SortCriteria sortCriteria) {
     switch (sortCriteria) {
 
@@ -260,6 +263,46 @@ public class BookModel {
     sortBookList(sortCriteria);
 
     return bookList;
+  }
+
+  /**
+   * Find an amount of last modified books.
+   *
+   * @param amount of books to retrieve.
+   * @return a list of the retrieved books.
+   */
+  public List<Book> findModifiedBooks(int amount) {
+    return bookDao.findModifiedBooks(amount);
+  }
+
+  /**
+   * Method that finds the shelfId of a book in the database.
+   *
+   * @param id id of the book
+   * @return the shelfId of the book
+   */
+  public Long findShelfIdByBook(Long id) {
+    return bookDao.findShelfIdByBook(id);
+  }
+
+  /**
+   * Find the shelf name of a book in the database.
+   *
+   * @param id of the book.
+   * @return the shelf name of the book.
+   */
+  public String findShelfNameByBook(Long id) {
+    return bookDao.findShelfNameByBook(id);
+  }
+
+  /**
+   * Method to count all Notes for a specific Book.
+   *
+   * @param bookId current bookId
+   * @return count of all notes that belong to the current book
+   */
+  public int countAllNotesForBook(Long bookId) {
+    return bookDao.countAllNotesForBook(bookId);
   }
 
 }

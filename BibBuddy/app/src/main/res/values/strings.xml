@@ -44,6 +44,18 @@
     <string name="one"> einer </string>
     <string name="of_one"> einem </string>
 
+    <!-- Home -->
+    <string name="welcome_1">Hey, willkommen zurück!</string>
+    <string name="welcome_2">Hi, schön dich zu sehen!</string>
+    <string name="welcome_3">Willkommen zurück!</string>
+    <string name="welcome_4">Hallo, alles bereit!</string>
+    <string name="start_here">Mach gleich da weiter, wo du aufgehört hast.</string>
+
+    <!-- Home | Help -->
+    <string name="home_help">Hier zeigen wir dir die letzten Bücher, an denen du gearbeitet hast.
+        Momentan gibt\'s hier nichts zu sehen, Füge ein paar Bücher in deiner <b>Bibliothek</b>
+        hinzu, dann kann\'s mit der Literaturarbeit losgehen!</string>
+
     <!-- Library -->
     <!-- Library | Add Shelf -->
     <string name="add_shelf">Hinzufügen</string>

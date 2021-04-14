@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * BookDao contains all sql queries related to Book.
  *
- * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
+ * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class BookDao implements InterfaceBookDao {
 
@@ -492,6 +492,64 @@ public class BookDao implements InterfaceBookDao {
     cursor.close();
 
     return shelfId;
+  }
+
+  /**
+   * Find the shelf name of a book in the database.
+   *
+   * @param id of the book.
+   * @return the shelf name of the book.
+   */
+  public String findShelfNameByBook(Long id) {
+    Long shelfId = findShelfIdByBook(id);
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.NAME + " FROM " + DatabaseHelper.TABLE_NAME_SHELF
+            + " WHERE " + DatabaseHelper._ID + " = ? LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
+
+    String shelfName = "";
+    if (cursor.moveToFirst()) {
+      shelfName = cursor.getString(0);
+    }
+
+    cursor.close();
+
+    return shelfName;
+  }
+
+  /**
+   * Find an amount of last modified books.
+   *
+   * @param amount of books to retrieve.
+   * @return a list of the retrieved books.
+   */
+  public List<Book> findModifiedBooks(int amount) {
+    List<Book> bookList = new ArrayList<Book>();
+    List<Long> bookIds = new ArrayList<Long>();
+
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
+        + DatabaseHelper.TABLE_NAME_BOOK + " ORDER BY " + DatabaseHelper.MOD_DATE + " DESC LIMIT ?";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(amount)});
+
+    if (cursor.moveToFirst()) {
+      do {
+        bookIds.add(Long.parseLong(cursor.getString(0)));
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+
+    for (Long id : bookIds) {
+      bookList.add(findById(id));
+    }
+
+    return bookList;
   }
 
 }

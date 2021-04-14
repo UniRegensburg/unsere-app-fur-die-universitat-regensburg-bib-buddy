@@ -96,8 +96,6 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
     MainActivity mainActivity = (MainActivity) requireActivity();
     sortCriteria = mainActivity.getSortCriteria();
-    mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
@@ -112,6 +110,10 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     String fileName = (book.getTitle() + book.getPubYear())
         .replaceAll("\\s+", "");
     exportBibTex = new ExportBibTex(fileName);
+
+    mainActivity.updateHeaderFragment(bundle.getString(LibraryKeys.SHELF_NAME));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
     setupRecyclerView(bookId);
     setupSortBtn();

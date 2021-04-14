@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
   private final String imprintFragmentTag = "imprint";
+  private String welcomeMsg = "";
   private final String defaultAppFragmentTag = "defaultAppSelected";
 
   public ImageButton importBtn;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+    welcomeMsg = "";
     logoButton = findViewById(R.id.headerLogo);
     bottomNavigationView = findViewById(R.id.bottom_navigation);
     fragmentManager = getSupportFragmentManager();
@@ -296,5 +298,13 @@ public class MainActivity extends AppCompatActivity {
 
   public void setFilterCriteria(int choice, boolean isChecked) {
     filterCriteria[choice] = isChecked;
+  }
+
+  public void setWelcomeMsg(String welcomeMsg) {
+    this.welcomeMsg = welcomeMsg;
+  }
+
+  public String getWelcomeMsg() {
+    return welcomeMsg;
   }
 }
