@@ -52,13 +52,12 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
                            @Nullable Bundle savedInstanceState) {
     enableBackPressedHandler();
 
-    View view = inflater.inflate(R.layout.fragment_notes, container, false);
-
     mainActivity = (MainActivity) requireActivity();
     noteModel = new NoteModel(mainActivity);
     noteList = noteModel.getNoteList();
     sortCriteria = mainActivity.getSortCriteria();
 
+    View view = inflater.inflate(R.layout.fragment_notes, container, false);
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
 
