@@ -42,8 +42,9 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   private Long bookId;
   private ActivityResultLauncher<String> requestPermissionLauncher;
 
-  private BookDao bookDao;
-  private NoteDao noteDao;
+  private BookModel bookModel;
+  private NoteModel noteModel;
+
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
 
@@ -103,14 +104,14 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
       bookId = bundle.getLong(LibraryKeys.BOOK_ID);
     }
 
-    // TODO model instead of dao
-    bookDao = bookNotesViewModel.getBookDao();
-    noteDao = bookNotesViewModel.getNoteDao();
+    bookModel = new BookModel(requireContext(), getShelfId());
+    noteModel = new NoteModel(requireContext());
 
-    String fileName = (bookDao.findById(bookId).getTitle()
-        + bookDao.findById(bookId).getPubYear())
+    Book book = bookModel.getBookById(bookId);
+
+    String fileName = (book.getTitle() + book.getPubYear())
         .replaceAll("\\s+", "");
-    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
+    exportBibTex = new ExportBibTex(fileName);
 
     setupRecyclerView(bookId);
     setupSortBtn();
@@ -121,6 +122,12 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     fillBookData();
 
     return view;
+  }
+
+  private Long getShelfId() {
+    Bundle bundle = this.getArguments();
+    assert bundle != null;
+    return bundle.getLong(LibraryKeys.SHELF_ID);
   }
 
   private void setupSortBtn() {
@@ -272,7 +279,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void setupAddButton() {
@@ -350,6 +358,14 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
     TextView bookYear = view.findViewById(R.id.book_year);
     bookYear.setText(String.valueOf(book.getPubYear()));
+
+    if (bookAuthors.getText().equals("")) {
+      bookAuthors.setVisibility(View.GONE);
+    }
+
+    if (bookYear.getText().equals("0")) {
+      bookYear.setVisibility(View.GONE);
+    }
   }
 
   private void setupRecyclerView(Long bookId) {
@@ -375,9 +391,9 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void shareBookNoteBibIntent() {
-    // TODO model instead of dao
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
-        exportBibTex.getBibDataFromBook(bookId, bookDao, noteDao));
+    String content =
+        exportBibTex.getBibDataFromBook(bookId, bookModel, noteModel);
+    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
 
     Intent shareBookNoteIntent =
         ShareCompat.IntentBuilder.from(requireActivity())

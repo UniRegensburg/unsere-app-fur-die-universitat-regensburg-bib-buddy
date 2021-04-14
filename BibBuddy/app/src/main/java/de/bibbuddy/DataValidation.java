@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.util.Log;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,6 +10,8 @@ import java.util.regex.Pattern;
  * @author Silvia Ivanova, Claudia Schönherr
  */
 public class DataValidation {
+
+  private static final String TAG = DataValidation.class.getSimpleName();
 
   /**
    * Checks if the input string is not null.
@@ -69,8 +72,10 @@ public class DataValidation {
       }
 
       return checksum == Integer.parseInt(isbnStr.substring(12));
-    } catch (NumberFormatException nfe) {
+    } catch (NumberFormatException ex) {
       // to catch invalid ISBNs with non-numeric characters
+      Log.e(TAG, ex.toString(), ex);
+
       return false;
     }
   }
@@ -109,8 +114,10 @@ public class DataValidation {
       }
 
       return checksum.equals(isbnStr.substring(9));
-    } catch (NumberFormatException nfe) {
+    } catch (NumberFormatException ex) {
       // to catch invalid ISBNs with non-numeric characters
+      Log.e(TAG, ex.toString(), ex);
+
       return false;
     }
   }

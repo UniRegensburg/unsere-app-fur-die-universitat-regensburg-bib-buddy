@@ -115,7 +115,7 @@ public class AuthorFragment extends BackStackFragment
         break;
 
       default:
-        Toast.makeText(getContext(), "Fehler", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -209,7 +209,9 @@ public class AuthorFragment extends BackStackFragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
+
   }
 
   private void deselectAuthorItems() {
@@ -251,6 +253,8 @@ public class AuthorFragment extends BackStackFragment
 
             authorList.add(author);
             adapter.notifyDataSetChanged();
+
+            Toast.makeText(context, getString(R.string.changed_author), Toast.LENGTH_SHORT).show();
           }
         });
 

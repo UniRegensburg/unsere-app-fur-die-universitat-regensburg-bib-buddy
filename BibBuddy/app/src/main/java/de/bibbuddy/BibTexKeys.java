@@ -26,5 +26,6 @@ public class BibTexKeys {
   public static final String OPENING_CURLY_BRACKET = "{";
   public static final String CLOSING_CURLY_BRACKET = "}";
   public static final String COMMA_SEPARATOR = ",";
+  public static final String EQUAL_SIGN = "=";
 
 }

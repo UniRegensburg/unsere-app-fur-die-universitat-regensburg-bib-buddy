@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,12 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
@@ -136,16 +134,18 @@ public class SearchFragment extends BackStackFragment
     ImageButton filterBtn = view.findViewById(R.id.filter_btn);
 
     filterBtn.setOnClickListener(v -> handleSearchFilter());
-
   }
 
   private void setupSearchInput() {
     searchInput = view.findViewById(R.id.search_input);
 
     searchInput.setOnEditorActionListener((v, actionId, event) -> {
-      String searchText = searchInput.getText().toString();
-      ((MainActivity) requireActivity()).setSearchText(searchText);
-      searchItems(searchText);
+
+      if (!(event == null || event.getAction() != KeyEvent.ACTION_DOWN)) {
+        String searchText = searchInput.getText().toString();
+        ((MainActivity) requireActivity()).setSearchText(searchText);
+        searchItems(searchText);
+      }
 
       return false;
     });
@@ -195,7 +195,7 @@ public class SearchFragment extends BackStackFragment
     String[] filterChoices = {
         getString(R.string.filter_shelf),
         getString(R.string.filter_book),
-        getString(R.string.filter_note)};
+        getString(R.string.filter_text_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
         (dialog, choice, isChecked) -> {
@@ -232,7 +232,8 @@ public class SearchFragment extends BackStackFragment
 
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
 
@@ -248,7 +249,7 @@ public class SearchFragment extends BackStackFragment
       openShelf(searchItem);
     } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
       openBook(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_NOTE) {
+    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
       openTextNote(searchItem);
     }
 

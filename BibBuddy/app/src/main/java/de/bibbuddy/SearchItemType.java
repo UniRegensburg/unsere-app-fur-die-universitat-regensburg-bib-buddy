@@ -8,5 +8,5 @@ package de.bibbuddy;
 public enum SearchItemType {
   SEARCH_SHELF,
   SEARCH_BOOK,
-  SEARCH_NOTE
+  SEARCH_TEXT_NOTE
 }

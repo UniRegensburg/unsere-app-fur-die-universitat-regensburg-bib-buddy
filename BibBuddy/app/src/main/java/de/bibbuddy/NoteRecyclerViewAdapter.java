@@ -5,6 +5,7 @@ import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import app.minimize.com.seek_bar_compat.SeekBarCompat;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +33,8 @@ import java.util.Locale;
  */
 public class NoteRecyclerViewAdapter
     extends RecyclerView.Adapter<NoteRecyclerViewAdapter.NotesViewHolder> {
+
+  private static final String TAG = NoteRecyclerViewAdapter.class.getSimpleName();
 
   private final MainActivity activity;
   private final NoteModel noteModel;
@@ -247,9 +249,10 @@ public class NoteRecyclerViewAdapter
                           NoteItem noteItem, SeekBarListener seekBarListener) {
     try {
       mediaPlayer.setDataSource(noteModel.getNoteFilePath(noteItem.getId()));
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
+
     mediaPlayer.prepareAsync();
     mediaPlayer.setOnPreparedListener(mp -> {
       setSelection(button, true, R.drawable.pause);
@@ -263,13 +266,13 @@ public class NoteRecyclerViewAdapter
     return noteList.size();
   }
 
+  public List<NoteItem> getNoteList() {
+    return noteList;
+  }
+
   public void setNoteList(List<NoteItem> noteList) {
     this.noteList = noteList;
     notifyDataSetChanged();
-  }
-
-  public List<NoteItem> getNoteList() {
-    return noteList;
   }
 
   /**

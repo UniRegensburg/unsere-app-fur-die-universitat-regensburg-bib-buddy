@@ -84,7 +84,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   //Save the current text as note-object.
@@ -113,6 +114,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
         noteModel.createNote(name, NoteTypeLut.TEXT, text, "");
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
+      Toast.makeText(requireActivity(), getString(R.string.text_note_saved), Toast.LENGTH_SHORT)
+          .show();
     }
   }
 

@@ -9,14 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 /**
  * Fragment for the user manuals.
  *
- * @author Sarah Kurek
+ * @author Sarah Kurek, Luis Moßburger
  */
-public class HelpFragment extends Fragment {
+public class HelpFragment extends DialogFragment {
+  private View view;
+  private String manualText;
 
   @Nullable
   @Override
@@ -27,11 +30,6 @@ public class HelpFragment extends Fragment {
 
     Bundle bundle = this.getArguments();
     String manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
-
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.updateHeaderFragment(getString(R.string.headerHelp));
-    mainActivity.setVisibilitySortButton(false);
 
     // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,

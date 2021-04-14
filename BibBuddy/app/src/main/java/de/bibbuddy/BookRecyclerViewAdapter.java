@@ -72,6 +72,14 @@ public class BookRecyclerViewAdapter
     holder.getTextBookYear().setText(String.valueOf(bookItem.getYear()));
     holder.getTextNoteCount().setText(getNoteString(bookItem.getNoteCount()));
 
+    if (holder.getTextBookAuthors().getText().equals("")) {
+      holder.getTextBookAuthors().setVisibility(View.GONE);
+    }
+
+    if (holder.getTextBookYear().getText().equals("0")) {
+      holder.getTextBookYear().setVisibility(View.GONE);
+    }
+
     holder.itemView.setOnClickListener(v -> {
       if (getSelectedBookItems().size() > 0) {
         listener.onBookLongClicked(position, bookItem, v);

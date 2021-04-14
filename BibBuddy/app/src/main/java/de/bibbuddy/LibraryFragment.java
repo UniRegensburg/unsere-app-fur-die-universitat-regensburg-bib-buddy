@@ -1,8 +1,8 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,12 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -41,8 +38,8 @@ public class LibraryFragment extends BackStackFragment
   private LibraryRecyclerViewAdapter adapter;
   private List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
-  private BookDao bookDao;
-  private NoteDao noteDao;
+  private BookModel bookModel;
+  private NoteModel noteModel;
 
   private ExportBibTex exportBibTex;
   private SortCriteria sortCriteria;
@@ -82,11 +79,11 @@ public class LibraryFragment extends BackStackFragment
     setHasOptionsMenu(true);
 
     selectedShelfItems.clear();
-    bookDao = libraryModel.getBookDao();
-    noteDao = libraryModel.getNoteDao();
+    bookModel = new BookModel(requireContext(), libraryModel.getShelfId());
+    noteModel = new NoteModel(requireContext());
 
     String fileName = "library_export_BibBuddy";
-    exportBibTex = new ExportBibTex(StorageKeys.DOWNLOAD_FOLDER, fileName);
+    exportBibTex = new ExportBibTex(fileName);
 
     return view;
   }
@@ -97,21 +94,11 @@ public class LibraryFragment extends BackStackFragment
     ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
     mainActivity.setVisibilitySortButton(true);
 
-    sortBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSortShelf();
-      }
-    });
+    sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
   private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        checkEmptyLibrary();
-      }
-    });
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyLibrary());
 
   }
 
@@ -121,6 +108,7 @@ public class LibraryFragment extends BackStackFragment
     super.onCreateOptionsMenu(menu, inflater);
   }
 
+  @SuppressLint("NonConstantResourceId")
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
@@ -149,16 +137,13 @@ public class LibraryFragment extends BackStackFragment
 
   private void checkEmptyLibrary() {
     // if no shelf or no books
-    if (libraryModel.getCurrentLibraryList().isEmpty() || bookDao.findAllBooks().isEmpty()) {
-      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
+    if (libraryModel.getCurrentLibraryList().isEmpty() || bookModel.getAllBooks().isEmpty()) {
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
       alertDialogEmptyLib.setTitle(R.string.empty_library);
       alertDialogEmptyLib.setMessage(R.string.empty_library_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
+          (dialog, which) -> {
           });
 
       alertDialogEmptyLib.create().show();
@@ -177,7 +162,8 @@ public class LibraryFragment extends BackStackFragment
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   @Override
@@ -209,19 +195,11 @@ public class LibraryFragment extends BackStackFragment
       alertDeleteShelf.setTitle(R.string.delete_shelf);
     }
 
-    alertDeleteShelf.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        deselectLibraryItems();
-      }
-    });
+    alertDeleteShelf.setNegativeButton(R.string.cancel, (dialog, which) -> deselectLibraryItems());
 
-    alertDeleteShelf.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        performDeleteShelf();
-        deselectLibraryItems();
-      }
+    alertDeleteShelf.setPositiveButton(R.string.delete, (dialog, which) -> {
+      performDeleteShelf();
+      deselectLibraryItems();
     });
 
     alertDeleteShelf.show();
@@ -334,13 +312,10 @@ public class LibraryFragment extends BackStackFragment
 
   private void handleSortShelf() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
-            sortLibraryList();
-          }
+        newSortCriteria -> {
+          sortCriteria = newSortCriteria;
+          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortLibraryList();
         });
 
     sortDialog.show();
@@ -353,7 +328,7 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void setupRecyclerView() {
-    libraryModel = new LibraryModel(getContext());
+    libraryModel = new LibraryModel(requireContext());
     List<ShelfItem> libraryList = libraryModel
         .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
 
@@ -371,12 +346,7 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void createAddShelfListener(FloatingActionButton addShelfBtn) {
-    addShelfBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleAddShelf();
-      }
-    });
+    addShelfBtn.setOnClickListener(v -> handleAddShelf());
   }
 
   private Bundle createAddShelfBundle() {
@@ -475,8 +445,8 @@ public class LibraryFragment extends BackStackFragment
 
   private void shareLibraryBibIntent() {
 
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context,
-        exportBibTex.getBibDataLibrary(libraryModel, bookDao, noteDao));
+    String content = exportBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
+    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
 
     Intent shareLibraryIntent =
         ShareCompat.IntentBuilder.from(requireActivity())

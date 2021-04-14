@@ -26,12 +26,12 @@ import java.util.List;
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
-  public static List<NoteItem> noteList;
-
-  private static NoteModel noteModel;
-
   private MainActivity mainActivity;
   private Context context;
+
+  public List<NoteItem> noteList;
+  public NoteModel noteModel;
+
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
@@ -178,7 +178,8 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
-    showFragment(helpFragment, LibraryKeys.FRAGMENT_HELP_VIEW);
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void setupRecyclerView(View view) {

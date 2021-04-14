@@ -12,6 +12,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +31,8 @@ import java.io.InputStream;
  */
 
 public class UriUtils {
+
+  private static final String TAG = UriUtils.class.getSimpleName();
 
   /**
    * Gets the full path from URI.
@@ -243,9 +246,10 @@ public class UriUtils {
 
       try {
         return getDataColumn(context, ContentUris.withAppendedId(Uri.parse(contentUriPrefix),
-            Long.valueOf(id)), null, null);
+            Long.parseLong(id)), null, null);
 
-      } catch (NumberFormatException e) {
+      } catch (NumberFormatException ex) {
+        Log.e(TAG, ex.toString(), ex);
         return uri.getPath().replaceFirst(UriUtilsKeys.PREFIX_DOCUMENT_RAW, "")
             .replaceFirst(UriUtilsKeys.PREFIX_RAW, "");
       }
@@ -320,8 +324,8 @@ public class UriUtils {
       inputStream.close();
       outputStream.close();
 
-    } catch (IOException e) {
-      e.getMessage();
+    } catch (IOException ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
     return file.getPath();
