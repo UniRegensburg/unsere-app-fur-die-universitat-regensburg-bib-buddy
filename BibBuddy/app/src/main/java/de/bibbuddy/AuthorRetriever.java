@@ -51,6 +51,7 @@ public class AuthorRetriever {
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {
         authorList = persons;
+        break;
       }
     }
 
