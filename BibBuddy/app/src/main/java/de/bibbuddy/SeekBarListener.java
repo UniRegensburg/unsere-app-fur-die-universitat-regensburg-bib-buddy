@@ -93,7 +93,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
         }
       }
     };
-    
+
     r.run();
   }
 
