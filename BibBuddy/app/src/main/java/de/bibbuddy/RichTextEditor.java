@@ -65,7 +65,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   private void init(AttributeSet attrs) {
-    TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RichTextEditor);
+    TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.RichTextEditor);
     historyEnable = array.getBoolean(R.styleable.RichTextEditor_historyEnable, true);
     historySize = array.getInt(R.styleable.RichTextEditor_historySize, historySize);
     array.recycle();
