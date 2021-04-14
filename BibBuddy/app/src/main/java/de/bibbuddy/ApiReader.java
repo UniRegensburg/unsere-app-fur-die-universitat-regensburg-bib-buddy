@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.util.Log;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -7,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class ApiReader implements Runnable {
 
+  private static final String TAG = ApiReader.class.getSimpleName();
   private final String url;
   private String metadata = null;
 
@@ -34,9 +36,8 @@ public class ApiReader implements Runnable {
 
         this.metadata = in.lines().collect(Collectors.joining());
       }
-    } catch (Exception e) {
-      // TODO logging instead of System.out.println("*** ERROR ***");
-      // TODO logging instead of System.out.println(e);
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
   }
 

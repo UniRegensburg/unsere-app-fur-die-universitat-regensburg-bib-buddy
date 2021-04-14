@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import java.util.Locale;
  */
 public class NoteRecyclerViewAdapter
     extends RecyclerView.Adapter<NoteRecyclerViewAdapter.NotesViewHolder> {
+
+  private static final String TAG = NoteRecyclerViewAdapter.class.getSimpleName();
 
   private final MainActivity activity;
   private final NoteModel noteModel;
@@ -237,9 +240,10 @@ public class NoteRecyclerViewAdapter
                           NoteItem noteItem, SeekBarListener seekBarListener) {
     try {
       mediaPlayer.setDataSource(noteModel.getNoteFilePath(noteItem.getId()));
-    } catch (IOException e) {
-      e.printStackTrace();
+    } catch (IOException ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
+
     mediaPlayer.prepareAsync();
     mediaPlayer.setOnPreparedListener(mp -> {
       setSelection(button, true, R.drawable.pause);

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
  * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 public class BookDao implements InterfaceBookDao {
+
+  private static final String TAG = BookDao.class.getSimpleName();
+
   private final DatabaseHelper dbHelper;
   private final AuthorDao authorDao;
 
@@ -39,6 +43,7 @@ public class BookDao implements InterfaceBookDao {
       book.setId(id);
 
     } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
       return false;
     } finally {
       db.close();
@@ -211,6 +216,8 @@ public class BookDao implements InterfaceBookDao {
       contentValues.put(DatabaseHelper.BOOK_ID, bookId);
       contentValues.put(DatabaseHelper.SHELF_ID, shelfId);
       db.insert(DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK, null, contentValues);
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
     } finally {
       db.close();
     }
@@ -229,7 +236,7 @@ public class BookDao implements InterfaceBookDao {
           .filter(id -> !existingAuthorIds.contains(id))
           .forEach(id -> insertAuthorBookLink(db, bookId, id));
     } catch (SQLException ex) {
-      ex.printStackTrace();
+      Log.e(TAG, ex.toString(), ex);
     } finally {
       db.close();
     }
@@ -241,8 +248,8 @@ public class BookDao implements InterfaceBookDao {
       contentValues.put(DatabaseHelper.AUTHOR_ID, authorId);
       contentValues.put(DatabaseHelper.BOOK_ID, bookId);
       db.insert(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, null, contentValues);
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
   }
 
@@ -410,6 +417,8 @@ public class BookDao implements InterfaceBookDao {
       dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
                                             DatabaseHelper._ID + " = ?",
                                             new String[] {String.valueOf(book.getId())});
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
     } finally {
       db.close();
     }

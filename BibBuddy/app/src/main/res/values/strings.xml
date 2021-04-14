@@ -40,6 +40,9 @@
     <string name="delete_question">löschen?</string>
     <string name="finally_delete">wirklich löschen?</string>
     <string name="delete_counter_msg">mit insgesamt</string>
+    <string name="and"> und </string>
+    <string name="one"> einer </string>
+    <string name="of_one"> einem </string>
 
     <!-- Home -->
     <string name="welcome_1">Hey, willkommen zurück!</string>
@@ -100,7 +103,7 @@
     <string name="delete_books">Bücher löschen</string>
     <string name="deleted_book">Ok, wir haben das Buch gelöscht.</string>
     <string name="deleted_books">Ok, wir haben die Bücher gelöscht.</string>
-    <!-- TODO -->
+
     <string name="delete_book_message">Willst du das Buch </string>
     <string name="delete_books_message">Willst du die Bücher </string>
     <string name="delete_book_notes">mit folgenden Notizen </string>
@@ -245,6 +248,10 @@
     <string name="imported_file_name_is">Importiere Datei:</string>
 
 
+    <!-- As Default App Selected -->
+    <string name="header_default_app">BibTeX importieren</string>
+
+    
     <!-- Sharing -->
     <string name="share_file">BibTeX-Datei teilen:</string>
     <string name="exception_failed_temp_file">Sorry, wir konnten die Datei nicht speichern.</string>

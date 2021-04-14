@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.util.Log;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.xml.sax.InputSource;
  */
 public class AuthorRetriever {
 
+  private static final String TAG = AuthorRetriever.class.getSimpleName();
+
   private static Document loadXmlFromString(String xml) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
@@ -35,7 +38,6 @@ public class AuthorRetriever {
    *
    * @param xmlMetadata XML metadata about a book, contains URL to author information
    * @return list of authors/relevant persons for this book
-   * @author Luis Moßburger
    */
   public List<Author> extractAuthors(Document xmlMetadata) {
     NodeList[] relevantPersons = {
@@ -49,6 +51,7 @@ public class AuthorRetriever {
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {
         authorList = persons;
+        break;
       }
     }
 
@@ -76,8 +79,8 @@ public class AuthorRetriever {
 
       try {
         thread.join();
-      } catch (Exception e) {
-        // TODO logging instead of System.out.println(e);
+      } catch (Exception ex) {
+        Log.e(TAG, ex.toString(), ex);
       }
 
       // retrieve metadata that was saved
@@ -87,8 +90,8 @@ public class AuthorRetriever {
         try {
           xmlMetadata = loadXmlFromString(metadata);
           authorArray.add(constructAuthor(xmlMetadata));
-        } catch (Exception e) {
-          // TODO logging instead of System.out.println(e);
+        } catch (Exception ex) {
+          Log.e(TAG, ex.toString(), ex);
         }
       }
     }
@@ -116,13 +119,12 @@ public class AuthorRetriever {
       } else if (authorName.contains(" ")) {
         int posOfLastSpace = authorName.lastIndexOf(" ");
         author = new Author(authorName.substring(0, posOfLastSpace).trim(),
-            authorName.substring(posOfLastSpace).trim());
+                            authorName.substring(posOfLastSpace).trim());
       } else {
         author = new Author(authorName, " ");
       }
-
-    } catch (Exception e) {
-      // TODO logging instead of System.out.println(e);
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
     return author;
