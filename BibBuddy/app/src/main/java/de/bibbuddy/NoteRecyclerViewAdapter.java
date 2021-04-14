@@ -53,7 +53,7 @@ public class NoteRecyclerViewAdapter
    *
    * @param activity  instance of MainActivity.
    * @param noteList  of NoteItems.
-   * @param noteModel model for handling Note-objects.
+   * @param noteModel model for handling Note objects.
    */
   public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
                                  NoteModel noteModel) {
