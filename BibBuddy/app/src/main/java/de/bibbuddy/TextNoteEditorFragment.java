@@ -78,7 +78,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Show the TextNoteEditorFragment help-element.
+   * Show the TextNoteEditorFragment help element.
    */
   private void handleManualTextNoteEditor() {
     String htmlAsString = getString(R.string.text_editor_help_text);
