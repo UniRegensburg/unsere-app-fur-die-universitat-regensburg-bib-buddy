@@ -21,14 +21,13 @@ import java.util.List;
 /**
  * NotesFragment is responsible for the Notes of a Book.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
   public List<NoteItem> noteList;
   public NoteModel noteModel;
 
-  private MainActivity mainActivity;
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
@@ -49,7 +48,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
                            @Nullable Bundle savedInstanceState) {
     enableBackPressedHandler();
 
-    mainActivity = (MainActivity) requireActivity();
+    MainActivity mainActivity = (MainActivity) requireActivity();
     noteModel = new NoteModel(mainActivity);
     noteList = noteModel.getNoteList();
     sortCriteria = mainActivity.getSortCriteria();
@@ -89,6 +88,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     } else if (id == R.id.menu_note_list_help) {
       handleHelpNotesFragment();
     } else if (id == R.id.menu_imprint) {
+      MainActivity mainActivity = (MainActivity) requireActivity();
       mainActivity.openImprint();
     }
 
@@ -96,7 +96,8 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
-    AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(mainActivity);
+    AlertDialog.Builder alertDeleteBookNote =
+        new AlertDialog.Builder((MainActivity) requireActivity());
     alertDeleteBookNote.setCancelable(false);
 
     if (adapter.getSelectedNoteItems().size() > 1) {
@@ -153,6 +154,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
 
+    MainActivity mainActivity = (MainActivity) requireActivity();
     if (!itemsToDelete.isEmpty()) {
       Toast.makeText(mainActivity, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
     } else {
@@ -180,7 +182,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
 
     adapter =
-        new NoteRecyclerViewAdapter(mainActivity, noteList, noteModel);
+        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList, noteModel);
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
 
@@ -196,18 +198,20 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void setupSortBtn() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
     ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
     mainActivity.setVisibilitySortButton(true);
     sortBtn.setOnClickListener(v -> sortNotes());
   }
 
   private void sortNotes() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
     SortDialog sortDialog = new SortDialog(mainActivity, sortCriteria,
-        newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          mainActivity.setSortCriteria(newSortCriteria);
-          sortNoteList();
-        });
+                                           newSortCriteria -> {
+                                             sortCriteria = newSortCriteria;
+                                             mainActivity.setSortCriteria(newSortCriteria);
+                                             sortNoteList();
+                                           });
 
     sortDialog.show();
   }

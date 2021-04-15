@@ -11,14 +11,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
- * The AuthorFormFragment is responsible for adding author to a book.
+ * The AuthorFormFragment is responsible for adding authors to a book.
  *
  * @author Sarah Kurek
  */
 public class AuthorFormFragment extends BackStackFragment {
+
   private final AuthorFormFragment.ChangeAuthorListener listener;
   private final Author author;
   private final boolean isNewAuthor;
+
   private int redColor;
   private int greenColor;
 
@@ -40,7 +42,6 @@ public class AuthorFormFragment extends BackStackFragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_author_form, container, false);
 
     setInputText(view);
@@ -71,22 +72,18 @@ public class AuthorFormFragment extends BackStackFragment {
   private void setupAddAuthorBtnListener(View view) {
     FloatingActionButton addAuthorBtn = view.findViewById(R.id.confirm_btn);
 
-    addAuthorBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleAuthorInput();
-      }
-    });
+    addAuthorBtn.setOnClickListener(v -> handleAuthorInput());
   }
 
   private void handleAuthorInput() {
     boolean validInput = true;
+    View view = requireView();
 
-    EditText authorTitleInput = requireView().findViewById(R.id.author_form_title_input);
+    EditText authorTitleInput = view.findViewById(R.id.author_form_title_input);
     authorTitleInput.setBackgroundColor(greenColor);
     author.setTitle(authorTitleInput.getText().toString());
 
-    EditText authorFirstNameInput = requireView().findViewById(R.id.author_form_first_name_input);
+    EditText authorFirstNameInput = view.findViewById(R.id.author_form_first_name_input);
     String authorFirstName = authorFirstNameInput.getText().toString();
     if (authorFirstName.isEmpty()) {
       authorFirstNameInput.setBackgroundColor(redColor);
@@ -96,7 +93,7 @@ public class AuthorFormFragment extends BackStackFragment {
       author.setFirstName(authorFirstName);
     }
 
-    EditText authorLastNameInput = requireView().findViewById(R.id.author_form_last_name_input);
+    EditText authorLastNameInput = view.findViewById(R.id.author_form_last_name_input);
     String authorLastName = authorLastNameInput.getText().toString();
     if (authorLastName.isEmpty()) {
       authorLastNameInput.setBackgroundColor(redColor);

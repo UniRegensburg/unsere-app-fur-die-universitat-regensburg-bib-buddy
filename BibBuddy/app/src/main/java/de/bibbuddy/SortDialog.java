@@ -36,10 +36,10 @@ public class SortDialog extends AlertDialog.Builder {
         context.getString(R.string.sort_mod_date_oldest),
         context.getString(R.string.sort_name_ascending),
         context.getString(R.string.sort_name_descending)
-        };
+    };
 
     setSingleChoiceItems(sortChoices, checkedItem,
-        (dialog, choice) -> handleSelectedSortChoice(choice));
+                         (dialog, choice) -> handleSelectedSortChoice(choice));
 
     setNegativeButton(R.string.ok, (dialog, choice) -> listener.onSortedSelected(sortCriteria));
   }

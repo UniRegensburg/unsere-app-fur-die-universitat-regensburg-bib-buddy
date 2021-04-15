@@ -7,16 +7,17 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger.
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 
 public class BookModel {
+
   private final BookDao bookDao;
   private final AuthorDao authorDao;
   private final NoteDao noteDao;
-  private Long shelfId;
 
   private List<BookItem> bookList;
+  private Long shelfId;
 
   /**
    * Constructor for a BookModel.
@@ -35,7 +36,7 @@ public class BookModel {
   }
 
   /**
-   * Gets all books from the databse.
+   * Gets all books from the database.
    *
    * @return a list with objects of the class Book
    */
@@ -266,17 +267,17 @@ public class BookModel {
   }
 
   /**
-   * Find an amount of last modified books.
+   * Finds an amount of last modified books.
    *
-   * @param amount of books to retrieve.
-   * @return a list of the retrieved books.
+   * @param amount of books to retrieve
+   * @return a list of the retrieved books
    */
   public List<Book> findModifiedBooks(int amount) {
     return bookDao.findModifiedBooks(amount);
   }
 
   /**
-   * Method that finds the shelfId of a book in the database.
+   * Finds the shelfId of a book in the database.
    *
    * @param id id of the book
    * @return the shelfId of the book
@@ -286,17 +287,17 @@ public class BookModel {
   }
 
   /**
-   * Find the shelf name of a book in the database.
+   * Finds the shelf name of a book in the database.
    *
-   * @param id of the book.
-   * @return the shelf name of the book.
+   * @param id of the book
+   * @return the shelf name of the book
    */
   public String findShelfNameByBook(Long id) {
     return bookDao.findShelfNameByBook(id);
   }
 
   /**
-   * Method to count all Notes for a specific Book.
+   * Counts all Notes for a specific Book.
    *
    * @param bookId current bookId
    * @return count of all notes that belong to the current book

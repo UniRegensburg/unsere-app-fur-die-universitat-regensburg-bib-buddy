@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -22,17 +21,14 @@ public class MainActivity extends AppCompatActivity {
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
   private final String imprintFragmentTag = "imprint";
-  private String welcomeMsg = "";
   private final String defaultAppFragmentTag = "defaultAppSelected";
-
   public ImageButton importBtn;
   public ImageButton shareBtn;
   public ImageButton sortBtn;
-
   BottomNavigationView bottomNavigationView;
   FragmentManager fragmentManager;
   DatabaseHelper dbHelper;
-
+  private String welcomeMessage = "";
   private ImageButton logoButton;
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    welcomeMsg = "";
+    welcomeMessage = "";
     logoButton = findViewById(R.id.headerLogo);
     bottomNavigationView = findViewById(R.id.bottom_navigation);
     fragmentManager = getSupportFragmentManager();
@@ -65,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     if (savedInstanceState == null) {
       homeFragment = new HomeFragment();
       updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+      setupDefaultAppSelected();
     }
 
     setupLogoButton();
@@ -78,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
     filterCriteria = new boolean[] {true, true, true};
 
     searchText = "";
-
-    setupDefaultAppSelected();
   }
 
   private void setupDefaultAppSelected() {
@@ -143,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
           if (homeFragment == null) {
             homeFragment = new HomeFragment();
           }
+
           resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
           break;
@@ -151,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
           if (searchFragment == null) {
             searchFragment = new SearchFragment();
           }
+
           resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, searchFragment, searchFragmentTag);
           break;
@@ -159,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
           if (libraryFragment == null) {
             libraryFragment = new LibraryFragment();
           }
+
           resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, libraryFragment, libraryFragmentTag);
           break;
@@ -167,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
           if (notesFragment == null) {
             notesFragment = new NotesFragment();
           }
+
           resetIsDefaultApp();
           updateFragment(R.id.fragment_container_view, notesFragment, notesFragmentTag);
           break;
@@ -180,14 +179,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupLogoButton() {
-    logoButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (homeFragment == null) {
-          homeFragment = new HomeFragment();
-        }
-        updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+    logoButton.setOnClickListener(v -> {
+      if (homeFragment == null) {
+        homeFragment = new HomeFragment();
       }
+
+      updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
     });
   }
 
@@ -211,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void updateHeader(String tag) {
-    // change header text according to fragment
+    // Changes header text according to fragment
     View headerTextView = findViewById(R.id.headerText);
     TextView headerText = (TextView) headerTextView;
     switch (tag) {
@@ -300,11 +297,11 @@ public class MainActivity extends AppCompatActivity {
     filterCriteria[choice] = isChecked;
   }
 
-  public void setWelcomeMsg(String welcomeMsg) {
-    this.welcomeMsg = welcomeMsg;
+  public String getWelcomeMessage() {
+    return welcomeMessage;
   }
 
-  public String getWelcomeMsg() {
-    return welcomeMsg;
+  public void setWelcomeMessage(String welcomeMessage) {
+    this.welcomeMessage = welcomeMessage;
   }
 }

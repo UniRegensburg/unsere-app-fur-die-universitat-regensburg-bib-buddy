@@ -37,7 +37,7 @@ public class SearchModel {
    * @param searchInput    input of the search
    * @param sortCriteria   sortCriteria for the searchResultList
    * @param filterCriteria filterCriteria for the searchResultList
-   * @return Returns the searchResultList
+   * @return returns the searchResultList
    */
   public List<SearchItem> getSearchResultList(String searchInput, SortCriteria sortCriteria,
                                               boolean[] filterCriteria) {
@@ -117,7 +117,7 @@ public class SearchModel {
    * Gets the selected search item at the current position.
    *
    * @param position position of the clicked item
-   * @return Returns the clicked SearchItem
+   * @return returns the clicked SearchItem
    */
   public SearchItem getSelectedSearchItem(int position) {
     return searchResultList.get(position);
@@ -131,7 +131,7 @@ public class SearchModel {
    * Gets the sorted search result list by sortCriteria.
    *
    * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted search results
+   * @return returns the sorted search results
    */
   public List<SearchItem> getSortedSearchResultList(SortCriteria sortCriteria) {
     sortSearchResultList(sortCriteria);

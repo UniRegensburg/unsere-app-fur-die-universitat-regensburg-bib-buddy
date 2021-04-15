@@ -46,9 +46,9 @@ public class SearchRecyclerViewAdapter
   public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
     SearchItem searchItem = searchResultList.get(position);
 
-    holder.getTextView().setText(searchItem.getDisplayName());
-    holder.getImageView().setImageResource(searchItem.getImage());
-    holder.getModDateView().setText(searchItem.getModDateStr());
+    holder.getResultName().setText(searchItem.getDisplayName());
+    holder.getResultIcon().setImageResource(searchItem.getImage());
+    holder.getModDate().setText(searchItem.getModDateStr());
 
     holder.itemView.setOnClickListener(v -> listener.onItemClicked(position));
   }
@@ -69,9 +69,9 @@ public class SearchRecyclerViewAdapter
 
   public static class SearchViewHolder extends RecyclerView.ViewHolder {
 
-    private final TextView textView;
-    private final ImageView imageView;
-    private final TextView modDateView;
+    private final TextView resultName;
+    private final ImageView resultIcon;
+    private final TextView modDate;
 
     /**
      * The SearchViewHolder describes a search item view and metadata about its place
@@ -80,21 +80,21 @@ public class SearchRecyclerViewAdapter
     public SearchViewHolder(@NonNull View itemView) {
       super(itemView);
 
-      textView = itemView.findViewById(R.id.search_result_name);
-      imageView = itemView.findViewById(R.id.search_result_icon);
-      modDateView = itemView.findViewById(R.id.search_mod_date);
+      resultName = itemView.findViewById(R.id.search_result_name);
+      resultIcon = itemView.findViewById(R.id.search_result_icon);
+      modDate = itemView.findViewById(R.id.search_mod_date);
     }
 
-    public TextView getTextView() {
-      return textView;
+    public TextView getResultName() {
+      return resultName;
     }
 
-    public ImageView getImageView() {
-      return imageView;
+    public ImageView getResultIcon() {
+      return resultIcon;
     }
 
-    public TextView getModDateView() {
-      return modDateView;
+    public TextView getModDate() {
+      return modDate;
     }
 
   }

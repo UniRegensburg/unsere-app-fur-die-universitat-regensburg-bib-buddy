@@ -19,7 +19,7 @@ import org.xml.sax.InputSource;
 /**
  * AuthorRetriever connects to the GND API and returns author data for a given book.
  *
- * @author Luis Moßburger.
+ * @author Luis Moßburger
  */
 public class AuthorRetriever {
 
@@ -34,10 +34,10 @@ public class AuthorRetriever {
   }
 
   /**
-   * Extract authors from a xmlDocument and gathers their data from an API.
+   * Extracts authors from a xmlDocument and gathers their data from an API.
    *
-   * @param xmlMetadata about a book.
-   * @return list of most relevant persons for this book.
+   * @param xmlMetadata about a book
+   * @return list of most relevant persons for this book
    */
   public List<Author> extractAuthors(Document xmlMetadata) {
     NodeList[] relevantPersons = {
@@ -59,10 +59,10 @@ public class AuthorRetriever {
   }
 
   /**
-   * Create a list of authors.
+   * Creates a list of authors.
    *
-   * @param authors wrapped in xmlNodes.
-   * @return list of extracted author objects.
+   * @param authors wrapped in xmlNodes
+   * @return list of extracted author objects
    */
   private List<Author> makeAuthorList(NodeList authors) {
     List<Author> authorArray = new ArrayList<>();
@@ -74,7 +74,7 @@ public class AuthorRetriever {
 
     for (int i = 0; i < authors.getLength(); i++) {
 
-      // read from API with isbn (Thread)
+      // Reads from API with isbn (Thread)
       Element authorEl = (Element) authors.item(i);
       String url = authorEl.getAttribute("rdf:resource");
       String autApiUrl = "https://d-nb.info/gnd/";
@@ -89,10 +89,10 @@ public class AuthorRetriever {
         Log.e(TAG, ex.toString(), ex);
       }
 
-      // retrieve metadata that was saved
+      // Retrieves metadata that was saved
       String metadata = apiReader.getMetadata();
       if (metadata != null) {
-        // parse xml
+        // Parses xml
         try {
           xmlMetadata = loadXmlFromString(metadata);
           authorArray.add(constructAuthor(xmlMetadata));
@@ -106,17 +106,17 @@ public class AuthorRetriever {
   }
 
   /**
-   * Create author object from XML data.
+   * Creates author object from XML data.
    *
-   * @param xmlMetadata about a person.
-   * @return author object for this person.
+   * @param xmlMetadata about a person
+   * @return author object for this person
    */
   private Author constructAuthor(Document xmlMetadata) {
     Author author = null;
     XPath xpath = XPathFactory.newInstance().newXPath();
 
     try {
-      // in MARCXML, datafield "100" (suggested name for the person) is only present once
+      // In MARCXML, datafield "100" (suggested name for the person) is only present once
       // (cataloguing rules for libraries)
       XPathExpression expr = xpath.compile("//datafield[@tag=\"100\"]//subfield[@code=\"a\"]");
       Object exprResult = expr.evaluate(xmlMetadata, XPathConstants.NODESET);
@@ -131,7 +131,7 @@ public class AuthorRetriever {
       } else if (authorName.contains(" ")) {
         int posOfLastSpace = authorName.lastIndexOf(" ");
         author = new Author(authorName.substring(0, posOfLastSpace).trim(),
-            authorName.substring(posOfLastSpace).trim());
+                            authorName.substring(posOfLastSpace).trim());
       } else {
         author = new Author(authorName, " ");
       }

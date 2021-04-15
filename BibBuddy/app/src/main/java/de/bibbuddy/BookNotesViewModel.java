@@ -4,18 +4,13 @@ import android.content.Context;
 import java.util.List;
 
 /**
- * BookNotesViewModel manages all data of the BookNotesView.
+ * BookNotesModel manages all data of the BookNotesView.
  *
  * @author Sarah Kurek, Silvia Ivanova
  */
 public class BookNotesViewModel {
 
-  private final Context context;
   private final NoteModel noteModel;
-  private final BookDao bookDao;
-  private final NoteDao noteDao;
-
-  private List<NoteItem> noteList;
 
   /**
    * BookNotesViewModel contains methods for managing the
@@ -24,30 +19,15 @@ public class BookNotesViewModel {
    * @param context context for the BookNotesView
    */
   public BookNotesViewModel(Context context) {
-    this.context = context;
     this.noteModel = new NoteModel(context);
-
-    DatabaseHelper databaseHelper = new DatabaseHelper(context);
-
-    this.bookDao = new BookDao(databaseHelper);
-    this.noteDao = new NoteDao(databaseHelper);
   }
 
   public NoteModel getNoteModel() {
     return noteModel;
   }
 
-  public BookDao getBookDao() {
-    return bookDao;
-  }
-
-  public NoteDao getNoteDao() {
-    return noteDao;
-  }
-
   public List<NoteItem> getBookNoteList(Long bookId) {
-    noteList = noteModel.getNoteListForBook(bookId);
-    return noteList;
+    return noteModel.getNoteListForBook(bookId);
   }
 
   /**
@@ -59,14 +39,10 @@ public class BookNotesViewModel {
     if (selectedNoteItems == null) {
       return;
     }
-    for (NoteItem note : selectedNoteItems) {
-      Long noteId = note.getId();
-      noteModel.deleteNote(noteId);
-    }
-  }
 
-  public NoteItem getSelectedNoteItem(int position) {
-    return noteList.get(position);
+    for (NoteItem note : selectedNoteItems) {
+      noteModel.deleteNote(note.getId());
+    }
   }
 
   public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {

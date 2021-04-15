@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -29,7 +28,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
@@ -48,20 +46,17 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     BookFormFragment.ChangeBookListener, SwipeLeftRightCallback.Listener {
 
   private static final String TAG = BookFragment.class.getSimpleName();
+
   private final List<BookItem> selectedBookItems = new ArrayList<>();
-
-  private Long shelfId;
-  private String shelfName;
-  private View view;
-  private Context context;
-  private BookModel bookModel;
-  private NoteModel noteModel;
-
-  private BookRecyclerViewAdapter adapter;
-
-  private SortCriteria sortCriteria;
-  private ExportBibTex exportBibTex;
-  private ImportBibTex importBibTex;
+  private final ActivityResultLauncher<String> requestPermissionLauncher =
+      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        if (isGranted) {
+          filePicker();
+        } else {
+          Toast.makeText(getContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT)
+              .show();
+        }
+      });
 
   private final ActivityResultLauncher<Intent> filePickerActivityResultLauncher =
       registerForActivityResult(
@@ -86,15 +81,17 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
             }
           });
 
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
-      registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if (isGranted) {
-          filePicker();
-        } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT)
-              .show();
-        }
-      });
+  private Long shelfId;
+  private String shelfName;
+  private View view;
+  private Context context;
+  private BookModel bookModel;
+  private NoteModel noteModel;
+  private BookRecyclerViewAdapter adapter;
+  private SortCriteria sortCriteria;
+  private ExportBibTex exportBibTex;
+  private ImportBibTex importBibTex;
+
 
   @Override
   protected void onBackPressed() {
@@ -129,16 +126,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     bookModel = new BookModel(requireContext(), shelfId);
     noteModel = new NoteModel(requireContext());
 
-    List<BookItem> bookList;
-    bookList = bookModel.getBookList(shelfId);
-
     exportBibTex = new ExportBibTex(shelfName);
     importBibTex = new ImportBibTex(context);
-
-    SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
-    adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
-    recyclerView.setAdapter(adapter);
-    recyclerView.setListener(this);
 
     setupRecyclerView();
 
@@ -162,16 +151,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     ((MainActivity) requireActivity()).setVisibilitySortButton(true);
 
-    sortBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSortBook();
-      }
-    });
+    sortBtn.setOnClickListener(v -> handleSortBook());
   }
 
   private void setupDefaultApp() {
-
     MainActivity mainActivity = ((MainActivity) requireActivity());
     Uri uri = mainActivity.getUriDefaultApp();
 
@@ -179,40 +162,28 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
       handleImport(uri);
       updateBookList(bookModel.getCurrentBookList());
     }
-    mainActivity.resetIsDefaultApp();
 
+    mainActivity.resetIsDefaultApp();
   }
 
   private void setupRecyclerView() {
-    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria,
-        bookModel.getBookList(shelfId));
+    SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
 
-    RecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
+    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria,
+                                                          bookModel.getBookList(shelfId));
+
     adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
     recyclerView.setAdapter(adapter);
+    recyclerView.setListener(this);
 
     updateEmptyView(bookList);
   }
 
   private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).importBtn.setOnClickListener(new View.OnClickListener() {
+    ((MainActivity) requireActivity()).importBtn.setOnClickListener(
+        view -> checkStoragePermission());
 
-      @Override
-      public void onClick(View view) {
-        checkStoragePermission();
-      }
-
-    });
-
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View view) {
-        checkEmptyShelf();
-      }
-
-    });
-
+    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyShelf());
   }
 
   @Override
@@ -293,18 +264,11 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
           getString(R.string.delete_book_message) + assembleAlertString());
     }
 
-    alertDeleteBook.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        deselectBookItems();
-      }
-    });
+    alertDeleteBook.setNegativeButton(R.string.cancel, (dialog, which) -> deselectBookItems());
 
-    alertDeleteBook.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        performDeleteBook();
-      }
+    alertDeleteBook.setPositiveButton(R.string.delete, (dialog, which) -> {
+      performDeleteBook();
+      deselectBookItems();
     });
 
     alertDeleteBook.show();
@@ -343,7 +307,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     }
 
     if (notesNumber == 1) {
-      return " einer " + getString(R.string.note);
+      return getString(R.string.one) + getString(R.string.note);
     }
 
     return " " + notesNumber + " " + getString(R.string.notes);
@@ -364,14 +328,12 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void handleSortBook() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        new SortDialog.SortDialogListener() {
-          @Override
-          public void onSortedSelected(SortCriteria newSortCriteria) {
-            sortCriteria = newSortCriteria;
-            ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
-            sortBookList();
-          }
-        });
+                                           newSortCriteria -> {
+                                             sortCriteria = newSortCriteria;
+                                             ((MainActivity) requireActivity())
+                                                 .setSortCriteria(newSortCriteria);
+                                             sortBookList();
+                                           });
 
     sortDialog.show();
   }
@@ -384,13 +346,13 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void checkEmptyShelf() {
     if (bookModel.getAllBooksForShelf(shelfId).isEmpty()) {
-      AlertDialog.Builder alertDialogEmptyShelf = new AlertDialog.Builder(getContext());
+      AlertDialog.Builder alertDialogEmptyShelf = new AlertDialog.Builder(requireContext());
       alertDialogEmptyShelf.setTitle(R.string.empty_shelf);
       alertDialogEmptyShelf.setMessage(R.string.empty_shelf_description);
 
       alertDialogEmptyShelf.setPositiveButton(R.string.ok,
-          (dialog, which) -> {
-          });
+                                              (dialog, which) -> {
+                                              });
 
       alertDialogEmptyShelf.create().show();
     } else {
@@ -422,13 +384,12 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
     } else {
       Toast.makeText(context, getString(R.string.not_valid_bib_file),
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
     }
 
   }
 
   private void addImportedBook(Book book, List<Author> authorList) {
-
     if (importBibTex.existsBibNote()) {
       bookModel.addBook(book, authorList);
 
@@ -442,7 +403,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private String readBibFile(Uri uri) {
-
     try {
       importBibTex.readTextFromUri(uri);
       return importBibTex.readTextFromUri(uri);
@@ -466,18 +426,17 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     nonBibFileAlertDialog.setMessage(R.string.import_non_bib_file_description);
 
     nonBibFileAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> filePicker());
+                                            (dialog, which) -> filePicker());
 
     nonBibFileAlertDialog.setNegativeButton(R.string.cancel,
-        (dialog, which) -> dialog.dismiss());
+                                            (dialog, which) -> dialog.dismiss());
 
     nonBibFileAlertDialog.create().show();
   }
 
   private void checkStoragePermission() {
-    // if the permissions are granted
     if (ContextCompat.checkSelfPermission(requireContext(),
-        Manifest.permission.READ_EXTERNAL_STORAGE)
+                                          Manifest.permission.READ_EXTERNAL_STORAGE)
         == PackageManager.PERMISSION_GRANTED) {
 
       filePicker();
@@ -501,24 +460,26 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> ActivityCompat.requestPermissions(requireActivity(),
-            new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
-            StorageKeys.STORAGE_PERMISSION_CODE
-        ));
+              (dialog, which) -> ActivityCompat
+                .requestPermissions(requireActivity(),
+                  new String[] {
+                    Manifest.permission.READ_EXTERNAL_STORAGE},
+                    StorageKeys.STORAGE_PERMISSION_CODE
+                ));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
-        (dialog, which) -> dialog.dismiss());
+                                     (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
   }
 
   private void handleManualBook() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.book_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
@@ -552,10 +513,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   public void onBookClicked(int position) {
     BookItem bookItem = bookModel.getSelectedBookItem(position);
 
-    BookNotesView fragment = new BookNotesView();
-    fragment.setArguments(createBookBundle(bookItem));
+    BookNotesView bookNotesFragment = new BookNotesView();
+    bookNotesFragment.setArguments(createBookBundle(bookItem));
 
-    showFragment(fragment);
+    showFragment(bookNotesFragment);
   }
 
   private void updateEmptyView(List<BookItem> bookList) {
@@ -569,42 +530,33 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void createAddBookListener() {
     FloatingActionButton addBookBtn = view.findViewById(R.id.add_btn);
-    PopupMenu pm = new PopupMenu(getContext(), addBookBtn);
-    pm.getMenuInflater().inflate(R.menu.add_book_menu, pm.getMenu());
+    PopupMenu popupMenu = new PopupMenu(getContext(), addBookBtn);
+    popupMenu.getMenuInflater().inflate(R.menu.add_book_menu, popupMenu.getMenu());
 
-    pm.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-      @Override
-      public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.add_book_scan) {
-          handleAddBookBarcodeFragment();
-        } else if (item.getItemId() == R.id.add_book_online) {
-          handleAddBookOnline();
-        } else if (item.getItemId() == R.id.add_book_manually) {
-          handleAddBookManually();
-        }
-
-        return true;
+    popupMenu.setOnMenuItemClickListener(item -> {
+      if (item.getItemId() == R.id.add_book_scan) {
+        handleAddBookBarcodeFragment();
+      } else if (item.getItemId() == R.id.add_book_online) {
+        handleAddBookOnline();
+      } else if (item.getItemId() == R.id.add_book_manually) {
+        handleAddBookManually();
       }
+
+      return true;
     });
 
-
-    addBookBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        pm.show();
-      }
-    });
+    addBookBtn.setOnClickListener(v -> popupMenu.show());
   }
 
   private void handleAddBookOnline() {
-    BookOnlineFragment fragment = new BookOnlineFragment();
-    fragment.setArguments(createBookBundle());
+    BookOnlineFragment bookOnlineFragment = new BookOnlineFragment();
+    bookOnlineFragment.setArguments(createBookBundle());
 
-    showFragment(fragment);
+    showFragment(bookOnlineFragment);
   }
 
   private void handleAddBookManually() {
-    BookFormFragment fragment = new BookFormFragment(
+    BookFormFragment bookFormFragment = new BookFormFragment(
         new BookFormFragment.ChangeBookListener() {
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
@@ -612,9 +564,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
             Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
           }
         });
-    fragment.setArguments(createBookBundle());
 
-    showFragment(fragment);
+    bookFormFragment.setArguments(createBookBundle());
+
+    showFragment(bookFormFragment);
   }
 
   private void addBook(Book book, List<Author> authorList) {
@@ -624,10 +577,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void handleAddBookBarcodeFragment() {
-    BookBarcodeScannerFragment fragment = new BookBarcodeScannerFragment();
-    fragment.setArguments(createBookBundle());
+    BookBarcodeScannerFragment bookBarcodeScannerFragment = new BookBarcodeScannerFragment();
+    bookBarcodeScannerFragment.setArguments(createBookBundle());
 
-    showFragment(fragment, LibraryKeys.FRAGMENT_BARCODE_SCANNER);
+    showFragment(bookBarcodeScannerFragment, LibraryKeys.FRAGMENT_BARCODE_SCANNER);
   }
 
   private void deselectBookItems() {
@@ -668,7 +621,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void shareShelfBibIntent() {
-
     String bibContent =
         exportBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
 
@@ -682,7 +634,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     startActivity(Intent.createChooser(shareShelfIntent, "SEND"));
-
   }
 
   @Override

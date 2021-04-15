@@ -55,8 +55,7 @@ public class TagDao implements InterfaceTagDao {
         new String[] {String.valueOf(id)}, null, null, null, null);
 
     Tag tag = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
 
       tag = new Tag(
           Long.parseLong(cursor.getString(0)), // Id
@@ -65,6 +64,7 @@ public class TagDao implements InterfaceTagDao {
 
       cursor.close();
     }
+
     return tag;
   }
 
@@ -90,7 +90,6 @@ public class TagDao implements InterfaceTagDao {
       } while (cursor.moveToNext());
       cursor.close();
     }
-
 
     return tagList;
   }

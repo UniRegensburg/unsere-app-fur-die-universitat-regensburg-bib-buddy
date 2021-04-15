@@ -10,6 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * AuthorRecyclerViewAdapter provides a binding from the authorList to the view
+ * that is displayed within the RecyclerView of the AuthorFragment.
+ *
+ * @author Sarah Kurek, Luis Moßburger
+ */
 public class AuthorRecyclerViewAdapter
     extends RecyclerView.Adapter<AuthorRecyclerViewAdapter.AuthorViewHolder> {
 
@@ -21,10 +27,10 @@ public class AuthorRecyclerViewAdapter
   private ViewGroup parent;
 
   /**
-   * AuthorRecyclerViewAdapter provides a binding from the authorList to the view
-   * that is displayed within the RecyclerView of the AuthorFragment.
+   * Constructor of the AuthorRecyclerViewAdapter.
    *
-   * @author Sarah Kurek, Luis Moßburger
+   * @param listener   listener for the interface and callback of the search
+   * @param authorList result list of the search
    */
   public AuthorRecyclerViewAdapter(AuthorListener listener,
                                    List<Author> authorList) {
@@ -70,6 +76,7 @@ public class AuthorRecyclerViewAdapter
   @Override
   public void onBindViewHolder(@NonNull AuthorRecyclerViewAdapter.AuthorViewHolder holder,
                                int position) {
+
     AuthorItem authorItem = authorItemList.get(position);
     String name = authorItem.getFirstName() + " " + authorItem.getLastName();
 
@@ -78,7 +85,7 @@ public class AuthorRecyclerViewAdapter
     holder.getTextTitleView().setText(authorItem.getTitle());
 
     holder.itemView.setOnClickListener(v -> {
-      if (getSelectedAuthorItems().size() > 0) {
+      if (!getSelectedAuthorItems().isEmpty()) {
         listener.onAuthorLongClicked(position, authorItem, v);
       } else {
         listener.onAuthorClicked(position);
@@ -105,7 +112,7 @@ public class AuthorRecyclerViewAdapter
   }
 
   /**
-   * This method fetches the number of items selected in the recyclerView.
+   * Fetches the number of items selected in the recyclerView.
    *
    * @return the selected recyclerView items
    */
@@ -136,8 +143,7 @@ public class AuthorRecyclerViewAdapter
     /**
      * Custom ViewHolder constructor to setup its basic view.
      *
-     * @param itemView View of the AuthorRecyclerView-item.
-     * @author Sarah
+     * @param itemView View of the AuthorRecyclerView-item
      */
     public AuthorViewHolder(@NonNull View itemView) {
       super(itemView);

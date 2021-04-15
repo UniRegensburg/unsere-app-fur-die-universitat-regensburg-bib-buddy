@@ -28,7 +28,7 @@ import java.util.Locale;
  * NoteRecyclerViewAdapter provides a binding from a note list to a corresponding
  * RecyclerView list.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class NoteRecyclerViewAdapter
     extends RecyclerView.Adapter<NoteRecyclerViewAdapter.NotesViewHolder> {
@@ -51,9 +51,9 @@ public class NoteRecyclerViewAdapter
   /**
    * Constructor to connect a NoteList with a MainActivity.
    *
-   * @param activity  instance of MainActivity.
-   * @param noteList  of NoteItems.
-   * @param noteModel model for handling Note objects.
+   * @param activity  instance of MainActivity
+   * @param noteList  of NoteItems
+   * @param noteModel model for handling Note objects
    */
   public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
                                  NoteModel noteModel) {
@@ -75,10 +75,10 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * Set up custom ViewHolder components for Notes.
+   * Sets up custom ViewHolder components for Notes.
    *
-   * @param holder   custom ViewHolder instance.
-   * @param position within the adapter for the viewHolder item.
+   * @param holder   custom ViewHolder instance
+   * @param position within the adapter for the viewHolder item
    */
   @Override
   public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
@@ -99,7 +99,7 @@ public class NoteRecyclerViewAdapter
 
           activity.getSupportFragmentManager().beginTransaction()
               .replace(R.id.fragment_container_view, nextFrag,
-                  LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
+                       LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
               .addToBackStack(null)
               .commit();
         }
@@ -132,7 +132,7 @@ public class NoteRecyclerViewAdapter
     holder.getModDateView().setText(noteItem.getModDateStr());
     holder.getNameView().setText(noteItem.getDisplayName());
     holder.getTypeView().setImageDrawable(ContextCompat.getDrawable(activity.getBaseContext(),
-        noteItem.getImage()));
+                                                                    noteItem.getImage()));
   }
 
   private void setupAudioElements(NotesViewHolder holder, NoteItem noteItem) {
@@ -168,13 +168,14 @@ public class NoteRecyclerViewAdapter
     progressBar.setOnSeekBarChangeListener(seekBarListener);
 
     setupMediaPlayerListeners(mediaPlayer, progressBar, playButton, stopButton, noteItem,
-        seekBarListener);
+                              seekBarListener);
   }
 
   private void setTotalTimes(NoteItem noteItem, TextView totalTime) {
     MediaMetadataRetriever mmr = new MediaMetadataRetriever();
     mmr.setDataSource(noteModel.getNoteFilePath(noteItem.getId()));
     String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
     int millis = Integer.parseInt(durationStr);
     String time = new SimpleDateFormat("mm:ss", Locale.getDefault())
         .format(new Date(millis));
@@ -182,7 +183,7 @@ public class NoteRecyclerViewAdapter
   }
 
   private void setupMediaPlayerListeners(MediaPlayer mediaPlayer, SeekBarCompat progressBar,
-                                        ImageButton playButton,
+                                         ImageButton playButton,
                                          ImageButton stopButton,
                                          NoteItem noteItem, SeekBarListener seekBarListener) {
     mediaPlayer.setOnCompletionListener(mp -> {
@@ -205,7 +206,7 @@ public class NoteRecyclerViewAdapter
   }
 
   private void playOrPause(View v, MediaPlayer mediaPlayer, ImageButton stopButton,
-                       NoteItem noteItem, SeekBarListener seekBarListener) {
+                           NoteItem noteItem, SeekBarListener seekBarListener) {
     ImageButton button = (ImageButton) v;
 
     if (v.isSelected()) {
@@ -278,9 +279,9 @@ public class NoteRecyclerViewAdapter
   }
 
   /**
-   * Fetch the selected items of the RecyclerView.
+   * Fetches the selected items of the RecyclerView.
    *
-   * @return the selected RecyclerView items.
+   * @return the selected RecyclerView items
    */
   public List<NoteItem> getSelectedNoteItems() {
     List<NoteItem> selectedNotes = new ArrayList<>();
@@ -315,7 +316,7 @@ public class NoteRecyclerViewAdapter
     /**
      * Constructor to set up the Note-CardView.
      *
-     * @param itemView view of the corresponding RecyclerView-item.
+     * @param itemView view of the corresponding RecyclerView-item
      */
     public NotesViewHolder(View itemView) {
       super(itemView);

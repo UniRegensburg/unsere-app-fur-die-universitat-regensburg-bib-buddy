@@ -131,10 +131,6 @@ public class Book {
     return volume;
   }
 
-  public void setVolume(String volume) {
-    this.volume = volume;
-  }
-
   public String getEdition() {
     return edition;
   }
@@ -151,16 +147,8 @@ public class Book {
     this.addInfo = addInfo;
   }
 
-  public void setCreateDate(Long createDate) {
-    this.createDate = createDate;
-  }
-
   public Long getModDate() {
     return modDate;
-  }
-
-  public void setModDate(Long modDate) {
-    this.modDate = modDate;
   }
 
 }

@@ -83,12 +83,13 @@ public class ShelfDao implements InterfaceShelfDao {
   // Gets all shelves in a list view
   @Override
   public List<Shelf> findAll() {
-    List<Shelf> shelfList = new ArrayList<Shelf>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
-
     SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
+
     Cursor cursor = db.rawQuery(selectQuery, null);
 
+    List<Shelf> shelfList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);
@@ -122,19 +123,20 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to find all sub-shelves of a certain shelf with the parentId.
+   * Finds all sub-shelves of a certain shelf with the parentId.
    *
    * @param id current shelfId
    * @return list with all sub-shelves for the current shelf
    */
   public List<Shelf> findAllByParentId(Long id) {
-    List<Shelf> shelfList = new ArrayList<Shelf>();
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
     String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF
         + " WHERE " + DatabaseHelper.SHELF_ID + partSqlQuery(id);
 
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
+    List<Shelf> shelfList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);
@@ -155,12 +157,13 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to find the last added shelfId.
+   * Finds the last added shelfId.
    *
    * @return last added shelfId
    */
   public Long findLatestId() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
+
     String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
         + DatabaseHelper.TABLE_NAME_SHELF + " ORDER BY " + DatabaseHelper._ID + " DESC LIMIT 1";
 
@@ -179,15 +182,15 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to count all Notes for a certain Shelf.
+   * Counts all Notes for a certain Shelf.
    *
    * @param shelfBookIds list with all bookIds for current shelf
    * @return count of all books for current shelf
    */
   public int countAllNotesForShelf(List<Long> shelfBookIds) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    int noteCount = 0;
 
+    int noteCount = 0;
     for (Long bookId : shelfBookIds) {
       String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
           + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
@@ -208,14 +211,13 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to count all Books for a certain Shelf.
+   * Counts all Books for a certain Shelf.
    *
    * @param shelfId current shelfId
    * @return count of all books for the current shelf
    */
   public int countAllBooksForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    int bookCount = 0;
 
     String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
         + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
@@ -223,6 +225,7 @@ public class ShelfDao implements InterfaceShelfDao {
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
 
+    int bookCount = 0;
     if (cursor.moveToFirst()) {
       do {
         bookCount = Integer.parseInt(cursor.getString(0));
@@ -270,8 +273,6 @@ public class ShelfDao implements InterfaceShelfDao {
    * @return a list of shelves which have the searchInput in the name
    */
   public List<Shelf> findShelvesByName(String searchInput) {
-    List<Shelf> shelfList = new ArrayList<>();
-
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF + " WHERE "
@@ -279,6 +280,7 @@ public class ShelfDao implements InterfaceShelfDao {
 
     Cursor cursor = db.rawQuery(selectQuery, null);
 
+    List<Shelf> shelfList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);

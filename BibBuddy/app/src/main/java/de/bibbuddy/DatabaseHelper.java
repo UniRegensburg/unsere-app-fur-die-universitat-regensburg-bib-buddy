@@ -57,7 +57,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   // Database Information
   private static final String DB_NAME = "BibBuddyStorage.db"; // DB
 
-  // database version
+  // Database version
   private static final int DB_VERSION = 1;
 
   // Table queries
