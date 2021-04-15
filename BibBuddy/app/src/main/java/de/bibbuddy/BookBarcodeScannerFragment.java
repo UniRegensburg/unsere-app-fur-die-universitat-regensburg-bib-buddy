@@ -53,6 +53,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     setupDetectorsAndSources(view);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
     mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
 

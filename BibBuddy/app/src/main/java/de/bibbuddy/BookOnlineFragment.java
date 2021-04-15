@@ -40,6 +40,7 @@ public class BookOnlineFragment extends BackStackFragment
     MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
+    mainActivity.updateHeaderFragment(getString(R.string.add_book));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
 
     return view;

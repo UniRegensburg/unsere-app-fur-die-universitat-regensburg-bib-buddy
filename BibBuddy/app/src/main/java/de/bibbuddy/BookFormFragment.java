@@ -53,6 +53,8 @@ public class BookFormFragment extends BackStackFragment {
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
@@ -69,9 +71,8 @@ public class BookFormFragment extends BackStackFragment {
           authorList.addAll(model.getAuthorList(bookId));
         }
 
-        mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+
         mainActivity.updateHeaderFragment(getString(R.string.change_book));
-        mainActivity.setVisibilitySortButton(false);
         mainActivity.updateNavigationFragment(R.id.navigation_library);
       }
 

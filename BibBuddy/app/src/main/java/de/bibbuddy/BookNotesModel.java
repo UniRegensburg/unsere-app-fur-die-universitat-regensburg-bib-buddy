@@ -4,7 +4,7 @@ import android.content.Context;
 import java.util.List;
 
 /**
- * BookNotesModel manages all data of the BookNotesView.
+ * BookNotesModel manages all data of the BookNotesFragment.
  *
  * @author Sarah Kurek, Silvia Ivanova
  */
@@ -13,10 +13,10 @@ public class BookNotesModel {
   private final NoteModel noteModel;
 
   /**
-   * BookNotesViewModel contains methods for managing the
-   * data for the BookNotesView.
+   * BookNotesModel contains methods for managing the
+   * data for the BookNotesFragment.
    *
-   * @param context context for the BookNotesView
+   * @param context context for the BookNotesFragment
    */
   public BookNotesModel(Context context) {
     this.noteModel = new NoteModel(context);
