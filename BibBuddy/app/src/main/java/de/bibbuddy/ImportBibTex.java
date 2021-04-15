@@ -96,7 +96,7 @@ public class ImportBibTex {
           }
 
           removeEqualSignFromBibTag(line);
-          stringBuilder.append(line.trim()).append('\n');
+          stringBuilder.append(line.trim()).append("\n");
           stringBuilder.setLength(stringBuilder.length() - 1);
         }
 

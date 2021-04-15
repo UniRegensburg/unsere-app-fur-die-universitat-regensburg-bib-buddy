@@ -41,7 +41,7 @@ public class LibraryFragment extends BackStackFragment
   private BookModel bookModel;
   private NoteModel noteModel;
 
-  private ExportBibTex exportBibTex;
+  private ShareBibTex shareBibTex;
   private SortCriteria sortCriteria;
 
   @Override
@@ -82,7 +82,7 @@ public class LibraryFragment extends BackStackFragment
     noteModel = new NoteModel(requireContext());
 
     String fileName = "library_export_BibBuddy";
-    exportBibTex = new ExportBibTex(fileName);
+    shareBibTex = new ShareBibTex(fileName);
 
     return view;
   }
@@ -444,8 +444,8 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void shareLibraryBibIntent() {
-    String content = exportBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
+    String content = shareBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
+    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, content);
 
     Intent shareLibraryIntent =
         ShareCompat.IntentBuilder.from(requireActivity())

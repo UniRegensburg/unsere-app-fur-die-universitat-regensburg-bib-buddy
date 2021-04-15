@@ -78,7 +78,7 @@ public class HomeFragment extends BackStackFragment
   public void onBookClicked(int position) {
     BookItem bookItem = bookItemList.get(position);
 
-    BookNotesView bookNotesFragment = new BookNotesView();
+    BookNotesFragment bookNotesFragment = new BookNotesFragment();
     bookNotesFragment.setArguments(createBookBundle(bookItem));
 
     showFragment(bookNotesFragment);

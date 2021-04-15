@@ -10,27 +10,27 @@ import java.io.FileWriter;
 import java.util.List;
 
 /**
- * The ExportBibTex creates and writes a BibTex file.
+ * The ShareBibTex creates and writes a BibTex file.
  * It contains methods for generation of contents that are
  * used for the export of the BibTex file.
  *
  * @author Silvia Ivanova, Luis Moßburger
  */
 
-public class ExportBibTex {
+public class ShareBibTex {
 
-  private static final String TAG = ExportBibTex.class.getSimpleName();
+  private static final String TAG = ShareBibTex.class.getSimpleName();
 
   private final String fileName;
 
 
   /**
-   * The ExportBibTex is responsible for the creating, writing
+   * The ShareBibTex is responsible for the creating, writing
    * and retrieving of contents, needed for the BibTex Export.
    *
    * @param fileName name of the BibTex file
    */
-  public ExportBibTex(String fileName) {
+  public ShareBibTex(String fileName) {
     this.fileName = fileName;
   }
 

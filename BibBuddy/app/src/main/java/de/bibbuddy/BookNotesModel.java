@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova
  */
-public class BookNotesViewModel {
+public class BookNotesModel {
 
   private final NoteModel noteModel;
 
@@ -18,7 +18,7 @@ public class BookNotesViewModel {
    *
    * @param context context for the BookNotesView
    */
-  public BookNotesViewModel(Context context) {
+  public BookNotesModel(Context context) {
     this.noteModel = new NoteModel(context);
   }
 

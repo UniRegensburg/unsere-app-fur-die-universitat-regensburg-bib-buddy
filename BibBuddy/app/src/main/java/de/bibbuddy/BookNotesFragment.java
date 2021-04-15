@@ -33,11 +33,11 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
-public class BookNotesView extends BackStackFragment implements SwipeLeftRightCallback.Listener {
+public class BookNotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
   private View view;
   private Context context;
-  private BookNotesViewModel bookNotesViewModel;
+  private BookNotesModel bookNotesModel;
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private ActivityResultLauncher<String> requestPermissionLauncher;
@@ -45,7 +45,7 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   private BookModel bookModel;
   private NoteModel noteModel;
 
-  private ExportBibTex exportBibTex;
+  private ShareBibTex shareBibTex;
   private SortCriteria sortCriteria;
 
   @Override
@@ -92,7 +92,7 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
-    bookNotesViewModel = new BookNotesViewModel(context);
+    bookNotesModel = new BookNotesModel(context);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
     sortCriteria = mainActivity.getSortCriteria();
@@ -109,7 +109,7 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
     String fileName = (book.getTitle() + book.getPubYear())
         .replaceAll("\\s+", "");
-    exportBibTex = new ExportBibTex(fileName);
+    shareBibTex = new ShareBibTex(fileName);
 
     mainActivity.updateHeaderFragment(bundle.getString(LibraryKeys.SHELF_NAME));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
@@ -217,8 +217,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   private void performDeleteNotes(List<NoteItem> itemsToDelete) {
     deselectNoteItems();
 
-    bookNotesViewModel.deleteNotes(itemsToDelete);
-    adapter.setNoteList(bookNotesViewModel.getBookNoteList(bookId));
+    bookNotesModel.deleteNotes(itemsToDelete);
+    adapter.setNoteList(bookNotesModel.getBookNoteList(bookId));
     adapter.notifyDataSetChanged();
 
     if (itemsToDelete.size() > 1) {
@@ -251,12 +251,12 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void sortNoteList() {
-    List<NoteItem> noteList = bookNotesViewModel.getSortedNoteList(sortCriteria, bookId);
+    List<NoteItem> noteList = bookNotesModel.getSortedNoteList(sortCriteria, bookId);
     adapter.setNoteList(noteList);
   }
 
   private void checkEmptyNoteList() {
-    if (bookNotesViewModel.getBookNoteList(bookId).isEmpty()) {
+    if (bookNotesModel.getBookNoteList(bookId).isEmpty()) {
       AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
       alertDialogEmptyLib.setTitle(R.string.empty_note_list);
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
@@ -377,8 +377,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
     adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(),
-                                          bookNotesViewModel.getBookNoteList(bookId),
-                                          bookNotesViewModel.getNoteModel());
+                                          bookNotesModel.getBookNoteList(bookId),
+                                          bookNotesModel.getNoteModel());
 
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
@@ -397,8 +397,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
   private void shareBookNoteBibIntent() {
     String content =
-        exportBibTex.getBibDataFromBook(bookId, bookModel, noteModel);
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
+        shareBibTex.getBibDataFromBook(bookId, bookModel, noteModel);
+    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, content);
 
     Intent shareBookNoteIntent =
         ShareCompat.IntentBuilder.from(requireActivity())

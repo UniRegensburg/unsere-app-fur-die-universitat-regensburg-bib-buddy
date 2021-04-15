@@ -3,7 +3,7 @@ package de.bibbuddy;
 import java.util.stream.Stream;
 
 /**
- * Looks up table for the note type.
+ * Look up table for the note type.
  *
  * @author Sarah Kurek
  */

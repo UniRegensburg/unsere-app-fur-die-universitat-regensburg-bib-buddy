@@ -283,7 +283,7 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void openBook(SearchItem searchItem) {
-    BookNotesView bookNotesFragment = new BookNotesView();
+    BookNotesFragment bookNotesFragment = new BookNotesFragment();
     bookNotesFragment.setArguments(createBookBundle(searchItem));
 
     showFragment(bookNotesFragment);

@@ -89,7 +89,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private NoteModel noteModel;
   private BookRecyclerViewAdapter adapter;
   private SortCriteria sortCriteria;
-  private ExportBibTex exportBibTex;
+  private ShareBibTex shareBibTex;
   private ImportBibTex importBibTex;
 
 
@@ -126,7 +126,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     bookModel = new BookModel(requireContext(), shelfId);
     noteModel = new NoteModel(requireContext());
 
-    exportBibTex = new ExportBibTex(shelfName);
+    shareBibTex = new ShareBibTex(shelfName);
     importBibTex = new ImportBibTex(context);
 
     setupRecyclerView();
@@ -513,7 +513,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   public void onBookClicked(int position) {
     BookItem bookItem = bookModel.getSelectedBookItem(position);
 
-    BookNotesView bookNotesFragment = new BookNotesView();
+    BookNotesFragment bookNotesFragment = new BookNotesFragment();
     bookNotesFragment.setArguments(createBookBundle(bookItem));
 
     showFragment(bookNotesFragment);
@@ -622,9 +622,9 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void shareShelfBibIntent() {
     String bibContent =
-        exportBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
+        shareBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
 
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, bibContent);
+    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, bibContent);
 
     Intent shareShelfIntent =
         ShareCompat.IntentBuilder.from(requireActivity())
