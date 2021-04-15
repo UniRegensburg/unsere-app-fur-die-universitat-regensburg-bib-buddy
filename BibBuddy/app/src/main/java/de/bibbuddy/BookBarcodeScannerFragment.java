@@ -25,7 +25,7 @@ import java.util.List;
  * BookBarcodeScannerFragment is responsible for scanning the ISBN of a book
  * that a user wants to add to a shelf.
  *
- * @author Claudia Schönherr, Luis Moßburger.
+ * @author Claudia Schönherr, Luis Moßburger
  */
 public class BookBarcodeScannerFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
@@ -33,7 +33,6 @@ public class BookBarcodeScannerFragment extends BackStackFragment
   private static final String TAG = BookBarcodeScannerFragment.class.getSimpleName();
   private static final int REQUEST_CAMERA_PERMISSION = 201;
 
-  private MainActivity mainActivity;
   private SurfaceView surfaceView;
   private CameraSource cameraSource;
   private BarcodeDetector barcodeDetector;
@@ -53,7 +52,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
     setupDetectorsAndSources(view);
 
-    mainActivity = (MainActivity) requireActivity();
+    MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
 
@@ -73,6 +72,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
       @Override
       public void surfaceCreated(SurfaceHolder holder) {
+        MainActivity mainActivity = (MainActivity) requireActivity();
         try {
           if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA)
               == PackageManager.PERMISSION_GRANTED) {
@@ -105,7 +105,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       /**
        * Receives a barcode ISBN, hands the ISBN over to the API.
        *
-       * @param detections that were received from the camera.
+       * @param detections that were received from the camera
        */
       @Override
       public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
@@ -121,6 +121,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
   private void handleIsbnInput(String isbn) {
     String cleanIsbn = isbn.replaceAll("\\s", "");
 
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
     if (DataValidation.isValidIsbn10or13(cleanIsbn)) {
       IsbnRetriever isbnRetriever = new IsbnRetriever(cleanIsbn);
       Thread thread = new Thread(isbnRetriever);
@@ -132,7 +134,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
         Log.e(TAG, ex.toString(), ex);
       }
 
-      // retrieve metadata that was saved
+      // Retrieves metadata that was saved
       Book book = isbnRetriever.getBook();
       List<Author> authors = isbnRetriever.getAuthors();
 
@@ -141,13 +143,13 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       } else {
         mainActivity.runOnUiThread(
             () -> Toast.makeText(mainActivity, getString(R.string.isbn_not_found),
-                Toast.LENGTH_SHORT).show());
+                                 Toast.LENGTH_SHORT).show());
       }
     } else {
 
       mainActivity
           .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.isbn_not_valid),
-              Toast.LENGTH_SHORT).show());
+                                              Toast.LENGTH_SHORT).show());
     }
   }
 
@@ -161,9 +163,10 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
     bookDao.create(book, authorList, shelfId);
 
+    MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity
         .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.added_book),
-            Toast.LENGTH_SHORT).show());
+                                            Toast.LENGTH_SHORT).show());
 
     closeFragment();
   }

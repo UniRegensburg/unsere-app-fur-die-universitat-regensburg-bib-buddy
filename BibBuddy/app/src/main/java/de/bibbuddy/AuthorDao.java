@@ -45,7 +45,7 @@ public class AuthorDao implements InterfaceAuthorDao {
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
-      long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
+      Long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
       author.setId(id);
 
     } catch (SQLiteException ex) {
@@ -60,7 +60,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   /**
-   * Method to update an existing author.
+   * Updates an existing author.
    *
    * @param author author object
    */
@@ -102,36 +102,38 @@ public class AuthorDao implements InterfaceAuthorDao {
     Author author = null;
     if (cursor.moveToFirst()) {
       author = createAuthorData(cursor);
-      cursor.close();
     }
+
+    cursor.close();
+
     return author;
   }
 
   /**
    * Finds an existing author by its title, first and last name.
    *
-   * @param authorToFind The author containing the data to search for
+   * @param authorToFind the author containing the data to search for
    * @return if found, the author (with its database ID), else null
    */
   public Author findByTitleAndFullName(Author authorToFind) {
     List<String> params = new ArrayList<>();
-    StringBuilder sb = new StringBuilder();
+    StringBuilder stringBuilder = new StringBuilder();
 
-    sb.append(DatabaseHelper.FIRST_NAME + " = ?");
+    stringBuilder.append(DatabaseHelper.FIRST_NAME + " = ?");
     params.add(authorToFind.getFirstName());
 
-    sb.append(" AND " + DatabaseHelper.LAST_NAME + " = ?");
+    stringBuilder.append(" AND " + DatabaseHelper.LAST_NAME + " = ?");
     params.add(authorToFind.getLastName());
 
-    sb.append(" AND " + DatabaseHelper.TITLE);
+    stringBuilder.append(" AND " + DatabaseHelper.TITLE);
     if (isNullOrEmpty(authorToFind.getTitle())) {
-      sb.append(" IS NULL");
+      stringBuilder.append(" IS NULL");
     } else {
-      sb.append(" = ?");
+      stringBuilder.append(" = ?");
       params.add(authorToFind.getTitle());
     }
 
-    String selection = sb.toString();
+    String selection = stringBuilder.toString();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
@@ -159,13 +161,13 @@ public class AuthorDao implements InterfaceAuthorDao {
   // Gets all authors in a list view
   @Override
   public List<Author> findAll() {
-    List<Author> authorList = new ArrayList<Author>();
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
 
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
+    List<Author> authorList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Author author = createAuthorData(cursor);
@@ -193,8 +195,8 @@ public class AuthorDao implements InterfaceAuthorDao {
   /**
    * Deletes the relevant author entries.
    *
-   * @param authorId Id of the author
-   * @param bookId   Id of the book
+   * @param authorId id of the author
+   * @param bookId   id of the book
    */
   public void delete(Long authorId, Long bookId) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -203,7 +205,7 @@ public class AuthorDao implements InterfaceAuthorDao {
             + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
         new String[] {String.valueOf(authorId), String.valueOf(bookId)});
 
-    // delete author only if author has no link to another book
+    // Deletes author only if author has no link to another book
     if (!existsAuthorBookLink(authorId)) {
       db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
           new String[] {String.valueOf(authorId)});
@@ -223,7 +225,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   /**
-   * Method to check if a certain Author already exists in the database.
+   * Checks if a certain Author already exists in the database.
    *
    * @param author instance of author
    * @return true if author exists, otherwise false
@@ -240,7 +242,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   /**
-   * Method to create an Author if it does not exist yet.
+   * Creates an Author if it does not exist yet.
    *
    * @param authorList list of all authors
    */

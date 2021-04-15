@@ -20,8 +20,10 @@ import java.util.List;
 
 public class BookRecyclerViewAdapter
     extends RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder> {
+
   private final BookRecyclerViewAdapter.BookListener listener;
   private final Context context;
+
   private List<BookItem> bookList;
   private ViewGroup parent;
 
@@ -81,7 +83,7 @@ public class BookRecyclerViewAdapter
     }
 
     holder.itemView.setOnClickListener(v -> {
-      if (getSelectedBookItems().size() > 0) {
+      if (!getSelectedBookItems().isEmpty()) {
         listener.onBookLongClicked(position, bookItem, v);
       } else {
         listener.onBookClicked(position);
@@ -108,7 +110,7 @@ public class BookRecyclerViewAdapter
   }
 
   /**
-   * This method fetches the number of items selected in the recyclerView.
+   * Fetches the number of items selected in the recyclerView.
    *
    * @return the selected recyclerView items
    */
@@ -141,7 +143,7 @@ public class BookRecyclerViewAdapter
     /**
      * Custom ViewHolder constructor to setup its basic view.
      *
-     * @param itemView View of the BookRecyclerView-item.
+     * @param itemView view of the BookRecyclerView-item
      */
     public BookViewHolder(@NonNull View itemView) {
       super(itemView);

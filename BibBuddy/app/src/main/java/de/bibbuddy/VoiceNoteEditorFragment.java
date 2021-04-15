@@ -25,13 +25,12 @@ import java.util.Date;
 /**
  * VoiceNoteEditorFragment is responsible for creating and saving voice notes.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class VoiceNoteEditorFragment extends BackStackFragment {
 
   private static final String TAG = VoiceNoteEditorFragment.class.getSimpleName();
 
-  private MainActivity mainActivity;
   private NoteModel noteModel;
   private Long bookId;
   private RippleBackground pulse;
@@ -44,7 +43,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mainActivity = (MainActivity) requireActivity();
+    MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
 
@@ -57,6 +56,8 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
                            @Nullable
                                Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_voice_note_editor, container, false);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
     noteModel = new NoteModel(mainActivity);
     pulse = view.findViewById(R.id.ripple_animation);
     recordButton = view.findViewById(R.id.record_button);
@@ -69,6 +70,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     } else {
       filePath += "/audio_record_" + noteModel.getVoiceNoteList().size() + 1 + ".mp4";
     }
+
     newAudio = new File(filePath);
 
     setupOnClickListener();
@@ -92,18 +94,21 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Show the VoiceNoteEditorFragment help element.
+   * Shows the VoiceNoteEditorFragment help element.
    */
   private void handleManualVoiceEditor() {
     Spanned htmlAsString =
         Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
-    android.app.AlertDialog.Builder helpAlert = new AlertDialog.Builder(mainActivity);
+    android.app.AlertDialog.Builder helpAlert =
+        new AlertDialog.Builder((MainActivity) requireActivity());
+
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
     helpAlert.setMessage(htmlAsString);
     helpAlert.setPositiveButton(R.string.ok, (dialog, which) -> {
     });
+
     helpAlert.show();
   }
 
@@ -117,11 +122,13 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Start or stop recording depending on the record-button selection.
+   * Starts or stops recording depending on the record-button selection.
    *
-   * @param start boolean if the recording should start or not.
+   * @param start boolean if the recording should start or not
    */
   private void record(boolean start) {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
     if (start) {
       pulse.startRippleAnimation();
       recordButton.setBackgroundTintList(
@@ -159,6 +166,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     if (recorder != null) {
       recorder.release();
     }
+
     saveNote();
   }
 
@@ -170,13 +178,15 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     noteModel.createNote(fileName, NoteTypeLut.AUDIO, "", newAudio.getPath());
     noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
 
-    Toast.makeText(mainActivity, getString(R.string.voice_note_saved), Toast.LENGTH_SHORT)
+    Toast.makeText((MainActivity) requireActivity(), getString(R.string.voice_note_saved),
+                   Toast.LENGTH_SHORT)
         .show();
   }
 
   @Override
   public void onPause() {
     super.onPause();
+
     if (isRecording) {
       stopRecording();
     }

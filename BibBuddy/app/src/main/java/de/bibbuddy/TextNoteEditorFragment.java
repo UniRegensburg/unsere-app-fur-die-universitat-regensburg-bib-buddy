@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,11 +24,10 @@ import org.jsoup.Jsoup;
 /**
  * TextNoteEditorFragment is responsible for creating, editing and saving text notes.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class TextNoteEditorFragment extends BackStackFragment {
 
-  private MainActivity mainActivity;
   private ImageView formatArrow;
   private View view;
   private RichTextEditor richTextEditor;
@@ -50,7 +46,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    mainActivity = (MainActivity) requireActivity();
+    MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
@@ -71,6 +67,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     if (item.getItemId() == R.id.menu_help_texteditor) {
       handleManualTextNoteEditor();
     } else if (item.getItemId() == R.id.menu_imprint) {
+      MainActivity mainActivity = (MainActivity) requireActivity();
       mainActivity.openImprint();
     }
 
@@ -78,7 +75,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Show the TextNoteEditorFragment help element.
+   * Shows the TextNoteEditorFragment help element.
    */
   private void handleManualTextNoteEditor() {
     String htmlAsString = getString(R.string.text_editor_help_text);
@@ -88,12 +85,13 @@ public class TextNoteEditorFragment extends BackStackFragment {
 
     HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
+
     helpFragment
-        .show(mainActivity.getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   /**
-   * Save the current text as Note object.
+   * Saves the current text as Note object.
    */
   private void saveNote() {
     String text = Html.toHtml(richTextEditor.getText(), Html.FROM_HTML_MODE_LEGACY);
@@ -121,7 +119,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
 
-      Toast.makeText(mainActivity, getString(R.string.text_note_saved), Toast.LENGTH_SHORT)
+      Toast.makeText((MainActivity) requireActivity(), getString(R.string.text_note_saved),
+                     Toast.LENGTH_SHORT)
           .show();
     }
   }
@@ -131,7 +130,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
-    noteModel = new NoteModel(mainActivity);
+    noteModel = new NoteModel((MainActivity) requireActivity());
     richTextEditor = view.findViewById(R.id.editor);
 
     enableBackPressedHandler();
@@ -160,7 +159,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   /**
-   * Show or hide the text format toolbar depending on if it is shown yet.
+   * Shows or hides the text format toolbar depending on if it is shown yet.
    */
   public void adjustFormatToolbarVisibility() {
     if (!formatToolbarIsShown()) {
@@ -204,7 +203,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   private void backgroundColorChange(ImageButton button) {
-    button.setBackgroundColor(ContextCompat.getColor(mainActivity, R.color.gray));
+    button
+        .setBackgroundColor(ContextCompat.getColor((MainActivity) requireActivity(), R.color.gray));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }
@@ -227,7 +227,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     bold.setOnLongClickListener(v -> {
-      Toast.makeText(mainActivity, R.string.toast_bold, Toast.LENGTH_SHORT).show();
+      Toast.makeText((MainActivity) requireActivity(), R.string.toast_bold, Toast.LENGTH_SHORT)
+          .show();
       return true;
     });
   }
@@ -241,7 +242,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     italic.setOnLongClickListener(v -> {
-      Toast.makeText(mainActivity, R.string.toast_italic, Toast.LENGTH_SHORT).show();
+      Toast.makeText((MainActivity) requireActivity(), R.string.toast_italic, Toast.LENGTH_SHORT)
+          .show();
       return true;
     });
   }
@@ -255,7 +257,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     underline.setOnLongClickListener(v -> {
-      Toast.makeText(mainActivity, R.string.toast_underline, Toast.LENGTH_SHORT).show();
+      Toast.makeText((MainActivity) requireActivity(), R.string.toast_underline, Toast.LENGTH_SHORT)
+          .show();
       return true;
     });
   }
@@ -269,7 +272,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     strikeThrough.setOnLongClickListener(v -> {
-      Toast.makeText(mainActivity, R.string.toast_strikethrough, Toast.LENGTH_SHORT).show();
+      Toast.makeText((MainActivity) requireActivity(), R.string.toast_strikethrough,
+                     Toast.LENGTH_SHORT).show();
       return true;
     });
   }
@@ -283,7 +287,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     bullet.setOnLongClickListener(v -> {
-      Toast.makeText(mainActivity, R.string.toast_bullet, Toast.LENGTH_SHORT).show();
+      Toast.makeText((MainActivity) requireActivity(), R.string.toast_bullet, Toast.LENGTH_SHORT)
+          .show();
       return true;
     });
   }
@@ -297,7 +302,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     quote.setOnLongClickListener(v -> {
-      Toast.makeText(mainActivity, R.string.toast_quote, Toast.LENGTH_SHORT).show();
+      Toast.makeText((MainActivity) requireActivity(), R.string.toast_quote, Toast.LENGTH_SHORT)
+          .show();
       return true;
     });
   }
@@ -314,6 +320,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
       deselectOtherAlignment(alignCenter);
     });
 
+    MainActivity mainActivity = (MainActivity) requireActivity();
     alignLeft.setOnLongClickListener(v -> {
       Toast.makeText(mainActivity, R.string.toast_alignLeft, Toast.LENGTH_SHORT).show();
       return true;

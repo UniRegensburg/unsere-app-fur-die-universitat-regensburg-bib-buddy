@@ -20,20 +20,20 @@ public class NoteModel {
   }
 
   /**
-   * This method gets the Ids of all notes for a given book.
+   * Gets the Ids of all notes for a given book.
    *
-   * @param id      id of a book
-   * @return        a list with the Ids of all text notes
+   * @param id id of a book
+   * @return a list with the Ids of all text notes
    */
   public List<Long> getTextNoteIdsForBook(Long id) {
     return noteDao.getTextNoteIdsForBook(id);
   }
 
   /**
-   * This method gets text string of a specific note without formatting xml tags.
+   * Gets text string of a specific note without formatting xml tags.
    *
-   * @param id   id of the note to look for
-   * @return     returns the notes text value without formatting texts
+   * @param id id of the note to look for
+   * @return returns the notes text value without formatting texts
    */
   public String findStrippedTextById(Long id) {
     return noteDao.findTextById(id).replaceAll(
@@ -47,10 +47,10 @@ public class NoteModel {
   /**
    * Creates a note object and pass it to the noteDao to add it to the database as well.
    *
-   * @param name         of the note object.
-   * @param type         of the note object.
-   * @param text         of the note object.
-   * @param noteFilePath string-value representing the path to a linked noteFile-object.
+   * @param name         of the note object
+   * @param type         of the note object
+   * @param text         of the note object
+   * @param noteFilePath string value representing the path to a linked noteFile-object
    */
   public void createNote(String name, NoteTypeLut type, String text, String noteFilePath) {
     Note note;
@@ -59,6 +59,7 @@ public class NoteModel {
     } else {
       note = new Note(name, type, text, noteFilePath);
     }
+
     noteDao.create(note);
   }
 
@@ -107,7 +108,7 @@ public class NoteModel {
     List<Note> noteList = noteDao.findAll();
 
     return noteList.stream()
-        .filter(n -> n.getType() == NoteTypeLut.AUDIO)
+        .filter(note -> note.getType() == NoteTypeLut.AUDIO)
         .collect(Collectors.toList());
   }
 

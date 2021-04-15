@@ -5,6 +5,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * The BackStackFragment contains several functions that are used by multiple Fragments.
+ * It is the parent class of several Fragments.
+ *
+ * @author Sarah Kurek
+ */
 public class BackStackFragment extends Fragment {
 
   private final OnBackPressedCallback backPressedCallback;

@@ -3,6 +3,7 @@ package de.bibbuddy;
 import java.util.Objects;
 
 public class Author {
+
   private Long id;
   private String firstName;
   private String lastName;
@@ -62,7 +63,7 @@ public class Author {
   }
 
   /**
-   * Method to check if author object is completely empty.
+   * Checks if author object is completely empty.
    */
   public boolean isEmpty() {
     return firstName == null
@@ -107,7 +108,7 @@ public class Author {
   }
 
   /**
-   * Method to copy an author object.
+   * Copies an author object.
    */
   public Author clone() {
 

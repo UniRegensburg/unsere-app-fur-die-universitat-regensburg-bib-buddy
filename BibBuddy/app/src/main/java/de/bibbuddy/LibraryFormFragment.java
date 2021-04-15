@@ -9,8 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -19,7 +17,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * @author Claudia Schönherr
  */
 public class LibraryFormFragment extends BackStackFragment {
+
   private final ChangeShelfListener listener;
+
   private int redColor;
   private int greenColor;
   private String[] shelfNames;
@@ -53,7 +53,6 @@ public class LibraryFormFragment extends BackStackFragment {
       mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
       mainActivity.setVisibilitySortButton(false);
       mainActivity.updateNavigationFragment(R.id.navigation_library);
-
     }
 
     setupUpdateShelfBtnListener();
@@ -80,12 +79,7 @@ public class LibraryFormFragment extends BackStackFragment {
   private void setupUpdateShelfBtnListener() {
     FloatingActionButton updateShelfBtn = view.findViewById(R.id.confirm_btn);
 
-    updateShelfBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleUserInput();
-      }
-    });
+    updateShelfBtn.setOnClickListener(v -> handleUserInput());
   }
 
   private void handleUserInput() {

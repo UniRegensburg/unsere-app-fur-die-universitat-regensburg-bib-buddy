@@ -41,7 +41,7 @@ public class NoteDao implements InterfaceNoteDao {
         db.insert(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, noteFileValues);
         Cursor c =
             db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE, null, null,
-                null, null, null, null);
+                     null, null, null, null);
         c.moveToLast();
 
         ContentValues noteValues = new ContentValues();
@@ -58,7 +58,7 @@ public class NoteDao implements InterfaceNoteDao {
 
         Cursor cursor =
             db.query(DatabaseHelper.TABLE_NAME_NOTE, null, null, null,
-                null, null, null);
+                     null, null, null);
         cursor.moveToLast();
 
         cursor.close();
@@ -80,12 +80,12 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-            DatabaseHelper.NOTE_FILE_ID},
-        DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)},
-        null, null, null, String.valueOf(1));
+                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.NOTE_FILE_ID},
+                             DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)},
+                             null, null, null, String.valueOf(1));
 
     Note note = null;
     if (cursor.moveToFirst()) {
@@ -100,7 +100,7 @@ public class NoteDao implements InterfaceNoteDao {
   }
 
   /**
-   * This method fetches the path-string of a note-file linked to a note.
+   * Fetches the path-string of a note-file linked to a note.
    *
    * @param noteFileId id of the note-file linked to the note
    * @return returns a string representing the path to the saved note media
@@ -109,15 +109,16 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE_FILE,
-        new String[] {DatabaseHelper._ID,
-            DatabaseHelper.FILE},
-        DatabaseHelper._ID + " = ?", new String[] {String.valueOf(noteFileId)},
-        null, null, null, String.valueOf(1));
+                             new String[] {DatabaseHelper._ID,
+                                 DatabaseHelper.FILE},
+                             DatabaseHelper._ID + " = ?", new String[] {String.valueOf(noteFileId)},
+                             null, null, null, String.valueOf(1));
 
     String path = "";
     if (cursor.moveToFirst()) {
       path = cursor.getString(1);
     }
+
     cursor.close();
 
     return path;
@@ -150,16 +151,16 @@ public class NoteDao implements InterfaceNoteDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.delete(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK, DatabaseHelper.NOTE_ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.close();
   }
 
   /**
-   * This method updates a note object within database selected by its id.
+   * Updates a note object within database selected by its id.
    *
    * @param id   note id
    * @param name note name
@@ -171,15 +172,16 @@ public class NoteDao implements InterfaceNoteDao {
     values.put(DatabaseHelper.NAME, name);
     values.put(DatabaseHelper.TEXT, text);
     values.put(DatabaseHelper.MOD_DATE, currentTime);
+
     dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_NOTE, values,
-        DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+                                          DatabaseHelper._ID + " = ?",
+                                          new String[] {String.valueOf(id)});
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.close();
   }
 
   /**
-   * This method links a note with a book.
+   * Links a note with a book.
    *
    * @param bookId id of the book to link
    * @param noteId id of the note to link
@@ -231,10 +233,10 @@ public class NoteDao implements InterfaceNoteDao {
   }
 
   /**
-   * This method gets a list of all notes that are connected to a specific book.
+   * Gets a list of all notes that are connected to a specific book.
    *
    * @param bookId id of the book that the result notes must be connected to
-   * @return returns a list of connected note-objects.
+   * @return returns a list of connected note-objects
    */
   public List<Note> getAllNotesForBook(Long bookId) {
     List<Long> noteIds = getAllNoteIdsForBook(bookId);
@@ -247,7 +249,7 @@ public class NoteDao implements InterfaceNoteDao {
   }
 
   /**
-   * This method gets text string of a specific note.
+   * Gets text string of a specific note.
    *
    * @param id id of the note to look for
    * @return returns the notes text value
@@ -256,12 +258,12 @@ public class NoteDao implements InterfaceNoteDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_NOTE,
-        new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
-            DatabaseHelper.TYPE, DatabaseHelper.TEXT,
-            DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
-            DatabaseHelper.NOTE_FILE_ID},
-        DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)},
-        null, null, null, String.valueOf(1));
+                             new String[] {DatabaseHelper._ID, DatabaseHelper.NAME,
+                                 DatabaseHelper.TYPE, DatabaseHelper.TEXT,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.NOTE_FILE_ID},
+                             DatabaseHelper._ID + " = ?", new String[] {String.valueOf(id)},
+                             null, null, null, String.valueOf(1));
 
     String noteText = null;
     if (cursor.moveToFirst()) {
@@ -325,18 +327,18 @@ public class NoteDao implements InterfaceNoteDao {
    * Finds the id of the book by the given noteId.
    *
    * @param noteId id of the note
-   * @return Returns the book id which contains the noteId.
+   * @return returns the book id which contains the noteId
    */
   public Long findBookIdByNoteId(Long noteId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK,
-        new String[] {DatabaseHelper.BOOK_ID},
-        DatabaseHelper.NOTE_ID + " = ?",
-        new String[] {String.valueOf(noteId)},
-        null, null, null, String.valueOf(1));
+                             new String[] {DatabaseHelper.BOOK_ID},
+                             DatabaseHelper.NOTE_ID + " = ?",
+                             new String[] {String.valueOf(noteId)},
+                             null, null, null, String.valueOf(1));
 
-    long bookId = 0L;
+    Long bookId = 0L;
     if (cursor.moveToFirst()) {
       bookId = cursor.getLong(0);
     }
@@ -363,7 +365,7 @@ public class NoteDao implements InterfaceNoteDao {
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {
         String.valueOf(NoteTypeLut.TEXT.getId()), String.valueOf(bookId)
-        });
+    });
 
     List<Long> noteIds = new ArrayList<>();
     if (cursor.moveToFirst()) {
@@ -385,8 +387,8 @@ public class NoteDao implements InterfaceNoteDao {
       contentValues.put(DatabaseHelper.MOD_DATE, new Date().getTime());
 
       db.update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
-          DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(bookId)});
+                DatabaseHelper._ID + " = ?",
+                new String[] {String.valueOf(bookId)});
 
     } catch (SQLiteException ex) {
       return false;

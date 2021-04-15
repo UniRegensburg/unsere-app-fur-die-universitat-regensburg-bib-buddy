@@ -15,7 +15,8 @@ public class UriUtilsKeys {
   public static final String PRIMARY = "primary";
   public static final String RAW = "raw:";
   public static final String ID = "_id=?";
-  //Media sources
+
+  // Media sources
   public static final String VIDEO = "video";
   public static final String AUDIO = "audio";
   public static final String IMAGE = "image";

@@ -28,7 +28,7 @@ public class ExportBibTex {
    * The ExportBibTex is responsible for the creating, writing
    * and retrieving of contents, needed for the BibTex Export.
    *
-   * @param fileName   name of the BibTex file
+   * @param fileName name of the BibTex file
    */
   public ExportBibTex(String fileName) {
     this.fileName = fileName;
@@ -43,7 +43,7 @@ public class ExportBibTex {
    *                     used to retrieve book data
    * @param noteModel    object of the class NoteModel
    *                     used to retrieve note data
-   * @return             the BibTex format of a library as String
+   * @return the BibTex format of a library as String
    */
   public String getBibDataLibrary(LibraryModel libraryModel,
                                   BookModel bookModel, NoteModel noteModel) {
@@ -51,12 +51,12 @@ public class ExportBibTex {
 
     List<ShelfItem> shelfItem = libraryModel.getCurrentLibraryList();
 
-    // for each shelf in the library
+    // For each shelf in the library
     for (int i = 0; i < shelfItem.size(); i++) {
       Long currentShelfId = shelfItem.get(i).getId();
 
       bibFormat.append(getBibDataFromShelf(currentShelfId, bookModel,
-          noteModel));
+                                           noteModel));
 
     }
 
@@ -66,19 +66,19 @@ public class ExportBibTex {
   /**
    * Generates the BibTex format for all books in a given shelf.
    *
-   * @param shelfId id of the shelf
-   * @param bookModel  object of the class BookModel
-   *                   used to retrieve book data from a selected shelf
-   * @param noteModel  object of the class NoteModel
-   *                   used to retrieve note data from a selected shelf
-   * @return           the BibTex format of a collection of books as String
+   * @param shelfId   id of the shelf
+   * @param bookModel object of the class BookModel
+   *                  used to retrieve book data from a selected shelf
+   * @param noteModel object of the class NoteModel
+   *                  used to retrieve note data from a selected shelf
+   * @return the BibTex format of a collection of books as String
    */
   public String getBibDataFromShelf(Long shelfId, BookModel bookModel, NoteModel noteModel) {
     List<Long> bookIdsCurrentShelf =
         bookModel.getAllBookIdsForShelf(shelfId);
     StringBuilder bibFormat = new StringBuilder();
 
-    // for each book in the current shelf
+    // For each book in the current shelf
     for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
       Long bookId = bookIdsCurrentShelf.get(i);
 
@@ -92,12 +92,12 @@ public class ExportBibTex {
   /**
    * Generates the BibTex format for a given book.
    *
-   * @param bookId     id of the book
-   * @param bookModel  object of the class BookModel
-   *                   used to retrieve book data
-   * @param noteModel  object of the class NoteModel
-   *                   used to retrieve note data
-   * @return           the BibTex format of a book as String
+   * @param bookId    id of the book
+   * @param bookModel object of the class BookModel
+   *                  used to retrieve book data
+   * @param noteModel object of the class NoteModel
+   *                  used to retrieve note data
+   * @return the BibTex format of a book as String
    */
   public String getBibDataFromBook(Long bookId, BookModel bookModel, NoteModel noteModel) {
     Book book = bookModel.getBookById(bookId);
@@ -130,9 +130,9 @@ public class ExportBibTex {
   }
 
   private String getBibKey(Book book) {
-    // remove whitespaces from book's title
+    // Removes whitespaces from book's title
     return book.getTitle().replaceAll("\\s+",
-        "");
+                                      "");
   }
 
   private String getBibNotesFromBook(Book book, NoteModel noteModel) {
@@ -193,7 +193,7 @@ public class ExportBibTex {
       fileWriter.close();
     } catch (Exception ex) {
       Toast.makeText(context, context.getString(R.string.exception_failed_temp_file),
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
 
       Log.e(TAG, ex.toString(), ex);
     }

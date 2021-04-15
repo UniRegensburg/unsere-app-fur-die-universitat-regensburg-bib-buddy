@@ -60,7 +60,6 @@ public class LibraryFragment extends BackStackFragment
 
     enableBackPressedHandler();
 
-    // Called to have the fragment instantiate its user interface view.
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
 
@@ -136,15 +135,14 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void checkEmptyLibrary() {
-    // if no shelf or no books
     if (libraryModel.getCurrentLibraryList().isEmpty() || bookModel.getAllBooks().isEmpty()) {
       AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
       alertDialogEmptyLib.setTitle(R.string.empty_library);
       alertDialogEmptyLib.setMessage(R.string.empty_library_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-          (dialog, which) -> {
-          });
+                                            (dialog, which) -> {
+                                            });
 
       alertDialogEmptyLib.create().show();
 
@@ -155,11 +153,12 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void handleManualLibrary() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.library_help_text);
 
     Bundle bundle = new Bundle();
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
@@ -312,11 +311,12 @@ public class LibraryFragment extends BackStackFragment
 
   private void handleSortShelf() {
     SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
-          sortLibraryList();
-        });
+                                           newSortCriteria -> {
+                                             sortCriteria = newSortCriteria;
+                                             ((MainActivity) requireActivity())
+                                                 .setSortCriteria(newSortCriteria);
+                                             sortLibraryList();
+                                           });
 
     sortDialog.show();
   }
@@ -407,10 +407,10 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void updateBookListView(LibraryItem libraryItem) {
-    BookFragment fragment = new BookFragment();
-    fragment.setArguments(createShelfBundle(libraryItem));
+    BookFragment bookFragment = new BookFragment();
+    bookFragment.setArguments(createShelfBundle(libraryItem));
 
-    showFragment(fragment);
+    showFragment(bookFragment);
   }
 
   private Bundle createShelfBundle(LibraryItem libraryItem) {
@@ -444,7 +444,6 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void shareLibraryBibIntent() {
-
     String content = exportBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
     Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
 
@@ -456,7 +455,6 @@ public class LibraryFragment extends BackStackFragment
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     startActivity(Intent.createChooser(shareLibraryIntent, "SEND"));
-
   }
 
   @Override

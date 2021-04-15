@@ -19,12 +19,15 @@ import java.util.List;
  * @author Claudia Schönherr, Sarah Kurek, Luis Moßburger
  */
 public class BookFormFragment extends BackStackFragment {
+
   private final ChangeBookListener listener;
+
   private List<Author> authorList = new ArrayList<>();
+  private Book book = new Book();
+
   private boolean validInput;
   private int redColor;
   private int greenColor;
-  private Book book = new Book();
 
   public BookFormFragment(ChangeBookListener listener) {
     this.listener = listener;
@@ -33,8 +36,8 @@ public class BookFormFragment extends BackStackFragment {
   /**
    * Second constructor to handle construction from API call.
    *
-   * @param listener Listener for event handling.
-   * @param book     Book retrieved from API.
+   * @param listener listener for event handling
+   * @param book     book retrieved from API
    */
   public BookFormFragment(ChangeBookListener listener, Book book, List<Author> authorList) {
     this.listener = listener;
@@ -47,19 +50,18 @@ public class BookFormFragment extends BackStackFragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
 
-    // Called to have the fragment instantiate its user interface view.
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
-    Bundle bundle = this.getArguments();
     MainActivity mainActivity = (MainActivity) requireActivity();
 
+    Bundle bundle = this.getArguments();
     if (bundle != null) {
       Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
       Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
-      if (bookId == 0) { // add new book
+      if (bookId == 0) { // Adds new book
         mainActivity.updateHeaderFragment(getString(R.string.add_book));
-      } else { // edit existing book
+      } else { // Edits existing book
         BookModel model = new BookModel(getContext(), shelfId);
         book = model.getBookById(bookId);
 
@@ -123,9 +125,10 @@ public class BookFormFragment extends BackStackFragment {
     int counter = 1;
     for (Author author : authorList) {
 
-      if (author.getTitle() != null && !author.getTitle().isEmpty()) {
+      if (!DataValidation.isStringEmpty(author.getTitle())) {
         authors.append(author.getTitle()).append(" ");
       }
+
       authors.append(author.getFirstName()).append(" ").append(author.getLastName());
       if (counter != authorList.size()) {
         authors.append(",\n");
@@ -140,33 +143,18 @@ public class BookFormFragment extends BackStackFragment {
   private void setupAddBookBtnListener(View view) {
     FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
 
-    addBookBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleUserInput();
-      }
-    });
+    addBookBtn.setOnClickListener(v -> handleUserInput());
   }
 
   private void setupAddAuthorBtnListener(View view) {
     Button addAuthorBtn = view.findViewById(R.id.book_form_add_author_btn);
 
-    addAuthorBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        switchToAuthorFragment();
-      }
-    });
+    addAuthorBtn.setOnClickListener(v -> switchToAuthorFragment());
   }
 
   private void switchToAuthorFragment() {
     AuthorFragment authorFragment = new AuthorFragment(authorList,
-        new AuthorFragment.ChangeAuthorListListener() {
-          @Override
-          public void onAuthorListChanged(List<Author> authorList) {
-            BookFormFragment.this.authorList = authorList;
-          }
-        });
+                                                       authorList -> this.authorList = authorList);
 
     showFragment(authorFragment, LibraryKeys.FRAGMENT_AUTHOR);
   }
@@ -185,6 +173,7 @@ public class BookFormFragment extends BackStackFragment {
     if (!validInput) {
       return;
     }
+
     if (book.getId() == 0) {
       listener.onBookAdded(book, authorList);
     } else {
@@ -237,10 +226,13 @@ public class BookFormFragment extends BackStackFragment {
     boolean validPubYear = DataValidation.isValidYear(pubYear);
 
     if (DataValidation.isStringEmpty(pubYear) || validPubYear) {
-      book.setPubYear(0);
+
       if (validPubYear) {
         book.setPubYear(Integer.valueOf(pubYear));
+      } else {
+        book.setPubYear(0);
       }
+
       pubYearInput.setBackgroundColor(greenColor);
     } else {
       pubYearInput.setBackgroundColor(redColor);

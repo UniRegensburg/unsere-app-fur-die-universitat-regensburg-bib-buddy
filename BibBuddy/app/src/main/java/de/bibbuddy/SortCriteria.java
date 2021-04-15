@@ -15,7 +15,7 @@ public enum SortCriteria {
    * Gets the int value of the sortingCriteria.
    *
    * @param sortCriteria the selected sortingCriteria
-   * @return Returns the int of the enum.
+   * @return returns the int of the enum
    */
   public static int getCriteriaNum(SortCriteria sortCriteria) {
     if (sortCriteria == MOD_DATE_LATEST) {

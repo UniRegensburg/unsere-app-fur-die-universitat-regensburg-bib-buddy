@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 /**
  * Fragment for the user manuals.
@@ -18,8 +17,6 @@ import androidx.fragment.app.Fragment;
  * @author Sarah Kurek, Luis Moßburger
  */
 public class HelpFragment extends DialogFragment {
-  private View view;
-  private String manualText;
 
   @Nullable
   @Override
@@ -31,9 +28,8 @@ public class HelpFragment extends DialogFragment {
     Bundle bundle = this.getArguments();
     String manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
-    // style text
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,
-        null, null);
+                                             null, null);
 
     TextView manualView = view.findViewById(R.id.manual_text);
     manualView.setText(styledText);

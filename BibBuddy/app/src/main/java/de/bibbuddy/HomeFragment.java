@@ -16,18 +16,15 @@ import java.util.Random;
 /**
  * HomeFragment is responsible for welcoming the user and displaying recently used books.
  *
- * @author Claudia Schönherr, Luis Moßburger.
+ * @author Luis Moßburger
  */
 public class HomeFragment extends BackStackFragment
     implements BookRecyclerViewAdapter.BookListener {
 
-  List<BookItem> bookItemList;
+  private List<BookItem> bookItemList;
   private View view;
-  private Context context;
-  private MainActivity mainActivity;
+
   private BookModel bookModel;
-  private DatabaseHelper dbHelper;
-  private int bookAmount;
   private BookRecyclerViewAdapter adapter;
 
   @Nullable
@@ -36,9 +33,8 @@ public class HomeFragment extends BackStackFragment
                            @Nullable Bundle savedInstanceState) {
 
     view = inflater.inflate(R.layout.fragment_home, container, false);
-    context = requireContext();
 
-    mainActivity = (MainActivity) requireActivity();
+    MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
 
@@ -46,14 +42,14 @@ public class HomeFragment extends BackStackFragment
     mainActivity.updateNavigationFragment(R.id.navigation_home);
     updateWelcomeMessage();
 
+    Context context = requireContext();
     bookModel = new BookModel(context, 1L);
-    dbHelper = new DatabaseHelper(context);
 
-    bookAmount = 3;
+    int bookAmount = 3;
     List<Book> bookList = bookModel.findModifiedBooks(bookAmount);
     bookItemList = getBookItems(bookList);
 
-    adapter = new BookRecyclerViewAdapter(bookItemList, this, getContext());
+    adapter = new BookRecyclerViewAdapter(bookItemList, this, context);
 
     setupBooksRecyclerView(bookItemList);
 
@@ -62,7 +58,7 @@ public class HomeFragment extends BackStackFragment
 
   private void setupBooksRecyclerView(List<BookItem> bookItemList) {
     RecyclerView recyclerView = view.findViewById(R.id.home_books_list);
-    adapter = new BookRecyclerViewAdapter(bookItemList, this, getContext());
+    adapter = new BookRecyclerViewAdapter(bookItemList, this, requireContext());
     recyclerView.setAdapter(adapter);
 
     updateEmptyView(bookItemList);
@@ -70,6 +66,7 @@ public class HomeFragment extends BackStackFragment
 
   private void updateEmptyView(List<BookItem> bookList) {
     TextView emptyView = view.findViewById(R.id.home_books_list_empty);
+
     if (bookList.isEmpty()) {
       emptyView.setVisibility(View.VISIBLE);
     } else {
@@ -81,10 +78,10 @@ public class HomeFragment extends BackStackFragment
   public void onBookClicked(int position) {
     BookItem bookItem = bookItemList.get(position);
 
-    BookNotesView fragment = new BookNotesView();
-    fragment.setArguments(createBookBundle(bookItem));
+    BookNotesView bookNotesFragment = new BookNotesView();
+    bookNotesFragment.setArguments(createBookBundle(bookItem));
 
-    showFragment(fragment);
+    showFragment(bookNotesFragment);
   }
 
   @Override
@@ -107,7 +104,7 @@ public class HomeFragment extends BackStackFragment
   }
 
   private List<BookItem> getBookItems(List<Book> bookList) {
-    List<BookItem> bookItemList = new ArrayList<BookItem>();
+    List<BookItem> bookItemList = new ArrayList<>();
 
     for (Book book : bookList) {
       bookModel.setShelfId(bookModel.findShelfIdByBook(book.getId()));
@@ -128,22 +125,22 @@ public class HomeFragment extends BackStackFragment
   private void updateWelcomeMessage() {
     TextView welcomeMessage = view.findViewById(R.id.welcome_msg);
 
-    if (mainActivity.getWelcomeMsg().equals("")) {
-      int randMsg = new Random().nextInt(5);
-      System.out.println(randMsg);
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    if (mainActivity.getWelcomeMessage().equals("")) {
+      int randomMessage = new Random().nextInt(4);
 
-      if (randMsg == 2) {
-        mainActivity.setWelcomeMsg(getString(R.string.welcome_2));
-      } else if (randMsg == 3) {
-        mainActivity.setWelcomeMsg(getString(R.string.welcome_3));
-      } else if (randMsg == 4) {
-        mainActivity.setWelcomeMsg(getString(R.string.welcome_4));
+      if (randomMessage == 1) {
+        mainActivity.setWelcomeMessage(getString(R.string.welcome_2));
+      } else if (randomMessage == 2) {
+        mainActivity.setWelcomeMessage(getString(R.string.welcome_3));
+      } else if (randomMessage == 3) {
+        mainActivity.setWelcomeMessage(getString(R.string.welcome_4));
       } else {
-        mainActivity.setWelcomeMsg(getString(R.string.welcome_1));
+        mainActivity.setWelcomeMessage(getString(R.string.welcome_1));
       }
     }
 
-    welcomeMessage.setText(mainActivity.getWelcomeMsg());
+    welcomeMessage.setText(mainActivity.getWelcomeMessage());
   }
 
 }

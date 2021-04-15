@@ -224,12 +224,12 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void handleHelp() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.search_help_text);
 
     Bundle bundle = new Bundle();
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
 
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
@@ -265,10 +265,10 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void openShelf(SearchItem searchItem) {
-    BookFragment fragment = new BookFragment();
-    fragment.setArguments(createShelfBundle(searchItem));
+    BookFragment bookFragment = new BookFragment();
+    bookFragment.setArguments(createShelfBundle(searchItem));
 
-    showFragment(fragment);
+    showFragment(bookFragment);
   }
 
   private Bundle createBookBundle(SearchItem searchItem) {
@@ -283,10 +283,10 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void openBook(SearchItem searchItem) {
-    BookNotesView fragment = new BookNotesView();
-    fragment.setArguments(createBookBundle(searchItem));
+    BookNotesView bookNotesFragment = new BookNotesView();
+    bookNotesFragment.setArguments(createBookBundle(searchItem));
 
-    showFragment(fragment);
+    showFragment(bookNotesFragment);
   }
 
   private Bundle createNoteBundle(SearchItem searchItem) {
@@ -300,10 +300,10 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void openTextNote(SearchItem searchItem) {
-    TextNoteEditorFragment fragment = new TextNoteEditorFragment();
-    fragment.setArguments(createNoteBundle(searchItem));
+    TextNoteEditorFragment textNoteEditorFragment = new TextNoteEditorFragment();
+    textNoteEditorFragment.setArguments(createNoteBundle(searchItem));
 
-    showFragment(fragment);
+    showFragment(textNoteEditorFragment);
   }
 
 }

@@ -56,16 +56,16 @@ public class DataValidation {
     }
 
     try {
-      // sum of digit position * digit value of this position
+      // Sum of digit position * digit value of this position
       int totalSum = 0;
 
       for (int i = 0; i < 12; i++) {
-        // get every digit in ISBN and convert it to Integer
+        // Gets every digit in ISBN and convert it to Integer
         int digit = Integer.parseInt(isbnStr.substring(i, i + 1));
         totalSum += (i % 2 == 0 ? digit : digit * 3);
       }
 
-      // checksum must be 0-9. If calculated as 10 then = 0
+      // Checksum must be 0-9. If calculated as 10 then = 0
       int checksum = 10 - (totalSum % 10);
       if (checksum == 10) {
         checksum = 0;
@@ -73,7 +73,7 @@ public class DataValidation {
 
       return checksum == Integer.parseInt(isbnStr.substring(12));
     } catch (NumberFormatException ex) {
-      // to catch invalid ISBNs with non-numeric characters
+      // Catches invalid ISBNs with non-numeric characters
       Log.e(TAG, ex.toString(), ex);
 
       return false;
@@ -102,9 +102,9 @@ public class DataValidation {
     try {
       int totalSum = 0;
       for (int i = 0; i < 9; i++) {
-        // get every digit in ISBN and convert it to Integer
+        // Gets every digit in ISBN and convert it to Integer
         int digit = Integer.parseInt(isbnStr.substring(i, i + 1));
-        // sum of digit position * digit value of this position
+        // Sum of digit position * digit value of this position
         totalSum += ((10 - i) * digit);
       }
 
@@ -115,7 +115,7 @@ public class DataValidation {
 
       return checksum.equals(isbnStr.substring(9));
     } catch (NumberFormatException ex) {
-      // to catch invalid ISBNs with non-numeric characters
+      // Catches invalid ISBNs with non-numeric characters
       Log.e(TAG, ex.toString(), ex);
 
       return false;

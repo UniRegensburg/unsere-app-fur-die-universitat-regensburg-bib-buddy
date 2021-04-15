@@ -9,7 +9,7 @@ import android.text.style.QuoteSpan;
 /**
  * RichTextEditorQuoteSpan is responsible for styling quote spans in text notes.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class RichTextEditorQuoteSpan extends QuoteSpan {
 
@@ -22,10 +22,10 @@ public class RichTextEditorQuoteSpan extends QuoteSpan {
   }
 
   /**
-   * Put default quote settings to a parcel.
+   * Puts default quote settings to a parcel.
    *
-   * @param dest  parcel to put the quote settings.
-   * @param flags how the settings should be written.
+   * @param dest  parcel to put the quote settings
+   * @param flags how the settings should be written
    */
   public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
@@ -35,35 +35,37 @@ public class RichTextEditorQuoteSpan extends QuoteSpan {
   }
 
   /**
-   * Fetch the leading margin between the quote-stripe and the first text character.
+   * Fetches the leading margin between the quote-stripe and the first text character.
    *
-   * @return the leading margin for the first character position.
+   * @return the leading margin for the first character position
    */
   public int getLeadingMargin(boolean first) {
     return this.quoteStripeWidth + this.quoteGapWidth;
   }
 
   /**
-   * Put a margin between the quote-stripe and the first text character.
+   * Puts a margin between the quote-stripe and the first text character.
    *
-   * @param p      paint to use for the margin.
-   * @param x      x-start-position to set rect bounds.
-   * @param dir    int of the x-direction (+ or -) to calculate the x-end-position to set rect
-   *               bounds.
-   * @param top    y-start-position to set rect bounds.
-   * @param bottom y-end-position to set rect bounds.
+   * @param paint     paint to use for the margin
+   * @param x         x-start-position to set rect bounds
+   * @param direction int of the x-direction (+ or -) to calculate the x-end-position to set rect
+   *                  bounds
+   * @param top       y-start-position to set rect bounds
+   * @param bottom    y-end-position to set rect bounds
    */
-  public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline,
-                                int bottom, CharSequence text, int start, int end, boolean first,
-                                Layout layout) {
-    p.setStyle(Paint.Style.FILL);
-    p.setColor(this.quoteColor);
-    c.drawRect((float) x, (float) top, (float) (x + dir * this.quoteGapWidth), (float) bottom, p);
+  public void drawLeadingMargin(Canvas canvas, Paint paint, int x, int direction, int top,
+                                int baseline, int bottom, CharSequence text, int start, int end,
+                                boolean first, Layout layout) {
+    paint.setStyle(Paint.Style.FILL);
+    paint.setColor(this.quoteColor);
+    canvas.drawRect((float) x, (float) top, (float) (x + direction * this.quoteGapWidth),
+                    (float) bottom,
+                    paint);
 
-    Paint.Style style = p.getStyle();
-    p.setStyle(style);
-    int color = p.getColor();
-    p.setColor(color);
+    Paint.Style style = paint.getStyle();
+    paint.setStyle(style);
+    int color = paint.getColor();
+    paint.setColor(color);
   }
 
 }

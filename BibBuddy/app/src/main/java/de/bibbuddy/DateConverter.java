@@ -14,8 +14,8 @@ public class DateConverter {
   /**
    * Converts the date to a String.
    *
-   * @param date that should be converted
-   * @return Returns the converted date as a String
+   * @param date date that should be converted
+   * @return returns the converted date as a String
    */
   public static String convertDateToString(Long date) {
     Date newDate = new Date(date);
