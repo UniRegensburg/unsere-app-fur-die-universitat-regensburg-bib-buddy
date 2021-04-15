@@ -10,7 +10,7 @@ Bib Buddy offers the possibility to retrieve data for books by scanning their ba
 To support mobile literature work, the app offers to save notes relating to a book either in textual form, with your usual formatting options (text style, alignment...) or in auditory form to quickly store a thought in your app.
 
 ### Sharing
-With Bib Buddy you can share your data and notes about a book, a complete shelf or even your whole library as a bibTeX file. This file can be imported from Zotero or other literature software so you can make the best out of the thoughts you gathered within the app!
+With Bib Buddy you can share your data and notes about a book, a complete shelf or even your whole library as a BibTeX file. This file can be imported from Zotero or other literature software so you can make the best out of the thoughts you gathered within the app!
 
 ## Team
 Bib Buddy is developed by Sabrina Freisleben (@xSabrina), Silvia Ivanova (@silvia-ivanova-github-rep), Sarah Kurek (@SarahKurek), Luis Moßburger (@luismossburger) and Claudia Schönherr (@claudia3).<br><br>
