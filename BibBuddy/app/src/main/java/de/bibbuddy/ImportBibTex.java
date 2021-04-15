@@ -81,6 +81,7 @@ public class ImportBibTex {
       while ((line = reader.readLine()) != null) {
 
         if (line.length() > 0) {
+
           if (line.contains(BibTexKeys.BOOK_SHORTTITLE)) {
             line = "";
             line.replaceFirst("\n", "");
