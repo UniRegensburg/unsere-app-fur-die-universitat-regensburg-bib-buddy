@@ -79,9 +79,26 @@ public class ImportBibTex {
 
       String line;
       while ((line = reader.readLine()) != null) {
-        removeEqualSignFromBibTag(line);
-        stringBuilder.append(line.trim()).append('\n');
-        stringBuilder.setLength(stringBuilder.length() - 1);
+
+        if (line.length() > 0) {
+          if (line.contains(BibTexKeys.BOOK_SHORTTITLE)) {
+            line = "";
+            line.replaceFirst("\n", "");
+          }
+
+          if (line.contains(BibTexKeys.NOTE)) {
+            line = line.replace(BibTexKeys.NOTE, BibTexKeys.ANNOTE);
+          }
+
+          if (line.contains("\t")) {
+            line = line.substring(line.indexOf("\t") + 1);
+          }
+
+          removeEqualSignFromBibTag(line);
+          stringBuilder.append(line.trim()).append('\n');
+          stringBuilder.setLength(stringBuilder.length() - 1);
+        }
+
       }
 
       removeCurlyBracketsFromBibTag(stringBuilder,
