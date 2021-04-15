@@ -137,14 +137,14 @@ public class NoteModel {
   }
 
   /**
-   * Gets a list of all noteItems from the database sorted by given sortCriteria.
+   * Gets a list of all noteItems from the database sorted by given sortTypeLut.
    *
-   * @param sortCriteria chosen by the user to sort the list
+   * @param sortTypeLut chosen by the user to sort the list
    * @param noteList     to be sorted
    * @return the sorted noteList
    */
-  public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
-    switch (sortCriteria) {
+  public List<NoteItem> sortNoteList(SortTypeLut sortTypeLut, List<NoteItem> noteList) {
+    switch (sortTypeLut) {
 
       case MOD_DATE_LATEST:
         noteList.sort(new SortDate());
@@ -170,29 +170,29 @@ public class NoteModel {
   }
 
   /**
-   * Gets the noteList of a book sorted by sortCriteria.
+   * Gets the noteList of a book sorted by sortTypeLut.
    *
-   * @param sortCriteria currently applied to the list
+   * @param sortTypeLut currently applied to the list
    * @param bookId       id of the book the noteList is linked to
    * @return the sorted noteList
    */
-  public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
+  public List<NoteItem> getSortedNoteList(SortTypeLut sortTypeLut, Long bookId) {
     List<Note> noteListDb = noteDao.getAllNotesForBook(bookId);
     List<NoteItem> noteList = createItemList(noteListDb);
 
-    return sortNoteList(sortCriteria, noteList);
+    return sortNoteList(sortTypeLut, noteList);
   }
 
   /**
-   * Gets the noteList for all notes in the database sorted by sortCriteria.
+   * Gets the noteList for all notes in the database sorted by sortTypeLut.
    *
-   * @param sortCriteria currently applied to the list
+   * @param sortTypeLut currently applied to the list
    * @return the sorted noteList
    */
-  public List<NoteItem> getAllSortedNoteList(SortCriteria sortCriteria) {
+  public List<NoteItem> getAllSortedNoteList(SortTypeLut sortTypeLut) {
     List<Note> allNoteList = noteDao.findAll();
     List<NoteItem> noteList = createItemList(allNoteList);
 
-    return sortNoteList(sortCriteria, noteList);
+    return sortNoteList(sortTypeLut, noteList);
   }
 }

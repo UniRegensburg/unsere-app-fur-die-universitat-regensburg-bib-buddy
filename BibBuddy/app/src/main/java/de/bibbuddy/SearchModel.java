@@ -35,11 +35,11 @@ public class SearchModel {
    * Gets the searchResultList based on the user input.
    *
    * @param searchInput    input of the search
-   * @param sortCriteria   sortCriteria for the searchResultList
+   * @param sortTypeLut   sortTypeLut for the searchResultList
    * @param filterCriteria filterCriteria for the searchResultList
    * @return returns the searchResultList
    */
-  public List<SearchItem> getSearchResultList(String searchInput, SortCriteria sortCriteria,
+  public List<SearchItem> getSearchResultList(String searchInput, SortTypeLut sortTypeLut,
                                               boolean[] filterCriteria) {
     searchResultList.clear();
 
@@ -55,7 +55,7 @@ public class SearchModel {
       searchNotes(searchInput);
     }
 
-    sortSearchResultList(sortCriteria);
+    sortSearchResultList(sortTypeLut);
 
     return searchResultList;
   }
@@ -88,8 +88,8 @@ public class SearchModel {
   }
 
 
-  private void sortSearchResultList(SortCriteria sortCriteria) {
-    switch (sortCriteria) {
+  private void sortSearchResultList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
 
       case MOD_DATE_LATEST:
         searchResultList.sort(new SortDate());
@@ -128,13 +128,13 @@ public class SearchModel {
   }
 
   /**
-   * Gets the sorted search result list by sortCriteria.
+   * Gets the sorted search result list by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return returns the sorted search results
    */
-  public List<SearchItem> getSortedSearchResultList(SortCriteria sortCriteria) {
-    sortSearchResultList(sortCriteria);
+  public List<SearchItem> getSortedSearchResultList(SortTypeLut sortTypeLut) {
+    sortSearchResultList(sortTypeLut);
 
     return searchResultList;
   }

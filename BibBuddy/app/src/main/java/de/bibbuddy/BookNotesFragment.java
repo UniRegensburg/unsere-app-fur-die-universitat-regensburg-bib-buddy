@@ -33,7 +33,8 @@ import java.util.List;
  *
  * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
-public class BookNotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
+public class BookNotesFragment extends BackStackFragment
+    implements SwipeLeftRightCallback.Listener {
 
   private View view;
   private Context context;
@@ -46,7 +47,7 @@ public class BookNotesFragment extends BackStackFragment implements SwipeLeftRig
   private NoteModel noteModel;
 
   private ShareBibTex shareBibTex;
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
 
   @Override
   protected void onBackPressed() {
@@ -95,7 +96,7 @@ public class BookNotesFragment extends BackStackFragment implements SwipeLeftRig
     bookNotesModel = new BookNotesModel(context);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
-    sortCriteria = mainActivity.getSortCriteria();
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     Bundle bundle = this.getArguments();
     if (bundle != null) {
@@ -239,11 +240,11 @@ public class BookNotesFragment extends BackStackFragment implements SwipeLeftRig
   }
 
   private void handleSortNote() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
                                            newSortCriteria -> {
-                                             sortCriteria = newSortCriteria;
+                                             sortTypeLut = newSortCriteria;
                                              ((MainActivity) requireActivity())
-                                                 .setSortCriteria(newSortCriteria);
+                                                 .setSortTypeLut(newSortCriteria);
                                              sortNoteList();
                                            });
 
@@ -251,7 +252,7 @@ public class BookNotesFragment extends BackStackFragment implements SwipeLeftRig
   }
 
   private void sortNoteList() {
-    List<NoteItem> noteList = bookNotesModel.getSortedNoteList(sortCriteria, bookId);
+    List<NoteItem> noteList = bookNotesModel.getSortedNoteList(sortTypeLut, bookId);
     adapter.setNoteList(noteList);
   }
 

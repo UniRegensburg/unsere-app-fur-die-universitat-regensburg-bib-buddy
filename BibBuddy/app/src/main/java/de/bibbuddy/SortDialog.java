@@ -2,6 +2,7 @@ package de.bibbuddy;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import java.util.EnumSet;
 
 /**
  * The SortDialog class is the UI for sorting items.
@@ -13,62 +14,57 @@ public class SortDialog extends AlertDialog.Builder {
   private final SortDialogListener listener;
   private final Context context;
 
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
 
-  protected SortDialog(Context context, SortCriteria sortCriteria,
+  protected SortDialog(Context context, SortTypeLut sortTypeLut,
                        SortDialogListener listener) {
     super(context);
 
     this.context = context;
     this.listener = listener;
 
-    this.sortCriteria = sortCriteria;
+    this.sortTypeLut = sortTypeLut;
 
     setTitle(R.string.search_sort_to);
     setupDialog();
   }
 
-  private void setupDialog() {
-    int checkedItem = SortCriteria.getCriteriaNum(sortCriteria);
+  // TODO
+  private String getSortCriteriaDisplayText(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
+      case MOD_DATE_LATEST:
+        return context.getString(R.string.sort_mod_date_latest);
+      case MOD_DATE_OLDEST:
+        return context.getString(R.string.sort_mod_date_oldest);
+      case NAME_ASCENDING:
+        return context.getString(R.string.sort_name_ascending);
+      case NAME_DESCENDING:
+        return context.getString(R.string.sort_name_descending);
+    }
 
-    String[] sortChoices = {
-        context.getString(R.string.sort_mod_date_latest),
-        context.getString(R.string.sort_mod_date_oldest),
-        context.getString(R.string.sort_name_ascending),
-        context.getString(R.string.sort_name_descending)
-    };
+    throw new IllegalArgumentException();
+  }
+
+  private void setupDialog() {
+    int checkedItem = sortTypeLut.getId();
+
+    EnumSet<SortTypeLut> sortTypes = EnumSet.allOf(SortTypeLut.class);
+    String[] sortChoices = sortTypes.stream()
+        .map(e -> getSortCriteriaDisplayText(e))
+        .toArray(String[]::new);
 
     setSingleChoiceItems(sortChoices, checkedItem,
                          (dialog, choice) -> handleSelectedSortChoice(choice));
 
-    setNegativeButton(R.string.ok, (dialog, choice) -> listener.onSortedSelected(sortCriteria));
+    setNegativeButton(R.string.ok, (dialog, choice) -> listener.onSortedSelected(sortTypeLut));
   }
 
   private void handleSelectedSortChoice(int choice) {
-    switch (choice) {
-      case 0:
-        sortCriteria = SortCriteria.MOD_DATE_LATEST;
-        break;
-
-      case 1:
-        sortCriteria = SortCriteria.MOD_DATE_OLDEST;
-        break;
-
-      case 2:
-        sortCriteria = SortCriteria.NAME_ASCENDING;
-        break;
-
-      case 3:
-        sortCriteria = SortCriteria.NAME_DESCENDING;
-        break;
-
-      default:
-        break;
-    }
+    sortTypeLut = SortTypeLut.valueOf(choice);
   }
 
   public interface SortDialogListener {
-    void onSortedSelected(SortCriteria sortCriteria);
+    void onSortedSelected(SortTypeLut sortTypeLut);
   }
 
 }

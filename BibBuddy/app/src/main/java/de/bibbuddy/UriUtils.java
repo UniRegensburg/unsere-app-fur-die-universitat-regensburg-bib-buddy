@@ -44,14 +44,15 @@ public class UriUtils {
 
   @SuppressLint("API29")
   public static String getFullUriPath(final Context context, final Uri uri) {
-
     if (DocumentsContract.isDocumentUri(context, uri)) { // Document Provider
       return handleUriPathDocuments(context, uri);
+    }
 
-    } else if (UriUtilsKeys.CONTENT.equalsIgnoreCase(uri.getScheme())) { // Google Drive Provider
+    if (UriUtilsKeys.CONTENT.equalsIgnoreCase(uri.getScheme())) { // Google Drive Provider
       return handleUriPathGoogleDrive(context, uri);
+    }
 
-    } else if (UriUtilsKeys.FILE.equalsIgnoreCase(uri.getScheme())) { // File
+    if (UriUtilsKeys.FILE.equalsIgnoreCase(uri.getScheme())) { // File
       return uri.getPath();
     }
 
@@ -88,17 +89,19 @@ public class UriUtils {
   }
 
   private static String handleUriPathDocuments(Context context, Uri uri) {
-
     if (isExternalStorageDocument(uri)) {
       return getPathFromExternalStorage(uri);
+    }
 
-    } else if (isDownloadsDocument(uri)) { // DownloadsProvider
+    if (isDownloadsDocument(uri)) { // DownloadsProvider
       return getPathFromDownloadDocument(context, uri);
+    }
 
-    } else if (isMediaDocument(uri)) { // MediaProvider
+    if (isMediaDocument(uri)) { // MediaProvider
       return getPathFromMediaDocument(context, uri);
+    }
 
-    } else if (isGoogleDriveUri(uri)) {
+    if (isGoogleDriveUri(uri)) {
       return getDriveFilePath(context, uri);
     }
 
@@ -106,7 +109,6 @@ public class UriUtils {
   }
 
   private static String handleUriPathGoogleDrive(Context context, Uri uri) {
-
     if (isGooglePhotosUri(uri)) {
       return uri.getLastPathSegment();
     }
@@ -117,10 +119,9 @@ public class UriUtils {
 
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
       return getMediaFilePathForVersionN(context, uri);
-    } else {
-      return getDataColumn(context, uri, null, null);
     }
 
+    return getDataColumn(context, uri, null, null);
   }
 
   @NonNull
@@ -261,7 +262,6 @@ public class UriUtils {
 
     return cursor.getString(cursor
                                 .getColumnIndex(OpenableColumns.DISPLAY_NAME));
-
   }
 
   private static String getDataColumn(@NonNull Context context, Uri uri, String selection,

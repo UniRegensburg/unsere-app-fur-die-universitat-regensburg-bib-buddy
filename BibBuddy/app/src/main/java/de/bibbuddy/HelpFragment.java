@@ -26,6 +26,7 @@ public class HelpFragment extends DialogFragment {
     View view = inflater.inflate(R.layout.fragment_help, container, false);
 
     Bundle bundle = this.getArguments();
+    assert bundle != null;
     String manualText = bundle.getString(LibraryKeys.MANUAL_TEXT);
 
     Spanned styledText = HtmlCompat.fromHtml(manualText, HtmlCompat.FROM_HTML_MODE_LEGACY,

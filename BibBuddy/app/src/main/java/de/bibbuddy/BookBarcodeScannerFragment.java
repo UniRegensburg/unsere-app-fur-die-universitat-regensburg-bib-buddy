@@ -48,6 +48,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     surfaceView = view.findViewById(R.id.surface_view);
     Bundle bundle = getArguments();
 
+    assert bundle != null;
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     setupDetectorsAndSources(view);
@@ -162,8 +163,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
   @Override
   public void onBookAdded(Book book, List<Author> authorList) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
-    bookDao.create(book, authorList, shelfId);
+    BookAddModel bookAddModel = new BookAddModel(requireContext());
+    bookAddModel.addBook(book, authorList, shelfId);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity

@@ -64,7 +64,7 @@ public class BookFormFragment extends BackStackFragment {
       if (bookId == 0) { // Adds new book
         mainActivity.updateHeaderFragment(getString(R.string.add_book));
       } else { // Edits existing book
-        BookModel model = new BookModel(getContext(), shelfId);
+        BookModel model = new BookModel(requireContext(), shelfId);
         book = model.getBookById(bookId);
 
         if (authorList.isEmpty()) {

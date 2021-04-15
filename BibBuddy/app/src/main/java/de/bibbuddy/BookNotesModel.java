@@ -45,8 +45,8 @@ public class BookNotesModel {
     }
   }
 
-  public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
-    return noteModel.getSortedNoteList(sortCriteria, bookId);
+  public List<NoteItem> getSortedNoteList(SortTypeLut sortTypeLut, Long bookId) {
+    return noteModel.getSortedNoteList(sortTypeLut, bookId);
   }
 }
 

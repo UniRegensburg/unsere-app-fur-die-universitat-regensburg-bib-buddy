@@ -6,6 +6,7 @@ package de.bibbuddy;
  * @author Sarah Kurek
  */
 public class Tag {
+
   private Long id;
   private String name;
 

@@ -53,7 +53,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
         if (isGranted) {
           filePicker();
         } else {
-          Toast.makeText(getContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT)
+          Toast.makeText(requireContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT)
               .show();
         }
       });
@@ -88,7 +88,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private BookModel bookModel;
   private NoteModel noteModel;
   private BookRecyclerViewAdapter adapter;
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private ShareBibTex shareBibTex;
   private ImportBibTex importBibTex;
 
@@ -117,7 +117,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
 
     MainActivity mainActivity = ((MainActivity) requireActivity());
-    sortCriteria = mainActivity.getSortCriteria();
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     Bundle bundle = this.getArguments();
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
@@ -169,10 +169,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private void setupRecyclerView() {
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.book_recycler_view);
 
-    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria,
+    List<BookItem> bookList = bookModel.getSortedBookList(sortTypeLut,
                                                           bookModel.getBookList(shelfId));
 
-    adapter = new BookRecyclerViewAdapter(bookList, this, getContext());
+    adapter = new BookRecyclerViewAdapter(bookList, this, requireContext());
     recyclerView.setAdapter(adapter);
     recyclerView.setListener(this);
 
@@ -212,7 +212,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
         break;
 
       default:
-        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show();
     }
 
     return super.onOptionsItemSelected(item);
@@ -242,7 +242,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void updateBookList(List<BookItem> bookList) {
-    bookList = bookModel.getSortedBookList(sortCriteria, bookList);
+    bookList = bookModel.getSortedBookList(sortTypeLut, bookList);
 
     adapter.setBookList(bookList);
     adapter.notifyDataSetChanged();
@@ -327,11 +327,11 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void handleSortBook() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
                                            newSortCriteria -> {
-                                             sortCriteria = newSortCriteria;
+                                             sortTypeLut = newSortCriteria;
                                              ((MainActivity) requireActivity())
-                                                 .setSortCriteria(newSortCriteria);
+                                                 .setSortTypeLut(newSortCriteria);
                                              sortBookList();
                                            });
 
@@ -339,7 +339,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void sortBookList() {
-    List<BookItem> bookList = bookModel.getSortedBookList(sortCriteria);
+    List<BookItem> bookList = bookModel.getSortedBookList(sortTypeLut);
     adapter.setBookList(bookList);
     adapter.notifyDataSetChanged();
   }
@@ -380,7 +380,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
       }
 
       Toast.makeText(context, getString(R.string.imported_file_name_is) + '\n'
-          + UriUtils.getUriFileName(getActivity(), uri), Toast.LENGTH_LONG).show();
+          + UriUtils.getUriFileName(requireActivity(), uri), Toast.LENGTH_LONG).show();
 
     } else {
       Toast.makeText(context, getString(R.string.not_valid_bib_file),
@@ -454,7 +454,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void showRequestPermissionDialog() {
-    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(getContext());
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(requireContext());
 
     reqAlertDialog.setTitle(R.string.storage_permission_needed);
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
@@ -530,7 +530,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void createAddBookListener() {
     FloatingActionButton addBookBtn = view.findViewById(R.id.add_btn);
-    PopupMenu popupMenu = new PopupMenu(getContext(), addBookBtn);
+    PopupMenu popupMenu = new PopupMenu(requireContext(), addBookBtn);
     popupMenu.getMenuInflater().inflate(R.menu.add_book_menu, popupMenu.getMenu());
 
     popupMenu.setOnMenuItemClickListener(item -> {
@@ -561,7 +561,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
             addBook(book, authorList);
-            Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
           }
         });
 
@@ -572,7 +572,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void addBook(Book book, List<Author> authorList) {
     bookModel.addBook(book, authorList);
-    Toast.makeText(getContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+    Toast.makeText(requireContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
     updateBookList(bookModel.getCurrentBookList());
   }
 

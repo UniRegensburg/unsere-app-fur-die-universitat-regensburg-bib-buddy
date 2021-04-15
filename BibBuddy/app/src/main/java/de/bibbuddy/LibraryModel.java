@@ -172,8 +172,8 @@ public class LibraryModel {
     }
   }
 
-  private void sortLibraryList(SortCriteria sortCriteria) {
-    switch (sortCriteria) {
+  private void sortLibraryList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
 
       case MOD_DATE_LATEST:
         libraryList.sort(new SortDate());
@@ -197,27 +197,27 @@ public class LibraryModel {
   }
 
   /**
-   * Gets the sorted search result list by sortCriteria.
+   * Gets the sorted search result list by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return the sorted shelves
    */
-  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria) {
-    sortLibraryList(sortCriteria);
+  public List<ShelfItem> getSortedLibraryList(SortTypeLut sortTypeLut) {
+    sortLibraryList(sortTypeLut);
 
     return libraryList;
   }
 
   /**
-   * Gets the sorted libraryList by sortCriteria.
+   * Gets the sorted libraryList by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return the sorted libraryList
    */
-  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria,
+  public List<ShelfItem> getSortedLibraryList(SortTypeLut sortTypeLut,
                                               List<ShelfItem> libraryList) {
     this.libraryList = libraryList;
-    sortLibraryList(sortCriteria);
+    sortLibraryList(sortTypeLut);
 
     return libraryList;
   }

@@ -101,7 +101,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
         Html.fromHtml(getString(R.string.voice_editor_help_text), Html.FROM_HTML_MODE_COMPACT);
 
     android.app.AlertDialog.Builder helpAlert =
-        new AlertDialog.Builder((MainActivity) requireActivity());
+        new AlertDialog.Builder(requireActivity());
 
     helpAlert.setCancelable(false);
     helpAlert.setTitle(R.string.help);
@@ -178,7 +178,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     noteModel.createNote(fileName, NoteTypeLut.AUDIO, "", newAudio.getPath());
     noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
 
-    Toast.makeText((MainActivity) requireActivity(), getString(R.string.voice_note_saved),
+    Toast.makeText(requireActivity(), getString(R.string.voice_note_saved),
                    Toast.LENGTH_SHORT)
         .show();
   }

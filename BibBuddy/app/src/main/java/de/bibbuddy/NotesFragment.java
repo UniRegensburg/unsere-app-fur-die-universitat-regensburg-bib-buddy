@@ -30,7 +30,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
 
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private TextView emptyListView;
 
   @Override
@@ -51,7 +51,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     MainActivity mainActivity = (MainActivity) requireActivity();
     noteModel = new NoteModel(mainActivity);
     noteList = noteModel.getNoteList();
-    sortCriteria = mainActivity.getSortCriteria();
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
@@ -97,7 +97,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
 
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
     AlertDialog.Builder alertDeleteBookNote =
-        new AlertDialog.Builder((MainActivity) requireActivity());
+        new AlertDialog.Builder(requireActivity());
     alertDeleteBookNote.setCancelable(false);
 
     if (adapter.getSelectedNoteItems().size() > 1) {
@@ -206,10 +206,10 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
 
   private void sortNotes() {
     MainActivity mainActivity = (MainActivity) requireActivity();
-    SortDialog sortDialog = new SortDialog(mainActivity, sortCriteria,
+    SortDialog sortDialog = new SortDialog(mainActivity, sortTypeLut,
                                            newSortCriteria -> {
-                                             sortCriteria = newSortCriteria;
-                                             mainActivity.setSortCriteria(newSortCriteria);
+                                             sortTypeLut = newSortCriteria;
+                                             mainActivity.setSortTypeLut(newSortCriteria);
                                              sortNoteList();
                                            });
 
@@ -217,7 +217,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void sortNoteList() {
-    noteList = noteModel.getAllSortedNoteList(sortCriteria);
+    noteList = noteModel.getAllSortedNoteList(sortTypeLut);
     adapter.setNoteList(noteList);
   }
 

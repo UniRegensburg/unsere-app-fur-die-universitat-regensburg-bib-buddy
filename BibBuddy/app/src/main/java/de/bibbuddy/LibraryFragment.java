@@ -36,13 +36,13 @@ public class LibraryFragment extends BackStackFragment
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private List<ShelfItem> selectedShelfItems = new ArrayList<>();
+  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
   private BookModel bookModel;
   private NoteModel noteModel;
 
   private ShareBibTex shareBibTex;
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
 
   @Override
   protected void onBackPressed() {
@@ -64,7 +64,7 @@ public class LibraryFragment extends BackStackFragment
     context = view.getContext();
 
     MainActivity mainActivity = (MainActivity) requireActivity();
-    sortCriteria = mainActivity.getSortCriteria();
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     setupRecyclerView();
     setupAddShelfBtn();
@@ -310,11 +310,11 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void handleSortShelf() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
                                            newSortCriteria -> {
-                                             sortCriteria = newSortCriteria;
+                                             sortTypeLut = newSortCriteria;
                                              ((MainActivity) requireActivity())
-                                                 .setSortCriteria(newSortCriteria);
+                                                 .setSortTypeLut(newSortCriteria);
                                              sortLibraryList();
                                            });
 
@@ -322,7 +322,7 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void sortLibraryList() {
-    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortCriteria);
+    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortTypeLut);
     adapter.setLibraryList(libraryList);
     adapter.notifyDataSetChanged();
   }
@@ -330,7 +330,7 @@ public class LibraryFragment extends BackStackFragment
   private void setupRecyclerView() {
     libraryModel = new LibraryModel(requireContext());
     List<ShelfItem> libraryList = libraryModel
-        .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
+        .getSortedLibraryList(sortTypeLut, libraryModel.getLibraryList(null));
 
     SwipeableRecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
     adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
@@ -401,7 +401,7 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void updateLibraryListView(List<ShelfItem> libraryList) {
-    libraryList = libraryModel.getSortedLibraryList(sortCriteria, libraryList);
+    libraryList = libraryModel.getSortedLibraryList(sortTypeLut, libraryList);
     adapter.notifyDataSetChanged();
     updateEmptyView(libraryList);
   }

@@ -20,14 +20,14 @@ public class MainActivity extends AppCompatActivity {
   private final String searchFragmentTag = "search";
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
-  private final String imprintFragmentTag = "imprint";
-  private final String defaultAppFragmentTag = "defaultAppSelected";
+
   public ImageButton importBtn;
   public ImageButton shareBtn;
   public ImageButton sortBtn;
-  BottomNavigationView bottomNavigationView;
-  FragmentManager fragmentManager;
-  DatabaseHelper dbHelper;
+
+  private BottomNavigationView bottomNavigationView;
+  private FragmentManager fragmentManager;
+
   private String welcomeMessage = "";
   private ImageButton logoButton;
   private HomeFragment homeFragment;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
   private ImprintFragment imprintFragment;
   private AsDefaultAppFragment defaultAppFragment;
 
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private boolean[] filterCriteria;
   private String searchText;
 
@@ -60,16 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
     if (savedInstanceState == null) {
       homeFragment = new HomeFragment();
-      updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+      updateFragment(homeFragment, homeFragmentTag);
       setupDefaultAppSelected();
     }
 
     setupLogoButton();
     setupBottomNavigationView();
 
-    dbHelper = new DatabaseHelper(this);
+    DatabaseHelper dbHelper = new DatabaseHelper(this);
 
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
+    sortTypeLut = SortTypeLut.MOD_DATE_LATEST;
     sortBtn = findViewById(R.id.sort_btn);
 
     filterCriteria = new boolean[] {true, true, true};
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         isDefaultSelected = true;
         uri = defaultAppIntent.getData();
         switchToDefaultAppFragment();
-
       }
     }
 
@@ -128,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
       defaultAppFragment = new AsDefaultAppFragment();
     }
 
-    updateFragment(R.id.fragment_container_view, defaultAppFragment, defaultAppFragmentTag);
+    String defaultAppFragmentTag = "defaultAppSelected";
+    updateFragment(defaultAppFragment, defaultAppFragmentTag);
   }
 
   private void setupBottomNavigationView() {
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
           }
 
           resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+          updateFragment(homeFragment, homeFragmentTag);
           break;
 
         case R.id.navigation_search:
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
           }
 
           resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, searchFragment, searchFragmentTag);
+          updateFragment(searchFragment, searchFragmentTag);
           break;
 
         case R.id.navigation_library:
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
           }
 
           resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, libraryFragment, libraryFragmentTag);
+          updateFragment(libraryFragment, libraryFragmentTag);
           break;
 
         case R.id.navigation_notes:
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
           }
 
           resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, notesFragment, notesFragmentTag);
+          updateFragment(notesFragment, notesFragmentTag);
           break;
 
         default:
@@ -184,16 +184,17 @@ public class MainActivity extends AppCompatActivity {
         homeFragment = new HomeFragment();
       }
 
-      updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
+      updateFragment(homeFragment, homeFragmentTag);
     });
   }
 
-  private void updateFragment(int id, Fragment fragment, String tag) {
+  private void updateFragment(Fragment fragment, String tag) {
     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    fragmentTransaction.replace(id, fragment, tag);
+    fragmentTransaction.replace(R.id.fragment_container_view, fragment, tag);
     fragmentTransaction.setReorderingAllowed(true);
     fragmentTransaction.addToBackStack(null);
     fragmentTransaction.commit();
+
     updateHeader(tag);
   }
 
@@ -269,16 +270,17 @@ public class MainActivity extends AppCompatActivity {
       imprintFragment = new ImprintFragment();
     }
 
-    updateFragment(R.id.fragment_container_view, imprintFragment, imprintFragmentTag);
+    String imprintFragmentTag = "imprint";
+    updateFragment(imprintFragment, imprintFragmentTag);
     updateHeader(imprintFragmentTag);
   }
 
-  public SortCriteria getSortCriteria() {
-    return sortCriteria;
+  public SortTypeLut getSortTypeLut() {
+    return sortTypeLut;
   }
 
-  public void setSortCriteria(SortCriteria sortCriteria) {
-    this.sortCriteria = sortCriteria;
+  public void setSortTypeLut(SortTypeLut sortTypeLut) {
+    this.sortTypeLut = sortTypeLut;
   }
 
   public String getSearchText() {
@@ -304,4 +306,5 @@ public class MainActivity extends AppCompatActivity {
   public void setWelcomeMessage(String welcomeMessage) {
     this.welcomeMessage = welcomeMessage;
   }
+
 }

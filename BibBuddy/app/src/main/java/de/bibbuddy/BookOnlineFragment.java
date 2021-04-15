@@ -35,6 +35,7 @@ public class BookOnlineFragment extends BackStackFragment
     setupSearchInput();
 
     Bundle bundle = this.getArguments();
+    assert bundle != null;
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
@@ -87,8 +88,8 @@ public class BookOnlineFragment extends BackStackFragment
 
   @Override
   public void onBookAdded(Book book, List<Author> authorList) {
-    BookDao bookDao = new BookDao(new DatabaseHelper(requireContext()));
-    bookDao.create(book, authorList, shelfId);
+    BookAddModel bookAddModel = new BookAddModel(requireContext());
+    bookAddModel.addBook(book, authorList, shelfId);
 
     MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity

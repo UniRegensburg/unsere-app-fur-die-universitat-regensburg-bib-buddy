@@ -36,7 +36,7 @@ public class SearchFragment extends BackStackFragment
   private List<SearchItem> searchResultList;
   private EditText searchInput;
 
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private boolean[] filterCriteria;
 
   @Nullable
@@ -51,7 +51,7 @@ public class SearchFragment extends BackStackFragment
     mainActivity.updateHeaderFragment(getString(R.string.navigation_search));
     mainActivity.updateNavigationFragment(R.id.navigation_search);
 
-    sortCriteria = mainActivity.getSortCriteria();
+    sortTypeLut = mainActivity.getSortTypeLut();
     filterCriteria = mainActivity.getFilterCriteria();
 
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
@@ -163,7 +163,7 @@ public class SearchFragment extends BackStackFragment
 
   private void updateSearchResultList(String searchInputStr) {
     searchResultList =
-        searchModel.getSearchResultList(searchInputStr, sortCriteria, filterCriteria);
+        searchModel.getSearchResultList(searchInputStr, sortTypeLut, filterCriteria);
 
     adapter.setSearchResultList(searchResultList);
     adapter.notifyDataSetChanged();
@@ -172,10 +172,10 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void handleSortSearch() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
         newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity()).setSortTypeLut(newSortCriteria);
           sortResultList();
         });
 
@@ -183,7 +183,7 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void sortResultList() {
-    searchResultList = searchModel.getSortedSearchResultList(sortCriteria);
+    searchResultList = searchModel.getSortedSearchResultList(sortTypeLut);
     adapter.setSearchResultList(searchResultList);
     adapter.notifyDataSetChanged();
   }

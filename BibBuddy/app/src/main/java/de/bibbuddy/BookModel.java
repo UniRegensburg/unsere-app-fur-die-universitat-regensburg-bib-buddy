@@ -216,8 +216,8 @@ public class BookModel {
     this.shelfId = shelfId;
   }
 
-  private void sortBookList(SortCriteria sortCriteria) {
-    switch (sortCriteria) {
+  private void sortBookList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
 
       case MOD_DATE_LATEST:
         bookList.sort(new SortDate());
@@ -241,27 +241,27 @@ public class BookModel {
   }
 
   /**
-   * Gets the sorted bookList by sortCriteria.
+   * Gets the sorted bookList by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return the sorted bookList
    */
-  public List<BookItem> getSortedBookList(SortCriteria sortCriteria) {
-    sortBookList(sortCriteria);
+  public List<BookItem> getSortedBookList(SortTypeLut sortTypeLut) {
+    sortBookList(sortTypeLut);
 
     return bookList;
   }
 
   /**
-   * Gets the sorted bookList by sortCriteria with the given bookList.
+   * Gets the sorted bookList by sortTypeLut with the given bookList.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @param bookList     bookList that should be sorted
    * @return the sorted bookList
    */
-  public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {
+  public List<BookItem> getSortedBookList(SortTypeLut sortTypeLut, List<BookItem> bookList) {
     this.bookList = bookList;
-    sortBookList(sortCriteria);
+    sortBookList(sortTypeLut);
 
     return bookList;
   }

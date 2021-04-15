@@ -25,7 +25,7 @@ public class ImprintFragment extends Fragment {
 
     View view = inflater.inflate(R.layout.fragment_imprint, container, false);
 
-    MainActivity mainActivity = (MainActivity) getActivity();
+    MainActivity mainActivity = (MainActivity) requireActivity();
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
     mainActivity.updateHeaderFragment(getString(R.string.header_imprint));

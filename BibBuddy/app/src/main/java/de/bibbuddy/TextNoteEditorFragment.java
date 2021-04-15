@@ -119,7 +119,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
         noteModel.linkNoteWithBook(bookId, noteModel.getLastNote().getId());
       }
 
-      Toast.makeText((MainActivity) requireActivity(), getString(R.string.text_note_saved),
+      Toast.makeText(requireActivity(), getString(R.string.text_note_saved),
                      Toast.LENGTH_SHORT)
           .show();
     }
@@ -130,7 +130,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
-    noteModel = new NoteModel((MainActivity) requireActivity());
+    noteModel = new NoteModel(requireActivity());
     richTextEditor = view.findViewById(R.id.editor);
 
     enableBackPressedHandler();
@@ -204,7 +204,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
 
   private void backgroundColorChange(ImageButton button) {
     button
-        .setBackgroundColor(ContextCompat.getColor((MainActivity) requireActivity(), R.color.gray));
+        .setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.gray));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }
@@ -227,7 +227,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     bold.setOnLongClickListener(v -> {
-      Toast.makeText((MainActivity) requireActivity(), R.string.toast_bold, Toast.LENGTH_SHORT)
+      Toast.makeText(requireActivity(), R.string.toast_bold, Toast.LENGTH_SHORT)
           .show();
       return true;
     });
@@ -242,7 +242,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     italic.setOnLongClickListener(v -> {
-      Toast.makeText((MainActivity) requireActivity(), R.string.toast_italic, Toast.LENGTH_SHORT)
+      Toast.makeText(requireActivity(), R.string.toast_italic, Toast.LENGTH_SHORT)
           .show();
       return true;
     });
@@ -257,7 +257,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     underline.setOnLongClickListener(v -> {
-      Toast.makeText((MainActivity) requireActivity(), R.string.toast_underline, Toast.LENGTH_SHORT)
+      Toast.makeText(requireActivity(), R.string.toast_underline, Toast.LENGTH_SHORT)
           .show();
       return true;
     });
@@ -272,7 +272,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     strikeThrough.setOnLongClickListener(v -> {
-      Toast.makeText((MainActivity) requireActivity(), R.string.toast_strikethrough,
+      Toast.makeText(requireActivity(), R.string.toast_strikethrough,
                      Toast.LENGTH_SHORT).show();
       return true;
     });
@@ -287,7 +287,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     bullet.setOnLongClickListener(v -> {
-      Toast.makeText((MainActivity) requireActivity(), R.string.toast_bullet, Toast.LENGTH_SHORT)
+      Toast.makeText(requireActivity(), R.string.toast_bullet, Toast.LENGTH_SHORT)
           .show();
       return true;
     });
@@ -302,7 +302,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
 
     quote.setOnLongClickListener(v -> {
-      Toast.makeText((MainActivity) requireActivity(), R.string.toast_quote, Toast.LENGTH_SHORT)
+      Toast.makeText(requireActivity(), R.string.toast_quote, Toast.LENGTH_SHORT)
           .show();
       return true;
     });

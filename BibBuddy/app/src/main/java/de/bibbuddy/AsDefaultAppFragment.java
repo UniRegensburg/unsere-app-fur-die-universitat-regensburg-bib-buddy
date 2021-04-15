@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -38,9 +37,9 @@ public class AsDefaultAppFragment extends BackStackFragment
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private List<ShelfItem> selectedShelfItems = new ArrayList<>();
+  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private ImportBibTex importBibTex;
 
 
@@ -54,7 +53,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     context = view.getContext();
 
     MainActivity mainActivity = (MainActivity) requireActivity();
-    sortCriteria = mainActivity.getSortCriteria();
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     importBibTex = new ImportBibTex(context);
 
@@ -82,7 +81,7 @@ public class AsDefaultAppFragment extends BackStackFragment
 
     if (!importBibTex.isBibFile(uriFileName)) {
       Toast.makeText(context, R.string.import_non_bib_file,
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
       mainActivity.resetIsDefaultApp();
       onBackPressed();
     }
@@ -298,18 +297,19 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void handleSortShelf() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
-        newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
-          sortLibraryList();
-        });
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
+                                           newSortCriteria -> {
+                                             sortTypeLut = newSortCriteria;
+                                             ((MainActivity) requireActivity())
+                                                 .setSortTypeLut(newSortCriteria);
+                                             sortLibraryList();
+                                           });
 
     sortDialog.show();
   }
 
   private void sortLibraryList() {
-    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortCriteria);
+    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortTypeLut);
 
     adapter.setLibraryList(libraryList);
     adapter.notifyDataSetChanged();
@@ -318,7 +318,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   private void setupRecyclerView() {
     libraryModel = new LibraryModel(requireContext());
     List<ShelfItem> libraryList = libraryModel
-        .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
+        .getSortedLibraryList(sortTypeLut, libraryModel.getLibraryList(null));
 
     SwipeableRecyclerView libraryRecyclerView =
         view.findViewById(R.id.library_recycler_view);
@@ -392,7 +392,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void updateLibraryListView(List<ShelfItem> libraryList) {
-    libraryList = libraryModel.getSortedLibraryList(sortCriteria, libraryList);
+    libraryList = libraryModel.getSortedLibraryList(sortTypeLut, libraryList);
     adapter.notifyDataSetChanged();
     updateEmptyView(libraryList);
   }

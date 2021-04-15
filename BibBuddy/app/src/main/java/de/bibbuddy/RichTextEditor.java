@@ -39,7 +39,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
   private final List<Editable> historyList = new LinkedList<>();
 
-  private Context context;
+  private final Context context;
   private boolean historyEnable = true;
   private int historySize = 100;
   private boolean historyWorking = false;
