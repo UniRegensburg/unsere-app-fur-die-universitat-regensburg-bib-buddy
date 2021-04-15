@@ -38,6 +38,12 @@ public class BookBarcodeScannerFragment extends BackStackFragment
   private BarcodeDetector barcodeDetector;
   private Long shelfId;
 
+  @Override
+  protected void closeFragment() {
+    barcodeDetector.release();
+    super.closeFragment();
+  }
+
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -46,20 +52,25 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     View view = inflater.inflate(R.layout.fragment_barcode_scanner, container, false);
 
     surfaceView = view.findViewById(R.id.surface_view);
-    Bundle bundle = getArguments();
 
+    Bundle bundle = getArguments();
     assert bundle != null;
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     setupDetectorsAndSources(view);
-
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
-    mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
-    mainActivity.updateNavigationFragment(R.id.navigation_library);
+    setupMainActivity();
 
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void setupDetectorsAndSources(View view) {
@@ -114,7 +125,6 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       public void receiveDetections(@NonNull Detector.Detections<Barcode> detections) {
         final SparseArray<Barcode> barcodes = detections.getDetectedItems();
         if (barcodes.size() != 0) {
-          barcodeDetector.release();
           handleIsbnInput(barcodes.valueAt(0).displayValue);
         }
       }
@@ -149,7 +159,6 @@ public class BookBarcodeScannerFragment extends BackStackFragment
                                  Toast.LENGTH_SHORT).show());
       }
     } else {
-
       mainActivity
           .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.isbn_not_valid),
                                               Toast.LENGTH_SHORT).show());
@@ -178,6 +187,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
   public void onPause() {
     super.onPause();
     cameraSource.release();
+    barcodeDetector.release();
   }
 
   @Override

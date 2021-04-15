@@ -21,7 +21,7 @@ public enum SortTypeLut {
   }
 
   static SortTypeLut valueOf(int id) {
-    return Stream.of(SortTypeLut.values())
+    return Stream.of(values())
         .filter(e -> e.getId() == id)
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);

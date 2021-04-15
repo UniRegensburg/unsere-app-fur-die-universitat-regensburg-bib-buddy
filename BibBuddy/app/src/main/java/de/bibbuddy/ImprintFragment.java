@@ -25,11 +25,7 @@ public class ImprintFragment extends Fragment {
 
     View view = inflater.inflate(R.layout.fragment_imprint, container, false);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-
-    mainActivity.updateHeaderFragment(getString(R.string.header_imprint));
-    mainActivity.setVisibilitySortButton(false);
+    setupMainActivity();
 
     Spanned styledText =
         HtmlCompat.fromHtml(getString(R.string.imprint), HtmlCompat.FROM_HTML_MODE_LEGACY,
@@ -39,6 +35,15 @@ public class ImprintFragment extends Fragment {
     imprintView.setText(styledText);
 
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.header_imprint));
   }
 
 }

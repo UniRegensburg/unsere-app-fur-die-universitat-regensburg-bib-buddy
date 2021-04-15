@@ -129,7 +129,7 @@ public class AsDefaultAppFragment extends BackStackFragment
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
 
     return super.onOptionsItemSelected(item);

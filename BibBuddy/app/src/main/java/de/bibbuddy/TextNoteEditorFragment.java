@@ -46,12 +46,19 @@ public class TextNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
-    mainActivity.updateNavigationFragment(R.id.navigation_notes);
+    setupMainActivity();
 
     setHasOptionsMenu(true);
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
+    mainActivity.updateNavigationFragment(R.id.navigation_notes);
   }
 
   @Override
@@ -129,6 +136,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
     noteModel = new NoteModel(requireActivity());
     richTextEditor = view.findViewById(R.id.editor);
@@ -203,8 +211,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
   }
 
   private void backgroundColorChange(ImageButton button) {
-    button
-        .setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.gray));
+    button.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.gray));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
     backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }

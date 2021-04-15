@@ -18,7 +18,7 @@ public enum NoteTypeLut {
   }
 
   static NoteTypeLut valueOf(int id) {
-    return Stream.of(NoteTypeLut.values())
+    return Stream.of(values())
         .filter(e -> e.getId() == id)
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);

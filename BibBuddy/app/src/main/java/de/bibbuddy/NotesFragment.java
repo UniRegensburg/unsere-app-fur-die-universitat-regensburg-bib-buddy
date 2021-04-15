@@ -46,25 +46,34 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                            @Nullable Bundle savedInstanceState) {
+
     enableBackPressedHandler();
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    noteModel = new NoteModel(mainActivity);
+    setupMainActivity();
+
+    noteModel = new NoteModel(requireActivity());
     noteList = noteModel.getNoteList();
-    sortTypeLut = mainActivity.getSortTypeLut();
 
     View view = inflater.inflate(R.layout.fragment_notes, container, false);
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
     emptyListView = view.findViewById(R.id.empty_notes_list_view);
-
-    mainActivity.updateNavigationFragment(R.id.navigation_notes);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
     setupSortBtn();
     setHasOptionsMenu(true);
     setupRecyclerView(view);
 
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
+
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
+    mainActivity.updateNavigationFragment(R.id.navigation_notes);
   }
 
   @Override
@@ -198,9 +207,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void setupSortBtn() {
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
-    mainActivity.setVisibilitySortButton(true);
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> sortNotes());
   }
 
@@ -212,7 +219,6 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
                                              mainActivity.setSortTypeLut(newSortCriteria);
                                              sortNoteList();
                                            });
-
     sortDialog.show();
   }
 

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -45,17 +44,24 @@ public class AuthorFormFragment extends BackStackFragment {
     View view = inflater.inflate(R.layout.fragment_author_form, container, false);
 
     setInputText(view);
-
-    BottomNavigationView bottomNavigationView =
-        requireActivity().findViewById(R.id.bottom_navigation);
-    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
+    setupMainActivity();
 
     redColor = getResources().getColor(R.color.red, null);
     greenColor = getResources().getColor(R.color.green, null);
+
     setupAddAuthorBtnListener(view);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(false);
 
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.add_author_btn));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void setInputText(View view) {

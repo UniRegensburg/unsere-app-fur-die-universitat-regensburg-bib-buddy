@@ -1,7 +1,6 @@
 package de.bibbuddy;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -33,7 +31,6 @@ public class AuthorFragment extends BackStackFragment
   private final List<AuthorItem> selectedAuthorItems = new ArrayList<>();
 
   private View view;
-  private Context context;
   private AuthorRecyclerViewAdapter adapter;
 
   public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
@@ -58,20 +55,9 @@ public class AuthorFragment extends BackStackFragment
     enableBackPressedHandler();
 
     view = inflater.inflate(R.layout.fragment_author, container, false);
-    context = view.getContext();
 
-    SwipeableRecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
-    adapter = new AuthorRecyclerViewAdapter(this, authorList);
-    recyclerView.setAdapter(adapter);
-    recyclerView.setListener(this);
-
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.updateHeaderFragment(getString(R.string.add_author_btn));
-    mainActivity.setVisibilitySortButton(false);
-
-    BottomNavigationView bottomNavigationView = mainActivity.findViewById(R.id.bottom_navigation);
-    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
+    setupRecyclerView();
+    setupMainActivity();
 
     selectedAuthorItems.clear();
     updateEmptyView();
@@ -81,6 +67,23 @@ public class AuthorFragment extends BackStackFragment
     confirmAuthorsBtnListener(view);
 
     return view;
+  }
+
+  private void setupRecyclerView() {
+    SwipeableRecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
+    adapter = new AuthorRecyclerViewAdapter(this, authorList);
+    recyclerView.setAdapter(adapter);
+    recyclerView.setListener(this);
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.add_author_btn));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void updateEmptyView() {
@@ -115,14 +118,14 @@ public class AuthorFragment extends BackStackFragment
         break;
 
       default:
-        Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show();
+        throw new IllegalArgumentException();
     }
 
     return super.onOptionsItemSelected(item);
   }
 
   private void deleteAuthors() {
-    AlertDialog.Builder alertDeleteAuthor = new AlertDialog.Builder(context);
+    AlertDialog.Builder alertDeleteAuthor = new AlertDialog.Builder(requireContext());
     alertDeleteAuthor.setCancelable(false);
 
     if (selectedAuthorItems.size() > 1) {
@@ -183,9 +186,11 @@ public class AuthorFragment extends BackStackFragment
     adapter.notifyDataSetChanged();
 
     if (authorsNumber > 1) {
-      Toast.makeText(context, getString(R.string.deleted_authors), Toast.LENGTH_SHORT).show();
+      Toast.makeText(requireContext(), getString(R.string.deleted_authors), Toast.LENGTH_SHORT)
+          .show();
     } else {
-      Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
+      Toast.makeText(requireContext(), getString(R.string.deleted_author), Toast.LENGTH_SHORT)
+          .show();
     }
 
     updateEmptyView();
@@ -230,17 +235,19 @@ public class AuthorFragment extends BackStackFragment
   private void handleEditAuthor(Author author) {
     AuthorFormFragment authorFormFragment
         = new AuthorFormFragment(author,
-            (author1, isNew) -> {
-              if (!isNew) {
-                authorList.remove(author1.getCache());
-              }
+                                 (author1, isNew) -> {
+                                   if (!isNew) {
+                                     authorList.remove(author1.getCache());
+                                   }
 
-              authorList.add(author1);
-              adapter.notifyDataSetChanged();
+                                   authorList.add(author1);
+                                   adapter.notifyDataSetChanged();
 
-              Toast.makeText(context, getString(R.string.changed_author), Toast.LENGTH_SHORT)
+                                   Toast.makeText(requireContext(),
+                                                  getString(R.string.changed_author),
+                                                  Toast.LENGTH_SHORT)
                                        .show();
-            });
+                                 });
 
     showFragment(authorFormFragment);
   }

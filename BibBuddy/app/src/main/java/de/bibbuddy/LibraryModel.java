@@ -110,8 +110,7 @@ public class LibraryModel {
       return;
     }
 
-    for (ShelfItem shelf : selectedShelfItems
-    ) {
+    for (ShelfItem shelf : selectedShelfItems) {
       Long shelfId = shelf.getId();
 
       List<Long> bookIds = bookDao.getAllBookIdsForShelf(shelfId);
@@ -123,15 +122,7 @@ public class LibraryModel {
       }
 
       shelfDao.delete(shelfId);
-      deleteShelfFromLibraryList(shelf);
-    }
-  }
-
-  private void deleteShelfFromLibraryList(ShelfItem shelf) {
-    for (int i = 0; i < libraryList.size(); i++) {
-      if (shelf.equals(libraryList.get(i))) {
-        libraryList.remove(i);
-      }
+      libraryList.removeIf(shelf::equals);
     }
   }
 
@@ -174,7 +165,6 @@ public class LibraryModel {
 
   private void sortLibraryList(SortTypeLut sortTypeLut) {
     switch (sortTypeLut) {
-
       case MOD_DATE_LATEST:
         libraryList.sort(new SortDate());
         break;
@@ -192,7 +182,7 @@ public class LibraryModel {
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
   }
 

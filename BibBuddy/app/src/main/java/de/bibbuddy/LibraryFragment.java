@@ -32,11 +32,12 @@ import java.util.List;
 public class LibraryFragment extends BackStackFragment
     implements LibraryRecyclerViewAdapter.LibraryListener, SwipeLeftRightCallback.Listener {
 
+  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
+
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
   private BookModel bookModel;
   private NoteModel noteModel;
@@ -63,15 +64,10 @@ public class LibraryFragment extends BackStackFragment
     view = inflater.inflate(R.layout.fragment_library, container, false);
     context = view.getContext();
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    sortTypeLut = mainActivity.getSortTypeLut();
+    setupMainActivity();
 
     setupRecyclerView();
     setupAddShelfBtn();
-
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
-    mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
     setupSortBtn();
     setFunctionsToolbar();
@@ -87,18 +83,24 @@ public class LibraryFragment extends BackStackFragment
     return view;
   }
 
-  private void setupSortBtn() {
+  private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
     mainActivity.setVisibilitySortButton(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
 
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
+  }
+
+  private void setupSortBtn() {
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
   private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyLibrary());
-
+    requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyLibrary());
   }
 
   @Override
@@ -128,7 +130,7 @@ public class LibraryFragment extends BackStackFragment
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
 
     return super.onOptionsItemSelected(item);

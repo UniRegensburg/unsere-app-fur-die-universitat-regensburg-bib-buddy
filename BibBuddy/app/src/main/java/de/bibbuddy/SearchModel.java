@@ -108,7 +108,7 @@ public class SearchModel {
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
   }
 
@@ -139,8 +139,11 @@ public class SearchModel {
     return searchResultList;
   }
 
-  public Long getShelfIdByBook(Long id) {
-    return bookDao.findShelfIdByBook(id);
+  public Long getShelfIdByBook(Long bookId) {
+    return bookDao.findShelfIdByBook(bookId);
   }
 
+  public String getShelfNameByBook(Long bookId) {
+    return bookDao.findShelfNameByBook(bookId);
+  }
 }

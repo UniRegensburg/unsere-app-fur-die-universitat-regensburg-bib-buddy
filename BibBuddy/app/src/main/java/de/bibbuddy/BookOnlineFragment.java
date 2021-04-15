@@ -38,13 +38,19 @@ public class BookOnlineFragment extends BackStackFragment
     assert bundle != null;
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
-    mainActivity.updateHeaderFragment(getString(R.string.add_book));
-    mainActivity.updateNavigationFragment(R.id.navigation_library);
+    setupMainActivity();
 
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.add_book));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   /**

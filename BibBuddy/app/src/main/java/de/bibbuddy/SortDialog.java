@@ -2,7 +2,7 @@ package de.bibbuddy;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import java.util.EnumSet;
+import java.util.stream.Stream;
 
 /**
  * The SortDialog class is the UI for sorting items.
@@ -29,28 +29,30 @@ public class SortDialog extends AlertDialog.Builder {
     setupDialog();
   }
 
-  // TODO
   private String getSortCriteriaDisplayText(SortTypeLut sortTypeLut) {
     switch (sortTypeLut) {
       case MOD_DATE_LATEST:
         return context.getString(R.string.sort_mod_date_latest);
+
       case MOD_DATE_OLDEST:
         return context.getString(R.string.sort_mod_date_oldest);
+
       case NAME_ASCENDING:
         return context.getString(R.string.sort_name_ascending);
+
       case NAME_DESCENDING:
         return context.getString(R.string.sort_name_descending);
-    }
 
-    throw new IllegalArgumentException();
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
   private void setupDialog() {
     int checkedItem = sortTypeLut.getId();
 
-    EnumSet<SortTypeLut> sortTypes = EnumSet.allOf(SortTypeLut.class);
-    String[] sortChoices = sortTypes.stream()
-        .map(e -> getSortCriteriaDisplayText(e))
+    String[] sortChoices = Stream.of(SortTypeLut.values())
+        .map(this::getSortCriteriaDisplayText)
         .toArray(String[]::new);
 
     setSingleChoiceItems(sortChoices, checkedItem,

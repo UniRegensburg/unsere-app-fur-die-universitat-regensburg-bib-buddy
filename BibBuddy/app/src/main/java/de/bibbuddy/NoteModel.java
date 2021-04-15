@@ -140,7 +140,7 @@ public class NoteModel {
    * Gets a list of all noteItems from the database sorted by given sortTypeLut.
    *
    * @param sortTypeLut chosen by the user to sort the list
-   * @param noteList     to be sorted
+   * @param noteList    to be sorted
    * @return the sorted noteList
    */
   public List<NoteItem> sortNoteList(SortTypeLut sortTypeLut, List<NoteItem> noteList) {
@@ -163,7 +163,7 @@ public class NoteModel {
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
 
     return noteList;
@@ -173,7 +173,7 @@ public class NoteModel {
    * Gets the noteList of a book sorted by sortTypeLut.
    *
    * @param sortTypeLut currently applied to the list
-   * @param bookId       id of the book the noteList is linked to
+   * @param bookId      id of the book the noteList is linked to
    * @return the sorted noteList
    */
   public List<NoteItem> getSortedNoteList(SortTypeLut sortTypeLut, Long bookId) {

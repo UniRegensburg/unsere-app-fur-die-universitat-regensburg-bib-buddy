@@ -52,11 +52,23 @@ public class BookFormFragment extends BackStackFragment {
 
     View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
+    Bundle bundle = this.getArguments();
+    setupViews(view, bundle);
+
+    redColor = getResources().getColor(R.color.red, null);
+    greenColor = getResources().getColor(R.color.green, null);
+
+    setupAddBookBtnListener(view);
+
+    return view;
+  }
+
+  private void setupViews(View view, Bundle bundle) {
     MainActivity mainActivity = (MainActivity) requireActivity();
+
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
 
-    Bundle bundle = this.getArguments();
     if (bundle != null) {
       Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
       Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
@@ -71,9 +83,7 @@ public class BookFormFragment extends BackStackFragment {
           authorList.addAll(model.getAuthorList(bookId));
         }
 
-
         mainActivity.updateHeaderFragment(getString(R.string.change_book));
-        mainActivity.updateNavigationFragment(R.id.navigation_library);
       }
 
       setInputText(view);
@@ -84,12 +94,7 @@ public class BookFormFragment extends BackStackFragment {
       setupAddAuthorBtnListener(view);
     }
 
-    redColor = getResources().getColor(R.color.red, null);
-    greenColor = getResources().getColor(R.color.green, null);
-
-    setupAddBookBtnListener(view);
-
-    return view;
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void setInputText(View view) {

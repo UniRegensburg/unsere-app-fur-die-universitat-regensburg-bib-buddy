@@ -184,15 +184,7 @@ public class BookModel {
       deleteAuthors(bookId);
 
       bookDao.delete(bookId, shelfId);
-      deleteBookFromBookList(book);
-    }
-  }
-
-  private void deleteBookFromBookList(BookItem book) {
-    for (int i = 0; i < bookList.size(); i++) {
-      if (book.equals(bookList.get(i))) {
-        bookList.remove(i);
-      }
+      bookList.removeIf(book::equals);
     }
   }
 
@@ -218,7 +210,6 @@ public class BookModel {
 
   private void sortBookList(SortTypeLut sortTypeLut) {
     switch (sortTypeLut) {
-
       case MOD_DATE_LATEST:
         bookList.sort(new SortDate());
         break;
@@ -236,7 +227,7 @@ public class BookModel {
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
   }
 

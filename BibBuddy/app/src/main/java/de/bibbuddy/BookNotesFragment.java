@@ -93,28 +93,21 @@ public class BookNotesFragment extends BackStackFragment
 
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
-    bookNotesModel = new BookNotesModel(context);
-
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    sortTypeLut = mainActivity.getSortTypeLut();
 
     Bundle bundle = this.getArguments();
-    if (bundle != null) {
-      bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-    }
+    assert bundle != null;
+    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
 
-    bookModel = new BookModel(requireContext(), getShelfId());
-    noteModel = new NoteModel(requireContext());
+    setupMainActivity(bundle);
+
+    bookNotesModel = new BookNotesModel(context);
+    bookModel = new BookModel(context, getShelfId());
+    noteModel = new NoteModel(context);
 
     Book book = bookModel.getBookById(bookId);
-
     String fileName = (book.getTitle() + book.getPubYear())
         .replaceAll("\\s+", "");
     shareBibTex = new ShareBibTex(fileName);
-
-    mainActivity.updateHeaderFragment(bundle.getString(LibraryKeys.SHELF_NAME));
-    mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
 
     setupRecyclerView(bookId);
     setupSortBtn();
@@ -127,6 +120,17 @@ public class BookNotesFragment extends BackStackFragment
     return view;
   }
 
+  private void setupMainActivity(Bundle bundle) {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
+    mainActivity.setVisibilitySortButton(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
+
+    mainActivity.updateHeaderFragment(bundle.getString(LibraryKeys.SHELF_NAME));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
+  }
+
   private Long getShelfId() {
     Bundle bundle = this.getArguments();
     assert bundle != null;
@@ -135,12 +139,11 @@ public class BookNotesFragment extends BackStackFragment
 
   private void setupSortBtn() {
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
     sortBtn.setOnClickListener(v -> handleSortNote());
   }
 
   private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyNoteList());
+    requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyNoteList());
   }
 
   @Override

@@ -26,7 +26,7 @@ import java.util.List;
  * @author Claudia Schönherr
  */
 public class SearchFragment extends BackStackFragment
-        implements SearchRecyclerViewAdapter.SearchListener {
+    implements SearchRecyclerViewAdapter.SearchListener {
 
   private View view;
   private Context context;
@@ -47,30 +47,39 @@ public class SearchFragment extends BackStackFragment
     view = inflater.inflate(R.layout.fragment_search, container, false);
     context = view.getContext();
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_search));
-    mainActivity.updateNavigationFragment(R.id.navigation_search);
-
-    sortTypeLut = mainActivity.getSortTypeLut();
-    filterCriteria = mainActivity.getFilterCriteria();
-
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    setupMainActivity();
 
     setupSearchInput();
     setupRecyclerView();
     setupFilterButton();
     setHasOptionsMenu(true);
 
-    setupSortBtn();
+    setupSortButton();
 
     return view;
   }
 
-  private void setupSortBtn() {
-    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
+
+    filterCriteria = mainActivity.getFilterCriteria();
+
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_search));
+    mainActivity.updateNavigationFragment(R.id.navigation_search);
+  }
+
+  private void setupSortButton() {
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> handleSortSearch());
+  }
+
+  private void setupFilterButton() {
+    ImageButton filterBtn = view.findViewById(R.id.filter_btn);
+    filterBtn.setOnClickListener(v -> handleSearchFilter());
   }
 
   @Override
@@ -92,12 +101,11 @@ public class SearchFragment extends BackStackFragment
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
 
     return super.onOptionsItemSelected(item);
   }
-
 
   private void setupRecyclerView() {
     searchModel = new SearchModel(context);
@@ -128,12 +136,6 @@ public class SearchFragment extends BackStackFragment
     } else {
       emptyView.setVisibility(View.GONE);
     }
-  }
-
-  private void setupFilterButton() {
-    ImageButton filterBtn = view.findViewById(R.id.filter_btn);
-
-    filterBtn.setOnClickListener(v -> handleSearchFilter());
   }
 
   private void setupSearchInput() {
@@ -173,11 +175,12 @@ public class SearchFragment extends BackStackFragment
 
   private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortTypeLut,
-        newSortCriteria -> {
-          sortTypeLut = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortTypeLut(newSortCriteria);
-          sortResultList();
-        });
+                                           newSortCriteria -> {
+                                             sortTypeLut = newSortCriteria;
+                                             ((MainActivity) requireActivity())
+                                                 .setSortTypeLut(newSortCriteria);
+                                             sortResultList();
+                                           });
 
     sortDialog.show();
   }
@@ -198,10 +201,11 @@ public class SearchFragment extends BackStackFragment
         getString(R.string.filter_text_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-        (dialog, choice, isChecked) -> {
-          filterCriteria[choice] = isChecked;
-          ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
-        });
+                                             (dialog, choice, isChecked) -> {
+                                               filterCriteria[choice] = isChecked;
+                                               ((MainActivity) requireActivity())
+                                                   .setFilterCriteria(choice, isChecked);
+                                             });
 
     selectFilterCriteria.setNegativeButton(R.string.ok, (dialog, choice) -> {
       if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
@@ -276,7 +280,7 @@ public class SearchFragment extends BackStackFragment
 
     Long searchItemId = searchItem.getId();
     bundle.putLong(LibraryKeys.SHELF_ID, searchModel.getShelfIdByBook(searchItemId));
-    bundle.putString(LibraryKeys.BOOK_TITLE, searchItem.getName());
+    bundle.putString(LibraryKeys.SHELF_NAME, searchModel.getShelfNameByBook(searchItemId));
     bundle.putLong(LibraryKeys.BOOK_ID, searchItemId);
 
     return bundle;

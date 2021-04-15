@@ -28,7 +28,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -112,19 +111,15 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     view = inflater.inflate(R.layout.fragment_book, container, false);
     context = view.getContext();
 
-    BottomNavigationView bottomNavigationView =
-        requireActivity().findViewById(R.id.bottom_navigation);
-    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
-
-    MainActivity mainActivity = ((MainActivity) requireActivity());
-    sortTypeLut = mainActivity.getSortTypeLut();
-
     Bundle bundle = this.getArguments();
+    assert bundle != null;
     shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
-    bookModel = new BookModel(requireContext(), shelfId);
-    noteModel = new NoteModel(requireContext());
+    setupMainActivity();
+
+    bookModel = new BookModel(context, shelfId);
+    noteModel = new NoteModel(context);
 
     shareBibTex = new ShareBibTex(shelfName);
     importBibTex = new ImportBibTex(context);
@@ -134,12 +129,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     setHasOptionsMenu(true);
     createAddBookListener();
 
-    mainActivity.updateHeaderFragment(shelfName);
-    mainActivity.setVisibilityImportShareButton(View.VISIBLE, View.VISIBLE);
     setupSortBtn();
-
-    setFunctionsToolbar();
-
     setupDefaultApp();
 
     selectedBookItems.clear();
@@ -147,10 +137,23 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     return view;
   }
 
+  private void setupMainActivity() {
+    MainActivity mainActivity = ((MainActivity) requireActivity());
+
+    mainActivity.setVisibilityImportShareButton(View.VISIBLE, View.VISIBLE);
+    mainActivity.setVisibilitySortButton(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
+
+    mainActivity.findViewById(R.id.import_btn).setOnClickListener(
+        view -> checkStoragePermission());
+    mainActivity.findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyShelf());
+
+    mainActivity.updateHeaderFragment(shelfName);
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
+  }
+
   private void setupSortBtn() {
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
-
     sortBtn.setOnClickListener(v -> handleSortBook());
   }
 
@@ -179,13 +182,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     updateEmptyView(bookList);
   }
 
-  private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).importBtn.setOnClickListener(
-        view -> checkStoragePermission());
-
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyShelf());
-  }
-
   @Override
   public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.fragment_book_menu, menu);
@@ -212,7 +208,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
         break;
 
       default:
-        Toast.makeText(requireContext(), R.string.error, Toast.LENGTH_SHORT).show();
+        throw new IllegalArgumentException();
     }
 
     return super.onOptionsItemSelected(item);
@@ -459,13 +455,14 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     reqAlertDialog.setTitle(R.string.storage_permission_needed);
     reqAlertDialog.setMessage(R.string.storage_permission_alert_msg);
 
-    reqAlertDialog.setPositiveButton(R.string.ok,
-              (dialog, which) -> ActivityCompat
-                .requestPermissions(requireActivity(),
-                  new String[] {
-                    Manifest.permission.READ_EXTERNAL_STORAGE},
-                    StorageKeys.STORAGE_PERMISSION_CODE
-                ));
+    reqAlertDialog
+        .setPositiveButton(R.string.ok,
+                           (dialog, which) -> ActivityCompat
+                               .requestPermissions(requireActivity(),
+                                                   new String[] {
+                                                       Manifest.permission.READ_EXTERNAL_STORAGE},
+                                                   StorageKeys.STORAGE_PERMISSION_CODE
+                               ));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
                                      (dialog, which) -> dialog.dismiss());
@@ -561,7 +558,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
           @Override
           public void onBookAdded(Book book, List<Author> authorList) {
             addBook(book, authorList);
-            Toast.makeText(requireContext(), getString(R.string.added_book), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), getString(R.string.added_book), Toast.LENGTH_SHORT)
+                .show();
           }
         });
 

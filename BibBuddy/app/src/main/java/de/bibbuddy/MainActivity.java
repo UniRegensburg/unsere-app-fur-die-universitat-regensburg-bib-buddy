@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,8 +11,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,16 +19,9 @@ public class MainActivity extends AppCompatActivity {
   private final String searchFragmentTag = "search";
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
-
-  public ImageButton importBtn;
-  public ImageButton shareBtn;
-  public ImageButton sortBtn;
-
-  private BottomNavigationView bottomNavigationView;
-  private FragmentManager fragmentManager;
+  private final String imprintFragmentTag = "imprint";
 
   private String welcomeMessage = "";
-  private ImageButton logoButton;
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
@@ -53,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-    welcomeMessage = "";
-    logoButton = findViewById(R.id.headerLogo);
-    bottomNavigationView = findViewById(R.id.bottom_navigation);
-    fragmentManager = getSupportFragmentManager();
-
     if (savedInstanceState == null) {
       homeFragment = new HomeFragment();
       updateFragment(homeFragment, homeFragmentTag);
@@ -67,13 +54,8 @@ public class MainActivity extends AppCompatActivity {
     setupLogoButton();
     setupBottomNavigationView();
 
-    DatabaseHelper dbHelper = new DatabaseHelper(this);
-
     sortTypeLut = SortTypeLut.MOD_DATE_LATEST;
-    sortBtn = findViewById(R.id.sort_btn);
-
-    filterCriteria = new boolean[] {true, true, true};
-
+    filterCriteria = new boolean[] {true, true, true}; // shelf, book, note
     searchText = "";
   }
 
@@ -98,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   /**
-   * Checks if the BubBuddy-App is selected as
+   * Checks if the BibBuddy-App is selected as
    * default app for opening a certain files.
    *
    * @return true if BibBuddy-App is selected as default
@@ -131,7 +113,10 @@ public class MainActivity extends AppCompatActivity {
     updateFragment(defaultAppFragment, defaultAppFragmentTag);
   }
 
+  @SuppressLint("NonConstantResourceId")
   private void setupBottomNavigationView() {
+    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
       switch (item.getItemId()) {
         case R.id.navigation_home:
@@ -171,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
           break;
 
         default:
-          break;
+          throw new IllegalArgumentException();
       }
 
       return true;
@@ -179,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void setupLogoButton() {
+    ImageButton logoButton = findViewById(R.id.headerLogo);
     logoButton.setOnClickListener(v -> {
       if (homeFragment == null) {
         homeFragment = new HomeFragment();
@@ -189,11 +175,11 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void updateFragment(Fragment fragment, String tag) {
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    fragmentTransaction.replace(R.id.fragment_container_view, fragment, tag);
-    fragmentTransaction.setReorderingAllowed(true);
-    fragmentTransaction.addToBackStack(null);
-    fragmentTransaction.commit();
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment, tag)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
 
     updateHeader(tag);
   }
@@ -204,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void updateNavigationFragment(int item) {
-    bottomNavigationView = findViewById(R.id.bottom_navigation);
+    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
     bottomNavigationView.getMenu().findItem(item).setChecked(true);
   }
 
@@ -213,19 +199,19 @@ public class MainActivity extends AppCompatActivity {
     View headerTextView = findViewById(R.id.headerText);
     TextView headerText = (TextView) headerTextView;
     switch (tag) {
-      case "home":
+      case homeFragmentTag:
         headerText.setText(getString(R.string.navigation_home));
         break;
-      case "search":
+      case searchFragmentTag:
         headerText.setText(getString(R.string.navigation_search));
         break;
-      case "library":
+      case libraryFragmentTag:
         headerText.setText(getString(R.string.navigation_library));
         break;
-      case "notes":
+      case notesFragmentTag:
         headerText.setText(getString(R.string.navigation_notes));
         break;
-      case "imprint":
+      case imprintFragmentTag:
         headerText.setText(R.string.header_imprint);
         break;
 
@@ -241,10 +227,10 @@ public class MainActivity extends AppCompatActivity {
    * @param visibilityShare  visibility of the share button
    */
   public void setVisibilityImportShareButton(int visibilityImport, int visibilityShare) {
-    importBtn = findViewById(R.id.import_btn);
+    ImageButton importBtn = findViewById(R.id.import_btn);
     importBtn.setVisibility(visibilityImport);
 
-    shareBtn = findViewById(R.id.share_btn);
+    ImageButton shareBtn = findViewById(R.id.share_btn);
     shareBtn.setVisibility(visibilityShare);
   }
 
@@ -254,6 +240,8 @@ public class MainActivity extends AppCompatActivity {
    * @param isVisible if the button should be visible or not
    */
   public void setVisibilitySortButton(boolean isVisible) {
+    ImageButton sortBtn = findViewById(R.id.sort_btn);
+
     if (isVisible) {
       sortBtn.setVisibility(View.VISIBLE);
     } else {
@@ -265,12 +253,10 @@ public class MainActivity extends AppCompatActivity {
    * Opens the imprint fragment.
    */
   public void openImprint() {
-
     if (imprintFragment == null) {
       imprintFragment = new ImprintFragment();
     }
 
-    String imprintFragmentTag = "imprint";
     updateFragment(imprintFragment, imprintFragmentTag);
     updateHeader(imprintFragmentTag);
   }

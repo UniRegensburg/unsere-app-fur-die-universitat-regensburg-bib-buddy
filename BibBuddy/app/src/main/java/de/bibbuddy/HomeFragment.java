@@ -34,15 +34,11 @@ public class HomeFragment extends BackStackFragment
 
     view = inflater.inflate(R.layout.fragment_home, container, false);
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    setupMainActivity();
 
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_home));
-    mainActivity.updateNavigationFragment(R.id.navigation_home);
     updateWelcomeMessage();
 
-    Context context = requireContext();
+    Context context = view.getContext();
     bookModel = new BookModel(context, 1L);
 
     int bookAmount = 3;
@@ -54,6 +50,16 @@ public class HomeFragment extends BackStackFragment
     setupBooksRecyclerView(bookItemList);
 
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortButton(false);
+
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_home));
+    mainActivity.updateNavigationFragment(R.id.navigation_home);
   }
 
   private void setupBooksRecyclerView(List<BookItem> bookItemList) {

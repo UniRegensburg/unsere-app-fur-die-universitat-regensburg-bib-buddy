@@ -43,11 +43,18 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    setupMainActivity();
+
+    setHasOptionsMenu(true);
+  }
+
+  private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
+
     mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
     mainActivity.setVisibilitySortButton(false);
 
-    setHasOptionsMenu(true);
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
   }
 
   @Nullable
