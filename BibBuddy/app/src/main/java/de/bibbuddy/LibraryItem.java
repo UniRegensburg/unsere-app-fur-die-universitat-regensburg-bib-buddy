@@ -10,7 +10,11 @@ public class LibraryItem implements SortableItem {
 
   private final int image;
   private final Long id;
-  private final Long parentId; // Can be used in the future
+
+  @SuppressWarnings({"FieldCanBeLocal", "unused"})
+  // Can be used in the future
+  private final Long parentId;
+
   private final Long modDate;
   private final String modDateStr;
 

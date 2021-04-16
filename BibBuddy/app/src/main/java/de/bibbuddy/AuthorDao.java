@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
  */
-public class AuthorDao implements InterfaceAuthorDao {
+public class AuthorDao {
 
   private static final String TAG = AuthorDao.class.getSimpleName();
 
@@ -46,9 +46,7 @@ public class AuthorDao implements InterfaceAuthorDao {
         + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
         + DatabaseHelper.AUTHOR_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()});
-
-    try {
+    try (Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()})) {
       if (!cursor.moveToFirst()) {
         return 0;
       }
@@ -57,8 +55,6 @@ public class AuthorDao implements InterfaceAuthorDao {
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
       return 0;
-    } finally {
-      cursor.close();
     }
   }
 
@@ -71,12 +67,10 @@ public class AuthorDao implements InterfaceAuthorDao {
     this.dbHelper = dbHelper;
   }
 
-  @Override
-  public boolean create(Author author) {
+  public void create(Author author) {
     Long currentTime = new Date().getTime();
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
@@ -93,13 +87,9 @@ public class AuthorDao implements InterfaceAuthorDao {
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-      return false;
 
-    } finally {
-      db.close();
     }
 
-    return true;
   }
 
   /**
@@ -109,9 +99,8 @@ public class AuthorDao implements InterfaceAuthorDao {
    */
   public void update(Author author) {
     Long currentTime = new Date().getTime();
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
@@ -125,14 +114,11 @@ public class AuthorDao implements InterfaceAuthorDao {
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-    } finally {
-      db.close();
     }
 
   }
 
   // Gets single author entry
-  @Override
   public Author findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -181,61 +167,24 @@ public class AuthorDao implements InterfaceAuthorDao {
     String selection = stringBuilder.toString();
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
-                             new String[] {DatabaseHelper._ID,
-                                 DatabaseHelper.FIRST_NAME,
-                                 DatabaseHelper.LAST_NAME,
-                                 DatabaseHelper.TITLE,
-                                 DatabaseHelper.MOD_DATE,
-                                 DatabaseHelper.CREATE_DATE},
-                             selection,
-                             params.toArray(new String[params.size()]),
-                             null, null, null, null);
-
-    try {
+    //noinspection ToArrayCallWithZeroLengthArrayArgument
+    try (Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
+                                  new String[] {DatabaseHelper._ID,
+                                      DatabaseHelper.FIRST_NAME,
+                                      DatabaseHelper.LAST_NAME,
+                                      DatabaseHelper.TITLE,
+                                      DatabaseHelper.MOD_DATE,
+                                      DatabaseHelper.CREATE_DATE},
+                                  selection,
+                                  params.toArray(new String[params.size()]),
+                                  null, null, null, null)) {
       if (!cursor.moveToFirst()) {
         return null;
       }
 
       return createAuthorData(cursor);
-    } finally {
-      cursor.close();
     }
   }
-
-  // Gets all authors in a list view
-  @Override
-  public List<Author> findAll() {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
-
-    Cursor cursor = db.rawQuery(selectQuery, null);
-
-    List<Author> authorList = new ArrayList<>();
-    if (cursor.moveToFirst()) {
-      do {
-        Author author = createAuthorData(cursor);
-
-        authorList.add(author);
-      } while (cursor.moveToNext());
-    }
-
-    cursor.close();
-
-    return authorList;
-  }
-
-  // Deletes single author entry
-  @Override
-  public void delete(Long id) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-              new String[] {String.valueOf(id)});
-
-    db.close();
-  }
-
 
   /**
    * Deletes the relevant author entries.

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
-public class BookDao implements InterfaceBookDao {
+public class BookDao {
 
   private static final String TAG = BookDao.class.getSimpleName();
 
@@ -57,24 +57,20 @@ public class BookDao implements InterfaceBookDao {
   }
 
   private void linkBookWithShelf(Long shelfId, Long bookId) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.BOOK_ID, bookId);
       contentValues.put(DatabaseHelper.SHELF_ID, shelfId);
       db.insert(DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK, null, contentValues);
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-    } finally {
-      db.close();
     }
   }
 
   private void linkBookWithAuthors(Long bookId, List<Long> authorIds) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       List<Long> existingAuthorIds = getAllAuthorIdsForBook(bookId);
       existingAuthorIds.stream()
           .filter(id -> !authorIds.contains(id))
@@ -85,8 +81,6 @@ public class BookDao implements InterfaceBookDao {
           .forEach(id -> insertAuthorBookLink(db, bookId, id));
     } catch (SQLException ex) {
       Log.e(TAG, ex.toString(), ex);
-    } finally {
-      db.close();
     }
   }
 
@@ -112,11 +106,8 @@ public class BookDao implements InterfaceBookDao {
     this.authorDao = new AuthorDao(dbHelper);
   }
 
-  @Override
-  public boolean create(Book book) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    try {
+  public void create(Book book) {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       Long currentTime = new Date().getTime();
 
       ContentValues contentValues = createBookContentValues(book);
@@ -127,12 +118,8 @@ public class BookDao implements InterfaceBookDao {
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-      return false;
-    } finally {
-      db.close();
     }
 
-    return true;
   }
 
   /**
@@ -158,7 +145,6 @@ public class BookDao implements InterfaceBookDao {
   }
 
   // Gets a single book entry by id
-  @Override
   public Book findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -181,40 +167,6 @@ public class BookDao implements InterfaceBookDao {
     cursor.close();
 
     return book;
-  }
-
-
-  // Gets all books in a list view
-  @Override
-  public List<Book> findAll() {
-    List<Book> bookList = new ArrayList<>();
-    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
-
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    Cursor cursor = db.rawQuery(selectQuery, null);
-
-    if (cursor.moveToFirst()) {
-      do {
-        bookList.add(createBookData(cursor));
-
-      } while (cursor.moveToNext());
-    }
-
-    cursor.close();
-
-    return bookList;
-  }
-
-
-  // Deletes single book entry
-  @Override
-  @Deprecated
-  public void delete(Long id) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.delete(DatabaseHelper.TABLE_NAME_BOOK, DatabaseHelper._ID + " = ?",
-              new String[] {String.valueOf(id)});
-
-    db.close();
   }
 
   /**
@@ -411,16 +363,12 @@ public class BookDao implements InterfaceBookDao {
 
     ContentValues contentValues = createBookContentValues(book);
 
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
                                             DatabaseHelper._ID + " = ?",
                                             new String[] {String.valueOf(book.getId())});
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-    } finally {
-      db.close();
     }
 
     if (authorList == null || authorList.isEmpty()) {
@@ -471,7 +419,8 @@ public class BookDao implements InterfaceBookDao {
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(id)});
 
-    Long shelfId = 0L;
+    //noinspection WrapperTypeMayBePrimitive
+    Long shelfId = 0L; // Because all other ids are Long
     if (cursor.moveToFirst()) {
       shelfId = Long.parseLong(cursor.getString(0));
     }

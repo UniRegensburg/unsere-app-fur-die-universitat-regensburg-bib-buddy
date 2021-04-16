@@ -80,7 +80,7 @@ public class LibraryFormFragment extends BackStackFragment {
     editShelfName.setBackgroundColor(greenColor);
 
     if (shelfId == 0) {
-      listener.onShelfAdded(shelfName, shelfId);
+      listener.onShelfAdded(shelfName);
     } else {
       listener.onShelfRenamed(shelfName);
     }
@@ -114,7 +114,7 @@ public class LibraryFormFragment extends BackStackFragment {
   }
 
   public interface ChangeShelfListener {
-    default void onShelfAdded(String name, Long shelfId) {
+    default void onShelfAdded(String name) {
     }
 
     default void onShelfRenamed(String name) {

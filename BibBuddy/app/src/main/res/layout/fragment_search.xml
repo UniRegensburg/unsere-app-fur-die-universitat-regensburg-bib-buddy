@@ -40,7 +40,7 @@
                 android:src="@drawable/filter_icon"
                 android:tint="@color/tiffany"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="ContentDescription,MissingConstraints" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

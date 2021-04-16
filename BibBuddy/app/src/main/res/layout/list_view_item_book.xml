@@ -64,7 +64,7 @@
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/person_icon"
             android:contentDescription="@string/description_note"
-            android:src="@drawable/pen" />
+            android:src="@drawable/document" />
 
         <TextView
             android:id="@+id/note_count"

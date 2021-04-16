@@ -81,7 +81,7 @@ public class LibraryRecyclerViewAdapter
 
     holder.itemView.setOnClickListener(v -> {
       if (!getSelectedLibraryItems().isEmpty()) {
-        listener.onShelfLongClicked(position, shelfItem, v);
+        listener.onShelfLongClicked(shelfItem, v);
       } else {
         listener.onShelfClicked(position);
       }
@@ -92,7 +92,7 @@ public class LibraryRecyclerViewAdapter
         return false;
       }
 
-      listener.onShelfLongClicked(position, shelfItem, v);
+      listener.onShelfLongClicked(shelfItem, v);
       return true;
     });
   }
@@ -130,7 +130,7 @@ public class LibraryRecyclerViewAdapter
   public interface LibraryListener {
     void onShelfClicked(int position);
 
-    void onShelfLongClicked(int position, ShelfItem shelfItem, View view);
+    void onShelfLongClicked(ShelfItem shelfItem, View view);
   }
 
 

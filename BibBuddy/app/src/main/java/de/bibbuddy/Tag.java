@@ -5,6 +5,8 @@ package de.bibbuddy;
  *
  * @author Sarah Kurek
  */
+@SuppressWarnings("ALL")
+// Can be removed when it is used in the future
 public class Tag {
 
   private Long id;

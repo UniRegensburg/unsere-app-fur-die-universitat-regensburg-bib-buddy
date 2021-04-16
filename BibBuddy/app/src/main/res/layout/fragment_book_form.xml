@@ -138,7 +138,8 @@
                 android:autofillHints="@string/book_form_isbn"
                 android:focusedByDefault="true"
                 android:hint="@string/book_form_isbn"
-                android:inputType="text" />
+                android:inputType="text"
+                tools:targetApi="o" />
 
             <!-- add_infos -->
             <TextView
@@ -183,7 +184,8 @@
                 android:text="@string/add_author_btn"
                 android:theme="@style/Button.Pink"
                 android:tooltipText="@string/add_author_tooltip"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints"
+                tools:targetApi="o" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

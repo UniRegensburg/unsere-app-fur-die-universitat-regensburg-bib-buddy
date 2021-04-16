@@ -61,7 +61,7 @@ public class NoteModel {
   public String findStrippedTextById(Long id) {
     return noteDao.findTextById(id).replaceAll(
         "(<p dir=\"ltr\"( style=\"margin-top:0; margin-bottom:0;\")?>|</p>|"
-            + "<div align=\"right\"  >|<div align=\"center\"  >|</div>|"
+            + "<div align=\"right\" {2}<div align=\"center\" {2}> >|</div>|"
             + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
             + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
         "");

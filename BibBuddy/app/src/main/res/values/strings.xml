@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Bib Buddy</string>
 
     <!-- Image Descriptions -->
@@ -21,7 +21,7 @@
     <!-- Common -->
     <string name="empty_list">Hier gibt\'s noch nichts zu sehen!</string>
     <string name="add">+</string>
-    <string name="ok">Ok</string>
+    <string name="ok" tools:ignore="ButtonCase">Ok</string>
     <string name="cancel">Abbrechen</string>
     <string name="delete">Löschen</string>
     <string name="rename">Umbenennen</string>
@@ -151,7 +151,7 @@
     <!-- Note | Delete note -->
     <string name="delete_note">Notiz löschen</string>
     <string name="delete_notes">Notizen löschen</string>
-    <string name="deleted_note">Ok, wir haben die Notiz gelöscht.</string>
+    <string name="deleted_note" tools:ignore="Typos">Ok, wir haben die Notiz gelöscht.</string>
     <string name="deleted_notes">Ok, wir haben die Notizen gelöscht.</string>
     <string name="delete_note_message">Willst du die Notiz </string>
     <string name="delete_notes_message">Willst du die Notizen </string>

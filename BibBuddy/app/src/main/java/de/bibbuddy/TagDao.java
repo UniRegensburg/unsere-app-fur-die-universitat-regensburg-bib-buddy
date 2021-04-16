@@ -10,11 +10,12 @@ import java.util.List;
 
 /**
  * TagDao contains all sql queries related to Tag.
- * (This class can be used in the future)
+ *
  *
  * @author Sarah Kurek
  */
-public class TagDao implements InterfaceTagDao {
+@SuppressWarnings("unused") // This class can be used in the future
+public class TagDao {
 
   private static final String TAG = TagDao.class.getSimpleName();
 
@@ -24,11 +25,9 @@ public class TagDao implements InterfaceTagDao {
     this.dbHelper = dbHelper;
   }
 
-  @Override
   public boolean create(Tag tag) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.NAME, tag.getName());
 
@@ -38,8 +37,6 @@ public class TagDao implements InterfaceTagDao {
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
       return false;
-    } finally {
-      db.close();
     }
 
     return true;
@@ -47,7 +44,6 @@ public class TagDao implements InterfaceTagDao {
 
 
   // Gets single tag entry
-  @Override
   public Tag findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -72,11 +68,10 @@ public class TagDao implements InterfaceTagDao {
 
 
   // Gets all tags in a list view
-  @Override
   public List<Tag> findAll() {
-    List<Tag> tagList = new ArrayList<Tag>();
+    List<Tag> tagList = new ArrayList<>();
 
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_TAG;
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_TAG;
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
@@ -97,7 +92,6 @@ public class TagDao implements InterfaceTagDao {
   }
 
   // Deletes single tag entry
-  @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_TAG, DatabaseHelper._ID + " = ?",

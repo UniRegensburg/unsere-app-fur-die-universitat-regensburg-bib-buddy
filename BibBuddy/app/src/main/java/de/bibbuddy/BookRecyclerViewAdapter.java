@@ -84,7 +84,7 @@ public class BookRecyclerViewAdapter
 
     holder.itemView.setOnClickListener(v -> {
       if (!getSelectedBookItems().isEmpty()) {
-        listener.onBookLongClicked(position, bookItem, v);
+        listener.onBookLongClicked(bookItem, v);
       } else {
         listener.onBookClicked(position);
       }
@@ -95,7 +95,7 @@ public class BookRecyclerViewAdapter
         return false;
       }
 
-      listener.onBookLongClicked(position, bookItem, v);
+      listener.onBookLongClicked(bookItem, v);
       return true;
     });
   }
@@ -129,7 +129,7 @@ public class BookRecyclerViewAdapter
   public interface BookListener {
     void onBookClicked(int position);
 
-    void onBookLongClicked(int position, BookItem bookItem, View v);
+    void onBookLongClicked(BookItem bookItem, View v);
   }
 
   public static class BookViewHolder extends RecyclerView.ViewHolder {

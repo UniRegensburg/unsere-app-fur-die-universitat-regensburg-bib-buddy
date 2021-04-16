@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import androidx.annotation.NonNull;
 import java.util.Objects;
 
 public class Author {
@@ -17,6 +18,7 @@ public class Author {
       return null;
     }
 
+    //noinspection BoxingBoxedValue
     return Long.valueOf(number); // this is used because of a former bug
   }
 
@@ -103,6 +105,7 @@ public class Author {
     this.title = title;
   }
 
+  @SuppressWarnings("unused")
   public Long getModDate() {
     return modDate;
   }
@@ -110,6 +113,8 @@ public class Author {
   /**
    * Copies an author object.
    */
+  @NonNull
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   public Author clone() {
 
     return new Author(copyLong(id), firstName, lastName, title, copyLong(createDate),

@@ -48,7 +48,8 @@
                 android:autofillHints="@string/author_title"
                 android:focusedByDefault="true"
                 android:hint="@string/author_title"
-                android:inputType="text" />
+                android:inputType="text"
+                tools:targetApi="o" />
 
             <!-- first name -->
             <TextView

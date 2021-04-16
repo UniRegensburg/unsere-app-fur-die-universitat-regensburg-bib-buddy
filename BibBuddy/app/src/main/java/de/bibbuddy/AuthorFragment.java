@@ -111,7 +111,9 @@ public class AuthorFragment extends BackStackFragment
   }
 
   private void performDeleteAuthors() {
-    assert (!selectedAuthorItems.isEmpty());
+    if (BuildConfig.DEBUG && selectedAuthorItems.isEmpty()) {
+      throw new AssertionError("Assertion failed");
+    }
     final int authorsNumber = selectedAuthorItems.size();
 
     for (AuthorItem authorItem : selectedAuthorItems) {
@@ -268,7 +270,7 @@ public class AuthorFragment extends BackStackFragment
   }
 
   @Override
-  public void onAuthorLongClicked(int position, AuthorItem authorItem, View view) {
+  public void onAuthorLongClicked(AuthorItem authorItem, View view) {
     if (view.isSelected()) {
       view.setSelected(false);
       selectedAuthorItems.remove(authorItem);

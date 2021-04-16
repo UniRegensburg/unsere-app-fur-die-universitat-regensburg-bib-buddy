@@ -141,7 +141,7 @@ public class HomeFragment extends BackStackFragment
   }
 
   @Override
-  public void onBookLongClicked(int position, BookItem bookItem, View v) {
+  public void onBookLongClicked(BookItem bookItem, View v) {
   }
 
 }

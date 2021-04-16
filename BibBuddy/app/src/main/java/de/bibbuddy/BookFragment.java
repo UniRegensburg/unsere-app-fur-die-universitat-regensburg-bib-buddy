@@ -628,7 +628,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   @Override
-  public void onBookLongClicked(int position, BookItem bookItem, View v) {
+  public void onBookLongClicked(BookItem bookItem, View v) {
     if (v.isSelected()) {
       v.setSelected(false);
       selectedBookItems.remove(bookItem);

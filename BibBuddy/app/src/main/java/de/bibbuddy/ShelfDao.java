@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author Sarah Kurek, Claudia Schönherr
  */
-public class ShelfDao implements InterfaceShelfDao {
+public class ShelfDao {
 
   private static final String TAG = ShelfDao.class.getSimpleName();
 
@@ -42,12 +42,10 @@ public class ShelfDao implements InterfaceShelfDao {
     this.dbHelper = dbHelper;
   }
 
-  @Override
-  public boolean create(Shelf shelf) {
+  public void create(Shelf shelf) {
     Long currentTime = new Date().getTime();
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.NAME, shelf.getName());
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
@@ -59,16 +57,11 @@ public class ShelfDao implements InterfaceShelfDao {
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-      return false;
 
-    } finally {
-      db.close();
     }
 
-    return true;
   }
 
-  @Override
   public Shelf findById(long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -97,33 +90,7 @@ public class ShelfDao implements InterfaceShelfDao {
     return shelf;
   }
 
-
-  // Gets all shelves in a list view
-  @Override
-  public List<Shelf> findAll() {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
-
-    Cursor cursor = db.rawQuery(selectQuery, null);
-
-    List<Shelf> shelfList = new ArrayList<>();
-    if (cursor.moveToFirst()) {
-      do {
-        Shelf shelf = createShelfData(cursor);
-
-        shelfList.add(shelf);
-      } while (cursor.moveToNext());
-    }
-
-    cursor.close();
-
-    return shelfList;
-  }
-
-
   // Deletes single shelf entry
-  @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_SHELF, DatabaseHelper._ID + " = ?",

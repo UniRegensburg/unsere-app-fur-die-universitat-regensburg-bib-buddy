@@ -16,7 +16,11 @@ public class Book {
   private String volume = "";
   private String edition = "";
   private String addInfo = "";
-  private Long createDate; // Can be used in the future
+
+  @SuppressWarnings({"unused", "FieldCanBeLocal"})
+  // Can be used in the future and is here only to check for possible bugs
+  private Long createDate;
+
   private Long modDate;
 
   /**

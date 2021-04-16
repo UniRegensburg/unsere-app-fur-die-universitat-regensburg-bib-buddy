@@ -5,13 +5,18 @@ package de.bibbuddy;
  *
  * @author Sarah Kurek
  */
+@SuppressWarnings("unused")
 public class Note {
 
   private final String name;
   private final NoteTypeLut type;
   private final String text;
   private Long id;
-  private Long createDate; // Can be used in the future
+
+  @SuppressWarnings({"unused", "FieldCanBeLocal"})
+  // Can be used in the future and is here only to check for possible bugs
+  private Long createDate;
+
   private Long modDate;
   private Long noteFileId;
   private String noteFilePath;

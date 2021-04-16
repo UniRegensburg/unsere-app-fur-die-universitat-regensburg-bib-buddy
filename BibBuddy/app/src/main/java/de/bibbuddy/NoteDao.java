@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author Sarah Kurek, Claudia Schönherr, Luis Moßburger, Silvia Ivanova
  */
-public class NoteDao implements InterfaceNoteDao {
+public class NoteDao {
 
   private static final String TAG = NoteDao.class.getSimpleName();
 
@@ -56,8 +56,7 @@ public class NoteDao implements InterfaceNoteDao {
     this.dbHelper = dbHelper;
   }
 
-  @Override
-  public boolean create(Note note) {
+  public void create(Note note) {
     Long currentTime = new Date().getTime();
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       try {
@@ -95,17 +94,14 @@ public class NoteDao implements InterfaceNoteDao {
 
       } catch (SQLiteException ex) {
         Log.e(TAG, ex.toString(), ex);
-        return false;
 
       } finally {
         db.close();
       }
     }
-    return true;
   }
 
   // Gets single note entry
-  @Override
   public Note findById(long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -155,7 +151,6 @@ public class NoteDao implements InterfaceNoteDao {
   }
 
   // Gets all notes in a list view
-  @Override
   public List<Note> findAll() {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -177,7 +172,6 @@ public class NoteDao implements InterfaceNoteDao {
   }
 
   // Deletes single note entry
-  @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_NOTE, DatabaseHelper._ID + " = ?",
@@ -215,9 +209,8 @@ public class NoteDao implements InterfaceNoteDao {
    *
    * @param bookId id of the book to link
    * @param noteId id of the note to link
-   * @return true if linking was successful
    */
-  public boolean linkNoteWithBook(Long bookId, Long noteId) {
+  public void linkNoteWithBook(Long bookId, Long noteId) {
 
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
@@ -228,12 +221,11 @@ public class NoteDao implements InterfaceNoteDao {
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-      return false;
+      return;
     }
 
     updateBookModified(bookId);
 
-    return true;
   }
 
   /**
@@ -355,7 +347,8 @@ public class NoteDao implements InterfaceNoteDao {
                              new String[] {String.valueOf(noteId)},
                              null, null, null, String.valueOf(1));
 
-    Long bookId = 0L;
+    //noinspection WrapperTypeMayBePrimitive
+    Long bookId = 0L; // Because all other ids are Long
     if (cursor.moveToFirst()) {
       bookId = cursor.getLong(0);
     }

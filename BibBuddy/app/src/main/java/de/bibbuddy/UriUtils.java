@@ -89,6 +89,7 @@ public class UriUtils {
     String fullUriPath;
 
     if (UriUtilsKeys.PRIMARY.equalsIgnoreCase(pathUriData[0])) {
+      //noinspection deprecation
       fullUriPath = Environment.getExternalStorageDirectory()
           + relativeUriPath;
 
@@ -235,6 +236,7 @@ public class UriUtils {
 
   private static String getExternalStoragePath(@NonNull Cursor cursor) {
     String fileName = cursor.getString(0);
+    //noinspection deprecation
     String path = Environment.getExternalStorageDirectory().toString()
         + File.separator + StorageKeys.DOWNLOAD_FOLDER + File.separator + fileName;
 

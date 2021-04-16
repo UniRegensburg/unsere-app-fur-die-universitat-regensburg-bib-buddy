@@ -83,7 +83,7 @@ public class ImportBibTex {
     String year = bibTagValue.get(BibTexKeys.YEAR);
 
     if (DataValidation.isValidYear(year)) {
-      return Integer.parseInt(bibTagValue.get(BibTexKeys.YEAR));
+      return Integer.parseInt(Objects.requireNonNull(bibTagValue.get(BibTexKeys.YEAR)));
     }
 
     return 0;
@@ -92,7 +92,7 @@ public class ImportBibTex {
   private String getParsedIsbn() {
     String isbn = bibTagValue.get(BibTexKeys.ISBN);
 
-    if (isbn.contains("-")) {
+    if (Objects.requireNonNull(isbn).contains("-")) {
       isbn = isbn.replaceAll("-", "");
 
       if (DataValidation.isValidIsbn10or13(isbn)) {
@@ -149,7 +149,6 @@ public class ImportBibTex {
    * @param uri Uniform Resource Identifier (URI)
    * @return the URI content as String
    */
-  @NonNull
   public String readTextFromUri(Uri uri) throws IOException {
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -166,7 +165,6 @@ public class ImportBibTex {
 
           if (line.contains(BibTexKeys.BOOK_SHORTTITLE)) {
             line = "";
-            line.replaceFirst("\n", "");
           }
 
           if (line.contains(BibTexKeys.NOTE)) {
@@ -297,7 +295,7 @@ public class ImportBibTex {
     List<Author> authors = new ArrayList<>();
 
     // If multiple authors
-    if (authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
+    if (Objects.requireNonNull(authorNames).contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
       String[] names = authorNames.split(BibTexKeys.AND_MULTIPLE_AUTHORS);
 
       for (String name : names) {
@@ -322,7 +320,7 @@ public class ImportBibTex {
    * @return true if the note exists, false if the note does not exist
    */
   public boolean existsBibNote() {
-    return bibTagValue.get(BibTexKeys.ANNOTE).isEmpty();
+    return Objects.requireNonNull(bibTagValue.get(BibTexKeys.ANNOTE)).isEmpty();
   }
 
   /**
@@ -336,7 +334,7 @@ public class ImportBibTex {
    */
   public void importBibNote(NoteModel noteModel, Book book) {
     if (bibTagValue.containsKey(BibTexKeys.ANNOTE)
-        && !bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
+        && !Objects.requireNonNull(bibTagValue.get(BibTexKeys.ANNOTE)).isEmpty()) {
 
       noteModel.createNote(bibTagValue.get(BibTexKeys.ANNOTE),
                            NoteTypeLut.TEXT, bibTagValue.get(BibTexKeys.ANNOTE),

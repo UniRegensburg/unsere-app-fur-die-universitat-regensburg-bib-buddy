@@ -86,7 +86,7 @@ public class AuthorRecyclerViewAdapter
 
     holder.itemView.setOnClickListener(v -> {
       if (!getSelectedAuthorItems().isEmpty()) {
-        listener.onAuthorLongClicked(position, authorItem, v);
+        listener.onAuthorLongClicked(authorItem, v);
       } else {
         listener.onAuthorClicked(position);
       }
@@ -97,7 +97,7 @@ public class AuthorRecyclerViewAdapter
         return false;
       }
 
-      listener.onAuthorLongClicked(position, authorItem, v);
+      listener.onAuthorLongClicked(authorItem, v);
       return true;
     });
   }
@@ -131,7 +131,7 @@ public class AuthorRecyclerViewAdapter
   public interface AuthorListener {
     void onAuthorClicked(int position);
 
-    void onAuthorLongClicked(int position, AuthorItem authorItem, View view);
+    void onAuthorLongClicked(AuthorItem authorItem, View view);
   }
 
   public static class AuthorViewHolder extends RecyclerView.ViewHolder {

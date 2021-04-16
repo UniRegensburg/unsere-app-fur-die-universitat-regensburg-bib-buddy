@@ -73,6 +73,7 @@ public class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
   /**
    * Starts a runnable to permanently update the seekBar to match the position of the played audio.
    */
+  @SuppressWarnings("deprecation")
   public void updateProgress() {
     Handler handler = new Handler();
     checkProgress = true;

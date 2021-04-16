@@ -292,7 +292,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     LibraryFormFragment libraryFormFragment =
         new LibraryFormFragment(new LibraryFormFragment.ChangeShelfListener() {
           @Override
-          public void onShelfAdded(String name, Long shelfId) {
+          public void onShelfAdded(String name) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
             Toast.makeText(context, getString(R.string.shelf_added), Toast.LENGTH_SHORT).show();
@@ -431,7 +431,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   @Override
-  public void onShelfLongClicked(int position, ShelfItem shelfItem, View v) {
+  public void onShelfLongClicked(ShelfItem shelfItem, View v) {
 
     if (v.isSelected()) {
       v.setSelected(false);

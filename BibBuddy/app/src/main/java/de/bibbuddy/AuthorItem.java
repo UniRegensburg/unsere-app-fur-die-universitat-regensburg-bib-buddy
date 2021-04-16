@@ -29,14 +29,6 @@ public class AuthorItem {
     return author.getLastName();
   }
 
-  public Long getId() {
-    return author.getId();
-  }
-
-  public Long getModDate() {
-    return author.getModDate();
-  }
-
   public int getImage() {
     return image;
   }
