@@ -9,7 +9,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -37,6 +36,7 @@ public class NotesFragmentTest {
   /**
    * Initiate basic NotesFragment' setup before every test-case.
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   @Before
   public void init() {
     ActivityScenario scenario = ActivityScenario.launch(MainActivity.class);

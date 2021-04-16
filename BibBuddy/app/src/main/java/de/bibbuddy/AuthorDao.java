@@ -34,7 +34,6 @@ public class AuthorDao {
     );
   }
 
-
   private int countAuthorBookLinks(Long authorId) {
     if (authorId == null || authorId == 0) {
       return 0;
