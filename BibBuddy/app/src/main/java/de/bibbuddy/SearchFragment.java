@@ -131,12 +131,12 @@ public class SearchFragment extends BackStackFragment
 
   private void handleSortSearch() {
     SortDialog sortDialog = new SortDialog(context, sortTypeLut,
-                                           newSortCriteria -> {
-                                             sortTypeLut = newSortCriteria;
-                                             ((MainActivity) requireActivity())
-                                                 .setSortTypeLut(newSortCriteria);
-                                             sortResultList();
-                                           });
+        newSortCriteria -> {
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
+          sortResultList();
+        });
 
     sortDialog.show();
   }

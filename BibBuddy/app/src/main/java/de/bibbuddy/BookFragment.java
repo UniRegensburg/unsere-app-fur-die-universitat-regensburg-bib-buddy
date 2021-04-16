@@ -276,8 +276,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
       alertDialogEmptyShelf.setMessage(R.string.empty_shelf_description);
 
       alertDialogEmptyShelf.setPositiveButton(R.string.ok,
-        (dialog, which) -> {
-      });
+          (dialog, which) -> {
+        });
 
       alertDialogEmptyShelf.create().show();
     } else {
@@ -417,11 +417,11 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     reqAlertDialog.setMessage(R.string.camera_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-            (dialog, which) -> requestCameraPermissionLauncher.launch(
+        (dialog, which) -> requestCameraPermissionLauncher.launch(
                     Manifest.permission.CAMERA));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
-            (dialog, which) -> dialog.dismiss());
+        (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
   }

@@ -70,8 +70,8 @@ public class LibraryFragment extends BackStackFragment
       alertDialogEmptyLib.setMessage(R.string.empty_library_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-        (dialog, which) -> {
-      });
+          (dialog, which) -> {
+        });
 
       alertDialogEmptyLib.create().show();
 

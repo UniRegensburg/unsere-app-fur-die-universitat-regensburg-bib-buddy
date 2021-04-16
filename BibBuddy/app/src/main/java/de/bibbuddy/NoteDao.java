@@ -56,7 +56,7 @@ public class NoteDao {
     this.dbHelper = dbHelper;
   }
 
-  /*
+  /**
   * Creates a new Note.
   *
   * @param note the note that should be created
