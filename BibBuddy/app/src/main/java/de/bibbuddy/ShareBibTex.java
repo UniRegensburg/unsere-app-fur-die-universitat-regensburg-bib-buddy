@@ -34,7 +34,7 @@ public class ShareBibTex {
     StringBuilder allNotes = new StringBuilder();
 
     for (int i = 0; i < notesList.size(); i++) {
-      String bookTextNotes = noteModel.findStrippedTextById(notesList.get(i));
+      String bookTextNotes = noteModel.findStrippedTextById(notesList.get(i)) + "; ";
       allNotes.append(bookTextNotes);
     }
 
