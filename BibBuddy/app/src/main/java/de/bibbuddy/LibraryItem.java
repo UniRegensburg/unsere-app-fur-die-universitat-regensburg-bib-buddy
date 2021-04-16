@@ -10,11 +10,11 @@ public class LibraryItem implements SortableItem {
 
   private final int image;
   private final Long id;
-  private final Long parentId; // can be used in the future
-  private String name;
+  private final Long parentId; // Can be used in the future
+  private final Long modDate;
+  private final String modDateStr;
 
-  private Long modDate;
-  private String modDateStr;
+  private String name;
 
   /**
    * Constructor of a LibraryItem.

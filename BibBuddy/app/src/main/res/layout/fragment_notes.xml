@@ -4,17 +4,17 @@
     android:id="@+id/fragment_notes"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="75dp"
-    android:layout_marginTop="100dp">
+    android:layout_marginTop="100dp"
+    android:layout_marginBottom="75dp">
 
     <TextView
         android:id="@+id/empty_notes_list_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
-        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="60dp"
+        android:gravity="center_horizontal"
         android:text="@string/empty_list"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:visibility="gone" />

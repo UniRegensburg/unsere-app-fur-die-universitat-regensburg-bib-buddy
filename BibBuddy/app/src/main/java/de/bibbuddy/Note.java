@@ -11,7 +11,7 @@ public class Note {
   private final NoteTypeLut type;
   private final String text;
   private Long id;
-  private Long createDate;
+  private Long createDate; // Can be used in the future
   private Long modDate;
   private Long noteFileId;
   private String noteFilePath;

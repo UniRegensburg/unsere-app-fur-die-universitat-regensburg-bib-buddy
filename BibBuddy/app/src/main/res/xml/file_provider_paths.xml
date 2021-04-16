@@ -3,18 +3,15 @@
 <paths>
 
     <files-path
-        path="."
         name="migrations"
-        />
+        path="." />
 
     <external-path
-        path="."
         name="external"
-        />
+        path="." />
 
     <cache-path
-        path="."
         name="cache"
-        />
+        path="." />
 
 </paths>

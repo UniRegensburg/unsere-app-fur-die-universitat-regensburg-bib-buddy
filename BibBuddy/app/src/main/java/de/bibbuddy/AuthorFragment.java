@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -230,6 +231,7 @@ public class AuthorFragment extends BackStackFragment
     super.onCreateOptionsMenu(menu, inflater);
   }
 
+  @SuppressLint("NonConstantResourceId")
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
 

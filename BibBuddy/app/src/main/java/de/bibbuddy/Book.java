@@ -16,7 +16,7 @@ public class Book {
   private String volume = "";
   private String edition = "";
   private String addInfo = "";
-  private Long createDate;
+  private Long createDate; // Can be used in the future
   private Long modDate;
 
   /**

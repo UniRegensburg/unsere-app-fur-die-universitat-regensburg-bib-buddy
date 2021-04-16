@@ -6,8 +6,7 @@
     android:layout_marginTop="65dp"
     android:layout_marginBottom="100dp"
     android:fitsSystemWindows="false"
-    android:windowSoftInputMode="adjustResize"
-    >
+    android:windowSoftInputMode="adjustResize">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -15,8 +14,7 @@
         android:layout_marginTop="15dp"
         android:fillViewport="true"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints"
-        >
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:id="@+id/book_form"
@@ -24,16 +22,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="40dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <!-- title -->
             <TextView
-                    android:text="@string/book_form_notice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/info_mandatory"
-                    android:textColor="@color/gray_dark" />
+                android:id="@+id/info_mandatory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/book_form_notice"
+                android:textColor="@color/gray_dark" />
 
             <TextView
                 android:id="@+id/book_form_title"
@@ -41,17 +38,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/book_form_title"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/book_form_title_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_title"
                 android:hint="@string/book_form_title"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- subtitle -->
             <TextView
@@ -60,17 +56,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/book_form_subtitle"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/book_form_subtitle_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_subtitle"
                 android:hint="@string/book_form_subtitle"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- pub_year -->
             <TextView
@@ -79,17 +74,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/book_form_pub_year"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/book_form_pub_year_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_pub_year"
                 android:hint="@string/book_form_pub_year"
-                android:inputType="number"
-                />
+                android:inputType="number" />
 
             <!-- publisher -->
             <TextView
@@ -98,17 +92,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/book_form_publisher"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/book_form_publisher_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_publisher"
                 android:hint="@string/book_form_publisher"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- edition -->
             <TextView
@@ -117,37 +110,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/book_form_edition"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/book_form_edition_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_edition"
                 android:hint="@string/book_form_edition"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- ISBN -->
             <TextView
-                    android:id="@+id/book_form_isbn_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/book_form_isbn"
-                    android:theme="@style/TextViewCustom"
-                    />
+                android:id="@+id/book_form_isbn_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/book_form_isbn"
+                android:theme="@style/TextViewCustom" />
 
             <EditText
-                    android:id="@+id/book_form_isbn_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:focusedByDefault="true"
-                    android:hint="@string/book_form_isbn"
-                    android:inputType="text"
-                    />
+                android:id="@+id/book_form_isbn_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_isbn"
+                android:focusedByDefault="true"
+                android:hint="@string/book_form_isbn"
+                android:inputType="text" />
 
             <!-- add_infos -->
             <TextView
@@ -156,17 +147,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/book_form_add_infos"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/book_form_add_infos_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/book_form_add_infos"
                 android:hint="@string/book_form_add_infos"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- author -->
             <TextView
@@ -175,8 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/authors"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <TextView
                 android:id="@+id/book_form_author_list"
@@ -184,8 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:theme="@style/TextViewAuthors"
-                android:visibility="invisible"
-                />
+                android:visibility="invisible" />
 
             <Button
                 android:id="@+id/book_form_add_author_btn"
@@ -195,15 +183,14 @@
                 android:text="@string/add_author_btn"
                 android:theme="@style/Button.Pink"
                 android:tooltipText="@string/add_author_tooltip"
-                tools:ignore="MissingConstraints"
-                />
+                tools:ignore="MissingConstraints" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <include
-            layout="@layout/confirm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"/>
+        layout="@layout/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

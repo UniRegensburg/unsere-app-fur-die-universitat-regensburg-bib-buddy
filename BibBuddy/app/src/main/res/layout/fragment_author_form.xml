@@ -6,8 +6,7 @@
     android:layout_marginTop="75dp"
     android:layout_marginBottom="100dp"
     android:fitsSystemWindows="false"
-    android:windowSoftInputMode="adjustResize"
-    >
+    android:windowSoftInputMode="adjustResize">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -15,8 +14,7 @@
         android:layout_marginTop="15dp"
         android:fillViewport="true"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints"
-        >
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:id="@+id/author_form"
@@ -24,16 +22,15 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="40dp"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <!-- title -->
             <TextView
-                    android:text="@string/book_form_notice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/info_mandatory_author"
-                    android:textColor="@color/gray_dark" />
+                android:id="@+id/info_mandatory_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/book_form_notice"
+                android:textColor="@color/gray_dark" />
 
             <TextView
                 android:id="@+id/author_form_title_text"
@@ -41,18 +38,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/author_title"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/author_form_title_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/author_title"
                 android:focusedByDefault="true"
                 android:hint="@string/author_title"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- first name -->
             <TextView
@@ -61,17 +57,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/author_first_name"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/author_form_first_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/author_first_name"
                 android:hint="@string/author_first_name"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
             <!-- last name -->
             <TextView
@@ -80,25 +75,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/author_last_name"
-                android:theme="@style/TextViewCustom"
-                />
+                android:theme="@style/TextViewCustom" />
 
             <EditText
                 android:id="@+id/author_form_last_name_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autofillHints="@string/author_last_name"
                 android:hint="@string/author_last_name"
-                android:inputType="text"
-                />
+                android:inputType="text" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <include
-            layout="@layout/confirm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"/>
+        layout="@layout/confirm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

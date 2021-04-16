@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/white"
-        android:paddingBottom="10dp"
         android:paddingTop="8dp"
+        android:paddingBottom="10dp"
         app:menu="@menu/navigation_menu" />
 
 </FrameLayout>

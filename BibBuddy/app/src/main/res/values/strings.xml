@@ -215,13 +215,13 @@
     <!-- As Default App Selected -->
     <string name="header_default_app">BibTeX importieren</string>
 
-    
+
     <!-- Sharing -->
     <string name="exception_failed_temp_file">Sorry, wir konnten die Datei nicht speichern.</string>
 
 
     <!-- Search -->
-    <string name="search">Wir suchen...</string>
+    <string name="search">Wir suchen…</string>
     <string name="search_hint">Suche nach Regalen, Büchern und Notizen</string>
     <string name="search_invalid_name">Hey, bitte gib einen Suchbegriff ein, bevor wir loslegen.</string>
     <string name="search_empty">Sorry, dazu konnten wir nichts finden.</string>

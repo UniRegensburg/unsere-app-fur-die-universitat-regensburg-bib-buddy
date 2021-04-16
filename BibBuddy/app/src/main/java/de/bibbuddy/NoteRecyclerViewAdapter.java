@@ -45,9 +45,7 @@ public class NoteRecyclerViewAdapter
 
   private List<NoteItem> noteList;
   private ViewGroup parent;
-  private int mediaPlayerPosition;
   private boolean paused;
-
 
   private Bundle createNoteBundle(NoteItem item) {
     Bundle bundle = new Bundle();
@@ -145,7 +143,7 @@ public class NoteRecyclerViewAdapter
     if (v.isSelected()) {
 
       if (paused) {
-        mediaPlayerPosition = mediaPlayer.getCurrentPosition();
+        int mediaPlayerPosition = mediaPlayer.getCurrentPosition();
         mediaPlayer.seekTo(mediaPlayerPosition);
         mediaPlayer.start();
         button.setImageResource(R.drawable.pause);

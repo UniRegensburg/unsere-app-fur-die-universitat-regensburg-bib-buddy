@@ -9,7 +9,7 @@ public class Shelf {
 
   private Long id;
   private String name;
-  private Long createDate;
+  private Long createDate;  // Can be used in the future
   private Long modDate;
   private Long shelfId;
 

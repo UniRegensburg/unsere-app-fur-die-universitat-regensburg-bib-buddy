@@ -14,8 +14,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="15dp">
 
         <ImageView
             android:id="@+id/note_type"
@@ -23,17 +23,17 @@
             android:layout_height="50dp"
             android:contentDescription="@string/description_text_note"
             android:src="@drawable/document"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/note_mod_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/note_name"
@@ -52,9 +52,9 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/note_type"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -86,37 +86,37 @@
                 android:layout_height="35dp"
                 android:layout_marginHorizontal="10dp"
                 app:layout_constrainedWidth="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/play_note"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/play_note"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                    android:id="@+id/play_note"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:background="@null"
-                    android:contentDescription="@string/play_button_note"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/play"
-                    app:layout_constraintEnd_toStartOf="@+id/stop_note"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/play_note"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:contentDescription="@string/play_button_note"
+                android:scaleType="fitCenter"
+                android:src="@drawable/play"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/stop_note"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                    android:id="@+id/stop_note"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@null"
-                    android:contentDescription="@string/stop_button_note"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/stop"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                android:id="@+id/stop_note"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@null"
+                android:contentDescription="@string/stop_button_note"
+                android:scaleType="fitCenter"
+                android:src="@drawable/stop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
