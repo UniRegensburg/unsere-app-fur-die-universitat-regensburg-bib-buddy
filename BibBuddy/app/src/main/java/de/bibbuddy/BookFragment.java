@@ -47,6 +47,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private static final String TAG = BookFragment.class.getSimpleName();
 
   private final List<BookItem> selectedBookItems = new ArrayList<>();
+
   private final ActivityResultLauncher<String> requestPermissionLauncher =
       registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
         if (isGranted) {
@@ -80,17 +81,17 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
             }
           });
 
-  private Long shelfId;
-  private String shelfName;
   private View view;
   private Context context;
   private BookModel bookModel;
-  private NoteModel noteModel;
   private BookRecyclerViewAdapter adapter;
-  private SortTypeLut sortTypeLut;
-  private ShareBibTex shareBibTex;
+
+  private Long shelfId;
+  private String shelfName;
+
   private ImportBibTex importBibTex;
 
+  private SortTypeLut sortTypeLut;
 
   @Override
   protected void onBackPressed() {
@@ -119,20 +120,18 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     setupMainActivity();
 
     bookModel = new BookModel(context, shelfId);
-    noteModel = new NoteModel(context);
 
-    shareBibTex = new ShareBibTex(shelfName);
     importBibTex = new ImportBibTex(context);
 
     setupRecyclerView();
 
-    setHasOptionsMenu(true);
     createAddBookListener();
-
     setupSortBtn();
     setupDefaultApp();
 
     selectedBookItems.clear();
+
+    setHasOptionsMenu(true);
 
     return view;
   }
@@ -140,8 +139,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   private void setupMainActivity() {
     MainActivity mainActivity = ((MainActivity) requireActivity());
 
-    mainActivity.setVisibilityImportShareButton(View.VISIBLE, View.VISIBLE);
-    mainActivity.setVisibilitySortButton(true);
+    mainActivity.setVisibilityImportShareBtn(View.VISIBLE, View.VISIBLE);
+    mainActivity.setVisibilitySortBtn(true);
     sortTypeLut = mainActivity.getSortTypeLut();
 
     mainActivity.findViewById(R.id.import_btn).setOnClickListener(
@@ -363,12 +362,12 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
       List<String> nonRedundantBibItems
           = importBibTex.getNonRedundantBibItems(bibText);
 
-      Book book;
+      NoteModel noteModel = new NoteModel(context);
       for (int i = 0; i < nonRedundantBibItems.size(); i++) {
 
         if (nonRedundantBibItems.get(i).startsWith(BibTexKeys.BOOK_TAG)) {
           importBibTex.parseBibItem(nonRedundantBibItems.get(i));
-          book = importBibTex.importBook();
+          Book book = importBibTex.importBook();
           addImportedBook(book, importBibTex.parseAuthorNames());
           importBibTex.importBibNote(noteModel, book);
         }
@@ -619,6 +618,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
   }
 
   private void shareShelfBibIntent() {
+    NoteModel noteModel = new NoteModel(context);
+    ShareBibTex shareBibTex = new ShareBibTex(shelfName);
     String bibContent =
         shareBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
 

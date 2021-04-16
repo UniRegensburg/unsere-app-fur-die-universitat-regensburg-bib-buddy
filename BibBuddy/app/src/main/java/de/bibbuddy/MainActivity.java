@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
       setupDefaultAppSelected();
     }
 
-    setupLogoButton();
+    setupLogoBtn();
     setupBottomNavigationView();
 
     sortTypeLut = SortTypeLut.MOD_DATE_LATEST;
@@ -163,9 +163,9 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
-  private void setupLogoButton() {
-    ImageButton logoButton = findViewById(R.id.headerLogo);
-    logoButton.setOnClickListener(v -> {
+  private void setupLogoBtn() {
+    ImageButton logoBtn = findViewById(R.id.headerLogo);
+    logoBtn.setOnClickListener(v -> {
       if (homeFragment == null) {
         homeFragment = new HomeFragment();
       }
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
    * @param visibilityImport visibility of the import button
    * @param visibilityShare  visibility of the share button
    */
-  public void setVisibilityImportShareButton(int visibilityImport, int visibilityShare) {
+  public void setVisibilityImportShareBtn(int visibilityImport, int visibilityShare) {
     ImageButton importBtn = findViewById(R.id.import_btn);
     importBtn.setVisibility(visibilityImport);
 
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
    *
    * @param isVisible if the button should be visible or not
    */
-  public void setVisibilitySortButton(boolean isVisible) {
+  public void setVisibilitySortBtn(boolean isVisible) {
     ImageButton sortBtn = findViewById(R.id.sort_btn);
 
     if (isVisible) {

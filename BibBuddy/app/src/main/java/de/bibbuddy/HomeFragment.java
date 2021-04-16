@@ -1,6 +1,5 @@
 package de.bibbuddy;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,9 @@ import java.util.Random;
 public class HomeFragment extends BackStackFragment
     implements BookRecyclerViewAdapter.BookListener {
 
-  private List<BookItem> bookItemList;
   private View view;
-
   private BookModel bookModel;
-  private BookRecyclerViewAdapter adapter;
+  private List<BookItem> bookItemList;
 
   @Nullable
   @Override
@@ -37,17 +34,7 @@ public class HomeFragment extends BackStackFragment
     setupMainActivity();
 
     updateWelcomeMessage();
-
-    Context context = view.getContext();
-    bookModel = new BookModel(context, 1L);
-
-    int bookAmount = 3;
-    List<Book> bookList = bookModel.findModifiedBooks(bookAmount);
-    bookItemList = getBookItems(bookList);
-
-    adapter = new BookRecyclerViewAdapter(bookItemList, this, context);
-
-    setupBooksRecyclerView(bookItemList);
+    setupBooksRecyclerView();
 
     return view;
   }
@@ -55,16 +42,23 @@ public class HomeFragment extends BackStackFragment
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     mainActivity.updateHeaderFragment(getString(R.string.navigation_home));
     mainActivity.updateNavigationFragment(R.id.navigation_home);
   }
 
-  private void setupBooksRecyclerView(List<BookItem> bookItemList) {
+  private void setupBooksRecyclerView() {
     RecyclerView recyclerView = view.findViewById(R.id.home_books_list);
-    adapter = new BookRecyclerViewAdapter(bookItemList, this, requireContext());
+
+    bookModel = new BookModel(view.getContext(), 1L);
+    int bookAmount = 3;
+    List<Book> bookList = bookModel.findModifiedBooks(bookAmount);
+    bookItemList = getBookItems(bookList);
+
+    BookRecyclerViewAdapter adapter =
+        new BookRecyclerViewAdapter(bookItemList, this, requireContext());
     recyclerView.setAdapter(adapter);
 
     updateEmptyView(bookItemList);

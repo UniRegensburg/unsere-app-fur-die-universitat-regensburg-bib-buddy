@@ -33,15 +33,14 @@ import java.util.List;
 public class AsDefaultAppFragment extends BackStackFragment
     implements LibraryRecyclerViewAdapter.LibraryListener, SwipeLeftRightCallback.Listener {
 
+  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
+
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
   private SortTypeLut sortTypeLut;
-  private ImportBibTex importBibTex;
-
 
   @Nullable
   @Override
@@ -52,26 +51,29 @@ public class AsDefaultAppFragment extends BackStackFragment
     view = inflater.inflate(R.layout.fragment_default_app, container, false);
     context = view.getContext();
 
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    sortTypeLut = mainActivity.getSortTypeLut();
-
-    importBibTex = new ImportBibTex(context);
-
+    setupMainActivity();
     setupRecyclerView();
-    setupAddShelfBtn();
-
-    mainActivity.updateHeaderFragment(getString(R.string.header_default_app));
-    mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
 
     setupSortBtn();
-    setHasOptionsMenu(true);
-
+    setupAddShelfBtn();
     setupDefaultApp();
 
     selectedShelfItems.clear();
 
+    setHasOptionsMenu(true);
+
     return view;
+  }
+
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
+
+    mainActivity.updateHeaderFragment(getString(R.string.header_default_app));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void setupDefaultApp() {
@@ -79,6 +81,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     Uri uri = mainActivity.getUriDefaultApp();
     String uriFileName = UriUtils.getUriFileName(mainActivity, uri);
 
+    ImportBibTex importBibTex = new ImportBibTex(context);
     if (!importBibTex.isBibFile(uriFileName)) {
       Toast.makeText(context, R.string.import_non_bib_file,
                      Toast.LENGTH_LONG).show();
@@ -94,11 +97,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void setupSortBtn() {
-    MainActivity mainActivity = (MainActivity) requireActivity();
-
-    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
-    mainActivity.setVisibilitySortButton(true);
-
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
@@ -163,7 +162,6 @@ public class AsDefaultAppFragment extends BackStackFragment
     } else {
       renameShelf.setVisible(true);
       deleteShelf.setVisible(true);
-
     }
 
   }

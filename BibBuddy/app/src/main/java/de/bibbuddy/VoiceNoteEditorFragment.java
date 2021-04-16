@@ -33,8 +33,9 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
 
   private NoteModel noteModel;
   private Long bookId;
+
   private RippleBackground pulse;
-  private ImageButton recordButton;
+  private ImageButton recordBtn;
   private MediaRecorder recorder;
   private File newAudio;
   private boolean isRecording = false;
@@ -51,8 +52,8 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
   }
@@ -60,16 +61,16 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   @Nullable
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable
-                               Bundle savedInstanceState) {
+                           @Nullable Bundle savedInstanceState) {
+
     View view = inflater.inflate(R.layout.fragment_voice_note_editor, container, false);
     MainActivity mainActivity = (MainActivity) requireActivity();
 
+    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+
     noteModel = new NoteModel(mainActivity);
     pulse = view.findViewById(R.id.ripple_animation);
-    recordButton = view.findViewById(R.id.record_button);
-
-    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+    recordBtn = view.findViewById(R.id.record_btn);
 
     String filePath = mainActivity.getExternalCacheDir().getAbsolutePath();
     if (noteModel.getVoiceNoteList().isEmpty()) {
@@ -125,7 +126,7 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
       record(v.isSelected());
     };
 
-    recordButton.setOnClickListener(recordClickListener);
+    recordBtn.setOnClickListener(recordClickListener);
   }
 
   /**
@@ -138,13 +139,13 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
 
     if (start) {
       pulse.startRippleAnimation();
-      recordButton.setBackgroundTintList(
+      recordBtn.setBackgroundTintList(
           ContextCompat.getColorStateList(mainActivity, R.color.gray_light));
       isRecording = true;
       startRecording();
     } else {
       pulse.stopRippleAnimation();
-      recordButton
+      recordBtn
           .setBackgroundTintList(ContextCompat.getColorStateList(mainActivity, R.color.white));
       isRecording = false;
       stopRecording();

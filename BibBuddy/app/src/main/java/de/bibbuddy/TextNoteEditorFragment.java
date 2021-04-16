@@ -28,13 +28,15 @@ import org.jsoup.Jsoup;
  */
 public class TextNoteEditorFragment extends BackStackFragment {
 
-  private ImageView formatArrow;
   private View view;
-  private RichTextEditor richTextEditor;
-  private Note note;
-  private NoteModel noteModel;
-  private Long bookId;
   private View formatOptions;
+
+  private NoteModel noteModel;
+  private Note note;
+  private Long bookId;
+
+  private ImageView formatArrow;
+  private RichTextEditor richTextEditor;
 
   @Override
   protected void onBackPressed() {
@@ -54,8 +56,8 @@ public class TextNoteEditorFragment extends BackStackFragment {
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
@@ -138,6 +140,9 @@ public class TextNoteEditorFragment extends BackStackFragment {
                            @Nullable Bundle savedInstanceState) {
 
     view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
+
+    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+
     noteModel = new NoteModel(requireActivity());
     richTextEditor = view.findViewById(R.id.editor);
 
@@ -149,7 +154,7 @@ public class TextNoteEditorFragment extends BackStackFragment {
       adjustFormatToolbarVisibility();
     });
 
-    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+
 
     if (requireArguments().size() == 2) {
       Long noteId = requireArguments().getLong(LibraryKeys.NOTE_ID);
@@ -210,10 +215,10 @@ public class TextNoteEditorFragment extends BackStackFragment {
     });
   }
 
-  private void backgroundColorChange(ImageButton button) {
-    button.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.gray));
+  private void backgroundColorChange(ImageButton btn) {
+    btn.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.gray));
     ScheduledExecutorService backgroundExecutor = Executors.newSingleThreadScheduledExecutor();
-    backgroundExecutor.schedule(() -> button.setBackgroundColor(0), 1, TimeUnit.SECONDS);
+    backgroundExecutor.schedule(() -> btn.setBackgroundColor(0), 1, TimeUnit.SECONDS);
   }
 
   private void setupRedoOption() {

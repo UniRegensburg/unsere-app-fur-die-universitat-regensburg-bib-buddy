@@ -57,8 +57,8 @@ public class AuthorFormFragment extends BackStackFragment {
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     mainActivity.updateHeaderFragment(getString(R.string.add_author_btn));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
@@ -77,7 +77,6 @@ public class AuthorFormFragment extends BackStackFragment {
 
   private void setupAddAuthorBtnListener(View view) {
     FloatingActionButton addAuthorBtn = view.findViewById(R.id.confirm_btn);
-
     addAuthorBtn.setOnClickListener(v -> handleAuthorInput());
   }
 

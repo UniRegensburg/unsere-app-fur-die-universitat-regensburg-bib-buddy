@@ -44,9 +44,7 @@ public class BookNotesFragment extends BackStackFragment
   private ActivityResultLauncher<String> requestPermissionLauncher;
 
   private BookModel bookModel;
-  private NoteModel noteModel;
 
-  private ShareBibTex shareBibTex;
   private SortTypeLut sortTypeLut;
 
   @Override
@@ -99,23 +97,18 @@ public class BookNotesFragment extends BackStackFragment
     bookId = bundle.getLong(LibraryKeys.BOOK_ID);
 
     setupMainActivity(bundle);
-
-    bookNotesModel = new BookNotesModel(context);
-    bookModel = new BookModel(context, getShelfId());
-    noteModel = new NoteModel(context);
-
-    Book book = bookModel.getBookById(bookId);
-    String fileName = (book.getTitle() + book.getPubYear())
-        .replaceAll("\\s+", "");
-    shareBibTex = new ShareBibTex(fileName);
-
     setupRecyclerView(bookId);
+
+    bookModel = new BookModel(context, getShelfId());
+
+    setupFunctionsToolbar();
     setupSortBtn();
-    setHasOptionsMenu(true);
-    setupAddButton();
+    setupAddBtn();
+
     updateBookNoteList(adapter.getNoteList());
-    setFunctionsToolbar();
-    fillBookData();
+    setupBookData();
+
+    setHasOptionsMenu(true);
 
     return view;
   }
@@ -123,8 +116,8 @@ public class BookNotesFragment extends BackStackFragment
   private void setupMainActivity(Bundle bundle) {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
-    mainActivity.setVisibilitySortButton(true);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.VISIBLE);
+    mainActivity.setVisibilitySortBtn(true);
     sortTypeLut = mainActivity.getSortTypeLut();
 
     mainActivity.updateHeaderFragment(bundle.getString(LibraryKeys.SHELF_NAME));
@@ -142,7 +135,7 @@ public class BookNotesFragment extends BackStackFragment
     sortBtn.setOnClickListener(v -> handleSortNote());
   }
 
-  private void setFunctionsToolbar() {
+  private void setupFunctionsToolbar() {
     requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyNoteList());
   }
 
@@ -290,9 +283,9 @@ public class BookNotesFragment extends BackStackFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
-  private void setupAddButton() {
-    View addButtonView = view.findViewById(R.id.add_btn);
-    PopupMenu popupMenu = new PopupMenu(requireContext(), addButtonView);
+  private void setupAddBtn() {
+    View addBtnView = view.findViewById(R.id.add_btn);
+    PopupMenu popupMenu = new PopupMenu(requireContext(), addBtnView);
     popupMenu.getMenuInflater().inflate(R.menu.add_note_menu, popupMenu.getMenu());
 
     popupMenu.setOnMenuItemClickListener(item -> {
@@ -312,7 +305,7 @@ public class BookNotesFragment extends BackStackFragment
       return true;
     });
 
-    addButtonView.setOnClickListener(v -> popupMenu.show());
+    addBtnView.setOnClickListener(v -> popupMenu.show());
   }
 
   private void checkRecordPermission() {
@@ -354,8 +347,9 @@ public class BookNotesFragment extends BackStackFragment
     updateEmptyView(noteList);
   }
 
-  private void fillBookData() {
+  private void setupBookData() {
     Bundle bundle = this.getArguments();
+    assert bundle != null;
     BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
     Book book = bookModel.getBookById(bookId);
 
@@ -378,8 +372,11 @@ public class BookNotesFragment extends BackStackFragment
   }
 
   private void setupRecyclerView(Long bookId) {
+    bookNotesModel = new BookNotesModel(context);
+
     SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
+
     adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(),
                                           bookNotesModel.getBookNoteList(bookId),
                                           bookNotesModel.getNoteModel());
@@ -400,6 +397,13 @@ public class BookNotesFragment extends BackStackFragment
   }
 
   private void shareBookNoteBibIntent() {
+    NoteModel noteModel = new NoteModel(context);
+
+    Book book = bookModel.getBookById(bookId);
+    String fileName = (book.getTitle() + book.getPubYear())
+        .replaceAll("\\s+", "");
+    ShareBibTex shareBibTex = new ShareBibTex(fileName);
+
     String content =
         shareBibTex.getBibDataFromBook(bookId, bookModel, noteModel);
     Uri contentUri = shareBibTex.writeTemporaryBibFile(context, content);

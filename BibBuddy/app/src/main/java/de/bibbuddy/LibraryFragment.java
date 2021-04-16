@@ -40,9 +40,7 @@ public class LibraryFragment extends BackStackFragment
   private LibraryRecyclerViewAdapter adapter;
 
   private BookModel bookModel;
-  private NoteModel noteModel;
 
-  private ShareBibTex shareBibTex;
   private SortTypeLut sortTypeLut;
 
   @Override
@@ -65,20 +63,16 @@ public class LibraryFragment extends BackStackFragment
     context = view.getContext();
 
     setupMainActivity();
-
     setupRecyclerView();
-    setupAddShelfBtn();
 
+    setupFunctionsToolbar();
     setupSortBtn();
-    setFunctionsToolbar();
-    setHasOptionsMenu(true);
+    setupAddShelfBtn();
 
     selectedShelfItems.clear();
     bookModel = new BookModel(requireContext(), libraryModel.getShelfId());
-    noteModel = new NoteModel(requireContext());
 
-    String fileName = "library_export_BibBuddy";
-    shareBibTex = new ShareBibTex(fileName);
+    setHasOptionsMenu(true);
 
     return view;
   }
@@ -86,8 +80,8 @@ public class LibraryFragment extends BackStackFragment
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
-    mainActivity.setVisibilitySortButton(true);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.VISIBLE);
+    mainActivity.setVisibilitySortBtn(true);
     sortTypeLut = mainActivity.getSortTypeLut();
 
     mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
@@ -99,7 +93,7 @@ public class LibraryFragment extends BackStackFragment
     sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
-  private void setFunctionsToolbar() {
+  private void setupFunctionsToolbar() {
     requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyLibrary());
   }
 
@@ -250,6 +244,7 @@ public class LibraryFragment extends BackStackFragment
 
   private String getNotesToDeleteNumber(List<ShelfItem> shelfList) {
     int notesNumber = 0;
+
     for (ShelfItem shelf : shelfList) {
       notesNumber += shelf.getNoteCount();
     }
@@ -446,6 +441,10 @@ public class LibraryFragment extends BackStackFragment
   }
 
   private void shareLibraryBibIntent() {
+    String fileName = "library_export_BibBuddy";
+    ShareBibTex shareBibTex = new ShareBibTex(fileName);
+
+    NoteModel noteModel = new NoteModel(requireContext());
     String content = shareBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
     Uri contentUri = shareBibTex.writeTemporaryBibFile(context, content);
 

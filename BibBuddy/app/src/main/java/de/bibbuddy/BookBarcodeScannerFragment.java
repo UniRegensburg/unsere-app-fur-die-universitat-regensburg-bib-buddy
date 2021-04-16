@@ -66,8 +66,8 @@ public class BookBarcodeScannerFragment extends BackStackFragment
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     mainActivity.updateHeaderFragment(getString(R.string.isbn_scan));
     mainActivity.updateNavigationFragment(R.id.navigation_library);

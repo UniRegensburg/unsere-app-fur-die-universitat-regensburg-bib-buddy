@@ -36,7 +36,7 @@ public class LibraryModel {
    * Adds a new book to the bookList and database.
    *
    * @param name     name of the new shelf
-   * @param parentId parentId of the new shelf (is deprecated)
+   * @param parentId parentId of the new shelf (can be used in future)
    */
   public void addShelf(String name, Long parentId) {
     Shelf shelf = new Shelf(name, parentId);
@@ -59,7 +59,7 @@ public class LibraryModel {
   /**
    * Gets the libraryList of the current parentId of the shelf.
    *
-   * @param parentId parentId of the shelf (is deprecated)
+   * @param parentId parentId of the shelf (can be used in future)
    * @return the libraryList of the given id
    */
   public List<ShelfItem> getLibraryList(Long parentId) {

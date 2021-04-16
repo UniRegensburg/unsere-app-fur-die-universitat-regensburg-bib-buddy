@@ -66,8 +66,8 @@ public class BookFormFragment extends BackStackFragment {
   private void setupViews(View view, Bundle bundle) {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     if (bundle != null) {
       Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);

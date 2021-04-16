@@ -62,8 +62,8 @@ public class LibraryFormFragment extends BackStackFragment {
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     if (shelfId == 0) {
       mainActivity.updateHeaderFragment(getString(R.string.add_new_shelf));

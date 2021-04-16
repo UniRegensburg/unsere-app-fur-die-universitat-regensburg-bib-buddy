@@ -25,13 +25,12 @@ import java.util.List;
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
-  public List<NoteItem> noteList;
-  public NoteModel noteModel;
-
+  private View view;
+  private NoteModel noteModel;
+  public List<NoteItem> noteList; // TODO why is this public only because of test? should be private
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
   private SortTypeLut sortTypeLut;
-  private TextView emptyListView;
 
   @Override
   protected void onBackPressed() {
@@ -49,18 +48,13 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
 
     enableBackPressedHandler();
 
+    view = inflater.inflate(R.layout.fragment_notes, container, false);
+
     setupMainActivity();
-
-    noteModel = new NoteModel(requireActivity());
-    noteList = noteModel.getNoteList();
-
-    View view = inflater.inflate(R.layout.fragment_notes, container, false);
-    notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
-    emptyListView = view.findViewById(R.id.empty_notes_list_view);
-
+    setupRecyclerView();
     setupSortBtn();
+
     setHasOptionsMenu(true);
-    setupRecyclerView(view);
 
     return view;
   }
@@ -68,8 +62,8 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(true);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(true);
     sortTypeLut = mainActivity.getSortTypeLut();
 
     mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
@@ -187,8 +181,11 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
-  private void setupRecyclerView(View view) {
+  private void setupRecyclerView() {
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
+
+    noteModel = new NoteModel(requireActivity());
+    noteList = noteModel.getNoteList();
 
     adapter =
         new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList, noteModel);
@@ -199,6 +196,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void updateEmptyListView(List<NoteItem> noteList) {
+    TextView emptyListView = view.findViewById(R.id.empty_notes_list_view);
     if (noteList.isEmpty()) {
       emptyListView.setVisibility(View.VISIBLE);
     } else {

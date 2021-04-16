@@ -51,10 +51,10 @@ public class SearchFragment extends BackStackFragment
 
     setupSearchInput();
     setupRecyclerView();
-    setupFilterButton();
-    setHasOptionsMenu(true);
+    setupSortBtn();
+    setupFilterBtn();
 
-    setupSortButton();
+    setHasOptionsMenu(true);
 
     return view;
   }
@@ -62,8 +62,8 @@ public class SearchFragment extends BackStackFragment
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortButton(true);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(true);
     sortTypeLut = mainActivity.getSortTypeLut();
 
     filterCriteria = mainActivity.getFilterCriteria();
@@ -72,12 +72,12 @@ public class SearchFragment extends BackStackFragment
     mainActivity.updateNavigationFragment(R.id.navigation_search);
   }
 
-  private void setupSortButton() {
+  private void setupSortBtn() {
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> handleSortSearch());
   }
 
-  private void setupFilterButton() {
+  private void setupFilterBtn() {
     ImageButton filterBtn = view.findViewById(R.id.filter_btn);
     filterBtn.setOnClickListener(v -> handleSearchFilter());
   }
