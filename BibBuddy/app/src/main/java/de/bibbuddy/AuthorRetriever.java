@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.util.Log;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +17,13 @@ import org.xml.sax.InputSource;
 
 
 /**
- * The AuthorRetriever class connects to the API and returns authors for a given book.
+ * AuthorRetriever connects to the GND API and returns author data for a given book.
  *
  * @author Luis Moßburger
  */
 public class AuthorRetriever {
 
-  private final String autApiUrl = "https://d-nb.info/gnd/";
-  private final String autApiParam = "/about/marcxml";
+  private static final String TAG = AuthorRetriever.class.getSimpleName();
 
   private static Document loadXmlFromString(String xml) throws Exception {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -34,67 +34,70 @@ public class AuthorRetriever {
   }
 
   /**
-   * Extracts authors from the given xmlDocument and gathers their names from an API.
+   * Extracts authors from a xmlDocument and gathers their data from an API.
    *
-   * @param xmlMetadata XML metadata about a book, contains URL to author information
-   * @return list of authors/relevant persons for this book
-   * @author Luis Moßburger
+   * @param xmlMetadata about a book
+   * @return list of most relevant persons for this book
    */
   public List<Author> extractAuthors(Document xmlMetadata) {
-    List<Author> authors;
-    NodeList authorList = null;
     NodeList[] relevantPersons = {
         xmlMetadata.getElementsByTagName("marcrel:aut"), // "authors"
         xmlMetadata.getElementsByTagName("dcterms:contributor"), // "contributors"
         xmlMetadata.getElementsByTagName("dcterms:creator"), // "creator"
-        xmlMetadata.getElementsByTagName("marcrel:cmp") // "creator"
+        xmlMetadata.getElementsByTagName("marcrel:cmp") // "composer"
     };
 
+    NodeList authorList = null;
     for (NodeList persons : relevantPersons) {
       if (persons.getLength() > 0) {
         authorList = persons;
+        break;
       }
     }
 
-    authors = makeAuthorList(authorList);
-    return authors;
+    return makeAuthorList(authorList);
   }
 
+  /**
+   * Creates a list of authors.
+   *
+   * @param authors wrapped in xmlNodes
+   * @return list of extracted author objects
+   */
   private List<Author> makeAuthorList(NodeList authors) {
-    String url;
-    Element autEl;
-    List<Author> authorArray = new ArrayList<Author>();
+    List<Author> authorArray = new ArrayList<>();
+    Document xmlMetadata;
 
-    Thread thread;
-    ApiReader apiReader;
-    Document xmlMetadata = null;
+    if (authors == null) {
+      return authorArray;
+    }
 
-    if (authors != null) {
-      for (int i = 0; i < authors.getLength(); i++) {
+    for (int i = 0; i < authors.getLength(); i++) {
 
-        // read from API with isbn (Thread)
-        autEl = (Element) authors.item(i);
-        url = autEl.getAttribute("rdf:resource");
-        apiReader = new ApiReader(this.autApiUrl + url.split("/gnd/")[1] + this.autApiParam);
-        thread = new Thread(apiReader);
-        thread.start();
+      // Reads from API with isbn (Thread)
+      Element authorEl = (Element) authors.item(i);
+      String url = authorEl.getAttribute("rdf:resource");
+      String autApiUrl = "https://d-nb.info/gnd/";
+      String autApiParam = "/about/marcxml";
+      ApiReader apiReader = new ApiReader(autApiUrl + url.split("/gnd/")[1] + autApiParam);
+      Thread thread = new Thread(apiReader);
+      thread.start();
 
+      try {
+        thread.join();
+      } catch (Exception ex) {
+        Log.e(TAG, ex.toString(), ex);
+      }
+
+      // Retrieves metadata that was saved
+      String metadata = apiReader.getMetadata();
+      if (metadata != null) {
+        // Parses xml
         try {
-          thread.join();
-        } catch (Exception e) {
-          System.out.println(e);
-        }
-
-        // retrieve metadata that was saved
-        String metadata = apiReader.getMetadata();
-        if (metadata != null) {
-          // parse xml
-          try {
-            xmlMetadata = loadXmlFromString(metadata);
-            authorArray.add(constructAuthor(xmlMetadata));
-          } catch (Exception e) {
-            System.out.println(e);
-          }
+          xmlMetadata = loadXmlFromString(metadata);
+          authorArray.add(constructAuthor(xmlMetadata));
+        } catch (Exception ex) {
+          Log.e(TAG, ex.toString(), ex);
         }
       }
     }
@@ -102,21 +105,38 @@ public class AuthorRetriever {
     return authorArray;
   }
 
+  /**
+   * Creates author object from XML data.
+   *
+   * @param xmlMetadata about a person
+   * @return author object for this person
+   */
   private Author constructAuthor(Document xmlMetadata) {
     Author author = null;
     XPath xpath = XPathFactory.newInstance().newXPath();
 
     try {
-      // in MARCXML, datafield "100" (suggested name for the person) is only present once
+      // In MARCXML, datafield "100" (suggested name for the person) is only present once
       // (cataloguing rules for libraries)
       XPathExpression expr = xpath.compile("//datafield[@tag=\"100\"]//subfield[@code=\"a\"]");
       Object exprResult = expr.evaluate(xmlMetadata, XPathConstants.NODESET);
       NodeList authorNameWrapper = (NodeList) exprResult;
       String authorName = authorNameWrapper.item(0).getTextContent();
-      // MARCXML datafield "100" subfield code "a" is always in this form: Lastname, First Name
-      author = new Author(authorName.split(",")[1].trim(), authorName.split(",")[0].trim());
-    } catch (Exception e) {
-      System.out.println(e);
+
+      // MARCXML datafield "100" subfield code "a" normally is in this form: Lastname, First Name
+      // In some cases, the person has a "Eigenname", like "Marc Aurel" and therefore no comma
+      // In that case, we split by the last space in the name
+      if (authorName.contains(",")) {
+        author = new Author(authorName.split(",")[1].trim(), authorName.split(",")[0].trim());
+      } else if (authorName.contains(" ")) {
+        int posOfLastSpace = authorName.lastIndexOf(" ");
+        author = new Author(authorName.substring(0, posOfLastSpace).trim(),
+                            authorName.substring(posOfLastSpace).trim());
+      } else {
+        author = new Author(authorName, " ");
+      }
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
     return author;

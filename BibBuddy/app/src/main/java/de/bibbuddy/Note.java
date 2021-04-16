@@ -5,22 +5,21 @@ package de.bibbuddy;
  *
  * @author Sarah Kurek
  */
+@SuppressWarnings("unused")
 public class Note {
 
+  private final String name;
+  private final NoteTypeLut type;
+  private final String text;
   private Long id;
-  private String name;
-  private Integer type;
-  private String text;
+
+  @SuppressWarnings({"unused", "FieldCanBeLocal"})
+  // Can be used in the future and is here only to check for possible bugs
   private Long createDate;
+
   private Long modDate;
   private Long noteFileId;
-
-
-  /**
-   * Empty constructor to create an note-object that will be filled with necessary params later.
-   */
-  public Note() {
-  }
+  private String noteFilePath;
 
   /**
    * Constructor to set up a new note with only name, type and text.
@@ -29,10 +28,24 @@ public class Note {
    * @param type type of the note object (text, voice or picture)
    * @param text text content of the note object (as long as it is a type "text")
    */
-  public Note(String name, Integer type, String text) {
+  public Note(String name, NoteTypeLut type, String text) {
     this.name = name;
     this.type = type;
     this.text = text;
+  }
+
+  /**
+   * Constructor to set up a new note with only name, type and text.
+   *
+   * @param name         name of the note object
+   * @param type         type of the note object (text, voice or picture)
+   * @param noteFilePath path to the file of the note object
+   */
+  public Note(String name, NoteTypeLut type, String text, String noteFilePath) {
+    this.name = name;
+    this.type = type;
+    this.text = text;
+    this.noteFilePath = noteFilePath;
   }
 
   /**
@@ -47,7 +60,7 @@ public class Note {
    * @param modDate    modification date of the note object
    * @param noteFileId id of the noteFile object contained in the note object
    */
-  public Note(Long id, String name, Integer type, String text, Long createDate, Long modDate,
+  public Note(Long id, String name, NoteTypeLut type, String text, Long createDate, Long modDate,
               Long noteFileId) {
     this.id = id;
     this.name = name;
@@ -62,55 +75,28 @@ public class Note {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Integer getType() {
+  public NoteTypeLut getType() {
     return type;
-  }
-
-  public void setType(Integer type) {
-    this.type = type;
   }
 
   public String getText() {
     return text;
   }
 
-  public void setText(String text) {
-    this.text = text;
-  }
-
-  public Long getCreateDate() {
-    return createDate;
-  }
-
-  public void setCreateDate(Long createDate) {
-    this.createDate = createDate;
-  }
-
   public Long getModDate() {
     return modDate;
-  }
-
-  public void setModDate(Long modDate) {
-    this.modDate = modDate;
   }
 
   public Long getNoteFileId() {
     return noteFileId;
   }
 
-  public void setNoteFileId(Long noteFileId) {
-    this.noteFileId = noteFileId;
+  public String getNoteFilePath() {
+    return noteFilePath;
   }
+
 }

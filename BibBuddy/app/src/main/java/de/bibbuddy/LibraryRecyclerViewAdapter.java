@@ -8,13 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The LibraryRecyclerViewAdapter provides a binding from the libraryList to the view
  * that is displayed within the RecyclerView of the LibraryFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Luis Moßburger
  */
 public class LibraryRecyclerViewAdapter
     extends RecyclerView.Adapter<LibraryRecyclerViewAdapter.LibraryViewHolder> {
@@ -22,6 +23,23 @@ public class LibraryRecyclerViewAdapter
   private final LibraryListener listener;
   private final Context context;
   private List<ShelfItem> libraryList;
+  private ViewGroup parent;
+
+  private String getBookString(int bookCount) {
+    if (bookCount == 1) {
+      return bookCount + " " + context.getString(R.string.book);
+    }
+
+    return bookCount + " " + context.getString(R.string.books);
+  }
+
+  private String getNoteString(int noteCount) {
+    if (noteCount == 1) {
+      return noteCount + " " + context.getString(R.string.note);
+    }
+
+    return noteCount + " " + context.getString(R.string.navigation_notes);
+  }
 
   /**
    * Constructor of the LibraryRecyclerViewAdapter.
@@ -42,10 +60,7 @@ public class LibraryRecyclerViewAdapter
   @Override
   public LibraryRecyclerViewAdapter.LibraryViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                          int viewType) {
-    // RecyclerView calls this method whenever it needs to create a new ViewHolder.
-    // The method creates and initializes the ViewHolder and its associated View,
-    // but does not fill in the view's contents—the ViewHolder
-    // has not yet been bound to specific data.
+    this.parent = parent;
 
     return new LibraryViewHolder(LayoutInflater.from(parent.getContext())
                                      .inflate(R.layout.list_view_item_library, parent, false));
@@ -53,12 +68,10 @@ public class LibraryRecyclerViewAdapter
 
   @Override
   public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
-    // Get element from your dataset at this position and replace the contents of the view
-    // with that element
     ShelfItem shelfItem = libraryList.get(position);
 
-    holder.getTextView().setText(shelfItem.getName());
-    holder.getImageView().setImageResource(shelfItem.getImage());
+    holder.getName().setText(shelfItem.getName());
+    holder.getLibraryIcon().setImageResource(shelfItem.getImage());
 
     int bookCount = shelfItem.getBookCount();
     holder.getTextBookCount().setText(getBookString(bookCount));
@@ -66,60 +79,65 @@ public class LibraryRecyclerViewAdapter
     int noteCount = shelfItem.getNoteCount();
     holder.getTextNoteCount().setText(getNoteString(noteCount));
 
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        listener.onItemClicked(position);
+    holder.itemView.setOnClickListener(v -> {
+      if (!getSelectedLibraryItems().isEmpty()) {
+        listener.onShelfLongClicked(shelfItem, v);
+      } else {
+        listener.onShelfClicked(position);
       }
     });
 
-    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-      @Override
-      public boolean onLongClick(View v) {
-        if (position == RecyclerView.NO_POSITION) {
-          return false;
-        }
-
-        listener.onLongItemClicked(position, shelfItem, v);
-        return true;
+    holder.itemView.setOnLongClickListener(v -> {
+      if (position == RecyclerView.NO_POSITION) {
+        return false;
       }
+
+      listener.onShelfLongClicked(shelfItem, v);
+      return true;
     });
-  }
-
-  private String getBookString(int bookCount) {
-    if (bookCount == 1) {
-      return bookCount + " " + context.getString(R.string.book);
-    }
-
-    return bookCount + " " + context.getString(R.string.books);
-  }
-
-  private String getNoteString(int noteCount) {
-    if (noteCount == 1) {
-      return noteCount + " " + context.getString(R.string.note);
-    }
-
-    return noteCount + " " + context.getString(R.string.navigation_notes);
   }
 
   @Override
   public int getItemCount() {
-    // RecyclerView calls this method to get the size of the data set.
-    // RecyclerView uses this to determine when there are no more items that can be displayed.
     return libraryList.size();
   }
 
-  public interface LibraryListener { // create an interface
-    void onItemClicked(int position); // create callback function
+  public void setLibraryList(List<ShelfItem> libraryList) {
+    this.libraryList = libraryList;
+  }
 
-    void onLongItemClicked(int position, ShelfItem shelfItem, View v);
+  public ShelfItem getLibraryItem(int position) {
+    return libraryList.get(position);
+  }
+
+  /**
+   * This method fetches the number of items selected in the recyclerView.
+   *
+   * @return the selected recyclerView items
+   */
+  public List<LibraryItem> getSelectedLibraryItems() {
+    List<LibraryItem> selectedItems = new ArrayList<>();
+
+    for (int i = 0; i < parent.getChildCount(); i++) {
+      if (parent.getChildAt(i).isSelected()) {
+        selectedItems.add(libraryList.get(i));
+      }
+    }
+
+    return selectedItems;
+  }
+
+  public interface LibraryListener {
+    void onShelfClicked(int position);
+
+    void onShelfLongClicked(ShelfItem shelfItem, View view);
   }
 
 
-  public class LibraryViewHolder extends RecyclerView.ViewHolder {
+  public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
-    private final TextView textView;
-    private final ImageView imageView;
+    private final TextView name;
+    private final ImageView libraryIcon;
     private final TextView textBookCount;
     private final TextView textNoteCount;
 
@@ -130,18 +148,18 @@ public class LibraryRecyclerViewAdapter
     public LibraryViewHolder(@NonNull View itemView) {
       super(itemView);
 
-      textView = itemView.findViewById(R.id.item_name);
-      imageView = itemView.findViewById(R.id.library_icon);
+      name = itemView.findViewById(R.id.item_name);
+      libraryIcon = itemView.findViewById(R.id.library_icon);
       textBookCount = itemView.findViewById(R.id.text_book);
       textNoteCount = itemView.findViewById(R.id.note_count);
     }
 
-    public TextView getTextView() {
-      return textView;
+    public TextView getName() {
+      return name;
     }
 
-    public ImageView getImageView() {
-      return imageView;
+    public ImageView getLibraryIcon() {
+      return libraryIcon;
     }
 
     public TextView getTextBookCount() {
@@ -152,4 +170,5 @@ public class LibraryRecyclerViewAdapter
       return textNoteCount;
     }
   }
+
 }

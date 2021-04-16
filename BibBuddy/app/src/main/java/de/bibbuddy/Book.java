@@ -7,17 +7,21 @@ package de.bibbuddy;
  */
 public class Book {
 
-  private Long id = Long.valueOf(0);
-  private String isbn = new String();
-  private String title = new String();
-  private String subtitle = new String();
+  private Long id = 0L;
+  private String isbn = "";
+  private String title = "";
+  private String subtitle = "";
   private Integer pubYear;
-  private String publisher = new String();
-  private String volume = new String();
-  private String edition = new String();
-  private String addInfo = new String();
-  private Integer createDate;
-  private Integer modDate;
+  private String publisher = "";
+  private String volume = "";
+  private String edition = "";
+  private String addInfo = "";
+
+  @SuppressWarnings({"unused", "FieldCanBeLocal"})
+  // Can be used in the future and is here only to check for possible bugs
+  private Long createDate;
+
+  private Long modDate;
 
   /**
    * Constructor with all its parameters.
@@ -36,7 +40,7 @@ public class Book {
    */
   public Book(Long id, String isbn, String title, String subtitle, Integer pubYear,
               String publisher, String volume, String edition, String addInfo,
-              Integer createDate, Integer modDate) {
+              Long createDate, Long modDate) {
     this.id = id;
     this.isbn = isbn;
     this.title = title;
@@ -55,14 +59,14 @@ public class Book {
    * Constructor without the parameters id, creation_date and mod_date, because they are
    * automatically set in the database.
    *
-   * @param isbn       isbn of the book
-   * @param title      book title
-   * @param subtitle   book subtitle
-   * @param pubYear    publication year of the book
-   * @param publisher  publisher of the book
-   * @param volume     volume of the book
-   * @param edition    edition of the book
-   * @param addInfo    additional information to the book
+   * @param isbn      isbn of the book
+   * @param title     book title
+   * @param subtitle  book subtitle
+   * @param pubYear   publication year of the book
+   * @param publisher publisher of the book
+   * @param volume    volume of the book
+   * @param edition   edition of the book
+   * @param addInfo   additional information to the book
    */
   public Book(String isbn, String title, String subtitle, Integer pubYear,
               String publisher, String volume, String edition, String addInfo) {
@@ -131,10 +135,6 @@ public class Book {
     return volume;
   }
 
-  public void setVolume(String volume) {
-    this.volume = volume;
-  }
-
   public String getEdition() {
     return edition;
   }
@@ -151,20 +151,8 @@ public class Book {
     this.addInfo = addInfo;
   }
 
-  public Integer getCreateDate() {
-    return createDate;
-  }
-
-  public void setCreateDate(Integer createDate) {
-    this.createDate = createDate;
-  }
-
-  public Integer getModDate() {
+  public Long getModDate() {
     return modDate;
-  }
-
-  public void setModDate(Integer modDate) {
-    this.modDate = modDate;
   }
 
 }

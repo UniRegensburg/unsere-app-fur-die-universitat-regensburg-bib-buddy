@@ -2,29 +2,26 @@ package de.bibbuddy;
 
 /**
  * The ShelfItem is responsible for holding the information of the shelf view items.
- * It is a subclass of the LibraryItem class.
+ * It is a child of LibraryItem.
  *
  * @author Claudia Schönherr
  */
 public class ShelfItem extends LibraryItem {
-  private int bookCount;
-  private int noteCount;
 
-  public ShelfItem(String name, Long id) {
-    super(name, R.drawable.ic_shelf, id);
-  }
+  private final int bookCount;
+  private final int noteCount;
 
   /**
-   * Constructor for a BookItem.
+   * Constructor for a ShelfItem.
    *
-   * @param name      title of the shelf
-   * @param id        id of the shelf
-   * @param parentId  shelfId of the shelf (is deprecated)
+   * @param shelf     shelf from database
    * @param bookCount total number of books in the shelf
    * @param noteCount total number of notes in the shelf
    */
-  public ShelfItem(String name, Long id, Long parentId, int bookCount, int noteCount) {
-    super(name, R.drawable.ic_shelf, id, parentId);
+  public ShelfItem(Shelf shelf, int bookCount, int noteCount) {
+    super(shelf.getName(), R.drawable.books, shelf.getId(), shelf.getShelfId(),
+          shelf.getModDate());
+
     this.bookCount = bookCount;
     this.noteCount = noteCount;
   }
@@ -36,4 +33,5 @@ public class ShelfItem extends LibraryItem {
   public int getNoteCount() {
     return noteCount;
   }
+
 }

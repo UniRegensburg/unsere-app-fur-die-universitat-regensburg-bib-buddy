@@ -5,4 +5,8 @@
         android:id="@+id/menu_help_texteditor"
         android:title="@string/help" />
 
+    <item
+            android:id="@+id/menu_imprint"
+            android:title="@string/header_imprint" />
+
 </menu>

@@ -1,33 +1,105 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:elevation="10dp"
+    android:elevation="8dp"
     android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    tools:ignore="Overdraw">
 
-    <ImageView
-        android:id="@+id/headerLogo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="@string/description_logo"
-        app:srcCompat="@drawable/bibbuddy_icon" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/headerText"
-        android:layout_width="260dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-black"
-        android:maxLines="1"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp"
-        android:scrollHorizontally="true"
-        android:text="@string/app_name"
-        android:textColor="@color/black"
-        android:textSize="30sp" />
+        <ImageButton
+            android:id="@+id/headerLogo"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:background="@color/white"
+            android:contentDescription="@string/description_logo"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/bibbuddy_icon" />
+
+        <TextView
+            android:id="@+id/headerText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-black"
+            android:maxLines="1"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:scrollHorizontally="true"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="27sp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/header_btns"
+            app:layout_constraintStart_toEndOf="@+id/headerLogo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@id/header_btns"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingEnd="-10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/headerText"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry">
+
+            <ImageButton
+                android:id="@+id/sort_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/sort_icon"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/import_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/import_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/import_icon"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/share_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/share_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/share_icon"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>
-

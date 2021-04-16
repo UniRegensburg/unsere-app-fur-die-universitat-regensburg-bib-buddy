@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.util.Log;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,22 +12,22 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 public class IsbnRetriever implements Runnable {
-  private final String apiUrl = "https://lod.b3kat.de/";
-  private final String apiXmlParameter = "?output=xml";
-  private final String isbnApi = apiUrl + "data/isbn/%s" + apiXmlParameter;
+
+  private static final String TAG = IsbnRetriever.class.getSimpleName();
 
   private final String isbn;
-  private Book book = null;
-  private List<Author> authors = new ArrayList<Author>();
+
+  private Book book;
+  private List<Author> authors = new ArrayList<>();
 
   /**
-   * The IsbnRetriever class connects to the API and returns metadata for an ISBN.
+   * IsbnRetriever connects to the API and returns metadata for an ISBN.
    *
-   * @param isbn ISBN from which metadata should be returned
+   * @param isbn for which metadata should be returned
    * @author Luis Moßburger
    */
   IsbnRetriever(String isbn) {
-    this.isbn = isbn;
+    this.isbn = isbn.replaceAll("-", "").replaceAll("\\s", "");
   }
 
   private static Document loadXmlFromString(String xml) throws Exception {
@@ -37,88 +38,104 @@ public class IsbnRetriever implements Runnable {
     return builder.parse(inputSource);
   }
 
+  /**
+   * Extracts a field from a xmlDocument.
+   *
+   * @param xmlMetadata which contains the field
+   * @param fieldName   that should be extracted
+   */
+  private String getField(Document xmlMetadata, String fieldName) {
+    String value = "";
+
+    try {
+      value = xmlMetadata.getElementsByTagName(fieldName).item(0).getTextContent();
+    } catch (Exception ex) {
+      // Exception for publication year, which needs an int
+      if (fieldName.equals("dcterms:issued")) {
+        value = "0";
+      }
+    }
+
+    return value;
+  }
+
   private Book createRecord(Document xmlMetadata) {
-    return new Book(xmlMetadata.getElementsByTagName("bibo:isbn").item(0).getTextContent(), // isbn
-        xmlMetadata.getElementsByTagName("dc:title").item(0).getTextContent(), // title
-        "", // subtitle
-        Integer
-            .parseInt(xmlMetadata.getElementsByTagName("dcterms:issued").item(0).getTextContent()),
-        // pubYear
-        xmlMetadata.getElementsByTagName("dcterms:publisher").item(0).getTextContent(),
-        // publisher
-        "", // volume
-        "", // edition
-        ""); // addInfos
+    return new Book(getField(xmlMetadata, "bibo:isbn"), // isbn
+                    getField(xmlMetadata, "dc:title"), // title
+                    getField(xmlMetadata, "isbd:P1006"), // subtitle
+                    Integer.parseInt(getField(xmlMetadata, "dcterms:issued")), // pubYear
+                    getField(xmlMetadata, "dcterms:publisher"), // publisher
+                    "", // volume
+                    getField(xmlMetadata, "bibo:edition"), // edition
+                    getField(xmlMetadata, "dcterms:extent")); // addInfos
   }
 
   private List<Author> createAuthors(Document xmlMetadata) {
-    List<Author> authors = new ArrayList<Author>();
     AuthorRetriever authorRetriever = new AuthorRetriever();
-    authors = authorRetriever.extractAuthors(xmlMetadata);
-    return authors;
+
+    return authorRetriever.extractAuthors(xmlMetadata);
   }
 
   /**
-   * Main method for the Runnable to start - read from API and resolve to metadata.
-   *
-   * @author Luis Moßburger
+   * Reads from API and resolve to metadata.
    */
   public void run() {
-    // initialize variables
-    Thread thread;
-    ApiReader apiReader;
+
     Document xmlMetadata = null;
-    // read from API with isbn (Thread)
-    apiReader = new ApiReader(String.format(this.isbnApi, this.isbn));
-    thread = new Thread(apiReader);
+    String apiXmlParameter = "?output=xml";
+    String apiUrl = "https://lod.b3kat.de/";
+    String isbnApi = apiUrl + "data/isbn/%s" + apiXmlParameter;
+
+    // Reads from API with ISBN
+    ApiReader apiReader = new ApiReader(String.format(isbnApi, this.isbn));
+    Thread thread = new Thread(apiReader);
     thread.start();
 
     try {
       thread.join();
-    } catch (Exception e) {
-      System.out.println(e);
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
-    // retrieve metadata that was saved
+    // Retrieves metadata that was saved
     String metadata = apiReader.getMetadata();
     if (metadata != null) {
-      // parse xml
       try {
         xmlMetadata = loadXmlFromString(metadata);
-      } catch (Exception e) {
-        System.out.println(e);
+      } catch (Exception ex) {
+        Log.e(TAG, ex.toString(), ex);
       }
 
-      // extract url
-      Node sameAsNode = xmlMetadata.getElementsByTagName("owl:sameAs").item(0);
-      Element sameAsEl = (Element) sameAsNode;
-      String sameAsUrl = sameAsEl.getAttribute("rdf:resource");
-      String endUrl = this.apiUrl + "data/" + sameAsUrl.split(".de/")[1] + apiXmlParameter;
+      if (xmlMetadata != null) {
+        // Extracts url
+        Node sameAsNode = xmlMetadata.getElementsByTagName("owl:sameAs").item(0);
+        Element sameAsEl = (Element) sameAsNode;
+        String sameAsUrl = sameAsEl.getAttribute("rdf:resource");
+        String endUrl = apiUrl + "data/" + sameAsUrl.split(".de/")[1] + apiXmlParameter;
 
-      // read from API with bv-nr
-      apiReader = new ApiReader(endUrl);
-      thread = new Thread(apiReader);
-      thread.start();
+        // Reads from API with "BV-Nummer" (internal ID)
+        apiReader = new ApiReader(endUrl);
+        thread = new Thread(apiReader);
+        thread.start();
 
-      try {
-        thread.join();
-      } catch (Exception e) {
-        System.out.println(e);
-      }
-
-      // retrieve metadata that was saved
-      metadata = apiReader.getMetadata();
-      if (metadata != null) {
-        // parse xml
         try {
-          xmlMetadata = loadXmlFromString(metadata);
-        } catch (Exception e) {
-          System.out.println(e);
+          thread.join();
+        } catch (Exception ex) {
+          Log.e(TAG, ex.toString(), ex);
         }
 
-        // create record & authors
-        authors = createAuthors(xmlMetadata);
-        book = createRecord(xmlMetadata);
+        // Retrieves metadata that was saved
+        metadata = apiReader.getMetadata();
+        if (metadata != null) {
+          try {
+            xmlMetadata = loadXmlFromString(metadata);
+          } catch (Exception ex) {
+            Log.e(TAG, ex.toString(), ex);
+          }
+
+          authors = createAuthors(xmlMetadata);
+          book = createRecord(xmlMetadata);
+        }
       }
     }
   }

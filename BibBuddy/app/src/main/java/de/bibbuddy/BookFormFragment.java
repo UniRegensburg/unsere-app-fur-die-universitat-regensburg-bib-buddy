@@ -1,74 +1,66 @@
 package de.bibbuddy;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The BookFormFragment is responsible for adding a book manually to a shelf.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Sarah Kurek, Luis Moßburger
  */
-public class BookFormFragment extends Fragment {
+public class BookFormFragment extends BackStackFragment {
+
   private final ChangeBookListener listener;
-  private final List<Author> authorList = new ArrayList<>();
-  private boolean validInput;
-  private Long shelfId;
-  private String shelfName;
-  private int redColor;
-  private int greenColor;
+
+  private List<Author> authorList = new ArrayList<>();
   private Book book = new Book();
 
-  public BookFormFragment(ChangeBookListener listener) {
-    this.listener = listener;
-  }
+  private boolean validInput;
+  private int redColor;
+  private int greenColor;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-    // Called to have the fragment instantiate its user interface view.
-    View view = inflater.inflate(R.layout.fragment_book_form, container, false);
+  private void setupViews(View view, Bundle bundle) {
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
-    setupInput(view);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
-    Bundle bundle = this.getArguments();
     if (bundle != null) {
-      shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
-      shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-      long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
+      Long shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+      Long bookId = bundle.getLong(LibraryKeys.BOOK_ID, 0);
 
-      if (bookId == 0) { // add new book
-        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.add_book));
-      } else { // edit existing book
-        BookModel model = new BookModel(getContext(), shelfId);
+      if (bookId == 0) { // Adds new book
+        mainActivity.updateHeaderFragment(getString(R.string.add_book));
+      } else { // Edits existing book
+        BookModel model = new BookModel(requireContext(), shelfId);
         book = model.getBookById(bookId);
-        authorList.addAll(model.getAuthorList(bookId));
 
-        ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.change_book));
-        Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
-        addBookBtn.setText(R.string.change);
+        if (authorList.isEmpty()) {
+          authorList.addAll(model.getAuthorList(bookId));
+        }
+
+        mainActivity.updateHeaderFragment(getString(R.string.change_book));
       }
 
       setInputText(view);
+      setupAddAuthorBtnListener(view);
+    } else if (this.book != null) {
+      mainActivity.updateHeaderFragment(getString(R.string.add_book));
+      setInputText(view);
+      setupAddAuthorBtnListener(view);
     }
 
-    redColor = getResources().getColor(R.color.alert_red);
-    greenColor = getResources().getColor(R.color.green);
-
-    setupButtons(view);
-
-    return view;
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void setInputText(View view) {
@@ -88,85 +80,55 @@ public class BookFormFragment extends Fragment {
     EditText publisherField = view.findViewById(R.id.book_form_publisher_input);
     publisherField.setText(book.getPublisher());
 
-    EditText volumeField = view.findViewById(R.id.book_form_volume_input);
-    volumeField.setText(book.getVolume());
-
     EditText editionField = view.findViewById(R.id.book_form_edition_input);
     editionField.setText(book.getEdition());
 
     EditText addInfoField = view.findViewById(R.id.book_form_add_infos_input);
     addInfoField.setText(book.getAddInfo());
 
-    if (authorList.isEmpty()) {
-      return;
+    TextView bookFormAuthorList = view.findViewById(R.id.book_form_author_list);
+    bookFormAuthorList.setVisibility(View.VISIBLE);
+    bookFormAuthorList.setText(convertAuthorListToString(authorList));
+  }
+
+  private String convertAuthorListToString(List<Author> authorList) {
+    StringBuilder authors = new StringBuilder();
+
+    int counter = 1;
+    for (Author author : authorList) {
+
+      if (!DataValidation.isStringEmpty(author.getTitle())) {
+        authors.append(author.getTitle()).append(" ");
+      }
+
+      authors.append(author.getFirstName()).append(" ").append(author.getLastName());
+      if (counter != authorList.size()) {
+        authors.append(",\n");
+      }
+
+      ++counter;
     }
 
-    Author author = authorList.get(0);
-    EditText authorTitleInput = view.findViewById(R.id.book_form_author_title_input);
-    authorTitleInput.setText(author.getTitle());
-
-    EditText authorFirstNameInput = view.findViewById(R.id.book_form_author_first_name_input);
-    authorFirstNameInput.setText(author.getFirstName());
-
-    EditText authorLastNameInput = view.findViewById(R.id.book_form_author_last_name_input);
-    authorLastNameInput.setText(author.getLastName());
-  }
-
-  private void setupInput(View view) {
-    view.findViewById(R.id.book_form_isbn_input).requestFocus();
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-  }
-
-  /**
-   * Closes the BookFormFragment.
-   */
-  public void closeFragment() {
-    InputMethodManager inputManager =
-        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-    inputManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
-
-    BookFragment fragment = new BookFragment();
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
-
-    fragment.setArguments(createBookBundle());
-  }
-
-  private Bundle createBookBundle() {
-    Bundle bundle = new Bundle();
-    bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
-    bundle.putLong(LibraryKeys.SHELF_ID, shelfId);
-
-    return bundle;
-  }
-
-  private void setupButtons(View view) {
-    Button cancelBtn = view.findViewById(R.id.btn_book_form_cancel);
-
-    cancelBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        closeFragment();
-      }
-    });
-
-    setupAddBookBtnListener(view);
+    return authors.toString();
   }
 
   private void setupAddBookBtnListener(View view) {
-    Button addBookBtn = view.findViewById(R.id.btn_book_form_add);
+    FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
 
-    addBookBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleUserInput();
-      }
-    });
+    addBookBtn.setOnClickListener(v -> handleUserInput());
+  }
+
+  private void setupAddAuthorBtnListener(View view) {
+    Button addAuthorBtn = view.findViewById(R.id.book_form_add_author_btn);
+
+    addAuthorBtn.setOnClickListener(v -> switchToAuthorFragment());
+  }
+
+  private void switchToAuthorFragment() {
+    AuthorFragment authorFragment = new AuthorFragment(authorList,
+        authorList -> this.authorList = authorList);
+
+    showFragment(authorFragment, LibraryKeys.FRAGMENT_AUTHOR);
   }
 
   private void handleUserInput() {
@@ -177,27 +139,24 @@ public class BookFormFragment extends Fragment {
     handleSubtitle();
     handlePubYear();
     handlePublisher();
-    handleVolume();
     handleEdition();
     handleAddInfos();
-
-    handleAuthors();
 
     if (!validInput) {
       return;
     }
+
+    closeFragment();
+
     if (book.getId() == 0) {
       listener.onBookAdded(book, authorList);
     } else {
       listener.onBookChanged(book, authorList);
     }
-
-    closeFragment();
   }
 
-
   private void handleIsbn() {
-    EditText isbnInput = getView().findViewById(R.id.book_form_isbn_input);
+    EditText isbnInput = requireView().findViewById(R.id.book_form_isbn_input);
     String isbn = isbnInput.getText().toString();
 
     if (DataValidation.isValidIsbn10or13(isbn)) {
@@ -210,7 +169,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleTitle() {
-    EditText titleInput = getView().findViewById(R.id.book_form_title_input);
+    EditText titleInput = requireView().findViewById(R.id.book_form_title_input);
     String title = titleInput.getText().toString();
 
     if (!DataValidation.isStringEmpty(title)) {
@@ -223,7 +182,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleSubtitle() {
-    EditText subtitleInput = getView().findViewById(R.id.book_form_subtitle_input);
+    EditText subtitleInput = requireView().findViewById(R.id.book_form_subtitle_input);
     subtitleInput.setBackgroundColor(greenColor);
 
     String subtitle = subtitleInput.getText().toString();
@@ -233,16 +192,19 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handlePubYear() {
-    EditText pubYearInput = getView().findViewById(R.id.book_form_pub_year_input);
+    EditText pubYearInput = requireView().findViewById(R.id.book_form_pub_year_input);
     String pubYear = pubYearInput.getText().toString();
 
     boolean validPubYear = DataValidation.isValidYear(pubYear);
 
     if (DataValidation.isStringEmpty(pubYear) || validPubYear) {
-      book.setPubYear(0);
+
       if (validPubYear) {
         book.setPubYear(Integer.valueOf(pubYear));
+      } else {
+        book.setPubYear(0);
       }
+
       pubYearInput.setBackgroundColor(greenColor);
     } else {
       pubYearInput.setBackgroundColor(redColor);
@@ -251,7 +213,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handlePublisher() {
-    EditText publisherInput = getView().findViewById(R.id.book_form_publisher_input);
+    EditText publisherInput = requireView().findViewById(R.id.book_form_publisher_input);
     publisherInput.setBackgroundColor(greenColor);
 
     String publisher = publisherInput.getText().toString();
@@ -260,18 +222,8 @@ public class BookFormFragment extends Fragment {
     }
   }
 
-  private void handleVolume() {
-    EditText volumeInput = getView().findViewById(R.id.book_form_volume_input);
-    volumeInput.setBackgroundColor(greenColor);
-
-    String volume = volumeInput.getText().toString();
-    if (!DataValidation.isStringEmpty(volume)) {
-      book.setVolume(volume);
-    }
-  }
-
   private void handleEdition() {
-    EditText editionInput = getView().findViewById(R.id.book_form_edition_input);
+    EditText editionInput = requireView().findViewById(R.id.book_form_edition_input);
     editionInput.setBackgroundColor(greenColor);
 
     String edition = editionInput.getText().toString();
@@ -281,7 +233,7 @@ public class BookFormFragment extends Fragment {
   }
 
   private void handleAddInfos() {
-    EditText addInfosInput = getView().findViewById(R.id.book_form_add_infos_input);
+    EditText addInfosInput = requireView().findViewById(R.id.book_form_add_infos_input);
     addInfosInput.setBackgroundColor(greenColor);
 
     String addInfos = addInfosInput.getText().toString();
@@ -290,38 +242,38 @@ public class BookFormFragment extends Fragment {
     }
   }
 
-  private void handleAuthors() {
-    // TODO add more edit texts via plus button to add more than one author
-    Author author = (authorList.isEmpty() ? new Author() : authorList.get(0));
+  public BookFormFragment(ChangeBookListener listener) {
+    this.listener = listener;
+  }
 
-    boolean authorValid = false;
-    EditText authorTitleInput = getView().findViewById(R.id.book_form_author_title_input);
-    authorTitleInput.setBackgroundColor(greenColor);
-    String authorTitle = authorTitleInput.getText().toString();
-    author.setTitle(authorTitle);
+  /**
+   * Second constructor to handle construction from API call.
+   *
+   * @param listener listener for event handling
+   * @param book     book retrieved from API
+   */
+  public BookFormFragment(ChangeBookListener listener, Book book, List<Author> authorList) {
+    this.listener = listener;
+    this.book = book;
+    this.authorList.addAll(authorList);
+  }
 
-    EditText authorFirstNameInput = getView().findViewById(R.id.book_form_author_first_name_input);
-    authorFirstNameInput.setBackgroundColor(greenColor);
-    String authorFirstName = authorFirstNameInput.getText().toString();
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
 
-    if (!DataValidation.isStringEmpty(authorFirstName)) {
-      author.setFirstName(authorFirstName);
-      authorValid = true;
-    }
+    View view = inflater.inflate(R.layout.fragment_book_form, container, false);
 
+    Bundle bundle = this.getArguments();
+    setupViews(view, bundle);
 
-    EditText authorLastNameInput = getView().findViewById(R.id.book_form_author_last_name_input);
-    authorLastNameInput.setBackgroundColor(greenColor);
-    String authorLastName = authorLastNameInput.getText().toString();
+    redColor = getResources().getColor(R.color.red, null);
+    greenColor = getResources().getColor(R.color.green, null);
 
-    if (!DataValidation.isStringEmpty(authorLastName)) {
-      author.setLastName(authorLastName);
-      authorValid = true;
-    }
+    setupAddBookBtnListener(view);
 
-    if (authorValid && author.getId() == null) {
-      authorList.add(author);
-    }
+    return view;
   }
 
   public interface ChangeBookListener {
@@ -331,6 +283,5 @@ public class BookFormFragment extends Fragment {
     default void onBookChanged(Book book, List<Author> authorList) {
     }
   }
-
 
 }

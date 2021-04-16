@@ -10,75 +10,82 @@ import android.text.Spanned;
 import android.text.style.BulletSpan;
 
 /**
- * The RichTextEditorBulletSpan is responsible for the bullets in the text note.
+ * RichTextEditorBulletSpan is responsible for styling bullet spans in text notes.
  *
  * @author Sabrina Freisleben
  */
 public class RichTextEditorBulletSpan extends BulletSpan {
 
-  private static Path bulletPath = null;
+  private static Path bulletPath;
+
   private final int bulletColor = Color.BLACK;
   private final int bulletRadius = 10;
   private final int bulletGapWidth = 20;
 
   /**
-   * This method is called to write a parcel for the bullet span.
+   * Puts default bullet span settings to a parcel.
    *
-   * @param dest  A parcel for the bullet settings
-   * @param flags Used Flags for bullet settings
+   * @param dest  parcel to put the bullet settings
+   * @param flags how the settings should be written
    */
   public void writeToParcel(Parcel dest, int flags) {
     super.writeToParcel(dest, flags);
+
     dest.writeInt(this.bulletColor);
     dest.writeInt(this.bulletRadius);
     dest.writeInt(this.bulletGapWidth);
   }
 
   /**
-   * This method is called to fetch the margin between bullet and text.
+   * Fetches the margin between the bullet and the first character of the text.
    *
-   * @return Returns the distance between bullets and texts in line in pixels.
+   * @return the distance between the bullet and the first character in pixels
    */
   public int getLeadingMargin(boolean first) {
     return 2 * this.bulletRadius + this.bulletGapWidth;
   }
 
   /**
-   * This method is called to draw the leading margin for the bullets.
+   * Draws the leading margin for bullets.
    *
-   * @param c      Canvas to draw on
-   * @param p      Paint used to draw
-   * @param x      X-Coordinate to setup the canvas
-   * @param dir    X-Coordinate to give the canvas a direction to draw (+ or -)
-   * @param top    Y-Coordinate to set the top of the canvas
-   * @param bottom Y-coordinate to set the bottom of the canvas
-   * @param text   Contained text
-   * @param start  Start of the text
+   * @param canvas    canvas to draw on
+   * @param paint     paint used to draw
+   * @param x         x-coordinate to setup the canvas
+   * @param direction x-coordinate to give the canvas a direction to draw (+ or -)
+   * @param top       y-coordinate to set the top of the canvas
+   * @param bottom    y-coordinate to set the bottom of the canvas
+   * @param text      text content as charSequence
+   * @param start     first character position of the text
    */
-  public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline,
-                                int bottom, CharSequence text, int start, int end, boolean first,
-                                Layout l) {
+  public void drawLeadingMargin(final Canvas canvas, Paint paint, int x, int direction, int top,
+                                int baseline, int bottom, CharSequence text, int start, int end,
+                                boolean first, Layout layout) {
+
     if (((Spanned) text).getSpanStart(this) == start) {
-      p.setColor(this.bulletColor);
-      p.setStyle(Paint.Style.FILL);
-      if (c.isHardwareAccelerated()) {
+      paint.setColor(this.bulletColor);
+      paint.setStyle(Paint.Style.FILL);
+
+      if (canvas.isHardwareAccelerated()) {
         if (bulletPath == null) {
           bulletPath = new Path();
           bulletPath.addCircle(0.0F, 0.0F, (float) this.bulletRadius, Path.Direction.CW);
         }
 
-        c.save();
-        c.translate((float) (x + dir * this.bulletRadius), (float) (top + bottom) / 2.0F);
-        c.drawPath(bulletPath, p);
-        c.restore();
+        canvas.save();
+        canvas
+            .translate((float) (x + direction * this.bulletRadius), (float) (top + bottom) / 2.0F);
+        canvas.drawPath(bulletPath, paint);
+        canvas.restore();
       } else {
-        c.drawCircle((float) (x + dir * this.bulletRadius), (float) (top + bottom) / 2.0F,
-            (float) this.bulletRadius, p);
+        canvas
+            .drawCircle((float) (x + direction * this.bulletRadius), (float) (top + bottom) / 2.0F,
+                        (float) this.bulletRadius, paint);
       }
-      int oldColor = p.getColor();
-      p.setColor(oldColor);
-      Paint.Style style = p.getStyle();
-      p.setStyle(style);
+
+      int oldColor = paint.getColor();
+      paint.setColor(oldColor);
+      Paint.Style style = paint.getStyle();
+      paint.setStyle(style);
     }
 
   }

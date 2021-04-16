@@ -4,15 +4,20 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * TagDao contains all sql queries related to Tag.
  *
+ *
  * @author Sarah Kurek
  */
-public class TagDao implements InterfaceTagDao {
+@SuppressWarnings("unused") // This class can be used in the future
+public class TagDao {
+
+  private static final String TAG = TagDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
 
@@ -20,40 +25,35 @@ public class TagDao implements InterfaceTagDao {
     this.dbHelper = dbHelper;
   }
 
-  @Override
   public boolean create(Tag tag) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.NAME, tag.getName());
 
-      long id = db.insert(DatabaseHelper.TABLE_NAME_TAG, null, contentValues);
-
+      Long id = db.insert(DatabaseHelper.TABLE_NAME_TAG, null, contentValues);
       tag.setId(id);
-    } catch (
-    SQLiteException ex) {
+
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
       return false;
-    } finally {
-      db.close();
     }
 
     return true;
   }
 
 
-  // get single tag entry
-  @Override
+  // Gets single tag entry
   public Tag findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_TAG, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.NAME}, DatabaseHelper._ID + "=?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_TAG,
+                             new String[] {DatabaseHelper._ID,
+                                 DatabaseHelper.NAME}, DatabaseHelper._ID + " = ?",
+                             new String[] {String.valueOf(id)}, null, null, null, null);
 
     Tag tag = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
 
       tag = new Tag(
           Long.parseLong(cursor.getString(0)), // Id
@@ -62,16 +62,16 @@ public class TagDao implements InterfaceTagDao {
 
       cursor.close();
     }
+
     return tag;
   }
 
 
-  // get all tags in a list view
-  @Override
+  // Gets all tags in a list view
   public List<Tag> findAll() {
-    List<Tag> tagList = new ArrayList<Tag>();
-    // Select All Query
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_TAG;
+    List<Tag> tagList = new ArrayList<>();
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_TAG;
 
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
@@ -88,17 +88,16 @@ public class TagDao implements InterfaceTagDao {
       cursor.close();
     }
 
-
     return tagList;
   }
 
-  // delete single tag entry
-  @Override
+  // Deletes single tag entry
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_TAG, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.close();
   }
+
 }

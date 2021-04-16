@@ -4,222 +4,217 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * AuthorDao includes all sql queries related to Author.
  *
- * @author Sarah Kurek, Claudia Schönherr
+ * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova
  */
-public class AuthorDao implements InterfaceAuthorDao {
+public class AuthorDao {
+
+  private static final String TAG = AuthorDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
+
+  private static boolean isNullOrEmpty(String text) {
+    return text == null || text.isEmpty();
+  }
+
+  private Author createAuthorData(Cursor cursor) {
+    return new Author(Long.parseLong(cursor.getString(0)), // Id
+                      cursor.getString(1), // First name
+                      cursor.getString(2), // Last name
+                      cursor.getString(3), // Title
+                      Long.parseLong(cursor.getString(4)), // Create date
+                      Long.parseLong(cursor.getString(5)) // Mod date
+    );
+  }
+
+  private int countAuthorBookLinks(Long authorId) {
+    if (authorId == null || authorId == 0) {
+      return 0;
+    }
+
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT count(" + DatabaseHelper.BOOK_ID + ") FROM "
+        + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
+        + DatabaseHelper.AUTHOR_ID + " = ?";
+
+    try (Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()})) {
+      if (!cursor.moveToFirst()) {
+        return 0;
+      }
+
+      return cursor.getInt(0);
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
+      return 0;
+    }
+  }
+
+  // Checks if there is an entry of the author in the AUTHOR_BOOK_LNK table
+  private boolean existsAuthorBookLink(Long authorId) {
+    return countAuthorBookLinks(authorId) > 0;
+  }
 
   public AuthorDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 
-  @Override
-  public boolean create(Author author) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
+  /**
+   * Save an author object to database.
+   *
+   * @param author object that should be saved.
+   */
+  public void create(Author author) {
+    Long currentTime = new Date().getTime();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
-      contentValues.put(DatabaseHelper.TITLE, author.getTitle());
+
+      if (!isNullOrEmpty(author.getTitle())) {
+        contentValues.put(DatabaseHelper.TITLE, author.getTitle());
+      }
+
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
-      long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
-
+      Long id = db.insert(DatabaseHelper.TABLE_NAME_AUTHOR, null, contentValues);
       author.setId(id);
 
     } catch (SQLiteException ex) {
-      return false;
-    } finally {
-      db.close();
+      Log.e(TAG, ex.toString(), ex);
+
     }
 
-    return true;
   }
 
   /**
-   * Method to update an existing author.
+   * Updates an existing author.
    *
    * @param author author object
-   * @return true if author is updated successfully
    */
-  public boolean update(Author author) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
+  public void update(Author author) {
+    Long currentTime = new Date().getTime();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.FIRST_NAME, author.getFirstName());
       contentValues.put(DatabaseHelper.LAST_NAME, author.getLastName());
-      contentValues.put(DatabaseHelper.TITLE, author.getTitle());
+      contentValues.put(DatabaseHelper.TITLE, isNullOrEmpty(
+          author.getTitle()) ? null : author.getTitle());
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
       db.update(DatabaseHelper.TABLE_NAME_AUTHOR, contentValues,
-          DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(author.getId())});
+                DatabaseHelper._ID + " = ?",
+                new String[] {String.valueOf(author.getId())});
 
     } catch (SQLiteException ex) {
-      return false;
-    } finally {
-      db.close();
+      Log.e(TAG, ex.toString(), ex);
     }
 
-    return true;
   }
 
-  // get single author entry
-  @Override
+  // Gets single author entry
   public Author findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
-        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
-        DatabaseHelper._ID + "=?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
-
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
+                             new String[] {DatabaseHelper._ID,
+                                 DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME,
+                                 DatabaseHelper.TITLE,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
+                             DatabaseHelper._ID + " = ?",
+                             new String[] {String.valueOf(id)}, null, null, null, null);
 
     Author author = null;
     if (cursor.moveToFirst()) {
-
-      author = new Author(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // First name
-          cursor.getString(2), // Last name
-          cursor.getString(3), // Title
-          Integer.parseInt(cursor.getString(4)), // Create date
-          Integer.parseInt(cursor.getString(5)) // Mod date
-      );
-      cursor.close();
-    }
-    return author;
-  }
-
-  private String partSqlOperator(String checkPart) {
-    if (checkPart == null) {
-      return " IS NULL ";
-    } else {
-      return " = ? ";
-    }
-  }
-
-  /**
-   * Find an existing author by its title, first and last name.
-   *
-   * @param authorToFind The author containing the data to search for.
-   * @return If found, the author (with its database ID), else null.
-   */
-  public Author findByTitleAndFullName(Author authorToFind) {
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-    String selection = DatabaseHelper.FIRST_NAME + partSqlOperator(authorToFind.getFirstName())
-        + " AND " + DatabaseHelper.LAST_NAME + partSqlOperator(authorToFind.getLastName())
-        + " AND " + DatabaseHelper.TITLE + partSqlOperator(authorToFind.getTitle());
-
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
-        new String[] { DatabaseHelper._ID,
-            DatabaseHelper.FIRST_NAME,
-            DatabaseHelper.LAST_NAME,
-            DatabaseHelper.TITLE },
-            selection,
-        new String[] { authorToFind.getFirstName(),
-            authorToFind.getLastName()
-            },
-        null, null, null, null);
-
-    try {
-      if (!cursor.moveToFirst()) {
-        return null;
-      }
-
-      return new Author(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // First name
-          cursor.getString(2), // Last name
-          cursor.getString(3), // Title
-          null, null
-      );
-    } finally {
-      cursor.close();
-    }
-  }
-
-  // get all authors in a list view
-  @Override
-  public List<Author> findAll() {
-    List<Author> authorList = new ArrayList<Author>();
-    // Select All Query
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
-
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    Cursor cursor = db.rawQuery(selectQuery, null);
-
-    // looping through all rows and adding to list
-    if (cursor.moveToFirst()) {
-      do {
-        Author author = new Author();
-
-        author.setId(Long.parseLong(cursor.getString(0))); // Id
-        author.setFirstName(cursor.getString(1)); // First name
-        author.setLastName(cursor.getString(2)); // Last name
-        author.setTitle(cursor.getString(3)); // Title
-        author.setCreateDate(Integer.parseInt(cursor.getString(4))); // Create date
-        author.setModDate(Integer.parseInt(cursor.getString(5))); // Mod date
-
-        // Adding author to list
-        authorList.add(author);
-      } while (cursor.moveToNext());
+      author = createAuthorData(cursor);
     }
 
     cursor.close();
 
-    return authorList;
+    return author;
   }
 
-  // delete single author entry
-  @Override
-  public void delete(Long id) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+  /**
+   * Finds an existing author by its title, first and last name.
+   *
+   * @param authorToFind the author containing the data to search for
+   * @return if found, the author (with its database ID), else null
+   */
+  public Author findByTitleAndFullName(Author authorToFind) {
+    List<String> params = new ArrayList<>();
+    StringBuilder stringBuilder = new StringBuilder();
 
-    db.close();
+    stringBuilder.append(DatabaseHelper.FIRST_NAME + " = ?");
+    params.add(authorToFind.getFirstName());
+
+    stringBuilder.append(" AND " + DatabaseHelper.LAST_NAME + " = ?");
+    params.add(authorToFind.getLastName());
+
+    stringBuilder.append(" AND " + DatabaseHelper.TITLE);
+    if (isNullOrEmpty(authorToFind.getTitle())) {
+      stringBuilder.append(" IS NULL");
+    } else {
+      stringBuilder.append(" = ?");
+      params.add(authorToFind.getTitle());
+    }
+
+    String selection = stringBuilder.toString();
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    //noinspection ToArrayCallWithZeroLengthArrayArgument
+    try (Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
+                                  new String[] {DatabaseHelper._ID,
+                                      DatabaseHelper.FIRST_NAME,
+                                      DatabaseHelper.LAST_NAME,
+                                      DatabaseHelper.TITLE,
+                                      DatabaseHelper.MOD_DATE,
+                                      DatabaseHelper.CREATE_DATE},
+                                  selection,
+                                  params.toArray(new String[params.size()]),
+                                  null, null, null, null)) {
+      if (!cursor.moveToFirst()) {
+        return null;
+      }
+
+      return createAuthorData(cursor);
+    }
   }
-
 
   /**
    * Deletes the relevant author entries.
    *
-   * @param authorId Id of the author
-   * @param bookId   Id of the book
+   * @param authorId id of the author
+   * @param bookId   id of the book
    */
   public void delete(Long authorId, Long bookId) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.AUTHOR_ID
-            + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
-        new String[] {String.valueOf(authorId), String.valueOf(bookId)});
+                  + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
+              new String[] {String.valueOf(authorId), String.valueOf(bookId)});
 
-    // delete author only if author has no link to another book
+    // Deletes author only if author has no link to another book
     if (!existsAuthorBookLink(authorId)) {
       db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(authorId)});
+                new String[] {String.valueOf(authorId)});
     }
 
     db.close();
   }
 
+
   /**
-   * Method to check if a certain Author already exists in the database.
+   * Checks if a certain Author already exists in the database.
    *
    * @param author instance of author
    * @return true if author exists, otherwise false
@@ -236,7 +231,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   }
 
   /**
-   * Method to create an Author if it does not exist yet.
+   * Creates an Author if it does not exist yet.
    *
    * @param authorList list of all authors
    */
@@ -255,32 +250,4 @@ public class AuthorDao implements InterfaceAuthorDao {
     }
   }
 
-  private int countAuthorBookLinks(Long authorId) {
-    if (authorId == null || authorId == 0) {
-      return 0;
-    }
-
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-    String selectQuery = "SELECT count(" + DatabaseHelper.BOOK_ID + ") FROM "
-        + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
-        + DatabaseHelper.AUTHOR_ID + " = ?";
-
-    Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()});
-
-    try {
-      if (!cursor.moveToFirst()) {
-        return 0;
-      }
-
-      return cursor.getInt(0);
-    } finally {
-      cursor.close();
-    }
-  }
-
-  // Checks if there is an entry of the author in the AUTHOR_BOOK_LNK table
-  private boolean existsAuthorBookLink(Long authorId) {
-    return countAuthorBookLinks(authorId) > 0;
-  }
 }

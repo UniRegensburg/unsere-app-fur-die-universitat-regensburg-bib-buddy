@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_author"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="40dp"
+    android:layout_marginBottom="75dp">
+
+
+    <TextView
+        android:id="@+id/list_view_author_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/author_help"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_author"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <com.tsuryo.swipeablerv.SwipeableRecyclerView
+        android:id="@+id/author_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:scrollbars="vertical"
+        app:layoutManager="LinearLayoutManager"
+        app:leftBgColor="@color/yellow"
+        app:leftImage="@drawable/ic_edit"
+        app:rightBgColor="@color/red"
+        app:rightImage="@drawable/ic_delete" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom">
+
+        <include
+            android:id="@+id/btn_add_author"
+            layout="@layout/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/btn_confirm_author"
+            android:contentDescription="@string/add_author_btn" />
+
+        <include
+            android:id="@+id/btn_confirm_author"
+            layout="@layout/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

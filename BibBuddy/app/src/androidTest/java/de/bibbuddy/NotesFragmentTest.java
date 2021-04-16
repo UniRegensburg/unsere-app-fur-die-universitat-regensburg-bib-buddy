@@ -1,16 +1,13 @@
 package de.bibbuddy;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -18,8 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 import java.util.Objects;
 import org.hamcrest.Description;
@@ -27,43 +22,73 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * NotesFragmentTest is responsible for the UI-test of the NotesFragment-class.
+ *
+ * @author Sabrina.
+ */
 public class NotesFragmentTest {
 
   static NotesFragment nF;
   private static View itemView;
-  private final String exampleText = "text";
-  private String modDate;
-  private String name;
-  private int idText;
+  private int itemViewId;
 
   /**
-   * This method initiates the basic NotesFragment setup before every test-case.
+   * Initiate basic NotesFragment' setup before every test-case.
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   @Before
   public void init() {
     ActivityScenario scenario = ActivityScenario.launch(MainActivity.class);
     onView(withId(R.id.navigation_notes)).perform(click());
-    onView(withId(R.id.fragment_notes)).check(matches(isDisplayed()));
-    ActivityScenario activityScenario = scenario.onActivity(
+    scenario.onActivity(
         (ActivityScenario.ActivityAction<MainActivity>) activity -> {
           nF = (NotesFragment) activity.getSupportFragmentManager().getFragments().get(0);
-          NotesFragment.notes.clear();
-          NotesFragment.notes.size();
-          Note textNote =
-              new Note(exampleText, 0, exampleText);
-          modDate = String.valueOf(textNote.getModDate());
-          name = textNote.getName();
-          NoteTextItem noteTextItem =
-              new NoteTextItem(modDate, name, textNote.getText(), textNote.getId());
-          NotesFragment.notes.add(noteTextItem);
-        });
 
-    onView(ViewMatchers.withId(R.id.recyclerView))
-        .perform(RecyclerViewActions.scrollTo(hasDescendant(withText(exampleText))));
-    RecyclerView recyclerView =
-        Objects.requireNonNull(nF.getView()).findViewById(R.id.recyclerView);
-    itemView = recyclerView.getChildAt(0);
-    idText = itemView.getId();
+          if (nF.noteList.size() != 0) {
+            RecyclerView recyclerView = nF.getView().findViewById(R.id.note_list_recycler_view);
+            itemView = recyclerView.getChildAt(0);
+            itemViewId = itemView.getId();
+          }
+        });
+  }
+
+  @Test
+  public void headerTextIsCorrect_Test() {
+    onView(withId(R.id.headerText)).check(matches(withText(R.string.navigation_notes)));
+  }
+
+  @Test
+  public void headerButtonsVisibilities_Test() {
+    onView(withId(R.id.import_btn))
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+    onView(withId(R.id.share_btn))
+        .check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+    onView(withId(R.id.sort_btn)).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void optionsMenuHelpWorks_Test() {
+    openActionBarOverflowOrOptionsMenu(nF.requireActivity());
+    onView(withText(R.string.help)).perform(click());
+    onView(withId(R.id.fragment_help)).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void optionsMenuImprintWorks_Test() {
+    openActionBarOverflowOrOptionsMenu(nF.requireActivity());
+    onView(withText(R.string.header_imprint)).perform(click());
+    onView(withId(R.id.fragment_imprint)).check(matches(isDisplayed()));
+  }
+
+  @Test
+  public void optionsMenuDeleteWorks_Test() {
+    if (itemView != null) {
+      itemView.setSelected(true);
+      openActionBarOverflowOrOptionsMenu(nF.requireActivity());
+      onView(withText(R.string.delete)).perform(click());
+      onView(withText(R.string.delete_note)).check(matches(isDisplayed()));
+    }
   }
 
   @Test
@@ -72,69 +97,62 @@ public class NotesFragmentTest {
   }
 
   @Test
-  public void noteListIsDisplayed_Test() {
-    ViewActions.closeSoftKeyboard();
-    onView(withId(idText)).check(matches(isDisplayed()));
-    onView(withId(R.id.noteModDate)).check(matches(isDisplayed()));
-    onView(withId(R.id.noteName)).check(matches(isDisplayed()));
-    onView(withId(R.id.noteType)).check(matches(isDisplayed()));
-    new DrawableMatcher(R.drawable.document)
-        .matchesSafely(itemView);
+  public void recyclerViewWorks_Test() {
+    if (itemView != null) {
+      onView(withId(R.id.note_list_recycler_view)).check(matches(isDisplayed()));
+    }
   }
 
   @Test
-  public void editorIsOpenedOnItemClick_Test() {
-    ViewActions.closeSoftKeyboard();
-    onView(withId(idText)).perform(click());
-    onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
+  public void noteItemIsDisplayedCorrectly_Test() {
+    if (itemView != null) {
+      onView(withId(itemViewId)).check(matches(isDisplayed()));
+
+      int modDateId = itemView.findViewById(R.id.note_mod_date).getId();
+      onView(withId(modDateId)).check(matches(isDisplayed()));
+
+      if (nF.noteList.get(nF.noteList.size() - 1).getType() == NoteTypeLut.TEXT) {
+        int nameId = itemView.findViewById(R.id.note_name).getId();
+        onView(withId(nameId)).check(matches(isDisplayed()));
+
+        new DrawableMatcher(R.drawable.document)
+            .matchesSafely(itemView);
+      } else {
+        new DrawableMatcher(R.drawable.microphone)
+            .matchesSafely(itemView);
+
+        onView(withId(R.id.seekBar)).check(matches(isDisplayed()));
+        onView(withId(R.id.play_note)).check(matches(isDisplayed()));
+        onView(withId(R.id.stop_note)).check(matches(isDisplayed()));
+        onView(withId(R.id.played_time)).check(matches(isDisplayed()));
+        onView(withId(R.id.total_time)).check(matches(isDisplayed()));
+      }
+    }
   }
 
   @Test
-  public void deletePanelIsDisplayed_Test() {
-    ViewActions.closeSoftKeyboard();
-    onView(withId(idText)).perform(longClick());
-    new DrawableMatcher(R.color.flirt_light).matchesSafely(itemView);
-    onView(withId(R.id.hidden_delete_panel)).check(matches(isDisplayed()));
-    new DrawableMatcher(R.color.alert_red)
-        .matchesSafely(itemView.getRootView().findViewById(R.id.panel_delete));
-    new DrawableMatcher(R.drawable.delete)
-        .matchesSafely(itemView.getRootView().findViewById(R.id.panel_delete));
-    onView(withId(R.id.hidden_delete_panel)).perform(click());
-    onView(withId(idText)).check(doesNotExist());
+  public void emptyNoteListViewIsDisplayedCorrectly_Test() {
+    if (itemView == null) {
+      onView(withId(R.id.empty_notes_list_view)).check(matches(isDisplayed()));
+    }
   }
 
   @Test
-  public void itemIsDeletedOnDeletePanelUsage_Test() {
-    ViewActions.closeSoftKeyboard();
-    onView(withId(idText)).perform(longClick());
-    onView(withId(R.id.hidden_delete_panel)).check(matches(isDisplayed()));
-    onView(withId(idText)).perform(longClick());
-    onView(withId(R.id.hidden_delete_panel)).check(matches(not(isDisplayed())));
-  }
-
-
-  @Test
-  public void itemIsDeletedOnItemSwipeLeft_Test() {
-    onView(withId(idText)).perform(swipeLeft());
-    new DrawableMatcher(R.color.alert_red).matchesSafely(itemView);
-    new DrawableMatcher(R.drawable.delete).matchesSafely(itemView);
+  public void textNoteEditorIsOpenedOnItemClick_Test() {
+    if (itemView != null) {
+      if (nF.noteList.get(nF.noteList.size() - 1).getType() == NoteTypeLut.TEXT) {
+        onView(withId(itemViewId)).perform(click());
+        onView(withId(R.id.fragment_text_note_editor)).check(matches(isDisplayed()));
+      }
+    }
   }
 
   @Test
   public void deleteSnackbarIsDisplayedOnSwipeLeft_Test() {
-    onView(withId(idText)).perform(swipeLeft());
-    onView(withText(R.string.delete_notification)).check(matches(isDisplayed()));
-    onView(withText(R.string.undo)).check(matches(isDisplayed()));
-  }
-
-  @Test
-  public void itemViewIsRestoredOnUndoClick_Test() {
-    onView(withId(idText)).perform(swipeLeft());
-    onView(withText(R.string.undo)).perform(click());
-    onView(withId(R.id.noteType)).check(matches(isDisplayed()));
-    onView(withId(R.id.noteName)).check(matches(isDisplayed()));
-    onView(withId(R.id.noteType)).check(matches(isDisplayed()));
-    ViewActions.closeSoftKeyboard();
+    if (itemView != null) {
+      onView(withId(itemViewId)).perform(swipeLeft());
+      onView(withText(R.string.delete_note)).check(matches(isDisplayed()));
+    }
   }
 
   public static class DrawableMatcher extends TypeSafeMatcher<View> {
@@ -180,5 +198,7 @@ public class NotesFragmentTest {
       }
     }
   }
+
 }
+
 

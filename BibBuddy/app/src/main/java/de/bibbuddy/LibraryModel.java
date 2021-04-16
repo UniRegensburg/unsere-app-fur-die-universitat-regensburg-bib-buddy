@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The LibraryModel contains all the shelf data for the LibraryFragment.
  *
- * @author Claudia Schönherr
+ * @author Claudia Schönherr, Silvia Ivanova
  */
 public class LibraryModel {
 
@@ -18,6 +18,45 @@ public class LibraryModel {
 
   private List<ShelfItem> libraryList;
   private Long currentShelfId;
+
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+  }
+
+  private void sortLibraryList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
+      case MOD_DATE_LATEST:
+        libraryList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        libraryList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        libraryList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        libraryList.sort(new SortName().reversed());
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
 
   /**
    * The LibraryModel contains all the shelf data for the LibraryFragment.
@@ -36,20 +75,21 @@ public class LibraryModel {
    * Adds a new book to the bookList and database.
    *
    * @param name     name of the new shelf
-   * @param parentId parentId of the new shelf (is deprecated)
+   * @param parentId parentId of the new shelf (can be used in future)
    */
   public void addShelf(String name, Long parentId) {
     Shelf shelf = new Shelf(name, parentId);
     shelfDao.create(shelf);
 
-    Long id = shelfDao.findLatestId();
-    libraryList.add(new ShelfItem(name, id, parentId, 0, 0));
+    shelf = shelfDao.findById(shelfDao.findLatestId());
+
+    libraryList.add(new ShelfItem(shelf, 0, 0));
   }
 
   /**
    * Gets the current libraryList.
    *
-   * @return Returns the current libraryList
+   * @return the current libraryList
    */
   public List<ShelfItem> getCurrentLibraryList() {
     return libraryList;
@@ -58,8 +98,8 @@ public class LibraryModel {
   /**
    * Gets the libraryList of the current parentId of the shelf.
    *
-   * @param parentId parentId of the shelf (is deprecated)
-   * @return Returns the libraryList of the given id
+   * @param parentId parentId of the shelf (can be used in future)
+   * @return the libraryList of the given id
    */
   public List<ShelfItem> getLibraryList(Long parentId) {
     currentShelfId = parentId;
@@ -73,8 +113,8 @@ public class LibraryModel {
 
       int bookNum = shelfDao.countAllBooksForShelf(shelfId);
       int noteNum = shelfDao.countAllNotesForShelf(bookIds);
-      libraryList
-          .add(new ShelfItem(shelf.getName(), shelf.getId(), shelf.getShelfId(), bookNum, noteNum));
+
+      libraryList.add(new ShelfItem(shelf, bookNum, noteNum));
     }
 
     return libraryList;
@@ -84,7 +124,7 @@ public class LibraryModel {
    * Gets the selected shelf at the current position.
    *
    * @param position position of the clicked item
-   * @return Returns the clicked ShelfItem
+   * @return the clicked ShelfItem
    */
   public ShelfItem getSelectedLibraryItem(int position) {
     return libraryList.get(position);
@@ -93,7 +133,7 @@ public class LibraryModel {
   /**
    * Gets the current id of the shelf.
    *
-   * @return Returns the currentShelfId
+   * @return the currentShelfId
    */
   public Long getShelfId() {
     return currentShelfId;
@@ -109,8 +149,7 @@ public class LibraryModel {
       return;
     }
 
-    for (ShelfItem shelf : selectedShelfItems
-    ) {
+    for (ShelfItem shelf : selectedShelfItems) {
       Long shelfId = shelf.getId();
 
       List<Long> bookIds = bookDao.getAllBookIdsForShelf(shelfId);
@@ -122,33 +161,8 @@ public class LibraryModel {
       }
 
       shelfDao.delete(shelfId);
-      deleteShelfFromLibraryList(shelf);
+      libraryList.removeIf(shelf::equals);
     }
-  }
-
-  private void deleteShelfFromLibraryList(ShelfItem shelf) {
-    for (int i = 0; i < libraryList.size(); i++) {
-      if (shelf.equals(libraryList.get(i))) {
-        libraryList.remove(i);
-      }
-    }
-  }
-
-  private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
-
-    for (Long authorId : authorIds) {
-      authorDao.delete(authorId, bookId);
-    }
-  }
-
-  private void deleteNotes(Long bookId) {
-    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
-
-    for (Long noteId : noteIds) {
-      noteDao.delete(noteId);
-    }
-
   }
 
   /**
@@ -170,4 +184,31 @@ public class LibraryModel {
       }
     }
   }
+
+  /**
+   * Gets the sorted search result list by sortTypeLut.
+   *
+   * @param sortTypeLut sortTypeLut of the list
+   * @return the sorted shelves
+   */
+  public List<ShelfItem> getSortedLibraryList(SortTypeLut sortTypeLut) {
+    sortLibraryList(sortTypeLut);
+
+    return libraryList;
+  }
+
+  /**
+   * Gets the sorted libraryList by sortTypeLut.
+   *
+   * @param sortTypeLut sortTypeLut of the list
+   * @return the sorted libraryList
+   */
+  public List<ShelfItem> getSortedLibraryList(SortTypeLut sortTypeLut,
+                                              List<ShelfItem> libraryList) {
+    this.libraryList = libraryList;
+    sortLibraryList(sortTypeLut);
+
+    return libraryList;
+  }
+
 }

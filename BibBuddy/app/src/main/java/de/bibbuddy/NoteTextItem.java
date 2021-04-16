@@ -1,5 +1,7 @@
 package de.bibbuddy;
 
+import org.jsoup.Jsoup;
+
 /**
  * The NoteTextItem is responsible for holding the information of the note text items.
  * It is a child of NoteItem.
@@ -8,15 +10,30 @@ package de.bibbuddy;
  */
 public class NoteTextItem extends NoteItem {
 
-  private String text;
+  private final String displayName;
 
-  public NoteTextItem(String modDate, String name, String text, Long id) {
-    super(modDate, name, R.drawable.document, id);
-    this.text = text;
+  /**
+   * Constructor to set up a new noteTextItem.
+   *
+   * @param note   note object
+   * @param bookId id of the related book
+   */
+  public NoteTextItem(Note note, Long bookId) {
+    super(note, R.drawable.document, bookId);
+
+    String name = note.getName();
+    name = Jsoup.parse(name).text();
+
+    if (name.length() > 20) {
+      name = name.substring(0, 20) + " ...";
+    }
+
+    this.displayName = name;
   }
 
-  public NoteTextItem(String modDate, String name, String text, Long id, Long bookId) {
-    super(modDate, name, text, R.drawable.document, id, bookId);
+  @Override
+  public String getDisplayName() {
+    return displayName;
   }
 
 }

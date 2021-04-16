@@ -1,175 +1,187 @@
 package de.bibbuddy;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.app.ShareCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
+import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The LibraryFragment is responsible for the shelves in the library.
  *
- * @author Claudia Schönherr, Silvia Ivanova
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
-public class LibraryFragment extends Fragment
-    implements LibraryRecyclerViewAdapter.LibraryListener {
+public class LibraryFragment extends BackStackFragment
+    implements LibraryRecyclerViewAdapter.LibraryListener, SwipeLeftRightCallback.Listener {
+
+  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private List<ShelfItem> selectedShelfItems;
-  private static final int STORAGE_PERMISSION_CODE = 1;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
+  private BookModel bookModel;
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
-      @Override
-      public void handleOnBackPressed() {
-          requireActivity().finish();
-          requireActivity().moveTaskToBack(true);
-      }
-    });
+  private SortTypeLut sortTypeLut;
 
-    // Called to have the fragment instantiate its user interface view.
-    view = inflater.inflate(R.layout.fragment_library, container, false);
-    context = view.getContext();
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
-    setupRecyclerView();
-    setupAddShelfBtn();
-    ((MainActivity) getActivity()).updateHeaderFragment(getString(R.string.navigation_library));
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.VISIBLE);
+    mainActivity.setVisibilitySortBtn(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
 
-    setHasOptionsMenu(true);
-    selectedShelfItems = new ArrayList<ShelfItem>();
-
-    return view;
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_library));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_library_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
+  private void setupSortBtn() {
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
+    sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
+  private void setupFunctionsToolbar() {
+    requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyLibrary());
+  }
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.menu_backup_library:
-        
-        break;
+  private void checkEmptyLibrary() {
+    if (libraryModel.getCurrentLibraryList().isEmpty() || bookModel.getAllBooks().isEmpty()) {
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
+      alertDialogEmptyLib.setTitle(R.string.empty_library);
+      alertDialogEmptyLib.setMessage(R.string.empty_library_description);
 
-      case R.id.menu_rename_shelf:
-        if (selectedShelfItems.size() != 1) {
-          return true;
-        }
-        handleRenameShelf();
-        break;
+      alertDialogEmptyLib.setPositiveButton(R.string.ok,
+          (dialog, which) -> {
+        });
 
-      case R.id.menu_delete_shelf:
-        handleDeleteShelf();
-        break;
+      alertDialogEmptyLib.create().show();
 
-      case R.id.menu_help_library:
-        handleManualLibrary();
-        break;
-
-      default:
-        Toast.makeText(getContext(), "??? wurde geklickt", Toast.LENGTH_SHORT).show();
+    } else {
+      shareLibraryBibIntent();
     }
 
-    return super.onOptionsItemSelected(item);
   }
 
   private void handleManualLibrary() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.library_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, helpFragment,
-            LibraryKeys.FRAGMENT_HELP_VIEW)
-        .addToBackStack(null)
-        .commit();
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
-    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
-
-    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
-      renameShelf.setVisible(false);
-      deleteShelf.setVisible(false);
-    } else if (selectedShelfItems.size() != 1) {
-      renameShelf.setVisible(false);
-      deleteShelf.setVisible(true);
-    } else {
-      renameShelf.setVisible(true);
-      deleteShelf.setVisible(true);
-    }
-
+    helpFragment
+        .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
   private void handleDeleteShelf() {
     AlertDialog.Builder alertDeleteShelf = new AlertDialog.Builder(context);
-
     alertDeleteShelf.setCancelable(false);
-    alertDeleteShelf.setTitle(R.string.delete_shelf);
-    alertDeleteShelf.setMessage(R.string.delete_shelf_message);
+    setAlertMessage(alertDeleteShelf);
 
-    alertDeleteShelf.setNegativeButton(R.string.back, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-      }
-    });
+    if (selectedShelfItems.size() > 1) {
+      alertDeleteShelf.setTitle(R.string.delete_shelves);
+    } else {
+      alertDeleteShelf.setTitle(R.string.delete_shelf);
+    }
 
-    alertDeleteShelf.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        libraryModel.deleteShelves(selectedShelfItems);
-        adapter.notifyDataSetChanged();
-        updateEmptyView(libraryModel.getCurrentLibraryList());
-        Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
-        unselectLibraryItems();
-      }
+    alertDeleteShelf.setNegativeButton(R.string.cancel, (dialog, which) -> deselectLibraryItems());
+
+    alertDeleteShelf.setPositiveButton(R.string.delete, (dialog, which) -> {
+      performDeleteShelf();
+      deselectLibraryItems();
     });
 
     alertDeleteShelf.show();
+  }
+
+  private void setAlertMessage(AlertDialog.Builder alertDeleteShelf) {
+    alertDeleteShelf.setMessage(
+        getString(R.string.delete_shelf_message)
+            + convertShelfListToString(selectedShelfItems)
+            + getString(R.string.delete_counter_msg)
+            + getBooksToDeleteNumber(selectedShelfItems) + " "
+            + getString(R.string.and) + getNotesToDeleteNumber(selectedShelfItems) + " "
+            + getString(R.string.finally_delete) + " "
+            + getString(R.string.delete_warning));
+  }
+
+  private String convertShelfListToString(List<ShelfItem> shelfList) {
+    StringBuilder shelfs = new StringBuilder();
+
+    int counter = 1;
+    for (ShelfItem shelf : shelfList) {
+      shelfs.append(" \"").append(shelf.getName()).append("\"");
+
+      if (counter != shelfList.size()) {
+        shelfs.append(",");
+      }
+
+      shelfs.append(" ");
+      ++counter;
+    }
+
+    return shelfs.toString();
+  }
+
+  private String getBooksToDeleteNumber(List<ShelfItem> shelfList) {
+    int booksNumber = 0;
+    for (ShelfItem shelf : shelfList) {
+      booksNumber += shelf.getBookCount();
+    }
+
+    if (booksNumber == 1) {
+      return " " + getString(R.string.of_one) + " " + getString(R.string.book);
+    }
+
+    return " " + booksNumber + " " + getString(R.string.books) + "n";
+  }
+
+  private String getNotesToDeleteNumber(List<ShelfItem> shelfList) {
+    int notesNumber = 0;
+
+    for (ShelfItem shelf : shelfList) {
+      notesNumber += shelf.getNoteCount();
+    }
+
+    if (notesNumber == 1) {
+      return " " + getString(R.string.one) + " " + getString(R.string.note);
+    }
+
+    return " " + notesNumber + " " + getString(R.string.notes);
+  }
+
+  private void performDeleteShelf() {
+    final int shelvesNumber = selectedShelfItems.size();
+
+    libraryModel.deleteShelves(selectedShelfItems);
+    updateLibraryListView(libraryModel.getCurrentLibraryList());
+
+    if (shelvesNumber > 1) {
+      Toast.makeText(context, getString(R.string.deleted_shelves), Toast.LENGTH_SHORT).show();
+    } else {
+      Toast.makeText(context, getString(R.string.deleted_shelf), Toast.LENGTH_SHORT).show();
+    }
   }
 
   private Bundle createRenameShelfBundle() {
@@ -177,27 +189,31 @@ public class LibraryFragment extends Fragment
 
     bundle.putStringArray(LibraryKeys.SHELF_NAMES, getAllShelfNames());
     bundle.putString(LibraryKeys.SHELF_NAME, selectedShelfItems.get(0).getName());
+
+    Long currentShelfId = selectedShelfItems.get(0).getId();
+    bundle.putLong(LibraryKeys.SHELF_ID, currentShelfId);
+
     return bundle;
   }
 
   private void handleRenameShelf() {
-    LibraryRenameShelfFragment fragment =
-        new LibraryRenameShelfFragment(new LibraryRenameShelfFragment.RenameShelfLibraryListener() {
+    LibraryFormFragment libraryFormFragment =
+        new LibraryFormFragment(new LibraryFormFragment.ChangeShelfListener() {
           @Override
           public void onShelfRenamed(String shelfName) {
             libraryModel.renameShelf(selectedShelfItems.get(0), shelfName);
-            unselectLibraryItems();
             adapter.notifyDataSetChanged();
+            Toast.makeText(context, getString(R.string.renamed_shelf), Toast.LENGTH_SHORT).show();
           }
         });
 
-    fragment.setArguments(createRenameShelfBundle());
-    fragment
-        .show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_RENAME_SHELF);
+    libraryFormFragment.setArguments(createRenameShelfBundle());
+
+    showFragment(libraryFormFragment, LibraryKeys.FRAGMENT_LIBRARY_FORM);
   }
 
-  private void unselectLibraryItems() {
-    RecyclerView shelfListView = getView().findViewById(R.id.library_recycler_view);
+  private void deselectLibraryItems() {
+    SwipeableRecyclerView shelfListView = requireView().findViewById(R.id.library_recycler_view);
     for (int i = 0; i < shelfListView.getChildCount(); i++) {
       shelfListView.getChildAt(i).setSelected(false);
     }
@@ -205,29 +221,43 @@ public class LibraryFragment extends Fragment
     selectedShelfItems.clear();
   }
 
-  private void setupRecyclerView() {
-    libraryModel = new LibraryModel(getContext());
-    List<ShelfItem> libraryList = libraryModel.getLibraryList(null);
+  private void handleSortShelf() {
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
+        newSortCriteria -> {
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
+          sortLibraryList();
+        });
+    sortDialog.show();
+  }
 
-    RecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
+  private void sortLibraryList() {
+    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortTypeLut);
+    adapter.setLibraryList(libraryList);
+    adapter.notifyDataSetChanged();
+  }
+
+  private void setupRecyclerView() {
+    libraryModel = new LibraryModel(requireContext());
+    List<ShelfItem> libraryList = libraryModel
+        .getSortedLibraryList(sortTypeLut, libraryModel.getLibraryList(null));
+
+    SwipeableRecyclerView libraryRecyclerView = view.findViewById(R.id.library_recycler_view);
     adapter = new LibraryRecyclerViewAdapter(libraryList, this, context);
     libraryRecyclerView.setAdapter(adapter);
+    libraryRecyclerView.setListener(this);
 
     updateEmptyView(libraryList);
   }
 
   private void setupAddShelfBtn() {
-    FloatingActionButton addShelfBtn = view.findViewById(R.id.btn_add_shelf);
+    FloatingActionButton addShelfBtn = view.findViewById(R.id.add_btn);
     createAddShelfListener(addShelfBtn);
   }
 
   private void createAddShelfListener(FloatingActionButton addShelfBtn) {
-    addShelfBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleAddShelf();
-      }
-    });
+    addShelfBtn.setOnClickListener(v -> handleAddShelf());
   }
 
   private Bundle createAddShelfBundle() {
@@ -256,27 +286,19 @@ public class LibraryFragment extends Fragment
   }
 
   private void handleAddShelf() {
-    LibraryAddShelfFragment fragment =
-        new LibraryAddShelfFragment(new LibraryAddShelfFragment.AddShelfLibraryListener() {
+    LibraryFormFragment libraryFormFragment =
+        new LibraryFormFragment(new LibraryFormFragment.ChangeShelfListener() {
           @Override
-          public void onShelfAdded(String name, Long shelfId) {
+          public void onShelfAdded(String name) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
-            unselectLibraryItems();
+            Toast.makeText(context, getString(R.string.shelf_added), Toast.LENGTH_SHORT).show();
           }
         });
 
-    fragment.setArguments(createAddShelfBundle());
-    fragment.show(getActivity().getSupportFragmentManager(), LibraryKeys.DIALOG_FRAGMENT_ADD_NAME);
-  }
+    libraryFormFragment.setArguments(createAddShelfBundle());
 
-  private void closeAddShelfFragment() {
-    LibraryAddShelfFragment fragment =
-        (LibraryAddShelfFragment) getActivity().getSupportFragmentManager()
-            .findFragmentById(R.id.fragment_container_add_shelf);
-    if (fragment != null) {
-      fragment.closeFragment();
-    }
+    showFragment(libraryFormFragment, LibraryKeys.FRAGMENT_LIBRARY_FORM);
   }
 
   private void updateEmptyView(List<ShelfItem> libraryList) {
@@ -290,19 +312,16 @@ public class LibraryFragment extends Fragment
   }
 
   private void updateLibraryListView(List<ShelfItem> libraryList) {
+    libraryList = libraryModel.getSortedLibraryList(sortTypeLut, libraryList);
     adapter.notifyDataSetChanged();
     updateEmptyView(libraryList);
   }
 
   private void updateBookListView(LibraryItem libraryItem) {
-    BookFragment fragment = new BookFragment();
-    fragment.setArguments(createShelfBundle(libraryItem));
+    BookFragment bookFragment = new BookFragment();
+    bookFragment.setArguments(createShelfBundle(libraryItem));
 
-    getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.fragment_container_view, fragment)
-        .setReorderingAllowed(true)
-        .addToBackStack(null)
-        .commit();
+    showFragment(bookFragment);
   }
 
   private Bundle createShelfBundle(LibraryItem libraryItem) {
@@ -317,19 +336,118 @@ public class LibraryFragment extends Fragment
     return bundle;
   }
 
-  @Override
-  public void onItemClicked(int position) {
-    closeAddShelfFragment();
+  private void shareLibraryBibIntent() {
+    String fileName = "library_export_BibBuddy";
+    ShareBibTex shareBibTex = new ShareBibTex(fileName);
 
+    NoteModel noteModel = new NoteModel(requireContext());
+    String content = shareBibTex.getBibDataLibrary(libraryModel, bookModel, noteModel);
+    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, content);
+
+    Intent shareLibraryIntent =
+        ShareCompat.IntentBuilder.from(requireActivity())
+            .setStream(contentUri)
+            .setType("text/*")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+    startActivity(Intent.createChooser(shareLibraryIntent, "SEND"));
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (selectedShelfItems.isEmpty()) {
+      closeFragment();
+    } else {
+      deselectLibraryItems();
+    }
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_library, container, false);
+    context = view.getContext();
+
+    setupMainActivity();
+    setupRecyclerView();
+
+    setupFunctionsToolbar();
+    setupSortBtn();
+    setupAddShelfBtn();
+
+    selectedShelfItems.clear();
+    bookModel = new BookModel(requireContext(), libraryModel.getShelfId());
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_library_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_rename_shelf:
+        handleRenameShelf();
+        break;
+
+      case R.id.menu_delete_shelf:
+        handleDeleteShelf();
+        break;
+
+      case R.id.menu_help_library:
+        handleManualLibrary();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
+    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
+
+    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(false);
+    } else if (selectedShelfItems.size() != 1) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(true);
+    } else {
+      renameShelf.setVisible(true);
+      deleteShelf.setVisible(true);
+    }
+
+  }
+
+  @Override
+  public void onShelfClicked(int position) {
     LibraryItem libraryItem = libraryModel.getSelectedLibraryItem(position);
-    ((MainActivity) getActivity()).updateHeaderFragment(libraryItem.getName());
+    ((MainActivity) requireActivity()).updateHeaderFragment(libraryItem.getName());
     updateBookListView(libraryItem);
   }
 
   @Override
-  public void onLongItemClicked(int position, ShelfItem shelfItem, View v) {
-    closeAddShelfFragment();
-
+  public void onShelfLongClicked(ShelfItem shelfItem, View v) {
     if (v.isSelected()) {
       v.setSelected(false);
       selectedShelfItems.remove(shelfItem);
@@ -338,4 +456,20 @@ public class LibraryFragment extends Fragment
       selectedShelfItems.add(shelfItem);
     }
   }
+
+  @Override
+  public void onSwipedLeft(int position) {
+    deselectLibraryItems();
+    selectedShelfItems.add(adapter.getLibraryItem(position));
+    handleDeleteShelf();
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onSwipedRight(int position) {
+    selectedShelfItems.add(adapter.getLibraryItem(position));
+    handleRenameShelf();
+    adapter.notifyDataSetChanged();
+  }
+
 }

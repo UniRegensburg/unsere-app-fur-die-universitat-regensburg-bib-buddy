@@ -5,55 +5,132 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * BookDao contains all sql queries related to Book.
  *
- * @author Sarah Kurek, Claudia Schönherr
+ * @author Sarah Kurek, Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
-public class BookDao implements InterfaceBookDao {
+public class BookDao {
+
+  private static final String TAG = BookDao.class.getSimpleName();
+
   private final DatabaseHelper dbHelper;
   private final AuthorDao authorDao;
 
+  private Book createBookData(Cursor cursor) {
+
+    return new Book(
+        Long.parseLong(cursor.getString(0)),
+        cursor.getString(1),
+        cursor.getString(2),
+        cursor.getString(3),
+        Integer.parseInt(cursor.getString(4)),
+        cursor.getString(5),
+        cursor.getString(6),
+        cursor.getString(7),
+        cursor.getString(8),
+        Long.parseLong(cursor.getString(9)),
+        Long.parseLong(cursor.getString(10))
+    );
+  }
+
+  private ContentValues createBookContentValues(Book book) {
+    ContentValues bookContentValues = new ContentValues();
+
+    bookContentValues.put(DatabaseHelper.ISBN, book.getIsbn());
+    bookContentValues.put(DatabaseHelper.TITLE, book.getTitle());
+    bookContentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
+    bookContentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
+    bookContentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
+    bookContentValues.put(DatabaseHelper.VOLUME, book.getVolume());
+    bookContentValues.put(DatabaseHelper.EDITION, book.getEdition());
+    bookContentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
+    bookContentValues.put(DatabaseHelper.MOD_DATE, new Date().getTime());
+
+    return bookContentValues;
+  }
+
+  private void linkBookWithShelf(Long shelfId, Long bookId) {
+
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(DatabaseHelper.BOOK_ID, bookId);
+      contentValues.put(DatabaseHelper.SHELF_ID, shelfId);
+      db.insert(DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK, null, contentValues);
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
+    }
+  }
+
+  private void linkBookWithAuthors(Long bookId, List<Long> authorIds) {
+
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+      List<Long> existingAuthorIds = getAllAuthorIdsForBook(bookId);
+      existingAuthorIds.stream()
+          .filter(id -> !authorIds.contains(id))
+          .forEach(id -> deleteAuthorBookLink(db, bookId, id));
+
+      authorIds.stream()
+          .filter(id -> !existingAuthorIds.contains(id))
+          .forEach(id -> insertAuthorBookLink(db, bookId, id));
+    } catch (SQLException ex) {
+      Log.e(TAG, ex.toString(), ex);
+    }
+  }
+
+  private void insertAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
+    try {
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(DatabaseHelper.AUTHOR_ID, authorId);
+      contentValues.put(DatabaseHelper.BOOK_ID, bookId);
+      db.insert(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, null, contentValues);
+    } catch (Exception ex) {
+      Log.e(TAG, ex.toString(), ex);
+    }
+  }
+
+  private void deleteAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
+    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.BOOK_ID + " = ?"
+                  + " AND " + DatabaseHelper.AUTHOR_ID + " = ?",
+              new String[] {bookId.toString(), authorId.toString()});
+  }
 
   public BookDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
     this.authorDao = new AuthorDao(dbHelper);
   }
 
-  @Override
-  public boolean create(Book book) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    try {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
-      contentValues.put(DatabaseHelper.TITLE, book.getTitle());
-      contentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
-      contentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
-      contentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
-      contentValues.put(DatabaseHelper.VOLUME, book.getVolume());
-      contentValues.put(DatabaseHelper.EDITION, book.getEdition());
-      contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
+  /**
+   * Save a book in the database.
+   *
+   * @param book that should be saved.
+   */
+  public void create(Book book) {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+      Long currentTime = new Date().getTime();
+
+      ContentValues contentValues = createBookContentValues(book);
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
-      contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-      long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
+
+      Long id = db.insert(DatabaseHelper.TABLE_NAME_BOOK, null, contentValues);
       book.setId(id);
+
     } catch (SQLiteException ex) {
-      return false;
-    } finally {
-      db.close();
+      Log.e(TAG, ex.toString(), ex);
     }
-    return true;
+
   }
 
   /**
-   * Method to create a new book in the database, link it with a shelf and add a author to it.
+   * Creates a new book in the database, link it with a shelf and add a author to it.
    *
-   * @param book       Instance of book
+   * @param book       instance of book
    * @param authorList list of authors
    * @param shelfId    current shelfId
    */
@@ -67,13 +144,12 @@ public class BookDao implements InterfaceBookDao {
     }
 
     authorDao.createOrUpdateAuthors(authorList);
-    List<Long> authorIds = authorList.stream().map(a -> a.getId()).collect(Collectors.toList());
+    List<Long> authorIds = authorList.stream().map(Author::getId).collect(Collectors.toList());
 
     linkBookWithAuthors(bookId, authorIds);
   }
 
-  // get a single book entry by id
-  @Override
+  // Gets a single book entry by id
   public Book findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -85,77 +161,17 @@ public class BookDao implements InterfaceBookDao {
                                  DatabaseHelper.VOLUME, DatabaseHelper.EDITION,
                                  DatabaseHelper.ADD_INFOS,
                                  DatabaseHelper.CREATE_DATE,
-                                 DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + "=?",
+                                 DatabaseHelper.MOD_DATE}, DatabaseHelper._ID + " = ?",
                              new String[] {String.valueOf(id)}, null, null, null, null);
 
     Book book = null;
     if (cursor.moveToFirst()) {
-      book = new Book(
-          Long.parseLong(cursor.getString(0)), // Id
-          cursor.getString(1), // Isbn
-          cursor.getString(2), // Title
-          cursor.getString(3), // Subtitle
-          Integer.parseInt(cursor.getString(4)), // Pub year
-          cursor.getString(5), // Publisher
-          cursor.getString(6), // Volume
-          cursor.getString(7), // Edition
-          cursor.getString(8), // Add Infos
-          Integer.parseInt(cursor.getString(9)), // Create date
-          Integer.parseInt(cursor.getString(10)) // Mod date
-      );
+      book = createBookData(cursor);
     }
 
     cursor.close();
 
     return book;
-  }
-
-
-  // get all books in a list view
-  @Override
-  public List<Book> findAll() {
-    List<Book> bookList = new ArrayList<Book>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR;
-
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    Cursor cursor = db.rawQuery(selectQuery, null);
-
-    // looping through all rows and adding to list
-    if (cursor.moveToFirst()) {
-      do {
-        Book book = new Book();
-
-        book.setId(Long.parseLong(cursor.getString(0)));
-        book.setIsbn(cursor.getString(1));
-        book.setTitle(cursor.getString(2));
-        book.setSubtitle(cursor.getString(3));
-        book.setPubYear(Integer.parseInt(cursor.getString(4)));
-        book.setPublisher(cursor.getString(5));
-        book.setVolume(cursor.getString(6));
-        book.setEdition(cursor.getString(7));
-        book.setAddInfo(cursor.getString(8));
-        book.setCreateDate(Integer.parseInt(cursor.getString(9)));
-        book.setModDate(Integer.parseInt(cursor.getString(10)));
-
-        bookList.add(book);
-
-      } while (cursor.moveToNext());
-      cursor.close();
-    }
-
-    return bookList;
-  }
-
-
-  // delete single book entry
-  @Override
-  @Deprecated
-  public void delete(Long id) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    db.delete(DatabaseHelper.TABLE_NAME_BOOK, DatabaseHelper._ID + " = ?",
-              new String[] {String.valueOf(id)});
-
-    db.close();
   }
 
   /**
@@ -178,7 +194,7 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
-   * Method to find the last added id.
+   * Finds the last added id.
    *
    * @return last added bookId
    */
@@ -190,101 +206,52 @@ public class BookDao implements InterfaceBookDao {
     Cursor cursor = db.rawQuery(selectQuery, null);
 
     Long id = null;
-    if (cursor != null) {
-      cursor.moveToFirst();
+    if (cursor.moveToFirst()) {
       id = cursor.getLong(0); // Id
-      cursor.close();
     }
+
+    cursor.close();
 
     return id;
   }
 
-
-  private void linkBookWithShelf(Long shelfId, Long bookId) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    try {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(DatabaseHelper.BOOK_ID, bookId);
-      contentValues.put(DatabaseHelper.SHELF_ID, shelfId);
-      db.insert(DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK, null, contentValues);
-    } finally {
-      db.close();
-    }
-  }
-
-  private void linkBookWithAuthors(Long bookId, List<Long> authorIds) {
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-    try {
-      List<Long> existingAuthorIds = getAllAuthorIdsForBook(bookId);
-      existingAuthorIds.stream()
-          .filter(id -> !authorIds.contains(id))
-          .forEach(id -> deleteAuthorBookLink(db, bookId, id));
-
-      authorIds.stream()
-          .filter(id -> !existingAuthorIds.contains(id))
-          .forEach(id -> insertAuthorBookLink(db, bookId, id));
-    } catch (SQLException ex) {
-      // TODO error handling
-      ex.printStackTrace();
-    } finally {
-      db.close();
-    }
-  }
-
-  private void insertAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
-    try {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(DatabaseHelper.AUTHOR_ID, authorId);
-      contentValues.put(DatabaseHelper.BOOK_ID, bookId);
-      db.insert(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, null, contentValues);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void deleteAuthorBookLink(SQLiteDatabase db, Long bookId, Long authorId) {
-    db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.BOOK_ID + " = ?"
-            + " AND " + DatabaseHelper.AUTHOR_ID + " = ?",
-        new String[] {bookId.toString(), authorId.toString()});
-  }
-
   /**
-   * Method to get all bookIds for a specific Shelf with its shelfId.
+   * Gets all bookIds for a specific Shelf with its shelfId.
    *
    * @param shelfId current shelfId
    * @return all bookIds for current shelf
    */
   public List<Long> getAllBookIdsForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    List<Long> bookIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
-        + DatabaseHelper.SHELF_ID + "=" + shelfId;
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
+        + DatabaseHelper.SHELF_ID + " = ?";
 
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
+
+    List<Long> bookIds = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         // Id, ShelfId, BookId
         bookIds.add(Long.parseLong(cursor.getString(2)));
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return bookIds;
   }
 
 
   /**
-   * Method to get all Books for a specific Shelf with a list of all bookIds.
+   * Gets all Books for a specific Shelf with a list of all bookIds.
    *
    * @param shelfId current shelfId
    * @return list of all books for current shelf
    */
   public List<Book> getAllBooksForShelf(Long shelfId) {
     List<Long> bookIds = getAllBookIdsForShelf(shelfId);
-    List<Book> bookList = new ArrayList<Book>();
+    List<Book> bookList = new ArrayList<>();
 
     for (Long id : bookIds) {
       bookList.add(findById(id));
@@ -294,40 +261,43 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
-   * Method to get all Books for a specific Shelf with a list of all bookIds.
+   * Gets all Books for a specific Shelf with a list of all bookIds.
    *
    * @param bookId id of the book
    * @return list of all authors of a book
    */
   public List<Long> getAllAuthorIdsForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    List<Long> authorIds = new ArrayList<Long>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
-        + DatabaseHelper.BOOK_ID + "=" + bookId;
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
+        + DatabaseHelper.BOOK_ID + " = ?";
 
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
+
+    List<Long> authorIds = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         // Id, AuthorId, BookId
         authorIds.add(Long.parseLong(cursor.getString(1)));
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return authorIds;
   }
 
 
   /**
-   * Method to get all Authors for a specific Book with its bookId.
+   * Gets all Authors for a specific Book with its bookId.
    *
    * @param bookId current bookId
    * @return list of all authors for the current book
    */
   public List<Author> getAllAuthorsForBook(Long bookId) {
-    List<Author> authorList = new ArrayList<Author>();
+    List<Author> authorList = new ArrayList<>();
     List<Long> authorIds = getAllAuthorIdsForBook(bookId);
+
     for (Long id : authorIds) {
       authorList.add(authorDao.findById(id));
     }
@@ -336,58 +306,74 @@ public class BookDao implements InterfaceBookDao {
   }
 
   /**
-   * Method to count all Notes for a specific Book.
+   * Counts all Notes for a specific Book.
    *
    * @param bookId current bookId
    * @return count of all notes that belong to the current book
    */
   public int countAllNotesForBook(Long bookId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    int noteCount = 0;
 
     String selectQuery =
         "SELECT COUNT(" + DatabaseHelper._ID + ") FROM " + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK
-            + " WHERE " + DatabaseHelper.BOOK_ID + "=" + bookId;
+            + " WHERE " + DatabaseHelper.BOOK_ID + " = ?";
 
-    Cursor cursor = db.rawQuery(selectQuery, null);
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
 
+    int noteCount = 0;
     if (cursor.moveToFirst()) {
       do {
         noteCount = Integer.parseInt(cursor.getString(0));
       } while (cursor.moveToNext());
-      cursor.close();
     }
+
+    cursor.close();
 
     return noteCount;
   }
 
   /**
-   * Method to update an existing book.
+   * Finds all books which contain searchInput.
+   *
+   * @param searchInput searchInput of the user
+   * @return returns a list of books which have the searchInput in the name
+   */
+  public List<Book> findBooksByTitle(String searchInput) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_BOOK + " WHERE "
+        + DatabaseHelper.TITLE + " LIKE '%" + searchInput + "%'";
+
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    List<Book> bookList = new ArrayList<>();
+    if (cursor.moveToFirst()) {
+      do {
+        bookList.add(createBookData(cursor));
+
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+
+    return bookList;
+  }
+
+  /**
+   * Updates an existing book.
    *
    * @param book book data for the database and bookList
    */
   public void updateBook(Book book, List<Author> authorList) {
-    long currentTime = System.currentTimeMillis() / 1_000L;
-    ContentValues contentValues = new ContentValues();
 
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
+    ContentValues contentValues = createBookContentValues(book);
 
-    contentValues.put(DatabaseHelper.ISBN, book.getIsbn());
-    contentValues.put(DatabaseHelper.TITLE, book.getTitle());
-    contentValues.put(DatabaseHelper.SUBTITLE, book.getSubtitle());
-    contentValues.put(DatabaseHelper.PUB_YEAR, book.getPubYear());
-    contentValues.put(DatabaseHelper.PUBLISHER, book.getPublisher());
-    contentValues.put(DatabaseHelper.VOLUME, book.getVolume());
-    contentValues.put(DatabaseHelper.EDITION, book.getEdition());
-    contentValues.put(DatabaseHelper.ADD_INFOS, book.getAddInfo());
-    contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
-
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       dbHelper.getWritableDatabase().update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
-          DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(book.getId())});
-    } finally {
-      db.close();
+                                            DatabaseHelper._ID + " = ?",
+                                            new String[] {String.valueOf(book.getId())});
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
     }
 
     if (authorList == null || authorList.isEmpty()) {
@@ -395,10 +381,139 @@ public class BookDao implements InterfaceBookDao {
     }
 
     authorDao.createOrUpdateAuthors(authorList);
-    List<Long> authorIds = authorList.stream().map(a -> a.getId()).collect(Collectors.toList());
+    List<Long> authorIds = authorList.stream().map(Author::getId).collect(Collectors.toList());
     linkBookWithAuthors(book.getId(), authorIds);
   }
 
+  /**
+   * Finds all books in the database.
+   *
+   * @return bookList all books as a list
+   */
+  public List<Book> findAllBooks() {
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+    String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_BOOK;
 
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    List<Book> bookList = new ArrayList<>();
+    if (cursor.moveToFirst()) {
+      do {
+        bookList.add(createBookData(cursor));
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+
+    return bookList;
+  }
+
+  /**
+   * Finds the shelfId of a book in the database.
+   *
+   * @param id id of the book
+   * @return the shelfId of the book
+   */
+  public Long findShelfIdByBook(Long id) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.SHELF_ID + " FROM " + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK
+            + " WHERE " + DatabaseHelper.BOOK_ID + " = ? LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(id)});
+
+    //noinspection WrapperTypeMayBePrimitive
+    Long shelfId = 0L; // Because all other ids are Long
+    if (cursor.moveToFirst()) {
+      shelfId = Long.parseLong(cursor.getString(0));
+    }
+
+    cursor.close();
+
+    return shelfId;
+  }
+
+  /**
+   * Finds the shelf name of a book in the database.
+   *
+   * @param id of the book
+   * @return the shelf name of the book
+   */
+  public String findShelfNameByBook(Long id) {
+    Long shelfId = findShelfIdByBook(id);
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.NAME + " FROM " + DatabaseHelper.TABLE_NAME_SHELF
+            + " WHERE " + DatabaseHelper._ID + " = ? LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
+
+    String shelfName = "";
+    if (cursor.moveToFirst()) {
+      shelfName = cursor.getString(0);
+    }
+
+    cursor.close();
+
+    return shelfName;
+  }
+
+  /**
+   * Finds an amount of last modified books.
+   *
+   * @param amount of books to retrieve
+   * @return a list of the retrieved books
+   */
+  public List<Book> findModifiedBooks(int amount) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
+        + DatabaseHelper.TABLE_NAME_BOOK + " ORDER BY " + DatabaseHelper.MOD_DATE + " DESC LIMIT ?";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(amount)});
+
+    List<Long> bookIds = new ArrayList<>();
+    if (cursor.moveToFirst()) {
+      do {
+        bookIds.add(Long.parseLong(cursor.getString(0)));
+      } while (cursor.moveToNext());
+    }
+
+    cursor.close();
+
+    List<Book> bookList = new ArrayList<>();
+    for (Long id : bookIds) {
+      bookList.add(findById(id));
+    }
+
+    return bookList;
+  }
+
+  /**
+   * Finds the bookTitle by the bookId.
+   *
+   * @param bookId of the book to retrieve
+   * @return the title of the retrieved book
+   */
+  public String findBookTitleByBookId(Long bookId) {
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery =
+        "SELECT " + DatabaseHelper.TITLE + " FROM " + DatabaseHelper.TABLE_NAME_BOOK
+            + " WHERE " + DatabaseHelper._ID + " = ? LIMIT 1";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(bookId)});
+
+    String bookName = "";
+    if (cursor.moveToFirst()) {
+      bookName = cursor.getString(0);
+    }
+
+    cursor.close();
+
+    return bookName;
+  }
 }

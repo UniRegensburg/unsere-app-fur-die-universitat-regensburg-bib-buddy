@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_notes"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:forceHasOverlappingRendering="true"
+    android:weightSum="3">
+
+    <com.skyfishjy.library.RippleBackground
+        android:id="@+id/ripple_animation"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:alpha="1"
+        android:scaleType="fitCenter"
+        app:rb_color="@color/flirt_dark"
+        app:rb_duration="2200"
+        app:rb_radius="14dp"
+        app:rb_rippleAmount="5"
+        app:rb_scale="7"
+        app:rb_strokeWidth="6dp"
+        app:rb_type="fillRipple">
+
+        <ImageButton
+            android:id="@+id/record_btn"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_button"
+            android:backgroundTint="@color/white"
+            android:contentDescription="@string/microphone"
+            android:elevation="5dp"
+            android:padding="25dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/microphone" />
+
+    </com.skyfishjy.library.RippleBackground>
+
+</RelativeLayout>
+

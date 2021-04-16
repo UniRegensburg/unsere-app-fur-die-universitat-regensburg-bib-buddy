@@ -2,43 +2,27 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_text_note_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="70dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageButton
+        android:id="@+id/formatArrow"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="end"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginVertical="10dp"
-        android:translationZ="11dp"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/formatIndicator"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@null"
-            android:contentDescription="@string/format_options"
-            android:scaleType="fitCenter"
-            android:src="@drawable/text_format"
-            android:tint="@color/true_black" />
-
-        <ImageButton
-            android:id="@+id/formatArrow"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@null"
-            android:contentDescription="@string/format_arrow"
-            android:scaleType="fitCenter"
-            android:src="@drawable/arrow_down"
-            android:tint="@color/true_black" />
-
-    </LinearLayout>
+        android:layout_marginTop="16dp"
+        android:background="@null"
+        android:contentDescription="@string/format_options"
+        android:orientation="vertical"
+        android:scaleType="fitCenter"
+        android:src="@drawable/format_down"
+        android:tint="@color/black"
+        android:translationZ="11dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,10 +33,11 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:scrollbars="horizontal"
             android:translationZ="15dp"
             android:visibility="gone"
-            android:background="@color/flirt_dark">
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -63,113 +48,134 @@
                     android:id="@+id/action_undo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/undo" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/undo"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_redo"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/redo" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/redo"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_bold"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/bold" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/bold"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_italic"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/italic" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/italic"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_strikeThrough"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/strike_through" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/strike_through"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_underline"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/underline" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/underline"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_insert_bullets"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/bullets" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/bullets"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_quote"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/quote" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/quote"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_alignLeft"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_left" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/align_left"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_alignRight"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_right" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/align_right"
+                    android:tint="@color/black" />
 
                 <ImageButton
                     android:id="@+id/action_alignCenter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@color/editor_toolbar_selector"
+                    android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_center" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/align_center"
+                    android:tint="@color/black" />
 
             </LinearLayout>
 
         </HorizontalScrollView>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginTop="20dp">
-
-            <de.bibbuddy.RichTextEditor
-                android:id="@+id/editor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                app:bulletColor="@color/true_black"
-                app:bulletGapWidth="3dp"
-                app:bulletRadius="3dp"
-                app:layout_constrainedHeight="true" />
-
-        </ScrollView>
-
     </RelativeLayout>
 
-</LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="20dp">
 
+        <de.bibbuddy.RichTextEditor
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            app:bulletColor="@color/black"
+            app:bulletGapWidth="3dp"
+            app:bulletRadius="3dp"
+            app:layout_constrainedHeight="true" />
+
+    </ScrollView>
+
+</LinearLayout>

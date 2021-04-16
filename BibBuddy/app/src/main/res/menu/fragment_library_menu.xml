@@ -10,11 +10,11 @@
         android:title="@string/rename" />
 
     <item
-        android:id="@+id/menu_backup_library"
-        android:title="@string/backup" />
-
-    <item
         android:id="@+id/menu_help_library"
         android:title="@string/help" />
+
+    <item
+            android:id="@+id/menu_imprint"
+            android:title="@string/header_imprint" />
 
 </menu>
