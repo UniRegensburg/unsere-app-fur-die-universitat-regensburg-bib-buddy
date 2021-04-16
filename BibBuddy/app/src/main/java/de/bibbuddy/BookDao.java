@@ -106,6 +106,11 @@ public class BookDao {
     this.authorDao = new AuthorDao(dbHelper);
   }
 
+  /**
+   * Save a book in the database.
+   *
+   * @param book that should be saved.
+   */
   public void create(Book book) {
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       Long currentTime = new Date().getTime();

@@ -157,11 +157,11 @@ public class SearchFragment extends BackStackFragment
         getString(R.string.filter_text_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-                                             (dialog, choice, isChecked) -> {
-                                               filterCriteria[choice] = isChecked;
-                                               ((MainActivity) requireActivity())
+      (dialog, choice, isChecked) -> {
+        filterCriteria[choice] = isChecked;
+        ((MainActivity) requireActivity())
                                                    .setFilterCriteria(choice, isChecked);
-                                             });
+      });
 
     selectFilterCriteria.setNegativeButton(R.string.ok, (dialog, choice) -> {
       if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {

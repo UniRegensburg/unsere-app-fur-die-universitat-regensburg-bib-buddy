@@ -165,19 +165,19 @@ public class AuthorFragment extends BackStackFragment
   private void handleEditAuthor(Author author) {
     AuthorFormFragment authorFormFragment
         = new AuthorFormFragment(author,
-                                 (author1, isNew) -> {
-                                   if (!isNew) {
-                                     authorList.remove(author1.getCache());
-                                   }
+            (author1, isNew) -> {
+              if (!isNew) {
+                authorList.remove(author1.getCache());
+              }
 
-                                   authorList.add(author1);
-                                   adapter.notifyDataSetChanged();
+              authorList.add(author1);
+              adapter.notifyDataSetChanged();
 
-                                   Toast.makeText(requireContext(),
+              Toast.makeText(requireContext(),
                                                   getString(R.string.changed_author),
                                                   Toast.LENGTH_SHORT)
                                        .show();
-                                 });
+            });
 
     showFragment(authorFormFragment);
   }
