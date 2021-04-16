@@ -28,31 +28,6 @@ public class LibraryFormFragment extends BackStackFragment {
   private int redColor;
   private int greenColor;
 
-  public LibraryFormFragment(ChangeShelfListener listener) {
-    this.listener = listener;
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    view = inflater.inflate(R.layout.fragment_library_form, container, false);
-
-    Bundle bundle = this.getArguments();
-    assert bundle != null;
-    setupMembersFromBundle(bundle);
-
-    setupMainActivity();
-
-    setupUpdateShelfBtnListener();
-
-    redColor = getResources().getColor(R.color.red, null);
-    greenColor = getResources().getColor(R.color.green, null);
-
-    return view;
-  }
-
   private void setupMembersFromBundle(Bundle bundle) {
     shelfNames = bundle.getStringArray(LibraryKeys.SHELF_NAMES);
     oldShelfName = bundle.getString(LibraryKeys.SHELF_NAME, "");
@@ -111,6 +86,31 @@ public class LibraryFormFragment extends BackStackFragment {
     }
 
     closeFragment();
+  }
+
+  public LibraryFormFragment(ChangeShelfListener listener) {
+    this.listener = listener;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_library_form, container, false);
+
+    Bundle bundle = this.getArguments();
+    assert bundle != null;
+    setupMembersFromBundle(bundle);
+
+    setupMainActivity();
+
+    setupUpdateShelfBtnListener();
+
+    redColor = getResources().getColor(R.color.red, null);
+    greenColor = getResources().getColor(R.color.green, null);
+
+    return view;
   }
 
   public interface ChangeShelfListener {

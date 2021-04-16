@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -39,26 +40,6 @@ public class SearchFragment extends BackStackFragment
   private SortTypeLut sortTypeLut;
   private boolean[] filterCriteria;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    view = inflater.inflate(R.layout.fragment_search, container, false);
-    context = view.getContext();
-
-    setupMainActivity();
-
-    setupSearchInput();
-    setupRecyclerView();
-    setupSortBtn();
-    setupFilterBtn();
-
-    setHasOptionsMenu(true);
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -80,31 +61,6 @@ public class SearchFragment extends BackStackFragment
   private void setupFilterBtn() {
     ImageButton filterBtn = view.findViewById(R.id.filter_btn);
     filterBtn.setOnClickListener(v -> handleSearchFilter());
-  }
-
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_search_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-
-      case R.id.menu_search_help:
-        handleHelp();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   private void setupRecyclerView() {
@@ -240,25 +196,6 @@ public class SearchFragment extends BackStackFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
-
-  @Override
-  public void onItemClicked(int position) {
-    SearchItem searchItem = searchModel.getSelectedSearchItem(position);
-
-    ((MainActivity) requireActivity()).updateHeaderFragment(searchItem.getName());
-
-    SearchItemType searchItemType = searchItem.getItemType();
-
-    if (searchItemType == SearchItemType.SEARCH_SHELF) {
-      openShelf(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
-      openBook(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
-      openTextNote(searchItem);
-    }
-
-  }
-
   private Bundle createShelfBundle(SearchItem searchItem) {
     Bundle bundle = new Bundle();
 
@@ -298,6 +235,7 @@ public class SearchFragment extends BackStackFragment
 
     Bundle bundle = new Bundle();
     bundle.putLong(LibraryKeys.BOOK_ID, searchModel.getBookIdByNoteId(noteId));
+    bundle.putString(LibraryKeys.BOOK_TITLE, searchModel.getBookTitleByBookId(noteId));
     bundle.putLong(LibraryKeys.NOTE_ID, noteId);
 
     return bundle;
@@ -308,6 +246,79 @@ public class SearchFragment extends BackStackFragment
     textNoteEditorFragment.setArguments(createNoteBundle(searchItem));
 
     showFragment(textNoteEditorFragment);
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_search, container, false);
+    context = view.getContext();
+
+    setupMainActivity();
+
+    setupSearchInput();
+    setupRecyclerView();
+    setupSortBtn();
+    setupFilterBtn();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_search_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+
+      case R.id.menu_search_help:
+        handleHelp();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onItemClicked(int position) {
+    SearchItem searchItem = searchModel.getSelectedSearchItem(position);
+
+    ((MainActivity) requireActivity()).updateHeaderFragment(searchItem.getName());
+
+    SearchTypeLut searchTypeLut = searchItem.getItemType();
+
+    switch (searchTypeLut) {
+      case SEARCH_SHELF:
+        openShelf(searchItem);
+        break;
+
+      case SEARCH_BOOK:
+        openBook(searchItem);
+        break;
+
+      case SEARCH_TEXT_NOTE:
+        openTextNote(searchItem);
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
   }
 
 }

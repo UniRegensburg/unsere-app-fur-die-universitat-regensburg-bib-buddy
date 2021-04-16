@@ -27,6 +27,14 @@ public class BookRecyclerViewAdapter
   private List<BookItem> bookList;
   private ViewGroup parent;
 
+  private String getNoteString(int noteCount) {
+    if (noteCount == 1) {
+      return noteCount + " " + context.getString(R.string.note);
+    }
+
+    return noteCount + " " + context.getString(R.string.navigation_notes);
+  }
+
   /**
    * Constructor of the BookRecyclerViewAdapter.
    *
@@ -53,14 +61,6 @@ public class BookRecyclerViewAdapter
     return new BookViewHolder(
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.list_view_item_book, parent, false));
-  }
-
-  private String getNoteString(int noteCount) {
-    if (noteCount == 1) {
-      return noteCount + " " + context.getString(R.string.note);
-    }
-
-    return noteCount + " " + context.getString(R.string.navigation_notes);
   }
 
   @Override

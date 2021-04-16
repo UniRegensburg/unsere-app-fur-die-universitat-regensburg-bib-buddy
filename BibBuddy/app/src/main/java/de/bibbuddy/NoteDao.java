@@ -22,6 +22,36 @@ public class NoteDao implements InterfaceNoteDao {
 
   private final DatabaseHelper dbHelper;
 
+  private Note createNoteData(Cursor cursor) {
+
+    return new Note(
+        Long.parseLong(cursor.getString(0)), // Id
+        cursor.getString(1), // Name
+        NoteTypeLut.valueOf(Integer.parseInt(cursor.getString(2))), // Type
+        cursor.getString(3), // Text
+        Long.parseLong(cursor.getString(4)), // Create date
+        Long.parseLong(cursor.getString(5)), // Mod date
+        cursor.getLong(6) // Note file id
+    );
+  }
+
+  private void updateBookModified(Long bookId) {
+
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
+
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(DatabaseHelper.MOD_DATE, new Date().getTime());
+
+      db.update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
+                DatabaseHelper._ID + " = ?",
+                new String[] {String.valueOf(bookId)});
+
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
+    }
+
+  }
+
   public NoteDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
@@ -275,19 +305,6 @@ public class NoteDao implements InterfaceNoteDao {
     return noteText;
   }
 
-  private Note createNoteData(Cursor cursor) {
-
-    return new Note(
-        Long.parseLong(cursor.getString(0)), // Id
-        cursor.getString(1), // Name
-        NoteTypeLut.valueOf(Integer.parseInt(cursor.getString(2))), // Type
-        cursor.getString(3), // Text
-        Long.parseLong(cursor.getString(4)), // Create date
-        Long.parseLong(cursor.getString(5)), // Mod date
-        cursor.getLong(6) // Note file id
-    );
-  }
-
   /**
    * Finds all text notes which which contain searchInput.
    *
@@ -379,21 +396,4 @@ public class NoteDao implements InterfaceNoteDao {
     return noteIds;
   }
 
-  private boolean updateBookModified(Long bookId) {
-
-    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
-
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(DatabaseHelper.MOD_DATE, new Date().getTime());
-
-      db.update(DatabaseHelper.TABLE_NAME_BOOK, contentValues,
-                DatabaseHelper._ID + " = ?",
-                new String[] {String.valueOf(bookId)});
-
-    } catch (SQLiteException ex) {
-      return false;
-    }
-
-    return true;
-  }
 }

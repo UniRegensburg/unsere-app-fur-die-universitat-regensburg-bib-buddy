@@ -24,6 +24,49 @@ public class AuthorDao implements InterfaceAuthorDao {
     return text == null || text.isEmpty();
   }
 
+  private Author createAuthorData(Cursor cursor) {
+    return new Author(Long.parseLong(cursor.getString(0)), // Id
+                      cursor.getString(1), // First name
+                      cursor.getString(2), // Last name
+                      cursor.getString(3), // Title
+                      Long.parseLong(cursor.getString(4)), // Create date
+                      Long.parseLong(cursor.getString(5)) // Mod date
+    );
+  }
+
+
+  private int countAuthorBookLinks(Long authorId) {
+    if (authorId == null || authorId == 0) {
+      return 0;
+    }
+
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    String selectQuery = "SELECT count(" + DatabaseHelper.BOOK_ID + ") FROM "
+        + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
+        + DatabaseHelper.AUTHOR_ID + " = ?";
+
+    Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()});
+
+    try {
+      if (!cursor.moveToFirst()) {
+        return 0;
+      }
+
+      return cursor.getInt(0);
+    } catch (SQLiteException ex) {
+      Log.e(TAG, ex.toString(), ex);
+      return 0;
+    } finally {
+      cursor.close();
+    }
+  }
+
+  // Checks if there is an entry of the author in the AUTHOR_BOOK_LNK table
+  private boolean existsAuthorBookLink(Long authorId) {
+    return countAuthorBookLinks(authorId) > 0;
+  }
+
   public AuthorDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
@@ -77,8 +120,8 @@ public class AuthorDao implements InterfaceAuthorDao {
       contentValues.put(DatabaseHelper.MOD_DATE, currentTime);
 
       db.update(DatabaseHelper.TABLE_NAME_AUTHOR, contentValues,
-          DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(author.getId())});
+                DatabaseHelper._ID + " = ?",
+                new String[] {String.valueOf(author.getId())});
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
@@ -93,11 +136,13 @@ public class AuthorDao implements InterfaceAuthorDao {
   public Author findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME, DatabaseHelper.TITLE,
-        DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
-        DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
+                             new String[] {DatabaseHelper._ID,
+                                 DatabaseHelper.FIRST_NAME, DatabaseHelper.LAST_NAME,
+                                 DatabaseHelper.TITLE,
+                                 DatabaseHelper.CREATE_DATE, DatabaseHelper.MOD_DATE},
+                             DatabaseHelper._ID + " = ?",
+                             new String[] {String.valueOf(id)}, null, null, null, null);
 
     Author author = null;
     if (cursor.moveToFirst()) {
@@ -137,15 +182,15 @@ public class AuthorDao implements InterfaceAuthorDao {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_AUTHOR,
-        new String[] { DatabaseHelper._ID,
-            DatabaseHelper.FIRST_NAME,
-            DatabaseHelper.LAST_NAME,
-            DatabaseHelper.TITLE,
-            DatabaseHelper.MOD_DATE,
-            DatabaseHelper.CREATE_DATE},
-            selection,
-        params.toArray(new String[params.size()]),
-        null, null, null, null);
+                             new String[] {DatabaseHelper._ID,
+                                 DatabaseHelper.FIRST_NAME,
+                                 DatabaseHelper.LAST_NAME,
+                                 DatabaseHelper.TITLE,
+                                 DatabaseHelper.MOD_DATE,
+                                 DatabaseHelper.CREATE_DATE},
+                             selection,
+                             params.toArray(new String[params.size()]),
+                             null, null, null, null);
 
     try {
       if (!cursor.moveToFirst()) {
@@ -186,7 +231,7 @@ public class AuthorDao implements InterfaceAuthorDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.close();
   }
@@ -202,27 +247,18 @@ public class AuthorDao implements InterfaceAuthorDao {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
 
     db.delete(DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK, DatabaseHelper.AUTHOR_ID
-            + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
-        new String[] {String.valueOf(authorId), String.valueOf(bookId)});
+                  + " = ?" + " AND " + DatabaseHelper.BOOK_ID + " = ?",
+              new String[] {String.valueOf(authorId), String.valueOf(bookId)});
 
     // Deletes author only if author has no link to another book
     if (!existsAuthorBookLink(authorId)) {
       db.delete(DatabaseHelper.TABLE_NAME_AUTHOR, DatabaseHelper._ID + " = ?",
-          new String[] {String.valueOf(authorId)});
+                new String[] {String.valueOf(authorId)});
     }
 
     db.close();
   }
 
-  private Author createAuthorData(Cursor cursor) {
-    return new Author(Long.parseLong(cursor.getString(0)), // Id
-                      cursor.getString(1), // First name
-                      cursor.getString(2), // Last name
-                      cursor.getString(3), // Title
-                      Long.parseLong(cursor.getString(4)), // Create date
-                      Long.parseLong(cursor.getString(5)) // Mod date
-    );
-  }
 
   /**
    * Checks if a certain Author already exists in the database.
@@ -259,38 +295,6 @@ public class AuthorDao implements InterfaceAuthorDao {
         create(author);
       }
     }
-  }
-
-  private int countAuthorBookLinks(Long authorId) {
-    if (authorId == null || authorId == 0) {
-      return 0;
-    }
-
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-    String selectQuery = "SELECT count(" + DatabaseHelper.BOOK_ID + ") FROM "
-        + DatabaseHelper.TABLE_NAME_AUTHOR_BOOK_LNK + " WHERE "
-        + DatabaseHelper.AUTHOR_ID + " = ?";
-
-    Cursor cursor = db.rawQuery(selectQuery, new String[] {authorId.toString()});
-
-    try {
-      if (!cursor.moveToFirst()) {
-        return 0;
-      }
-
-      return cursor.getInt(0);
-    } catch (SQLiteException ex) {
-      Log.e(TAG, ex.toString(), ex);
-      return 0;
-    } finally {
-      cursor.close();
-    }
-  }
-
-  // Checks if there is an entry of the author in the AUTHOR_BOOK_LNK table
-  private boolean existsAuthorBookLink(Long authorId) {
-    return countAuthorBookLinks(authorId) > 0;
   }
 
 }

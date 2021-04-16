@@ -24,21 +24,6 @@ public class HomeFragment extends BackStackFragment
   private BookModel bookModel;
   private List<BookItem> bookItemList;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    view = inflater.inflate(R.layout.fragment_home, container, false);
-
-    setupMainActivity();
-
-    updateWelcomeMessage();
-    setupBooksRecyclerView();
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -74,19 +59,6 @@ public class HomeFragment extends BackStackFragment
     }
   }
 
-  @Override
-  public void onBookClicked(int position) {
-    BookItem bookItem = bookItemList.get(position);
-
-    BookNotesFragment bookNotesFragment = new BookNotesFragment();
-    bookNotesFragment.setArguments(createBookBundle(bookItem));
-
-    showFragment(bookNotesFragment);
-  }
-
-  @Override
-  public void onBookLongClicked(int position, BookItem bookItem, View v) {
-  }
 
   private Bundle createBookBundle(LibraryItem item) {
     Bundle bundle = new Bundle();
@@ -141,6 +113,35 @@ public class HomeFragment extends BackStackFragment
     }
 
     welcomeMessage.setText(mainActivity.getWelcomeMessage());
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_home, container, false);
+
+    setupMainActivity();
+
+    updateWelcomeMessage();
+    setupBooksRecyclerView();
+
+    return view;
+  }
+
+  @Override
+  public void onBookClicked(int position) {
+    BookItem bookItem = bookItemList.get(position);
+
+    BookNotesFragment bookNotesFragment = new BookNotesFragment();
+    bookNotesFragment.setArguments(createBookBundle(bookItem));
+
+    showFragment(bookNotesFragment);
+  }
+
+  @Override
+  public void onBookLongClicked(int position, BookItem bookItem, View v) {
   }
 
 }

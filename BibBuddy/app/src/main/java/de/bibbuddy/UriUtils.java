@@ -34,60 +34,6 @@ public class UriUtils {
 
   private static final String TAG = UriUtils.class.getSimpleName();
 
-  /**
-   * Gets the full path from URI.
-   *
-   * @param context current context
-   * @param uri     Uniform Resource Identifier (URI)
-   * @return the full path of URI as String
-   */
-
-  @SuppressLint("API29")
-  public static String getFullUriPath(final Context context, final Uri uri) {
-    if (DocumentsContract.isDocumentUri(context, uri)) { // Document Provider
-      return handleUriPathDocuments(context, uri);
-    }
-
-    if (UriUtilsKeys.CONTENT.equalsIgnoreCase(uri.getScheme())) { // Google Drive Provider
-      return handleUriPathGoogleDrive(context, uri);
-    }
-
-    if (UriUtilsKeys.FILE.equalsIgnoreCase(uri.getScheme())) { // File
-      return uri.getPath();
-    }
-
-    return null;
-  }
-
-  /**
-   * Extracts the filename of the URI.
-   *
-   * @param activity the Activity
-   * @param uri      Uniform Resource Identifier (URI)
-   * @return the filename of URI as String
-   */
-  public static String getUriFileName(Activity activity, Uri uri) {
-    String pickedFilename = null;
-    String uriString = uri.toString();
-    File uriFile = new File(uriString);
-
-    if (uriString.startsWith(UriUtilsKeys.PREFIX_CONTENT)) {
-
-      try (Cursor cursor = activity.getContentResolver().query(uri,
-                                                               null, null, null, null)) {
-        if (cursor.moveToFirst()) {
-          pickedFilename = cursor.getString(cursor
-                                                .getColumnIndex(OpenableColumns.DISPLAY_NAME));
-        }
-
-      }
-    } else if (uriString.startsWith("file://")) {
-      pickedFilename = uriFile.getAbsolutePath();
-    }
-
-    return pickedFilename;
-  }
-
   private static String handleUriPathDocuments(Context context, Uri uri) {
     if (isExternalStorageDocument(uri)) {
       return getPathFromExternalStorage(uri);
@@ -347,6 +293,60 @@ public class UriUtils {
   private static boolean isGoogleDriveUri(@NonNull Uri uri) {
     return UriUtilsKeys.AUTHORITY_DOCUMENT_STORAGE.equals(uri.getAuthority())
         || UriUtilsKeys.AUTHORITY_DOCUMENT_STORAGE_LEGACY.equals(uri.getAuthority());
+  }
+
+  /**
+   * Gets the full path from URI.
+   *
+   * @param context current context
+   * @param uri     Uniform Resource Identifier (URI)
+   * @return the full path of URI as String
+   */
+
+  @SuppressLint("API29")
+  public static String getFullUriPath(final Context context, final Uri uri) {
+    if (DocumentsContract.isDocumentUri(context, uri)) { // Document Provider
+      return handleUriPathDocuments(context, uri);
+    }
+
+    if (UriUtilsKeys.CONTENT.equalsIgnoreCase(uri.getScheme())) { // Google Drive Provider
+      return handleUriPathGoogleDrive(context, uri);
+    }
+
+    if (UriUtilsKeys.FILE.equalsIgnoreCase(uri.getScheme())) { // File
+      return uri.getPath();
+    }
+
+    return null;
+  }
+
+  /**
+   * Extracts the filename of the URI.
+   *
+   * @param activity the Activity
+   * @param uri      Uniform Resource Identifier (URI)
+   * @return the filename of URI as String
+   */
+  public static String getUriFileName(Activity activity, Uri uri) {
+    String pickedFilename = null;
+    String uriString = uri.toString();
+    File uriFile = new File(uriString);
+
+    if (uriString.startsWith(UriUtilsKeys.PREFIX_CONTENT)) {
+
+      try (Cursor cursor = activity.getContentResolver().query(uri,
+                                                               null, null, null, null)) {
+        if (cursor.moveToFirst()) {
+          pickedFilename = cursor.getString(cursor
+                                                .getColumnIndex(OpenableColumns.DISPLAY_NAME));
+        }
+
+      }
+    } else if (uriString.startsWith("file://")) {
+      pickedFilename = uriFile.getAbsolutePath();
+    }
+
+    return pickedFilename;
   }
 
 }

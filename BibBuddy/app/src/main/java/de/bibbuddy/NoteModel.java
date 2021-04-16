@@ -13,10 +13,33 @@ import java.util.stream.Collectors;
 public class NoteModel {
 
   private final NoteDao noteDao;
+  private final BookDao bookDao;
 
+  private List<NoteItem> createItemList(List<Note> noteList) {
+    List<NoteItem> noteItemList = new ArrayList<>();
+
+    for (Note note : noteList) {
+      if (note.getType() == NoteTypeLut.TEXT) {
+        noteItemList
+            .add(new NoteTextItem(note, noteDao.findBookIdByNoteId(note.getId())));
+      } else if (note.getType() == NoteTypeLut.AUDIO) {
+        noteItemList
+            .add(new NoteAudioItem(note, noteDao.findBookIdByNoteId(note.getId())));
+      }
+    }
+
+    return noteItemList;
+  }
+
+  /**
+   * Constructor for a NoteModel.
+   *
+   * @param context context for the BookModel
+   */
   public NoteModel(Context context) {
     DatabaseHelper databaseHelper = new DatabaseHelper(context);
     this.noteDao = new NoteDao(databaseHelper);
+    this.bookDao = new BookDao(databaseHelper);
   }
 
   /**
@@ -116,22 +139,6 @@ public class NoteModel {
     return noteDao.getNoteFilePath(getNoteById(id).getNoteFileId());
   }
 
-  private List<NoteItem> createItemList(List<Note> noteList) {
-    List<NoteItem> noteItemList = new ArrayList<>();
-
-    for (Note note : noteList) {
-      if (note.getType() == NoteTypeLut.TEXT) {
-        noteItemList
-            .add(new NoteTextItem(note, noteDao.findBookIdByNoteId(note.getId())));
-      } else if (note.getType() == NoteTypeLut.AUDIO) {
-        noteItemList
-            .add(new NoteAudioItem(note, noteDao.findBookIdByNoteId(note.getId())));
-      }
-    }
-
-    return noteItemList;
-  }
-
   public void linkNoteWithBook(Long bookId, Long noteId) {
     noteDao.linkNoteWithBook(bookId, noteId);
   }
@@ -194,5 +201,9 @@ public class NoteModel {
     List<NoteItem> noteList = createItemList(allNoteList);
 
     return sortNoteList(sortTypeLut, noteList);
+  }
+
+  public String getBookNameByBookId(Long bookId) {
+    return bookDao.findBookTitleByBookId(bookId);
   }
 }

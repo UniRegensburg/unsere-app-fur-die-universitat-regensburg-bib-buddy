@@ -29,40 +29,6 @@ public class BookFormFragment extends BackStackFragment {
   private int redColor;
   private int greenColor;
 
-  public BookFormFragment(ChangeBookListener listener) {
-    this.listener = listener;
-  }
-
-  /**
-   * Second constructor to handle construction from API call.
-   *
-   * @param listener listener for event handling
-   * @param book     book retrieved from API
-   */
-  public BookFormFragment(ChangeBookListener listener, Book book, List<Author> authorList) {
-    this.listener = listener;
-    this.book = book;
-    this.authorList.addAll(authorList);
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    View view = inflater.inflate(R.layout.fragment_book_form, container, false);
-
-    Bundle bundle = this.getArguments();
-    setupViews(view, bundle);
-
-    redColor = getResources().getColor(R.color.red, null);
-    greenColor = getResources().getColor(R.color.green, null);
-
-    setupAddBookBtnListener(view);
-
-    return view;
-  }
-
   private void setupViews(View view, Bundle bundle) {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -276,6 +242,39 @@ public class BookFormFragment extends BackStackFragment {
     }
   }
 
+  public BookFormFragment(ChangeBookListener listener) {
+    this.listener = listener;
+  }
+
+  /**
+   * Second constructor to handle construction from API call.
+   *
+   * @param listener listener for event handling
+   * @param book     book retrieved from API
+   */
+  public BookFormFragment(ChangeBookListener listener, Book book, List<Author> authorList) {
+    this.listener = listener;
+    this.book = book;
+    this.authorList.addAll(authorList);
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    View view = inflater.inflate(R.layout.fragment_book_form, container, false);
+
+    Bundle bundle = this.getArguments();
+    setupViews(view, bundle);
+
+    redColor = getResources().getColor(R.color.red, null);
+    greenColor = getResources().getColor(R.color.green, null);
+
+    setupAddBookBtnListener(view);
+
+    return view;
+  }
 
   public interface ChangeBookListener {
     default void onBookAdded(Book book, List<Author> authorList) {

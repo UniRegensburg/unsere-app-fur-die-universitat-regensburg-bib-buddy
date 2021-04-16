@@ -42,29 +42,6 @@ public class AsDefaultAppFragment extends BackStackFragment
 
   private SortTypeLut sortTypeLut;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    // Called to have the fragment instantiate its user interface view.
-    view = inflater.inflate(R.layout.fragment_default_app, container, false);
-    context = view.getContext();
-
-    setupMainActivity();
-    setupRecyclerView();
-
-    setupSortBtn();
-    setupAddShelfBtn();
-    setupDefaultApp();
-
-    selectedShelfItems.clear();
-
-    setHasOptionsMenu(true);
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -101,38 +78,6 @@ public class AsDefaultAppFragment extends BackStackFragment
     sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_library_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @SuppressLint("NonConstantResourceId")
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.menu_rename_shelf:
-        handleRenameShelf();
-        break;
-
-      case R.id.menu_delete_shelf:
-        handleDeleteShelf();
-        break;
-
-      case R.id.menu_help_library:
-        handleManualLibrary();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
 
   private void handleManualLibrary() {
     HelpFragment helpFragment = new HelpFragment();
@@ -144,26 +89,6 @@ public class AsDefaultAppFragment extends BackStackFragment
 
     helpFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
-    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
-
-    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
-      renameShelf.setVisible(false);
-      deleteShelf.setVisible(false);
-
-    } else if (selectedShelfItems.size() != 1) {
-      renameShelf.setVisible(false);
-      deleteShelf.setVisible(true);
-
-    } else {
-      renameShelf.setVisible(true);
-      deleteShelf.setVisible(true);
-    }
-
   }
 
   private void handleDeleteShelf() {
@@ -417,6 +342,82 @@ public class AsDefaultAppFragment extends BackStackFragment
     bundle.putString(LibraryKeys.SHELF_NAME, shelfName);
 
     return bundle;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    // Called to have the fragment instantiate its user interface view.
+    view = inflater.inflate(R.layout.fragment_default_app, container, false);
+    context = view.getContext();
+
+    setupMainActivity();
+    setupRecyclerView();
+
+    setupSortBtn();
+    setupAddShelfBtn();
+    setupDefaultApp();
+
+    selectedShelfItems.clear();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_library_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
+    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
+
+    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(false);
+
+    } else if (selectedShelfItems.size() != 1) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(true);
+
+    } else {
+      renameShelf.setVisible(true);
+      deleteShelf.setVisible(true);
+    }
+
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_rename_shelf:
+        handleRenameShelf();
+        break;
+
+      case R.id.menu_delete_shelf:
+        handleDeleteShelf();
+        break;
+
+      case R.id.menu_help_library:
+        handleManualLibrary();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

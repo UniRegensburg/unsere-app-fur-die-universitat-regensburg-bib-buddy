@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -93,49 +94,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private SortTypeLut sortTypeLut;
 
-  @Override
-  protected void onBackPressed() {
-    if (selectedBookItems.isEmpty()) {
-      closeFragment();
-    } else {
-      deselectBookItems();
-    }
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    enableBackPressedHandler();
-
-    view = inflater.inflate(R.layout.fragment_book, container, false);
-    context = view.getContext();
-
-    Bundle bundle = this.getArguments();
-    assert bundle != null;
-    shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
-    shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-
-    setupMainActivity();
-
-    bookModel = new BookModel(context, shelfId);
-
-    importBibTex = new ImportBibTex(context);
-
-    setupRecyclerView();
-
-    createAddBookListener();
-    setupSortBtn();
-    setupDefaultApp();
-
-    selectedBookItems.clear();
-
-    setHasOptionsMenu(true);
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = ((MainActivity) requireActivity());
 
@@ -181,38 +139,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     updateEmptyView(bookList);
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_book_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.menu_change_book_data:
-        handleChangeBookData();
-        break;
-
-      case R.id.menu_delete_book:
-        handleDeleteBook();
-        break;
-
-      case R.id.menu_help_book:
-        handleManualBook();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
   private void handleChangeBookData() {
     if (selectedBookItems.isEmpty()) {
       return;
@@ -228,12 +154,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     bookFormFragment.setArguments(bundle);
 
     showFragment(bookFormFragment, LibraryKeys.FRAGMENT_BOOK);
-  }
-
-  @Override
-  public void onBookChanged(Book book, List<Author> authorList) {
-    bookModel.updateBook(book, authorList);
-    updateBookList(bookModel.getBookList(shelfId));
   }
 
   private void updateBookList(List<BookItem> bookList) {
@@ -505,16 +425,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     return bundle;
   }
 
-  @Override
-  public void onBookClicked(int position) {
-    BookItem bookItem = bookModel.getSelectedBookItem(position);
-
-    BookNotesFragment bookNotesFragment = new BookNotesFragment();
-    bookNotesFragment.setArguments(createBookBundle(bookItem));
-
-    showFragment(bookNotesFragment);
-  }
-
   private void updateEmptyView(List<BookItem> bookList) {
     TextView emptyView = view.findViewById(R.id.list_view_book_empty);
     if (bookList.isEmpty()) {
@@ -589,6 +499,117 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     selectedBookItems.clear();
   }
 
+  private void shareShelfBibIntent() {
+    NoteModel noteModel = new NoteModel(context);
+    ShareBibTex shareBibTex = new ShareBibTex(shelfName);
+    String bibContent =
+        shareBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
+
+    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, bibContent);
+
+    Intent shareShelfIntent =
+        ShareCompat.IntentBuilder.from(requireActivity())
+            .setStream(contentUri)
+            .setType("text/*")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+    startActivity(Intent.createChooser(shareShelfIntent, "SEND"));
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (selectedBookItems.isEmpty()) {
+      closeFragment();
+    } else {
+      deselectBookItems();
+    }
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_book, container, false);
+    context = view.getContext();
+
+    Bundle bundle = this.getArguments();
+    assert bundle != null;
+    shelfName = bundle.getString(LibraryKeys.SHELF_NAME);
+    shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+
+    setupMainActivity();
+
+    bookModel = new BookModel(context, shelfId);
+
+    importBibTex = new ImportBibTex(context);
+
+    setupRecyclerView();
+
+    createAddBookListener();
+    setupSortBtn();
+    setupDefaultApp();
+
+    selectedBookItems.clear();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_book_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_change_book_data:
+        handleChangeBookData();
+        break;
+
+      case R.id.menu_delete_book:
+        handleDeleteBook();
+        break;
+
+      case R.id.menu_help_book:
+        handleManualBook();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onBookChanged(Book book, List<Author> authorList) {
+    bookModel.updateBook(book, authorList);
+    updateBookList(bookModel.getBookList(shelfId));
+  }
+
+  @Override
+  public void onBookClicked(int position) {
+    BookItem bookItem = bookModel.getSelectedBookItem(position);
+
+    BookNotesFragment bookNotesFragment = new BookNotesFragment();
+    bookNotesFragment.setArguments(createBookBundle(bookItem));
+
+    showFragment(bookNotesFragment);
+  }
+
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
     MenuItem changeBookData = menu.findItem(R.id.menu_change_book_data);
@@ -615,24 +636,6 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
       v.setSelected(true);
       selectedBookItems.add(bookItem);
     }
-  }
-
-  private void shareShelfBibIntent() {
-    NoteModel noteModel = new NoteModel(context);
-    ShareBibTex shareBibTex = new ShareBibTex(shelfName);
-    String bibContent =
-        shareBibTex.getBibDataFromShelf(shelfId, bookModel, noteModel);
-
-    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, bibContent);
-
-    Intent shareShelfIntent =
-        ShareCompat.IntentBuilder.from(requireActivity())
-            .setStream(contentUri)
-            .setType("text/*")
-            .getIntent()
-            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-    startActivity(Intent.createChooser(shareShelfIntent, "SEND"));
   }
 
   @Override

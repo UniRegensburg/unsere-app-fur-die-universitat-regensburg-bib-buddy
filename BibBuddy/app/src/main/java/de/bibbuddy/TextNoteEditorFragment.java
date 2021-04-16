@@ -38,49 +38,12 @@ public class TextNoteEditorFragment extends BackStackFragment {
   private ImageView formatArrow;
   private RichTextEditor richTextEditor;
 
-  @Override
-  protected void onBackPressed() {
-    saveNote();
-    closeFragment();
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    setupMainActivity();
-
-    setHasOptionsMenu(true);
-  }
-
-  private void setupMainActivity() {
-    MainActivity mainActivity = (MainActivity) requireActivity();
-
-    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortBtn(false);
-
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
-    mainActivity.updateNavigationFragment(R.id.navigation_notes);
-  }
-
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_texteditor_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-
-    if (item.getItemId() == R.id.menu_help_texteditor) {
-      handleManualTextNoteEditor();
-    } else if (item.getItemId() == R.id.menu_imprint) {
-      MainActivity mainActivity = (MainActivity) requireActivity();
-      mainActivity.openImprint();
-    }
-
-    return super.onOptionsItemSelected(item);
+  private void setupFormatArrow() {
+    formatArrow = view.findViewById(R.id.formatArrow);
+    formatArrow.setOnClickListener(v -> {
+      formatOptions = view.findViewById(R.id.scroll_view);
+      adjustFormatToolbarVisibility();
+    });
   }
 
   /**
@@ -134,62 +97,14 @@ public class TextNoteEditorFragment extends BackStackFragment {
     }
   }
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
-    view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
-    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
-
-    noteModel = new NoteModel(requireActivity());
-    richTextEditor = view.findViewById(R.id.editor);
-
-    enableBackPressedHandler();
-
-    formatArrow = view.findViewById(R.id.formatArrow);
-    formatArrow.setOnClickListener(v -> {
-      formatOptions = view.findViewById(R.id.scroll_view);
-      adjustFormatToolbarVisibility();
-    });
-
-
-
-    if (requireArguments().size() == 2) {
-      Long noteId = requireArguments().getLong(LibraryKeys.NOTE_ID);
-      note = noteModel.getNoteById(noteId);
-
-      String text = note.getText();
-      text = text.replace("align=\"center\"", "style=\"text-align:center;\"");
-      text = text.replace("align=\"right\"", "style=\"text-align:end;\"");
-      richTextEditor.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
-    }
-
-    richTextEditor.setSelection(richTextEditor.getEditableText().length());
-
-    return view;
-  }
-
-  /**
-   * Shows or hides the text format toolbar depending on if it is shown yet.
-   */
-  public void adjustFormatToolbarVisibility() {
-    if (!formatToolbarIsShown()) {
-      formatOptions.setVisibility(View.VISIBLE);
-      formatArrow.setImageResource(R.drawable.format_up);
-      setupUndoOption();
-      setupRedoOption();
-      setupBoldOption();
-      setupItalicOption();
-      setupUnderlineOption();
-      setupStrikeThroughOption();
-      setupBulletOption();
-      setupQuoteOption();
-      setupAlignmentOptions();
-    } else {
-      hideFormatToolbar();
-    }
+    mainActivity.updateHeaderFragment(noteModel.getBookNameByBookId(bookId));
+    mainActivity.updateNavigationFragment(R.id.navigation_notes);
   }
 
   private void hideFormatToolbar() {
@@ -366,5 +281,87 @@ public class TextNoteEditorFragment extends BackStackFragment {
       highlightSelectedToolbarItem(align);
     }
   }
+
+  @Override
+  protected void onBackPressed() {
+    saveNote();
+    closeFragment();
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_text_note_editor, container, false);
+
+    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+
+    noteModel = new NoteModel(requireActivity());
+
+    setupMainActivity();
+
+    richTextEditor = view.findViewById(R.id.editor);
+
+    enableBackPressedHandler();
+
+    setupFormatArrow();
+
+    if (requireArguments().size() == 2) {
+      Long noteId = requireArguments().getLong(LibraryKeys.NOTE_ID);
+      note = noteModel.getNoteById(noteId);
+
+      String text = note.getText();
+      text = text.replace("align=\"center\"", "style=\"text-align:center;\"");
+      text = text.replace("align=\"right\"", "style=\"text-align:end;\"");
+      richTextEditor.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
+    }
+
+    richTextEditor.setSelection(richTextEditor.getEditableText().length());
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_texteditor_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_help_texteditor) {
+      handleManualTextNoteEditor();
+    } else if (item.getItemId() == R.id.menu_imprint) {
+      MainActivity mainActivity = (MainActivity) requireActivity();
+      mainActivity.openImprint();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  /**
+   * Shows or hides the text format toolbar depending on if it is shown yet.
+   */
+  public void adjustFormatToolbarVisibility() {
+    if (!formatToolbarIsShown()) {
+      formatOptions.setVisibility(View.VISIBLE);
+      formatArrow.setImageResource(R.drawable.format_up);
+      setupUndoOption();
+      setupRedoOption();
+      setupBoldOption();
+      setupItalicOption();
+      setupUnderlineOption();
+      setupStrikeThroughOption();
+      setupBulletOption();
+      setupQuoteOption();
+      setupAlignmentOptions();
+    } else {
+      hideFormatToolbar();
+    }
+  }
+
 
 }

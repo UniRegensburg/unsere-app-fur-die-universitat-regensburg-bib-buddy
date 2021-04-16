@@ -26,23 +26,6 @@ public class BookOnlineFragment extends BackStackFragment
   private EditText searchFieldText;
   private Long shelfId;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    view = inflater.inflate(R.layout.fragment_book_online, container, false);
-    setupSearchInput();
-
-    Bundle bundle = this.getArguments();
-    assert bundle != null;
-    shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
-
-    setupMainActivity();
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -92,19 +75,6 @@ public class BookOnlineFragment extends BackStackFragment
     showFragment(bookFormFragment);
   }
 
-  @Override
-  public void onBookAdded(Book book, List<Author> authorList) {
-    BookAddModel bookAddModel = new BookAddModel(requireContext());
-    bookAddModel.addBook(book, authorList, shelfId);
-
-    MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity
-        .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.added_book),
-                                            Toast.LENGTH_SHORT).show());
-
-    closeFragment();
-  }
-
   private void setupSearchInput() {
     searchFieldText = view.findViewById(R.id.search_input);
     searchFieldText.setHint(R.string.add_book_online_text);
@@ -124,6 +94,36 @@ public class BookOnlineFragment extends BackStackFragment
           return false;
       }
     });
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_book_online, container, false);
+    setupSearchInput();
+
+    Bundle bundle = this.getArguments();
+    assert bundle != null;
+    shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
+
+    setupMainActivity();
+
+    return view;
+  }
+
+  @Override
+  public void onBookAdded(Book book, List<Author> authorList) {
+    BookAddModel bookAddModel = new BookAddModel(requireContext());
+    bookAddModel.addBook(book, authorList, shelfId);
+
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    mainActivity
+        .runOnUiThread(() -> Toast.makeText(mainActivity, getString(R.string.added_book),
+                                            Toast.LENGTH_SHORT).show());
+
+    closeFragment();
   }
 
 }

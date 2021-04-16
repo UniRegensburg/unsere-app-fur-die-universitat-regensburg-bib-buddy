@@ -35,7 +35,7 @@ public class SearchModel {
    * Gets the searchResultList based on the user input.
    *
    * @param searchInput    input of the search
-   * @param sortTypeLut   sortTypeLut for the searchResultList
+   * @param sortTypeLut    sortTypeLut for the searchResultList
    * @param filterCriteria filterCriteria for the searchResultList
    * @return returns the searchResultList
    */
@@ -65,7 +65,7 @@ public class SearchModel {
     for (Shelf shelf : shelfList) {
       searchResultList.add(
           new SearchItem(shelf.getName(), R.drawable.books, shelf.getId(), shelf.getModDate(),
-                         SearchItemType.SEARCH_SHELF));
+                         SearchTypeLut.SEARCH_SHELF));
     }
   }
 
@@ -74,7 +74,7 @@ public class SearchModel {
     for (Book book : bookList) {
       searchResultList.add(
           new SearchItem(book.getTitle(), R.drawable.ic_book, book.getId(), book.getModDate(),
-                         SearchItemType.SEARCH_BOOK));
+                         SearchTypeLut.SEARCH_BOOK));
     }
   }
 
@@ -83,7 +83,7 @@ public class SearchModel {
     for (Note note : noteList) {
       searchResultList.add(
           new SearchItem(note.getName(), R.drawable.document, note.getId(), note.getModDate(),
-                         SearchItemType.SEARCH_TEXT_NOTE));
+                         SearchTypeLut.SEARCH_TEXT_NOTE));
     }
   }
 
@@ -143,7 +143,12 @@ public class SearchModel {
     return bookDao.findShelfIdByBook(bookId);
   }
 
-  public String getShelfNameByBook(Long bookId) {
-    return bookDao.findShelfNameByBook(bookId);
+  public String getBookTitleByBookId(Long noteId) {
+    return bookDao.findBookTitleByBookId(noteId);
   }
+
+  public String getShelfNameByBook(Long searchItemId) {
+    return bookDao.findShelfNameByBook(searchItemId);
+  }
+
 }

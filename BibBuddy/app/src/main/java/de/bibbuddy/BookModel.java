@@ -19,13 +19,78 @@ public class BookModel {
   private List<BookItem> bookList;
   private Long shelfId;
 
+
+  private String convertAuthorListToString(List<Author> authorList) {
+    if (authorList == null) {
+      return "";
+    }
+
+    StringBuilder authors = new StringBuilder();
+
+    boolean savedAuthor = false;
+    for (Author author : authorList) {
+
+      if (savedAuthor) {
+        authors.append(", ");
+      }
+
+      if (author.getTitle() != null) {
+        authors.append(author.getTitle()).append(" ");
+      }
+
+      authors.append(author.getFirstName()).append(" ").append(author.getLastName());
+      savedAuthor = true;
+    }
+
+    return authors.toString();
+  }
+
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+
+  }
+
+  private void sortBookList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
+      case MOD_DATE_LATEST:
+        bookList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        bookList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        bookList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        bookList.sort(new SortName().reversed());
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
+
   /**
    * Constructor for a BookModel.
    *
    * @param context context for the BookModel
    * @param shelfId shelfId of the selected book
    */
-
   public BookModel(Context context, Long shelfId) {
     this.shelfId = shelfId;
 
@@ -64,30 +129,6 @@ public class BookModel {
     return bookDao.getAllBookIdsForShelf(id);
   }
 
-  private String convertAuthorListToString(List<Author> authorList) {
-    if (authorList == null) {
-      return "";
-    }
-
-    StringBuilder authors = new StringBuilder();
-
-    boolean savedAuthor = false;
-    for (Author author : authorList) {
-
-      if (savedAuthor) {
-        authors.append(", ");
-      }
-
-      if (author.getTitle() != null) {
-        authors.append(author.getTitle()).append(" ");
-      }
-
-      authors.append(author.getFirstName()).append(" ").append(author.getLastName());
-      savedAuthor = true;
-    }
-
-    return authors.toString();
-  }
 
   /**
    * Adds a new book to the bookList and database.
@@ -150,23 +191,6 @@ public class BookModel {
     return convertAuthorListToString(getAuthorList(bookId));
   }
 
-  private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
-
-    for (Long authorId : authorIds) {
-      authorDao.delete(authorId, bookId);
-    }
-  }
-
-  private void deleteNotes(Long bookId) {
-    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
-
-    for (Long noteId : noteIds) {
-      noteDao.delete(noteId);
-    }
-
-  }
-
   /**
    * Deletes all selected books and their respective notes.
    *
@@ -208,29 +232,6 @@ public class BookModel {
     this.shelfId = shelfId;
   }
 
-  private void sortBookList(SortTypeLut sortTypeLut) {
-    switch (sortTypeLut) {
-      case MOD_DATE_LATEST:
-        bookList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_OLDEST:
-        bookList.sort(new SortDate().reversed());
-        break;
-
-      case NAME_ASCENDING:
-        bookList.sort(new SortName());
-        break;
-
-      case NAME_DESCENDING:
-        bookList.sort(new SortName().reversed());
-        break;
-
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
-
   /**
    * Gets the sorted bookList by sortTypeLut.
    *
@@ -247,7 +248,7 @@ public class BookModel {
    * Gets the sorted bookList by sortTypeLut with the given bookList.
    *
    * @param sortTypeLut sortTypeLut of the list
-   * @param bookList     bookList that should be sorted
+   * @param bookList    bookList that should be sorted
    * @return the sorted bookList
    */
   public List<BookItem> getSortedBookList(SortTypeLut sortTypeLut, List<BookItem> bookList) {

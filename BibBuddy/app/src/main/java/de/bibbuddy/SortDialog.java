@@ -16,19 +16,6 @@ public class SortDialog extends AlertDialog.Builder {
 
   private SortTypeLut sortTypeLut;
 
-  protected SortDialog(Context context, SortTypeLut sortTypeLut,
-                       SortDialogListener listener) {
-    super(context);
-
-    this.context = context;
-    this.listener = listener;
-
-    this.sortTypeLut = sortTypeLut;
-
-    setTitle(R.string.search_sort_to);
-    setupDialog();
-  }
-
   private String getSortCriteriaDisplayText(SortTypeLut sortTypeLut) {
     switch (sortTypeLut) {
       case MOD_DATE_LATEST:
@@ -63,6 +50,19 @@ public class SortDialog extends AlertDialog.Builder {
 
   private void handleSelectedSortChoice(int choice) {
     sortTypeLut = SortTypeLut.valueOf(choice);
+  }
+
+  protected SortDialog(Context context, SortTypeLut sortTypeLut,
+                       SortDialogListener listener) {
+    super(context);
+
+    this.context = context;
+    this.listener = listener;
+
+    this.sortTypeLut = sortTypeLut;
+
+    setTitle(R.string.search_sort_to);
+    setupDialog();
   }
 
   public interface SortDialogListener {

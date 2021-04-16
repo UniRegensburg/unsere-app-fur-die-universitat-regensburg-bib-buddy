@@ -19,6 +19,45 @@ public class LibraryModel {
   private List<ShelfItem> libraryList;
   private Long currentShelfId;
 
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+  }
+
+  private void sortLibraryList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
+      case MOD_DATE_LATEST:
+        libraryList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        libraryList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        libraryList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        libraryList.sort(new SortName().reversed());
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
+
   /**
    * The LibraryModel contains all the shelf data for the LibraryFragment.
    *
@@ -126,23 +165,6 @@ public class LibraryModel {
     }
   }
 
-  private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
-
-    for (Long authorId : authorIds) {
-      authorDao.delete(authorId, bookId);
-    }
-  }
-
-  private void deleteNotes(Long bookId) {
-    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
-
-    for (Long noteId : noteIds) {
-      noteDao.delete(noteId);
-    }
-
-  }
-
   /**
    * Renames the selected shelf.
    *
@@ -160,29 +182,6 @@ public class LibraryModel {
         shelfItem.setName(shelfName);
         libraryList.set(i, shelfItem);
       }
-    }
-  }
-
-  private void sortLibraryList(SortTypeLut sortTypeLut) {
-    switch (sortTypeLut) {
-      case MOD_DATE_LATEST:
-        libraryList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_OLDEST:
-        libraryList.sort(new SortDate().reversed());
-        break;
-
-      case NAME_ASCENDING:
-        libraryList.sort(new SortName());
-        break;
-
-      case NAME_DESCENDING:
-        libraryList.sort(new SortName().reversed());
-        break;
-
-      default:
-        throw new IllegalArgumentException();
     }
   }
 

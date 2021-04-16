@@ -25,6 +25,22 @@ public class LibraryRecyclerViewAdapter
   private List<ShelfItem> libraryList;
   private ViewGroup parent;
 
+  private String getBookString(int bookCount) {
+    if (bookCount == 1) {
+      return bookCount + " " + context.getString(R.string.book);
+    }
+
+    return bookCount + " " + context.getString(R.string.books);
+  }
+
+  private String getNoteString(int noteCount) {
+    if (noteCount == 1) {
+      return noteCount + " " + context.getString(R.string.note);
+    }
+
+    return noteCount + " " + context.getString(R.string.navigation_notes);
+  }
+
   /**
    * Constructor of the LibraryRecyclerViewAdapter.
    *
@@ -79,22 +95,6 @@ public class LibraryRecyclerViewAdapter
       listener.onShelfLongClicked(position, shelfItem, v);
       return true;
     });
-  }
-
-  private String getBookString(int bookCount) {
-    if (bookCount == 1) {
-      return bookCount + " " + context.getString(R.string.book);
-    }
-
-    return bookCount + " " + context.getString(R.string.books);
-  }
-
-  private String getNoteString(int noteCount) {
-    if (noteCount == 1) {
-      return noteCount + " " + context.getString(R.string.note);
-    }
-
-    return noteCount + " " + context.getString(R.string.navigation_notes);
   }
 
   @Override

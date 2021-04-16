@@ -131,6 +131,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     });
   }
 
+
   private void handleIsbnInput(String isbn) {
     String cleanIsbn = isbn.replaceAll("\\s", "");
 

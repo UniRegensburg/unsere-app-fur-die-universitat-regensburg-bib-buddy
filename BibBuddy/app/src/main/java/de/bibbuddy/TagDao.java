@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * TagDao contains all sql queries related to Tag.
+ * (This class can be used in the future)
  *
  * @author Sarah Kurek
  */
@@ -50,9 +51,10 @@ public class TagDao implements InterfaceTagDao {
   public Tag findById(Long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_TAG, new String[] {DatabaseHelper._ID,
-        DatabaseHelper.NAME}, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)}, null, null, null, null);
+    Cursor cursor = db.query(DatabaseHelper.TABLE_NAME_TAG,
+                             new String[] {DatabaseHelper._ID,
+                                 DatabaseHelper.NAME}, DatabaseHelper._ID + " = ?",
+                             new String[] {String.valueOf(id)}, null, null, null, null);
 
     Tag tag = null;
     if (cursor.moveToFirst()) {
@@ -99,7 +101,7 @@ public class TagDao implements InterfaceTagDao {
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_TAG, DatabaseHelper._ID + " = ?",
-        new String[] {String.valueOf(id)});
+              new String[] {String.valueOf(id)});
 
     db.close();
   }

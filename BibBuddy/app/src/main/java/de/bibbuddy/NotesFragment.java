@@ -32,33 +32,6 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   private NoteRecyclerViewAdapter adapter;
   private SortTypeLut sortTypeLut;
 
-  @Override
-  protected void onBackPressed() {
-    if (adapter.getSelectedNoteItems().isEmpty()) {
-      closeFragment();
-    } else {
-      deselectNoteItems();
-    }
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    enableBackPressedHandler();
-
-    view = inflater.inflate(R.layout.fragment_notes, container, false);
-
-    setupMainActivity();
-    setupRecyclerView();
-    setupSortBtn();
-
-    setHasOptionsMenu(true);
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -70,33 +43,6 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_note_list_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
-    deleteNote.setVisible(!adapter.getSelectedNoteItems().isEmpty());
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    long id = item.getItemId();
-
-    if (id == R.id.menu_note_list_delete) {
-      handleDeleteNote(adapter.getSelectedNoteItems());
-    } else if (id == R.id.menu_note_list_help) {
-      handleHelpNotesFragment();
-    } else if (id == R.id.menu_imprint) {
-      MainActivity mainActivity = (MainActivity) requireActivity();
-      mainActivity.openImprint();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
 
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
     AlertDialog.Builder alertDeleteBookNote =
@@ -223,6 +169,61 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   private void sortNoteList() {
     noteList = noteModel.getAllSortedNoteList(sortTypeLut);
     adapter.setNoteList(noteList);
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (adapter.getSelectedNoteItems().isEmpty()) {
+      closeFragment();
+    } else {
+      deselectNoteItems();
+    }
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_notes, container, false);
+
+    setupMainActivity();
+    setupRecyclerView();
+    setupSortBtn();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_note_list_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
+    deleteNote.setVisible(!adapter.getSelectedNoteItems().isEmpty());
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    long id = item.getItemId();
+
+    if (id == R.id.menu_note_list_delete) {
+      handleDeleteNote(adapter.getSelectedNoteItems());
+    } else if (id == R.id.menu_note_list_help) {
+      handleHelpNotesFragment();
+    } else if (id == R.id.menu_imprint) {
+      MainActivity mainActivity = (MainActivity) requireActivity();
+      mainActivity.openImprint();
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

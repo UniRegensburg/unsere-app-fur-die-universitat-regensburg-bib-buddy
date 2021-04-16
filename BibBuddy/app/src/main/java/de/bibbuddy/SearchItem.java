@@ -10,7 +10,7 @@ import org.jsoup.Jsoup;
  */
 public class SearchItem extends LibraryItem {
 
-  private final SearchItemType itemType;
+  private final SearchTypeLut itemType;
   private final String displayName;
 
   /**
@@ -22,7 +22,7 @@ public class SearchItem extends LibraryItem {
    * @param modDate  modification date of the SearchItem
    * @param itemType type of the SearchItem
    */
-  public SearchItem(String name, int image, Long id, Long modDate, SearchItemType itemType) {
+  public SearchItem(String name, int image, Long id, Long modDate, SearchTypeLut itemType) {
     super(name, image, id, null, modDate);
 
     this.itemType = itemType;
@@ -35,7 +35,7 @@ public class SearchItem extends LibraryItem {
     this.displayName = itemName;
   }
 
-  public SearchItemType getItemType() {
+  public SearchTypeLut getItemType() {
     return itemType;
   }
 

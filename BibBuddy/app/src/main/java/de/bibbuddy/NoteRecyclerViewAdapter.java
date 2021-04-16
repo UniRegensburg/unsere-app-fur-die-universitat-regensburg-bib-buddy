@@ -48,73 +48,6 @@ public class NoteRecyclerViewAdapter
   private int mediaPlayerPosition;
   private boolean paused;
 
-  /**
-   * Constructor to connect a NoteList with a MainActivity.
-   *
-   * @param activity  instance of MainActivity
-   * @param noteList  of NoteItems
-   * @param noteModel model for handling Note objects
-   */
-  public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
-                                 NoteModel noteModel) {
-    this.activity = activity;
-    this.noteList = noteList;
-    this.noteModel = noteModel;
-  }
-
-  @NonNull
-  @Override
-  public NotesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    this.parent = parent;
-    Context context = parent.getContext();
-
-    View itemView =
-        LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
-
-    return new NotesViewHolder(itemView);
-  }
-
-  /**
-   * Sets up custom ViewHolder components for Notes.
-   *
-   * @param holder   custom ViewHolder instance
-   * @param position within the adapter for the viewHolder item
-   */
-  @Override
-  public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
-    NoteItem noteItem = noteList.get(position);
-
-    setupBasicCardView(holder, position);
-    if (noteItem.getType() == NoteTypeLut.AUDIO) {
-      setupAudioElements(holder, noteItem);
-    }
-
-    holder.itemView.setOnClickListener(v -> {
-      if (!getSelectedNoteItems().isEmpty()) {
-        v.setSelected(!v.isSelected());
-      } else {
-        if (noteItem.getType() == NoteTypeLut.TEXT) {
-          TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
-          nextFrag.setArguments(createNoteBundle(noteItem));
-
-          activity.getSupportFragmentManager().beginTransaction()
-              .replace(R.id.fragment_container_view, nextFrag,
-                       LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
-              .addToBackStack(null)
-              .commit();
-        }
-      }
-    });
-
-    holder.itemView.setOnLongClickListener(v -> {
-      if (position == RecyclerView.NO_POSITION) {
-        return false;
-      }
-      v.setSelected(!v.isSelected());
-
-      return true;
-    });
-  }
 
   private Bundle createNoteBundle(NoteItem item) {
     Bundle bundle = new Bundle();
@@ -261,6 +194,74 @@ public class NoteRecyclerViewAdapter
       setSelection(button, true, R.drawable.pause);
       mp.start();
       seekBarListener.updateProgress();
+    });
+  }
+
+  /**
+   * Constructor to connect a NoteList with a MainActivity.
+   *
+   * @param activity  instance of MainActivity
+   * @param noteList  of NoteItems
+   * @param noteModel model for handling Note objects
+   */
+  public NoteRecyclerViewAdapter(MainActivity activity, List<NoteItem> noteList,
+                                 NoteModel noteModel) {
+    this.activity = activity;
+    this.noteList = noteList;
+    this.noteModel = noteModel;
+  }
+
+  @NonNull
+  @Override
+  public NotesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    this.parent = parent;
+    Context context = parent.getContext();
+
+    View itemView =
+        LayoutInflater.from(context).inflate(R.layout.list_view_item_note, parent, false);
+
+    return new NotesViewHolder(itemView);
+  }
+
+  /**
+   * Sets up custom ViewHolder components for Notes.
+   *
+   * @param holder   custom ViewHolder instance
+   * @param position within the adapter for the viewHolder item
+   */
+  @Override
+  public void onBindViewHolder(@NonNull NotesViewHolder holder, int position) {
+    NoteItem noteItem = noteList.get(position);
+
+    setupBasicCardView(holder, position);
+    if (noteItem.getType() == NoteTypeLut.AUDIO) {
+      setupAudioElements(holder, noteItem);
+    }
+
+    holder.itemView.setOnClickListener(v -> {
+      if (!getSelectedNoteItems().isEmpty()) {
+        v.setSelected(!v.isSelected());
+      } else {
+        if (noteItem.getType() == NoteTypeLut.TEXT) {
+          TextNoteEditorFragment nextFrag = new TextNoteEditorFragment();
+          nextFrag.setArguments(createNoteBundle(noteItem));
+
+          activity.getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container_view, nextFrag,
+                       LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR)
+              .addToBackStack(null)
+              .commit();
+        }
+      }
+    });
+
+    holder.itemView.setOnLongClickListener(v -> {
+      if (position == RecyclerView.NO_POSITION) {
+        return false;
+      }
+      v.setSelected(!v.isSelected());
+
+      return true;
     });
   }
 

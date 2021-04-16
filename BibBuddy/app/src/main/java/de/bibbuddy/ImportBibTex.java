@@ -33,6 +33,89 @@ public class ImportBibTex {
 
   private final HashMap<String, String> bibTagValue;
 
+  private void removeCurlyBracketsFromBibTag(@NonNull StringBuilder stringBuilder,
+                                             @NonNull String[] brackets) {
+    for (String bracket : brackets) {
+      if (stringBuilder.toString().contains(bracket)) {
+
+        int bracketIndex = stringBuilder.indexOf(bracket);
+        while (bracketIndex != -1) {
+          stringBuilder.replace(bracketIndex, bracketIndex + bracket.length(), "");
+          bracketIndex += "".length();
+          bracketIndex = stringBuilder.indexOf(bracket, bracketIndex);
+        }
+
+      }
+    }
+  }
+
+  private void removeEqualSignFromBibTag(String line) {
+    for (String bibTag : bibTags) {
+
+      if (line.contains(BibTexKeys.EQUAL_SIGN) && line.contains(bibTag)) {
+        line = line.replaceFirst("\\s*=\\s*", BibTexKeys.EQUAL_SIGN);
+      }
+
+    }
+  }
+
+  private void getAuthorNames(String authorNames, List<Author> authors) {
+
+    // If the names are comma separated
+    if (authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
+      String[] authorName =
+          authorNames.split(BibTexKeys.COMMA_SEPARATOR + " ");
+      authors.add(new Author(authorName[1], authorName[0], ""));
+    }
+
+    // If the names are whitespace separated
+    if (authorNames.contains(" ")
+        && !authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
+
+      String[] currentAuthorsNames = authorNames.split(" ", 2);
+      authors.add(new Author(currentAuthorsNames[1], currentAuthorsNames[0], ""));
+    }
+
+  }
+
+
+  private int getParsedYear() {
+    String year = bibTagValue.get(BibTexKeys.YEAR);
+
+    if (DataValidation.isValidYear(year)) {
+      return Integer.parseInt(bibTagValue.get(BibTexKeys.YEAR));
+    }
+
+    return 0;
+  }
+
+  private String getParsedIsbn() {
+    String isbn = bibTagValue.get(BibTexKeys.ISBN);
+
+    if (isbn.contains("-")) {
+      isbn = isbn.replaceAll("-", "");
+
+      if (DataValidation.isValidIsbn10or13(isbn)) {
+        return isbn;
+      } else {
+        return null;
+      }
+
+    }
+    return isbn;
+  }
+
+  @NonNull
+  private String replaceLast(String string, String substring) {
+    int index = string.lastIndexOf(substring);
+    if (index == -1) {
+      return string;
+    }
+
+    return string.substring(0, index) + ""
+        + string.substring(index + substring.length());
+  }
+
   /**
    * Constructor for the Import of BibTeX file.
    *
@@ -49,7 +132,6 @@ public class ImportBibTex {
    * @param filePath path of the file
    */
   public boolean isBibFile(@NonNull String filePath) {
-
     if (filePath.lastIndexOf(".") > 0) {
       String extension = filePath.substring(filePath.lastIndexOf("."));
       return extension.equals(StorageKeys.BIB_FILE_TYPE);
@@ -132,33 +214,6 @@ public class ImportBibTex {
         .distinct().collect(Collectors.toList());
   }
 
-  private void removeCurlyBracketsFromBibTag(@NonNull StringBuilder stringBuilder,
-                                             @NonNull String[] brackets) {
-    for (String bracket : brackets) {
-      if (stringBuilder.toString().contains(bracket)) {
-
-        int bracketIndex = stringBuilder.indexOf(bracket);
-        while (bracketIndex != -1) {
-          stringBuilder.replace(bracketIndex, bracketIndex + bracket.length(), "");
-          bracketIndex += "".length();
-          bracketIndex = stringBuilder.indexOf(bracket, bracketIndex);
-        }
-
-      }
-
-    }
-  }
-
-  private void removeEqualSignFromBibTag(String line) {
-    for (String bibTag : bibTags) {
-
-      if (line.contains(BibTexKeys.EQUAL_SIGN) && line.contains(bibTag)) {
-        line = line.replaceFirst("\\s*=\\s*", BibTexKeys.EQUAL_SIGN);
-      }
-
-    }
-  }
-
   /**
    * Parses the given BibTeX item to raw text value and stores
    * the values in a HashMap with BibTag as key and the
@@ -238,7 +293,6 @@ public class ImportBibTex {
    */
 
   public List<Author> parseAuthorNames() {
-
     String authorNames = bibTagValue.get(BibTexKeys.AUTHOR);
     List<Author> authors = new ArrayList<>();
 
@@ -260,24 +314,6 @@ public class ImportBibTex {
     return authors;
   }
 
-  private void getAuthorNames(String authorNames, List<Author> authors) {
-
-    // If the names are comma separated
-    if (authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
-      String[] authorName =
-          authorNames.split(BibTexKeys.COMMA_SEPARATOR + " ");
-      authors.add(new Author(authorName[1], authorName[0], ""));
-    }
-
-    // If the names are whitespace separated
-    if (authorNames.contains(" ")
-        && !authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
-
-      String[] currentAuthorsNames = authorNames.split(" ", 2);
-      authors.add(new Author(currentAuthorsNames[1], currentAuthorsNames[0], ""));
-    }
-
-  }
 
   /**
    * Checks if there is a note in the current BibTeX
@@ -299,7 +335,6 @@ public class ImportBibTex {
    * @param book      the corresponding book of the imported note
    */
   public void importBibNote(NoteModel noteModel, Book book) {
-
     if (bibTagValue.containsKey(BibTexKeys.ANNOTE)
         && !bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
 
@@ -325,43 +360,6 @@ public class ImportBibTex {
                     bibTagValue.get(BibTexKeys.SUBTITLE), getParsedYear(),
                     bibTagValue.get(BibTexKeys.PUBLISHER), bibTagValue.get(BibTexKeys.VOLUME),
                     bibTagValue.get(BibTexKeys.EDITION), "");
-  }
-
-  private int getParsedYear() {
-    String year = bibTagValue.get(BibTexKeys.YEAR);
-
-    if (DataValidation.isValidYear(year)) {
-      return Integer.parseInt(bibTagValue.get(BibTexKeys.YEAR));
-    }
-
-    return 0;
-  }
-
-  private String getParsedIsbn() {
-    String isbn = bibTagValue.get(BibTexKeys.ISBN);
-
-    if (isbn.contains("-")) {
-      isbn = isbn.replaceAll("-", "");
-
-      if (DataValidation.isValidIsbn10or13(isbn)) {
-        return isbn;
-      } else {
-        return null;
-      }
-
-    }
-    return isbn;
-  }
-
-  @NonNull
-  private String replaceLast(String string, String substring) {
-    int index = string.lastIndexOf(substring);
-    if (index == -1) {
-      return string;
-    }
-
-    return string.substring(0, index) + ""
-        + string.substring(index + substring.length());
   }
 
 }

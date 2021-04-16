@@ -9,6 +9,7 @@ import java.util.List;
  * @author Claudia Schönherr
  */
 public class BookAddModel {
+
   private final BookDao bookDao;
 
   public BookAddModel(Context context) {

@@ -36,29 +36,6 @@ public class MainActivity extends AppCompatActivity {
   private boolean isDefaultSelected;
   private Uri uri;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    Toolbar toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-    if (savedInstanceState == null) {
-      homeFragment = new HomeFragment();
-      updateFragment(homeFragment, homeFragmentTag);
-      setupDefaultAppSelected();
-    }
-
-    setupLogoBtn();
-    setupBottomNavigationView();
-
-    sortTypeLut = SortTypeLut.MOD_DATE_LATEST;
-    filterCriteria = new boolean[] {true, true, true}; // shelf, book, note
-    searchText = "";
-  }
-
   private void setupDefaultAppSelected() {
     Intent defaultAppIntent = getIntent();
     String action = defaultAppIntent.getAction();
@@ -77,31 +54,6 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
-  }
-
-  /**
-   * Checks if the BibBuddy-App is selected as
-   * default app for opening a certain files.
-   *
-   * @return true if BibBuddy-App is selected as default
-   *         false if BibBuddy-App is not selected as default
-   */
-  public boolean isDefaultApp() {
-    return isDefaultSelected;
-  }
-
-  /**
-   * Gets the Uri from a file when the
-   * BibBuddy-App is selected as default.
-   *
-   * @return Uri of selected file
-   */
-  public Uri getUriDefaultApp() {
-    return uri;
-  }
-
-  public void resetIsDefaultApp() {
-    isDefaultSelected = false;
   }
 
   private void switchToDefaultAppFragment() {
@@ -184,16 +136,6 @@ public class MainActivity extends AppCompatActivity {
     updateHeader(tag);
   }
 
-  public void updateHeaderFragment(String name) {
-    TextView headerView = findViewById(R.id.headerText);
-    headerView.setText(name);
-  }
-
-  public void updateNavigationFragment(int item) {
-    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-    bottomNavigationView.getMenu().findItem(item).setChecked(true);
-  }
-
   private void updateHeader(String tag) {
     // Changes header text according to fragment
     View headerTextView = findViewById(R.id.headerText);
@@ -218,6 +160,64 @@ public class MainActivity extends AppCompatActivity {
       default:
         headerText.setText(getString(R.string.app_name));
     }
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+    if (savedInstanceState == null) {
+      homeFragment = new HomeFragment();
+      updateFragment(homeFragment, homeFragmentTag);
+      setupDefaultAppSelected();
+    }
+
+    setupLogoBtn();
+    setupBottomNavigationView();
+
+    sortTypeLut = SortTypeLut.MOD_DATE_LATEST;
+    filterCriteria = new boolean[] {true, true, true}; // shelf, book, note
+    searchText = "";
+  }
+
+  /**
+   * Checks if the BibBuddy-App is selected as
+   * default app for opening a certain files.
+   *
+   * @return true if BibBuddy-App is selected as default
+   *         false if BibBuddy-App is not selected as default
+   */
+  public boolean isDefaultApp() {
+    return isDefaultSelected;
+  }
+
+  /**
+   * Gets the Uri from a file when the
+   * BibBuddy-App is selected as default.
+   *
+   * @return Uri of selected file
+   */
+  public Uri getUriDefaultApp() {
+    return uri;
+  }
+
+  public void resetIsDefaultApp() {
+    isDefaultSelected = false;
+  }
+
+  public void updateHeaderFragment(String name) {
+    TextView headerView = findViewById(R.id.headerText);
+    headerView.setText(name);
+  }
+
+  public void updateNavigationFragment(int item) {
+    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+    bottomNavigationView.getMenu().findItem(item).setChecked(true);
   }
 
   /**

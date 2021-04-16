@@ -26,6 +26,14 @@ public class AuthorRecyclerViewAdapter
   private List<AuthorItem> authorItemList;
   private ViewGroup parent;
 
+  private void updateAuthorItemList() {
+    authorItemList = new ArrayList<>();
+
+    for (Author author : authorList) {
+      authorItemList.add(new AuthorItem(author));
+    }
+  }
+
   /**
    * Constructor of the AuthorRecyclerViewAdapter.
    *
@@ -38,14 +46,6 @@ public class AuthorRecyclerViewAdapter
     this.authorList = authorList;
 
     updateAuthorItemList();
-  }
-
-  private void updateAuthorItemList() {
-    authorItemList = new ArrayList<>();
-
-    for (Author author : authorList) {
-      authorItemList.add(new AuthorItem(author));
-    }
   }
 
   @NonNull

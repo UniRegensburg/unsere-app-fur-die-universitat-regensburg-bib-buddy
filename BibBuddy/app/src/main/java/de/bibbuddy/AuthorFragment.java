@@ -33,42 +33,6 @@ public class AuthorFragment extends BackStackFragment
   private View view;
   private AuthorRecyclerViewAdapter adapter;
 
-  public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
-    this.authorList = new ArrayList<>(authorList);
-    this.listener = listener;
-  }
-
-  @Override
-  protected void onBackPressed() {
-    if (selectedAuthorItems.isEmpty()) {
-      closeFragment();
-    } else {
-      deselectAuthorItems();
-    }
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    enableBackPressedHandler();
-
-    view = inflater.inflate(R.layout.fragment_author, container, false);
-
-    setupRecyclerView();
-    setupMainActivity();
-
-    selectedAuthorItems.clear();
-    updateEmptyView();
-
-    setHasOptionsMenu(true);
-    createAddAuthorListener();
-    confirmAuthorsBtnListener(view);
-
-    return view;
-  }
-
   private void setupRecyclerView() {
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
     adapter = new AuthorRecyclerViewAdapter(this, authorList);
@@ -93,35 +57,6 @@ public class AuthorFragment extends BackStackFragment
     } else {
       emptyView.setVisibility(View.GONE);
     }
-  }
-
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_author_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_delete_author:
-        deleteAuthors();
-        break;
-
-      case R.id.menu_help_author:
-        authorManualFragment();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   private void deleteAuthors() {
@@ -218,14 +153,6 @@ public class AuthorFragment extends BackStackFragment
     selectedAuthorItems.clear();
   }
 
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem deleteAuthors = menu.findItem(R.id.menu_delete_author);
-
-    deleteAuthors.setVisible(selectedAuthorItems != null && !selectedAuthorItems.isEmpty());
-  }
-
   private void createAddAuthorListener() {
     FloatingActionButton addAuthorBtn = view.findViewById(R.id.add_btn);
 
@@ -259,6 +186,78 @@ public class AuthorFragment extends BackStackFragment
       listener.onAuthorListChanged(authorList);
       closeFragment();
     });
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (selectedAuthorItems.isEmpty()) {
+      closeFragment();
+    } else {
+      deselectAuthorItems();
+    }
+  }
+
+  public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
+    this.authorList = new ArrayList<>(authorList);
+    this.listener = listener;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_author, container, false);
+
+    setupRecyclerView();
+    setupMainActivity();
+
+    selectedAuthorItems.clear();
+    updateEmptyView();
+
+    setHasOptionsMenu(true);
+    createAddAuthorListener();
+    confirmAuthorsBtnListener(view);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_author_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.menu_delete_author:
+        deleteAuthors();
+        break;
+
+      case R.id.menu_help_author:
+        authorManualFragment();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteAuthors = menu.findItem(R.id.menu_delete_author);
+
+    deleteAuthors.setVisible(selectedAuthorItems != null && !selectedAuthorItems.isEmpty());
   }
 
   @Override

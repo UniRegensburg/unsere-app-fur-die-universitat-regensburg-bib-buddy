@@ -40,38 +40,8 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
   private File newAudio;
   private boolean isRecording = false;
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    setupMainActivity();
-
-    setHasOptionsMenu(true);
-  }
-
-  private void setupMainActivity() {
+  private void setupAudio() {
     MainActivity mainActivity = (MainActivity) requireActivity();
-
-    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
-    mainActivity.setVisibilitySortBtn(false);
-
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    View view = inflater.inflate(R.layout.fragment_voice_note_editor, container, false);
-    MainActivity mainActivity = (MainActivity) requireActivity();
-
-    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
-
-    noteModel = new NoteModel(mainActivity);
-    pulse = view.findViewById(R.id.ripple_animation);
-    recordBtn = view.findViewById(R.id.record_btn);
-
     String filePath = mainActivity.getExternalCacheDir().getAbsolutePath();
     if (noteModel.getVoiceNoteList().isEmpty()) {
       filePath += "/audio_record_1.mp4";
@@ -80,25 +50,16 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     }
 
     newAudio = new File(filePath);
-
-    setupOnClickListener();
-
-    return view;
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_voice_note_editor_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.menu_help_voice_editor) {
-      handleManualVoiceEditor();
-    }
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
-    return super.onOptionsItemSelected(item);
+    mainActivity.updateHeaderFragment(noteModel.getBookNameByBookId(bookId));
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   /**
@@ -189,6 +150,43 @@ public class VoiceNoteEditorFragment extends BackStackFragment {
     Toast.makeText(requireActivity(), getString(R.string.voice_note_saved),
                    Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    bookId = requireArguments().getLong(LibraryKeys.BOOK_ID);
+
+    noteModel = new NoteModel(requireActivity());
+
+    setupMainActivity();
+
+    View view = inflater.inflate(R.layout.fragment_voice_note_editor, container, false);
+    pulse = view.findViewById(R.id.ripple_animation);
+    recordBtn = view.findViewById(R.id.record_btn);
+
+    setupAudio();
+    setupOnClickListener();
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_voice_note_editor_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.menu_help_voice_editor) {
+      handleManualVoiceEditor();
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

@@ -47,21 +47,6 @@ public class BookNotesFragment extends BackStackFragment
 
   private SortTypeLut sortTypeLut;
 
-  @Override
-  protected void onBackPressed() {
-    if (adapter.getSelectedNoteItems().isEmpty()) {
-      closeFragment();
-    } else {
-      deselectNoteItems();
-    }
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setupPermissionLauncher();
-  }
-
   /**
    * Register permissions callback, which handles the user's response to the
    * system permissions dialog. Save the return value, an instance of
@@ -82,36 +67,6 @@ public class BookNotesFragment extends BackStackFragment
         });
   }
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    enableBackPressedHandler();
-
-    view = inflater.inflate(R.layout.fragment_book_notes, container, false);
-    context = view.getContext();
-
-    Bundle bundle = this.getArguments();
-    assert bundle != null;
-    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-
-    setupMainActivity(bundle);
-    setupRecyclerView(bookId);
-
-    bookModel = new BookModel(context, getShelfId());
-
-    setupFunctionsToolbar();
-    setupSortBtn();
-    setupAddBtn();
-
-    updateBookNoteList(adapter.getNoteList());
-    setupBookData();
-
-    setHasOptionsMenu(true);
-
-    return view;
-  }
 
   private void setupMainActivity(Bundle bundle) {
     MainActivity mainActivity = (MainActivity) requireActivity();
@@ -139,32 +94,6 @@ public class BookNotesFragment extends BackStackFragment
     requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyNoteList());
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_book_note_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-
-    if (itemId == R.id.menu_delete_note) {
-      handleDeleteNote(adapter.getSelectedNoteItems());
-    } else if (itemId == R.id.menu_help_book_note) {
-      handleManualBookNotes();
-    } else if (itemId == R.id.menu_imprint) {
-      ((MainActivity) requireActivity()).openImprint();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
-  }
 
   private void handleDeleteNote(List<NoteItem> selectedItems) {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
@@ -416,6 +345,79 @@ public class BookNotesFragment extends BackStackFragment
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     startActivity(Intent.createChooser(shareBookNoteIntent, "SEND"));
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (adapter.getSelectedNoteItems().isEmpty()) {
+      closeFragment();
+    } else {
+      deselectNoteItems();
+    }
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setupPermissionLauncher();
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_book_notes, container, false);
+    context = view.getContext();
+
+    Bundle bundle = this.getArguments();
+    assert bundle != null;
+    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
+
+    setupMainActivity(bundle);
+    setupRecyclerView(bookId);
+
+    bookModel = new BookModel(context, getShelfId());
+
+    setupFunctionsToolbar();
+    setupSortBtn();
+    setupAddBtn();
+
+    updateBookNoteList(adapter.getNoteList());
+    setupBookData();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_book_note_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == R.id.menu_delete_note) {
+      handleDeleteNote(adapter.getSelectedNoteItems());
+    } else if (itemId == R.id.menu_help_book_note) {
+      handleManualBookNotes();
+    } else if (itemId == R.id.menu_imprint) {
+      ((MainActivity) requireActivity()).openImprint();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
+    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
   }
 
   @Override

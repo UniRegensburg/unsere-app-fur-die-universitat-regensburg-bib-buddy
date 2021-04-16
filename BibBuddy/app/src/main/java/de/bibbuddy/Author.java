@@ -12,6 +12,14 @@ public class Author {
   private Long modDate;
   private Author cache;
 
+  private static Long copyLong(Long number) {
+    if (number == null) {
+      return null;
+    }
+
+    return Long.valueOf(number); // this is used because of a former bug
+  }
+
   public Author() {
   }
 
@@ -52,14 +60,6 @@ public class Author {
     this.firstName = firstName;
     this.lastName = lastName;
     this.title = title;
-  }
-
-  private static Long copyLong(Long number) {
-    if (number == null) {
-      return null;
-    }
-
-    return Long.valueOf(number);
   }
 
   /**

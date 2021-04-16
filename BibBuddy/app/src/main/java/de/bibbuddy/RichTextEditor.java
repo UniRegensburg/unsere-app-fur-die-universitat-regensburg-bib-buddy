@@ -56,66 +56,11 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   private boolean alignmentRight = false;
   private boolean alignmentCenter = false;
 
-  /**
-   * Constructor for the basic RichTextEditor.
-   *
-   * @param context of Fragment or Activity that is including the RichTextEditor
-   * @param attrs   attributeSet of the RichTextEditor
-   */
-  public RichTextEditor(Context context, AttributeSet attrs) {
-    super(context, attrs);
-
-    init(attrs);
-    this.context = context;
-  }
-
   private void init(AttributeSet attrs) {
     TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.RichTextEditor);
     historyEnable = array.getBoolean(R.styleable.RichTextEditor_historyEnable, true);
     historySize = array.getInt(R.styleable.RichTextEditor_historySize, historySize);
     array.recycle();
-  }
-
-  @Override
-  protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    addTextChangedListener(this);
-  }
-
-  @Override
-  protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    removeTextChangedListener(this);
-  }
-
-  /**
-   * Sets or removes the text format bold depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type bold is not selected
-   */
-  public void bold(boolean valid) {
-    bold = valid;
-
-    if (valid) {
-      applyStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
-    } else {
-      removeStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
-    }
-  }
-
-  /**
-   * Sets or removes the text format italic depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type italic is not selected
-   */
-  public void italic(boolean valid) {
-    italic = valid;
-
-    if (valid) {
-      applyStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
-    } else {
-      removeStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
-    }
   }
 
   private void applyStyleSpan(int style, int start, int end) {
@@ -143,21 +88,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
           applyStyleSpan(style, end, part.getEnd());
         }
       }
-    }
-  }
-
-  /**
-   * Sets or removes the text format underline depending on its related toolbar icon selection.
-   *
-   * @param valid if icon for format type underline is not selected
-   */
-  public void underline(boolean valid) {
-    underline = valid;
-
-    if (valid) {
-      applyUnderlineSpan(getSelectionStart(), getSelectionEnd());
-    } else {
-      removeUnderlineSpan(getSelectionStart(), getSelectionEnd());
     }
   }
 
@@ -194,20 +124,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     }
   }
 
-  /**
-   * Sets or removes the text format strikeThrough depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type strikeThrough is not selected
-   */
-  public void strikeThrough(boolean valid) {
-    strikeThrough = valid;
-
-    if (valid) {
-      applyStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
-    } else {
-      removeStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
-    }
-  }
 
   private void applyStrikeThroughSpan(int start, int end) {
     if (start < end) {
@@ -241,23 +157,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
           applyStrikeThroughSpan(end, part.getEnd());
         }
       }
-    }
-  }
-
-  /**
-   * Sets or removes the text format bullets depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type bullets is not selected
-   */
-  public void bullet(boolean valid) {
-    bullet = valid;
-
-    if (valid) {
-      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
-                         new RichTextEditorBulletSpan());
-    } else {
-      checkContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
-                      RichTextEditorBulletSpan.class);
     }
   }
 
@@ -520,6 +419,204 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
+   * Applies a given alignment style.
+   *
+   * @param style of the alignment to apply
+   */
+  private void applyAlignment(int style) {
+    int start = getSelectionStart();
+    int end = getSelectionEnd();
+    if (!hasSelection()) {
+      start = getLineBoundaries()[0];
+      end = getLineBoundaries()[1];
+    }
+
+    adjustAlignment(style, start, end);
+  }
+
+  /**
+   * Adjusts the alignment of a given line to a given style.
+   *
+   * @param style of the alignment to adjust to
+   * @param start of the line
+   * @param end   of the line
+   */
+  private void adjustAlignment(int style, int start, int end) {
+    if (start >= end) {
+      return;
+    }
+
+    // Clears the text from alignments to avoid double assignments
+    Object[] spansToRemove = getEditableText().getSpans(start, end, AlignmentSpan.class);
+    for (Object span : spansToRemove) {
+      getEditableText().removeSpan(span);
+    }
+
+    getEditableText().setSpan((AlignmentSpan) () -> {
+
+      if (style == FORMAT_ALIGN_RIGHT) {
+        return Alignment.ALIGN_OPPOSITE;
+      } else if (style == FORMAT_ALIGN_CENTER) {
+        return Alignment.ALIGN_CENTER;
+      }
+
+      return Alignment.ALIGN_NORMAL;
+    }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+  }
+
+  /**
+   * Applies the spans that represent the selected text format options.
+   *
+   * @param spannable          to apply
+   * @param lastCursorPosition current position of the cursor
+   * @param endOfString        end of the entire text string
+   */
+  private void applySpans(Spannable spannable, int lastCursorPosition, int endOfString) {
+    if (bold) {
+      applyStyleSpan(FORMAT_BOLD, lastCursorPosition, endOfString);
+    }
+
+    if (italic) {
+      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
+    }
+
+    if (underline) {
+      applyUnderlineSpan(lastCursorPosition, endOfString);
+    }
+
+    if (strikeThrough) {
+      applyStrikeThroughSpan(lastCursorPosition, endOfString);
+    }
+
+    if (bullet) {
+      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
+                         new RichTextEditorBulletSpan());
+    }
+
+    if (quote) {
+      checkNotContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
+                         new RichTextEditorQuoteSpan());
+      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
+      spannable.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.gray)),
+                        lastCursorPosition, endOfString, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (alignmentLeft) {
+      applyAlignment(FORMAT_ALIGN_LEFT);
+    }
+
+    if (alignmentRight) {
+      applyAlignment(FORMAT_ALIGN_RIGHT);
+    }
+
+    if (alignmentCenter) {
+      applyAlignment(FORMAT_ALIGN_CENTER);
+    }
+  }
+
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    addTextChangedListener(this);
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    removeTextChangedListener(this);
+  }
+
+  /**
+   * Constructor for the basic RichTextEditor.
+   *
+   * @param context of Fragment or Activity that is including the RichTextEditor
+   * @param attrs   attributeSet of the RichTextEditor
+   */
+  public RichTextEditor(Context context, AttributeSet attrs) {
+    super(context, attrs);
+
+    init(attrs);
+    this.context = context;
+  }
+
+  /**
+   * Sets or removes the text format bold depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type bold is not selected
+   */
+  public void bold(boolean valid) {
+    bold = valid;
+
+    if (valid) {
+      applyStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
+    } else {
+      removeStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format italic depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type italic is not selected
+   */
+  public void italic(boolean valid) {
+    italic = valid;
+
+    if (valid) {
+      applyStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
+    } else {
+      removeStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format underline depending on its related toolbar icon selection.
+   *
+   * @param valid if icon for format type underline is not selected
+   */
+  public void underline(boolean valid) {
+    underline = valid;
+
+    if (valid) {
+      applyUnderlineSpan(getSelectionStart(), getSelectionEnd());
+    } else {
+      removeUnderlineSpan(getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format strikeThrough depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type strikeThrough is not selected
+   */
+  public void strikeThrough(boolean valid) {
+    strikeThrough = valid;
+
+    if (valid) {
+      applyStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
+    } else {
+      removeStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format bullets depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type bullets is not selected
+   */
+  public void bullet(boolean valid) {
+    bullet = valid;
+
+    if (valid) {
+      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
+                         new RichTextEditorBulletSpan());
+    } else {
+      checkContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
+                      RichTextEditorBulletSpan.class);
+    }
+  }
+
+  /**
    * Sets or removes the text format quote depending on its related toolbar icon selection.
    *
    * @param valid if the icon for format type quote is not selected
@@ -568,52 +665,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
       alignmentCenter = false;
       applyAlignment(FORMAT_ALIGN_LEFT);
     }
-  }
-
-  /**
-   * Applies a given alignment style.
-   *
-   * @param style of the alignment to apply
-   */
-  private void applyAlignment(int style) {
-    int start = getSelectionStart();
-    int end = getSelectionEnd();
-    if (!hasSelection()) {
-      start = getLineBoundaries()[0];
-      end = getLineBoundaries()[1];
-    }
-
-    adjustAlignment(style, start, end);
-  }
-
-  /**
-   * Adjusts the alignment of a given line to a given style.
-   *
-   * @param style of the alignment to adjust to
-   * @param start of the line
-   * @param end   of the line
-   */
-  private void adjustAlignment(int style, int start, int end) {
-    if (start >= end) {
-      return;
-    }
-
-    // Clears the text from alignments to avoid double assignments
-    Object[] spansToRemove = getEditableText().getSpans(start, end, AlignmentSpan.class);
-    for (Object span : spansToRemove) {
-      getEditableText().removeSpan(span);
-    }
-
-    getEditableText().setSpan((AlignmentSpan) () -> {
-
-      if (style == FORMAT_ALIGN_RIGHT) {
-        return Alignment.ALIGN_OPPOSITE;
-      } else if (style == FORMAT_ALIGN_CENTER) {
-        return Alignment.ALIGN_CENTER;
-      }
-
-      return Alignment.ALIGN_NORMAL;
-    }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
   }
 
   /**
@@ -719,56 +770,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     }
 
     applySpans(str, lastCursorPosition, endOfString);
-  }
-
-  /**
-   * Applies the spans that represent the selected text format options.
-   *
-   * @param spannable          to apply
-   * @param lastCursorPosition current position of the cursor
-   * @param endOfString        end of the entire text string
-   */
-  private void applySpans(Spannable spannable, int lastCursorPosition, int endOfString) {
-    if (bold) {
-      applyStyleSpan(FORMAT_BOLD, lastCursorPosition, endOfString);
-    }
-
-    if (italic) {
-      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
-    }
-
-    if (underline) {
-      applyUnderlineSpan(lastCursorPosition, endOfString);
-    }
-
-    if (strikeThrough) {
-      applyStrikeThroughSpan(lastCursorPosition, endOfString);
-    }
-
-    if (bullet) {
-      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
-                         new RichTextEditorBulletSpan());
-    }
-
-    if (quote) {
-      checkNotContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
-                         new RichTextEditorQuoteSpan());
-      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
-      spannable.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.gray)),
-                        lastCursorPosition, endOfString, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    if (alignmentLeft) {
-      applyAlignment(FORMAT_ALIGN_LEFT);
-    }
-
-    if (alignmentRight) {
-      applyAlignment(FORMAT_ALIGN_RIGHT);
-    }
-
-    if (alignmentCenter) {
-      applyAlignment(FORMAT_ALIGN_CENTER);
-    }
   }
 
   /**

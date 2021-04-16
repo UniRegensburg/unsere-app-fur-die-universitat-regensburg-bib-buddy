@@ -23,6 +23,50 @@ public class ShareBibTex {
 
   private final String fileName;
 
+  private String getBibKey(Book book) {
+    // Removes whitespaces from book's title
+    return book.getTitle().replaceAll("\\s+",
+                                      "");
+  }
+
+  private String getBibNotesFromBook(Book book, NoteModel noteModel) {
+    List<Long> notesList = noteModel.getTextNoteIdsForBook(book.getId());
+    StringBuilder allNotes = new StringBuilder();
+
+    for (int i = 0; i < notesList.size(); i++) {
+      String bookTextNotes = noteModel.findStrippedTextById(notesList.get(i));
+      allNotes.append(bookTextNotes);
+    }
+
+    return BibTexKeys.ANNOTE + BibTexKeys.OPENING_CURLY_BRACKET + allNotes
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n";
+
+  }
+
+  private String getBibAuthorNames(Long bookId, BookModel bookModel) {
+    Book book = bookModel.getBookById(bookId);
+
+    List<Author> authorsList = bookModel.getAuthorList(book.getId());
+    StringBuilder authorNames = new StringBuilder();
+
+    for (int i = 0; i < authorsList.size(); i++) {
+      authorNames.append(authorsList.get(i).getLastName())
+          .append(BibTexKeys.COMMA_SEPARATOR + " ")
+          .append(authorsList.get(i).getFirstName());
+
+      if (i < authorsList.size() - 1) {
+        authorNames.append(BibTexKeys.AND_MULTIPLE_AUTHORS);
+      }
+    }
+
+    if (authorsList.isEmpty()) {
+      authorNames = new StringBuilder();
+    }
+
+    return BibTexKeys.AUTHOR + BibTexKeys.OPENING_CURLY_BRACKET + authorNames
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n";
+
+  }
 
   /**
    * The ShareBibTex is responsible for the creating, writing
@@ -126,51 +170,6 @@ public class ShareBibTex {
 
         + BibTexKeys.YEAR + book.getPubYear() + "\n" + BibTexKeys.CLOSING_CURLY_BRACKET
         + "\n" + "\n";
-
-  }
-
-  private String getBibKey(Book book) {
-    // Removes whitespaces from book's title
-    return book.getTitle().replaceAll("\\s+",
-                                      "");
-  }
-
-  private String getBibNotesFromBook(Book book, NoteModel noteModel) {
-    List<Long> notesList = noteModel.getTextNoteIdsForBook(book.getId());
-    StringBuilder allNotes = new StringBuilder();
-
-    for (int i = 0; i < notesList.size(); i++) {
-      String bookTextNotes = noteModel.findStrippedTextById(notesList.get(i));
-      allNotes.append(bookTextNotes);
-    }
-
-    return BibTexKeys.ANNOTE + BibTexKeys.OPENING_CURLY_BRACKET + allNotes
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n";
-
-  }
-
-  private String getBibAuthorNames(Long bookId, BookModel bookModel) {
-    Book book = bookModel.getBookById(bookId);
-
-    List<Author> authorsList = bookModel.getAuthorList(book.getId());
-    StringBuilder authorNames = new StringBuilder();
-
-    for (int i = 0; i < authorsList.size(); i++) {
-      authorNames.append(authorsList.get(i).getLastName())
-          .append(BibTexKeys.COMMA_SEPARATOR + " ")
-          .append(authorsList.get(i).getFirstName());
-
-      if (i < authorsList.size() - 1) {
-        authorNames.append(BibTexKeys.AND_MULTIPLE_AUTHORS);
-      }
-    }
-
-    if (authorsList.isEmpty()) {
-      authorNames = new StringBuilder();
-    }
-
-    return BibTexKeys.AUTHOR + BibTexKeys.OPENING_CURLY_BRACKET + authorNames
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n";
 
   }
 

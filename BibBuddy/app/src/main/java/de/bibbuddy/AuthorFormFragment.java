@@ -23,37 +23,6 @@ public class AuthorFormFragment extends BackStackFragment {
   private int redColor;
   private int greenColor;
 
-  /**
-   * Constructor that sets the author to empty when it is newly created.
-   *
-   * @param author   author object
-   * @param listener change listener
-   */
-  public AuthorFormFragment(Author author, AuthorFormFragment.ChangeAuthorListener listener) {
-    this.author = author.clone();
-    this.author.setCache();
-    this.listener = listener;
-    this.isNewAuthor = author.isEmpty();
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    View view = inflater.inflate(R.layout.fragment_author_form, container, false);
-
-    setInputText(view);
-    setupMainActivity();
-
-    redColor = getResources().getColor(R.color.red, null);
-    greenColor = getResources().getColor(R.color.green, null);
-
-    setupAddAuthorBtnListener(view);
-
-    return view;
-  }
-
   private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
 
@@ -112,6 +81,37 @@ public class AuthorFormFragment extends BackStackFragment {
       listener.onAuthorChanged(author, isNewAuthor);
       closeFragment();
     }
+  }
+
+  /**
+   * Constructor that sets the author to empty when it is newly created.
+   *
+   * @param author   author object
+   * @param listener change listener
+   */
+  public AuthorFormFragment(Author author, AuthorFormFragment.ChangeAuthorListener listener) {
+    this.author = author.clone();
+    this.author.setCache();
+    this.listener = listener;
+    this.isNewAuthor = author.isEmpty();
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    View view = inflater.inflate(R.layout.fragment_author_form, container, false);
+
+    setInputText(view);
+    setupMainActivity();
+
+    redColor = getResources().getColor(R.color.red, null);
+    greenColor = getResources().getColor(R.color.green, null);
+
+    setupAddAuthorBtnListener(view);
+
+    return view;
   }
 
   public interface ChangeAuthorListener {

@@ -20,6 +20,24 @@ public class ShelfDao implements InterfaceShelfDao {
 
   private final DatabaseHelper dbHelper;
 
+  private String partSqlQuery(Long id) {
+    if (id == null) {
+      return " IS NULL";
+    } else {
+      return " = " + id;
+    }
+  }
+
+  private Shelf createShelfData(Cursor cursor) {
+
+    return new Shelf(Long.parseLong(cursor.getString(0)), // Id
+                     cursor.getString(1), // Name
+                     Long.parseLong(cursor.getString(2)), // Create date
+                     Long.parseLong(cursor.getString(3)), // Mod date
+                     null // parent shelf id is deprecated
+    );
+  }
+
   public ShelfDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
@@ -112,14 +130,6 @@ public class ShelfDao implements InterfaceShelfDao {
               new String[] {String.valueOf(id)});
 
     db.close();
-  }
-
-  private String partSqlQuery(Long id) {
-    if (id == null) {
-      return " IS NULL";
-    } else {
-      return " = " + id;
-    }
   }
 
   /**
@@ -254,16 +264,6 @@ public class ShelfDao implements InterfaceShelfDao {
                                           new String[] {String.valueOf(id)});
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.close();
-  }
-
-  private Shelf createShelfData(Cursor cursor) {
-
-    return new Shelf(Long.parseLong(cursor.getString(0)), // Id
-                     cursor.getString(1), // Name
-                     Long.parseLong(cursor.getString(2)), // Create date
-                     Long.parseLong(cursor.getString(3)), // Mod date
-                     null // parent shelf id is deprecated
-    );
   }
 
   /**
