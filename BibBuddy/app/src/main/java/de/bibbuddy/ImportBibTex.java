@@ -27,16 +27,99 @@ public class ImportBibTex {
 
   private final Context context;
 
-  private final String [] bibTags = { BibTexKeys.ISBN, BibTexKeys.AUTHOR, BibTexKeys.BOOK_TITLE,
+  private final String[] bibTags = {BibTexKeys.ISBN, BibTexKeys.AUTHOR, BibTexKeys.BOOK_TITLE,
       BibTexKeys.SUBTITLE, BibTexKeys.VOLUME, BibTexKeys.PUBLISHER,
-      BibTexKeys.EDITION, BibTexKeys.ANNOTE, BibTexKeys.YEAR };
+      BibTexKeys.EDITION, BibTexKeys.ANNOTE, BibTexKeys.YEAR};
 
   private final HashMap<String, String> bibTagValue;
+
+  private void removeCurlyBracketsFromBibTag(@NonNull StringBuilder stringBuilder,
+                                             @NonNull String[] brackets) {
+    for (String bracket : brackets) {
+      if (stringBuilder.toString().contains(bracket)) {
+
+        int bracketIndex = stringBuilder.indexOf(bracket);
+        while (bracketIndex != -1) {
+          stringBuilder.replace(bracketIndex, bracketIndex + bracket.length(), "");
+          bracketIndex += "".length();
+          bracketIndex = stringBuilder.indexOf(bracket, bracketIndex);
+        }
+
+      }
+    }
+  }
+
+  private void removeEqualSignFromBibTag(String line) {
+    for (String bibTag : bibTags) {
+
+      if (line.contains(BibTexKeys.EQUAL_SIGN) && line.contains(bibTag)) {
+        line = line.replaceFirst("\\s*=\\s*", BibTexKeys.EQUAL_SIGN);
+      }
+
+    }
+  }
+
+  private void getAuthorNames(String authorNames, List<Author> authors) {
+
+    // If the names are comma separated
+    if (authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
+      String[] authorName =
+          authorNames.split(BibTexKeys.COMMA_SEPARATOR + " ");
+      authors.add(new Author(authorName[1], authorName[0], ""));
+    }
+
+    // If the names are whitespace separated
+    if (authorNames.contains(" ")
+        && !authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
+
+      String[] currentAuthorsNames = authorNames.split(" ", 2);
+      authors.add(new Author(currentAuthorsNames[1], currentAuthorsNames[0], ""));
+    }
+
+  }
+
+
+  private int getParsedYear() {
+    String year = bibTagValue.get(BibTexKeys.YEAR);
+
+    if (DataValidation.isValidYear(year)) {
+      return Integer.parseInt(Objects.requireNonNull(bibTagValue.get(BibTexKeys.YEAR)));
+    }
+
+    return 0;
+  }
+
+  private String getParsedIsbn() {
+    String isbn = bibTagValue.get(BibTexKeys.ISBN);
+
+    if (Objects.requireNonNull(isbn).contains("-")) {
+      isbn = isbn.replaceAll("-", "");
+
+      if (DataValidation.isValidIsbn10or13(isbn)) {
+        return isbn;
+      } else {
+        return null;
+      }
+
+    }
+    return isbn;
+  }
+
+  @NonNull
+  private String replaceLast(String string, String substring) {
+    int index = string.lastIndexOf(substring);
+    if (index == -1) {
+      return string;
+    }
+
+    return string.substring(0, index) + ""
+        + string.substring(index + substring.length());
+  }
 
   /**
    * Constructor for the Import of BibTeX file.
    *
-   * @param context      current context
+   * @param context current context
    */
   public ImportBibTex(Context context) {
     this.context = context;
@@ -46,10 +129,9 @@ public class ImportBibTex {
   /**
    * Checks if a file is from type BibTeX.
    *
-   * @param filePath      path of the file
+   * @param filePath path of the file
    */
   public boolean isBibFile(@NonNull String filePath) {
-
     if (filePath.lastIndexOf(".") > 0) {
       String extension = filePath.substring(filePath.lastIndexOf("."));
       return extension.equals(StorageKeys.BIB_FILE_TYPE);
@@ -64,10 +146,9 @@ public class ImportBibTex {
    * This method also removes initial unnecessary brackets from
    * the concatenated URI content.
    *
-   * @param uri      Uniform Resource Identifier (URI)
-   * @return         the URI content as String
+   * @param uri Uniform Resource Identifier (URI)
+   * @return the URI content as String
    */
-  @NonNull
   public String readTextFromUri(Uri uri) throws IOException {
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -84,7 +165,6 @@ public class ImportBibTex {
 
           if (line.contains(BibTexKeys.BOOK_SHORTTITLE)) {
             line = "";
-            line.replaceFirst("\n", "");
           }
 
           if (line.contains(BibTexKeys.NOTE)) {
@@ -96,14 +176,15 @@ public class ImportBibTex {
           }
 
           removeEqualSignFromBibTag(line);
-          stringBuilder.append(line.trim()).append('\n');
+          stringBuilder.append(line.trim()).append("\n");
           stringBuilder.setLength(stringBuilder.length() - 1);
         }
 
       }
 
       removeCurlyBracketsFromBibTag(stringBuilder,
-          new String[] {BibTexKeys.CLOSING_CURLY_BRACKET, BibTexKeys.OPENING_CURLY_BRACKET});
+                                    new String[] {BibTexKeys.CLOSING_CURLY_BRACKET,
+                                        BibTexKeys.OPENING_CURLY_BRACKET});
     }
 
     if (stringBuilder.toString().isEmpty()) {
@@ -118,11 +199,12 @@ public class ImportBibTex {
     return null;
   }
 
-  /** Splits the String content of URI file and removes redundant
+  /**
+   * Splits the String content of URI file and removes redundant
    * BibTeX elements.
    *
-   * @param bibText  the BibTeX content as String
-   * @return         list of unique BibTeX elements
+   * @param bibText the BibTeX content as String
+   * @return list of unique BibTeX elements
    */
   public List<String> getNonRedundantBibItems(@NonNull String bibText) {
 
@@ -130,39 +212,12 @@ public class ImportBibTex {
         .distinct().collect(Collectors.toList());
   }
 
-  private void removeCurlyBracketsFromBibTag(@NonNull StringBuilder stringBuilder,
-                                             @NonNull String[] brackets) {
-    for (String bracket : brackets) {
-      if (stringBuilder.toString().contains(bracket)) {
-
-        int bracketIndex = stringBuilder.indexOf(bracket);
-        while (bracketIndex != -1) {
-          stringBuilder.replace(bracketIndex, bracketIndex + bracket.length(), "");
-          bracketIndex += "".length();
-          bracketIndex = stringBuilder.indexOf(bracket, bracketIndex);
-        }
-
-      }
-
-    }
-  }
-
-  private void removeEqualSignFromBibTag(String line) {
-    for (String bibTag : bibTags) {
-
-      if (line.contains(BibTexKeys.EQUAL_SIGN) && line.contains(bibTag)) {
-        line = line.replaceFirst("\\s*=\\s*", BibTexKeys.EQUAL_SIGN);
-      }
-
-    }
-  }
-
   /**
    * Parses the given BibTeX item to raw text value and stores
    * the values in a HashMap with BibTag as key and the
    * corresponding parsed text data as value.
    *
-   * @param bibItem      the BibTeX item as String
+   * @param bibItem the BibTeX item as String
    */
   public void parseBibItem(String bibItem) {
     List<String> bibItemsList = checkNextBibTag(bibItem);
@@ -175,11 +230,10 @@ public class ImportBibTex {
 
         if (currentBibItem.startsWith(currentBibTag)) {
           parsedBibValue = replaceLast(replaceLast(currentBibItem,
-              BibTexKeys.COMMA_SEPARATOR), "\n");
+                                                   BibTexKeys.COMMA_SEPARATOR), "\n");
           parsedBibValue = parsedBibValue.replace(currentBibTag, "");
           bibItemsList.set(i, parsedBibValue);
         }
-
       }
 
       bibTagValue.put(currentBibTag, parsedBibValue);
@@ -187,13 +241,14 @@ public class ImportBibTex {
 
   }
 
-  /** Checks for the position of the next BibTeX tag.
+  /**
+   * Checks for the position of the next BibTeX tag.
    * The BibTeX tags (without "@book") do not have fixed order, so this
    * method stores the positions of the BibTeX tags  in a List and then
    * through sorting of this list - determines which is the next BibTeX tag.
    *
-   * @param bibItem  a single BibTeX item as String
-   * @return         the next BibTeX element with a BibTeX tag
+   * @param bibItem a single BibTeX item as String
+   * @return the next BibTeX element with a BibTeX tag
    */
   public List<String> checkNextBibTag(@NonNull String bibItem) {
     ArrayList<Integer> nextBibTagIndex = new ArrayList<>();
@@ -218,7 +273,7 @@ public class ImportBibTex {
       int nextBibTagPosition = nextBibTagIndex.get(i);
       if (nextBibTagPosition > 0) {
         bibItemsWithTags.add(bibItem.substring(currentBibTagPosition,
-            nextBibTagPosition));
+                                               nextBibTagPosition));
         currentBibTagPosition = nextBibTagPosition;
       }
     }
@@ -226,22 +281,21 @@ public class ImportBibTex {
     return bibItemsWithTags;
   }
 
-  /** Parses the authors from the BibTeX content.
+  /**
+   * Parses the authors from the BibTeX content.
    * Since the author names in BibTeX are comma separated
    * (no matter how many authors there are), this method
    * considers parsing of one author and of multiple authors.
    *
-   * @return         List of parsed author(s) name(s) and family
-   *                 name(s).
+   * @return list of parsed author(s) name(s) and family name(s)
    */
 
   public List<Author> parseAuthorNames() {
-
     String authorNames = bibTagValue.get(BibTexKeys.AUTHOR);
     List<Author> authors = new ArrayList<>();
 
-    // if multiple authors
-    if (authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
+    // If multiple authors
+    if (Objects.requireNonNull(authorNames).contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
       String[] names = authorNames.split(BibTexKeys.AND_MULTIPLE_AUTHORS);
 
       for (String name : names) {
@@ -250,7 +304,7 @@ public class ImportBibTex {
 
     }
 
-    // if one author
+    // If one author
     if (!authorNames.contains(BibTexKeys.AND_MULTIPLE_AUTHORS)) {
       getAuthorNames(authorNames, authors);
     }
@@ -258,107 +312,52 @@ public class ImportBibTex {
     return authors;
   }
 
-  private void getAuthorNames(String authorNames, List<Author> authors) {
 
-    // if the names are comma separated
-    if (authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
-      String[] authorName =
-          authorNames.split(BibTexKeys.COMMA_SEPARATOR + " ");
-      authors.add(new Author(authorName[1], authorName[0], ""));
-    }
-
-    // if the names are whitespace separated
-    if (authorNames.contains(" ")
-        && !authorNames.contains(BibTexKeys.COMMA_SEPARATOR + " ")) {
-
-      String[] currentAuthorsNames = authorNames.split(" ", 2);
-      authors.add(new Author(currentAuthorsNames[1], currentAuthorsNames[0], ""));
-
-    }
-
-  }
-
-  /** Checks if there is a note in the current BibTeX
+  /**
+   * Checks if there is a note in the current BibTeX
    * segment.
    *
-   * @return      true if the note exists
-   *              false if the note does not exist
+   * @return true if the note exists, false if the note does not exist
    */
   public boolean existsBibNote() {
-    return bibTagValue.get(BibTexKeys.ANNOTE).isEmpty();
+    return Objects.requireNonNull(bibTagValue.get(BibTexKeys.ANNOTE)).isEmpty();
   }
 
-  /** Adds the parsed BibTeX value for a note into the
+  /**
+   * Adds the parsed BibTeX value for a note into the
    * Database and links the created note with a book.
    *
-   * @param noteModel  object of the NoteModel class
-   *                   responsible for adding a note into the
-   *                   Database through the class NoteDao
-   * @param book       the corresponding book of the imported note
+   * @param noteModel object of the NoteModel class
+   *                  responsible for adding a note into the
+   *                  Database through the class NoteDao
+   * @param book      the corresponding book of the imported note
    */
   public void importBibNote(NoteModel noteModel, Book book) {
-
     if (bibTagValue.containsKey(BibTexKeys.ANNOTE)
-        && !bibTagValue.get(BibTexKeys.ANNOTE).isEmpty()) {
+        && !Objects.requireNonNull(bibTagValue.get(BibTexKeys.ANNOTE)).isEmpty()) {
 
       noteModel.createNote(bibTagValue.get(BibTexKeys.ANNOTE),
-          NoteTypeLut.TEXT, bibTagValue.get(BibTexKeys.ANNOTE),
-          "");
+                           NoteTypeLut.TEXT, bibTagValue.get(BibTexKeys.ANNOTE),
+                           "");
 
       noteModel.linkNoteWithBook(book.getId(),
-          noteModel.getLastNote().getId());
+                                 noteModel.getLastNote().getId());
 
     }
 
   }
 
-  /** Sets the parsed BibTeX values for a book.
+  /**
+   * Sets the parsed BibTeX values for a book.
    *
    * @return a new Book object
    */
   public Book importBook() {
 
     return new Book(getParsedIsbn(), bibTagValue.get(BibTexKeys.BOOK_TITLE),
-        bibTagValue.get(BibTexKeys.SUBTITLE),  getParsedYear(),
-        bibTagValue.get(BibTexKeys.PUBLISHER), bibTagValue.get(BibTexKeys.VOLUME),
-        bibTagValue.get(BibTexKeys.EDITION), "");
-  }
-
-  private int getParsedYear() {
-    String year = bibTagValue.get(BibTexKeys.YEAR);
-
-    if (DataValidation.isValidYear(year)) {
-      return Integer.parseInt(bibTagValue.get(BibTexKeys.YEAR));
-    }
-
-    return 0;
-  }
-
-  private String getParsedIsbn() {
-    String isbn = bibTagValue.get(BibTexKeys.ISBN);
-
-    if (isbn.contains("-")) {
-      isbn = isbn.replaceAll("-", "");
-
-      if (DataValidation.isValidIsbn10or13(isbn)) {
-        return isbn;
-      } else {
-        return null;
-      }
-
-    }
-    return isbn;
-  }
-
-  @NonNull
-  private String replaceLast(String string, String substring) {
-    int index = string.lastIndexOf(substring);
-    if (index == -1) {
-      return string;
-    }
-
-    return string.substring(0, index) + ""
-        + string.substring(index + substring.length());
+                    bibTagValue.get(BibTexKeys.SUBTITLE), getParsedYear(),
+                    bibTagValue.get(BibTexKeys.PUBLISHER), bibTagValue.get(BibTexKeys.VOLUME),
+                    bibTagValue.get(BibTexKeys.EDITION), "");
   }
 
 }

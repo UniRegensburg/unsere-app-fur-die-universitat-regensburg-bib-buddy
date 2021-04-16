@@ -23,15 +23,15 @@
         app:rb_type="fillRipple">
 
         <ImageButton
-            android:id="@+id/record_button"
+            android:id="@+id/record_btn"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:padding="25dp"
             android:layout_centerInParent="true"
-            android:elevation="5dp"
-            android:backgroundTint="@color/white"
             android:background="@drawable/round_button"
+            android:backgroundTint="@color/white"
             android:contentDescription="@string/microphone"
+            android:elevation="5dp"
+            android:padding="25dp"
             android:scaleType="fitCenter"
             android:src="@drawable/microphone" />
 

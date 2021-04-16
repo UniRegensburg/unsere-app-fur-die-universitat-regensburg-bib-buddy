@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/fragment_search"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_search"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="100dp"
@@ -15,33 +15,32 @@
         android:layout_marginEnd="15dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/search_part"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:id="@+id/search_part"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/filter_btn">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toStartOf="@+id/filter_btn"
+                app:layout_constraintStart_toStartOf="parent">
 
-                <include
-                    layout="@layout/search_bar" />
+                <include layout="@layout/search_bar" />
 
             </LinearLayout>
 
             <ImageButton
-                    android:id="@+id/filter_btn"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/filter_icon"
-                    android:tint="@color/tiffany"
-                    android:background="#80ffffff"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:ignore="MissingConstraints" />
+                android:id="@+id/filter_btn"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:adjustViewBounds="true"
+                android:background="#80ffffff"
+                android:padding="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/filter_icon"
+                android:tint="@color/tiffany"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="ContentDescription,MissingConstraints" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -50,10 +49,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/search_part"
-            android:layout_marginTop="60dp"
-            android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="60dp"
+            android:gravity="center_horizontal"
             android:text="@string/search_empty"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:visibility="gone" />
@@ -62,8 +61,8 @@
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
             android:layout_gravity="bottom"
+            android:layout_marginTop="60dp"
             android:clipToPadding="false"
             android:orientation="vertical"
             android:scrollbars="vertical"

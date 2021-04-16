@@ -1,8 +1,7 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -31,56 +29,26 @@ public class AuthorFragment extends BackStackFragment
 
   private final ChangeAuthorListListener listener;
   private final List<Author> authorList;
-  private View view;
-  private Context context;
-  private AuthorRecyclerViewAdapter adapter;
   private final List<AuthorItem> selectedAuthorItems = new ArrayList<>();
 
-  public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
-    this.authorList = new ArrayList<>(authorList);
-    this.listener = listener;
-  }
+  private View view;
+  private AuthorRecyclerViewAdapter adapter;
 
-  @Override
-  protected void onBackPressed() {
-    if (selectedAuthorItems.isEmpty()) {
-      closeFragment();
-    } else {
-      deselectAuthorItems();
-    }
-  }
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    enableBackPressedHandler();
-
-    view = inflater.inflate(R.layout.fragment_author, container, false);
-    context = view.getContext();
-
+  private void setupRecyclerView() {
     SwipeableRecyclerView recyclerView = view.findViewById(R.id.author_recycler_view);
     adapter = new AuthorRecyclerViewAdapter(this, authorList);
     recyclerView.setAdapter(adapter);
     recyclerView.setListener(this);
+  }
 
+  private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
+
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
+
     mainActivity.updateHeaderFragment(getString(R.string.add_author_btn));
-    mainActivity.setVisibilitySortButton(false);
-
-    BottomNavigationView bottomNavigationView = mainActivity.findViewById(R.id.bottom_navigation);
-    bottomNavigationView.getMenu().findItem(R.id.navigation_library).setChecked(true);
-
-    selectedAuthorItems.clear();
-    updateEmptyView();
-
-    setHasOptionsMenu(true);
-    createAddAuthorListener();
-    confirmAuthorsBtnListener(view);
-
-    return view;
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void updateEmptyView() {
@@ -92,37 +60,8 @@ public class AuthorFragment extends BackStackFragment
     }
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_author_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-
-    switch (item.getItemId()) {
-      case R.id.menu_delete_author:
-        deleteAuthors();
-        break;
-
-      case R.id.menu_help_author:
-        authorManualFragment();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT).show();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
   private void deleteAuthors() {
-    AlertDialog.Builder alertDeleteAuthor = new AlertDialog.Builder(context);
+    AlertDialog.Builder alertDeleteAuthor = new AlertDialog.Builder(requireContext());
     alertDeleteAuthor.setCancelable(false);
 
     if (selectedAuthorItems.size() > 1) {
@@ -135,19 +74,9 @@ public class AuthorFragment extends BackStackFragment
           getString(R.string.delete_author_message) + assembleAlertString());
     }
 
-    alertDeleteAuthor.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        deselectAuthorItems();
-      }
-    });
+    alertDeleteAuthor.setNegativeButton(R.string.cancel, (dialog, which) -> deselectAuthorItems());
 
-    alertDeleteAuthor.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        performDeleteAuthors();
-      }
-    });
+    alertDeleteAuthor.setPositiveButton(R.string.delete, (dialog, which) -> performDeleteAuthors());
 
     alertDeleteAuthor.show();
   }
@@ -168,6 +97,7 @@ public class AuthorFragment extends BackStackFragment
       if (author.getTitle() != null && !author.getTitle().isEmpty()) {
         authors.append(author.getTitle()).append(" ");
       }
+
       authors.append(author.getFirstName()).append(" ").append(author.getLastName()).append("\"");
       if (counter != authorList.size()) {
         authors.append(",");
@@ -181,7 +111,9 @@ public class AuthorFragment extends BackStackFragment
   }
 
   private void performDeleteAuthors() {
-    assert (!selectedAuthorItems.isEmpty());
+    if (BuildConfig.DEBUG && selectedAuthorItems.isEmpty()) {
+      throw new AssertionError("Assertion failed");
+    }
     final int authorsNumber = selectedAuthorItems.size();
 
     for (AuthorItem authorItem : selectedAuthorItems) {
@@ -192,26 +124,27 @@ public class AuthorFragment extends BackStackFragment
     adapter.notifyDataSetChanged();
 
     if (authorsNumber > 1) {
-      Toast.makeText(context, getString(R.string.deleted_authors), Toast.LENGTH_SHORT).show();
+      Toast.makeText(requireContext(), getString(R.string.deleted_authors), Toast.LENGTH_SHORT)
+          .show();
     } else {
-      Toast.makeText(context, getString(R.string.deleted_author), Toast.LENGTH_SHORT).show();
+      Toast.makeText(requireContext(), getString(R.string.deleted_author), Toast.LENGTH_SHORT)
+          .show();
     }
 
     updateEmptyView();
   }
 
   private void authorManualFragment() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.author_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
-
   }
 
   private void deselectAuthorItems() {
@@ -223,6 +156,106 @@ public class AuthorFragment extends BackStackFragment
     selectedAuthorItems.clear();
   }
 
+  private void createAddAuthorListener() {
+    FloatingActionButton addAuthorBtn = view.findViewById(R.id.add_btn);
+
+    addAuthorBtn.setOnClickListener(v -> handleEditAuthor(new Author()));
+  }
+
+  private void handleEditAuthor(Author author) {
+    AuthorFormFragment authorFormFragment
+        = new AuthorFormFragment(author,
+            (author1, isNew) -> {
+              if (!isNew) {
+                authorList.remove(author1.getCache());
+              }
+
+              authorList.add(author1);
+              adapter.notifyDataSetChanged();
+
+              Toast.makeText(requireContext(),
+                                                  getString(R.string.changed_author),
+                                                  Toast.LENGTH_SHORT)
+                                       .show();
+            });
+
+    showFragment(authorFormFragment);
+  }
+
+  private void confirmAuthorsBtnListener(View view) {
+    FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
+
+    addBookBtn.setOnClickListener(v -> {
+      listener.onAuthorListChanged(authorList);
+      closeFragment();
+    });
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (selectedAuthorItems.isEmpty()) {
+      closeFragment();
+    } else {
+      deselectAuthorItems();
+    }
+  }
+
+  public AuthorFragment(List<Author> authorList, ChangeAuthorListListener listener) {
+    this.authorList = new ArrayList<>(authorList);
+    this.listener = listener;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_author, container, false);
+
+    setupRecyclerView();
+    setupMainActivity();
+
+    selectedAuthorItems.clear();
+    updateEmptyView();
+
+    setHasOptionsMenu(true);
+    createAddAuthorListener();
+    confirmAuthorsBtnListener(view);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_author_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+
+    switch (item.getItemId()) {
+      case R.id.menu_delete_author:
+        deleteAuthors();
+        break;
+
+      case R.id.menu_help_author:
+        authorManualFragment();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
 
   @Override
   public void onPrepareOptionsMenu(Menu menu) {
@@ -231,55 +264,13 @@ public class AuthorFragment extends BackStackFragment
     deleteAuthors.setVisible(selectedAuthorItems != null && !selectedAuthorItems.isEmpty());
   }
 
-  private void createAddAuthorListener() {
-    FloatingActionButton addAuthorBtn = view.findViewById(R.id.add_btn);
-
-    addAuthorBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleEditAuthor(new Author());
-      }
-    });
-  }
-
-  private void handleEditAuthor(Author author) {
-    AuthorFormFragment authorFormFragment = new AuthorFormFragment(author,
-        new AuthorFormFragment.ChangeAuthorListener() {
-          @Override
-          public void onAuthorChanged(Author author, boolean isNew) {
-            if (!isNew) {
-              authorList.remove(author.getCache());
-            }
-
-            authorList.add(author);
-            adapter.notifyDataSetChanged();
-
-            Toast.makeText(context, getString(R.string.changed_author), Toast.LENGTH_SHORT).show();
-          }
-        });
-
-    showFragment(authorFormFragment);
-  }
-
-  private void confirmAuthorsBtnListener(View view) {
-    FloatingActionButton addBookBtn = view.findViewById(R.id.confirm_btn);
-
-    addBookBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        listener.onAuthorListChanged(authorList);
-        closeFragment();
-      }
-    });
-  }
-
   @Override
   public void onAuthorClicked(int position) {
     handleEditAuthor(authorList.get(position));
   }
 
   @Override
-  public void onAuthorLongClicked(int position, AuthorItem authorItem, View view) {
+  public void onAuthorLongClicked(AuthorItem authorItem, View view) {
     if (view.isSelected()) {
       view.setSelected(false);
       selectedAuthorItems.remove(authorItem);

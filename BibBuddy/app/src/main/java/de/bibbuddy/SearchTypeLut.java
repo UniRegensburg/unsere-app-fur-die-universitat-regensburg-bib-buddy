@@ -1,11 +1,11 @@
 package de.bibbuddy;
 
 /**
- * SearchItemType enum for the type of the searchItem.
+ * SearchTypeLut enum for the type of the searchItem.
  *
  * @author Claudia Schönherr
  */
-public enum SearchItemType {
+public enum SearchTypeLut {
   SEARCH_SHELF,
   SEARCH_BOOK,
   SEARCH_TEXT_NOTE

@@ -25,6 +25,22 @@ public class LibraryRecyclerViewAdapter
   private List<ShelfItem> libraryList;
   private ViewGroup parent;
 
+  private String getBookString(int bookCount) {
+    if (bookCount == 1) {
+      return bookCount + " " + context.getString(R.string.book);
+    }
+
+    return bookCount + " " + context.getString(R.string.books);
+  }
+
+  private String getNoteString(int noteCount) {
+    if (noteCount == 1) {
+      return noteCount + " " + context.getString(R.string.note);
+    }
+
+    return noteCount + " " + context.getString(R.string.navigation_notes);
+  }
+
   /**
    * Constructor of the LibraryRecyclerViewAdapter.
    *
@@ -54,8 +70,8 @@ public class LibraryRecyclerViewAdapter
   public void onBindViewHolder(@NonNull LibraryViewHolder holder, int position) {
     ShelfItem shelfItem = libraryList.get(position);
 
-    holder.getTextView().setText(shelfItem.getName());
-    holder.getImageView().setImageResource(shelfItem.getImage());
+    holder.getName().setText(shelfItem.getName());
+    holder.getLibraryIcon().setImageResource(shelfItem.getImage());
 
     int bookCount = shelfItem.getBookCount();
     holder.getTextBookCount().setText(getBookString(bookCount));
@@ -64,8 +80,8 @@ public class LibraryRecyclerViewAdapter
     holder.getTextNoteCount().setText(getNoteString(noteCount));
 
     holder.itemView.setOnClickListener(v -> {
-      if (getSelectedLibraryItems().size() > 0) {
-        listener.onShelfLongClicked(position, shelfItem, v);
+      if (!getSelectedLibraryItems().isEmpty()) {
+        listener.onShelfLongClicked(shelfItem, v);
       } else {
         listener.onShelfClicked(position);
       }
@@ -76,25 +92,9 @@ public class LibraryRecyclerViewAdapter
         return false;
       }
 
-      listener.onShelfLongClicked(position, shelfItem, v);
+      listener.onShelfLongClicked(shelfItem, v);
       return true;
     });
-  }
-
-  private String getBookString(int bookCount) {
-    if (bookCount == 1) {
-      return bookCount + " " + context.getString(R.string.book);
-    }
-
-    return bookCount + " " + context.getString(R.string.books);
-  }
-
-  private String getNoteString(int noteCount) {
-    if (noteCount == 1) {
-      return noteCount + " " + context.getString(R.string.note);
-    }
-
-    return noteCount + " " + context.getString(R.string.navigation_notes);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class LibraryRecyclerViewAdapter
   /**
    * This method fetches the number of items selected in the recyclerView.
    *
-   * @return the selected recyclerView items.
+   * @return the selected recyclerView items
    */
   public List<LibraryItem> getSelectedLibraryItems() {
     List<LibraryItem> selectedItems = new ArrayList<>();
@@ -130,14 +130,14 @@ public class LibraryRecyclerViewAdapter
   public interface LibraryListener {
     void onShelfClicked(int position);
 
-    void onShelfLongClicked(int position, ShelfItem shelfItem, View view);
+    void onShelfLongClicked(ShelfItem shelfItem, View view);
   }
 
 
   public static class LibraryViewHolder extends RecyclerView.ViewHolder {
 
-    private final TextView textView;
-    private final ImageView imageView;
+    private final TextView name;
+    private final ImageView libraryIcon;
     private final TextView textBookCount;
     private final TextView textNoteCount;
 
@@ -148,18 +148,18 @@ public class LibraryRecyclerViewAdapter
     public LibraryViewHolder(@NonNull View itemView) {
       super(itemView);
 
-      textView = itemView.findViewById(R.id.item_name);
-      imageView = itemView.findViewById(R.id.library_icon);
+      name = itemView.findViewById(R.id.item_name);
+      libraryIcon = itemView.findViewById(R.id.library_icon);
       textBookCount = itemView.findViewById(R.id.text_book);
       textNoteCount = itemView.findViewById(R.id.note_count);
     }
 
-    public TextView getTextView() {
-      return textView;
+    public TextView getName() {
+      return name;
     }
 
-    public ImageView getImageView() {
-      return imageView;
+    public ImageView getLibraryIcon() {
+      return libraryIcon;
     }
 
     public TextView getTextBookCount() {

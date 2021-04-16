@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -26,7 +27,7 @@ import java.util.List;
  * @author Claudia Schönherr
  */
 public class SearchFragment extends BackStackFragment
-        implements SearchRecyclerViewAdapter.SearchListener {
+    implements SearchRecyclerViewAdapter.SearchListener {
 
   private View view;
   private Context context;
@@ -36,68 +37,31 @@ public class SearchFragment extends BackStackFragment
   private List<SearchItem> searchResultList;
   private EditText searchInput;
 
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private boolean[] filterCriteria;
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    view = inflater.inflate(R.layout.fragment_search, container, false);
-    context = view.getContext();
-
+  private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
-    mainActivity.updateHeaderFragment(getString(R.string.navigation_search));
-    mainActivity.updateNavigationFragment(R.id.navigation_search);
 
-    sortCriteria = mainActivity.getSortCriteria();
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
+
     filterCriteria = mainActivity.getFilterCriteria();
 
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-
-    setupSearchInput();
-    setupRecyclerView();
-    setupFilterButton();
-    setHasOptionsMenu(true);
-
-    setupSortBtn();
-
-    return view;
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_search));
+    mainActivity.updateNavigationFragment(R.id.navigation_search);
   }
 
   private void setupSortBtn() {
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
-
     sortBtn.setOnClickListener(v -> handleSortSearch());
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_search_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
+  private void setupFilterBtn() {
+    ImageButton filterBtn = view.findViewById(R.id.filter_btn);
+    filterBtn.setOnClickListener(v -> handleSearchFilter());
   }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-
-      case R.id.menu_search_help:
-        handleHelp();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        break;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
 
   private void setupRecyclerView() {
     searchModel = new SearchModel(context);
@@ -130,12 +94,6 @@ public class SearchFragment extends BackStackFragment
     }
   }
 
-  private void setupFilterButton() {
-    ImageButton filterBtn = view.findViewById(R.id.filter_btn);
-
-    filterBtn.setOnClickListener(v -> handleSearchFilter());
-  }
-
   private void setupSearchInput() {
     searchInput = view.findViewById(R.id.search_input);
 
@@ -163,7 +121,7 @@ public class SearchFragment extends BackStackFragment
 
   private void updateSearchResultList(String searchInputStr) {
     searchResultList =
-        searchModel.getSearchResultList(searchInputStr, sortCriteria, filterCriteria);
+        searchModel.getSearchResultList(searchInputStr, sortTypeLut, filterCriteria);
 
     adapter.setSearchResultList(searchResultList);
     adapter.notifyDataSetChanged();
@@ -172,10 +130,11 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void handleSortSearch() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
         newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
           sortResultList();
         });
 
@@ -183,7 +142,7 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void sortResultList() {
-    searchResultList = searchModel.getSortedSearchResultList(sortCriteria);
+    searchResultList = searchModel.getSortedSearchResultList(sortTypeLut);
     adapter.setSearchResultList(searchResultList);
     adapter.notifyDataSetChanged();
   }
@@ -198,10 +157,11 @@ public class SearchFragment extends BackStackFragment
         getString(R.string.filter_text_note)};
 
     selectFilterCriteria.setMultiChoiceItems(filterChoices, filterCriteria,
-        (dialog, choice, isChecked) -> {
-          filterCriteria[choice] = isChecked;
-          ((MainActivity) requireActivity()).setFilterCriteria(choice, isChecked);
-        });
+      (dialog, choice, isChecked) -> {
+        filterCriteria[choice] = isChecked;
+        ((MainActivity) requireActivity())
+                                                   .setFilterCriteria(choice, isChecked);
+      });
 
     selectFilterCriteria.setNegativeButton(R.string.ok, (dialog, choice) -> {
       if (!DataValidation.isStringEmpty(searchInput.getText().toString())) {
@@ -224,35 +184,16 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void handleHelp() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.search_help_text);
 
     Bundle bundle = new Bundle();
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
 
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
-  }
-
-
-  @Override
-  public void onItemClicked(int position) {
-    SearchItem searchItem = searchModel.getSelectedSearchItem(position);
-
-    ((MainActivity) requireActivity()).updateHeaderFragment(searchItem.getName());
-
-    SearchItemType searchItemType = searchItem.getItemType();
-
-    if (searchItemType == SearchItemType.SEARCH_SHELF) {
-      openShelf(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_BOOK) {
-      openBook(searchItem);
-    } else if (searchItemType == SearchItemType.SEARCH_TEXT_NOTE) {
-      openTextNote(searchItem);
-    }
-
   }
 
   private Bundle createShelfBundle(SearchItem searchItem) {
@@ -265,10 +206,10 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void openShelf(SearchItem searchItem) {
-    BookFragment fragment = new BookFragment();
-    fragment.setArguments(createShelfBundle(searchItem));
+    BookFragment bookFragment = new BookFragment();
+    bookFragment.setArguments(createShelfBundle(searchItem));
 
-    showFragment(fragment);
+    showFragment(bookFragment);
   }
 
   private Bundle createBookBundle(SearchItem searchItem) {
@@ -276,17 +217,17 @@ public class SearchFragment extends BackStackFragment
 
     Long searchItemId = searchItem.getId();
     bundle.putLong(LibraryKeys.SHELF_ID, searchModel.getShelfIdByBook(searchItemId));
-    bundle.putString(LibraryKeys.BOOK_TITLE, searchItem.getName());
+    bundle.putString(LibraryKeys.SHELF_NAME, searchModel.getShelfNameByBook(searchItemId));
     bundle.putLong(LibraryKeys.BOOK_ID, searchItemId);
 
     return bundle;
   }
 
   private void openBook(SearchItem searchItem) {
-    BookNotesView fragment = new BookNotesView();
-    fragment.setArguments(createBookBundle(searchItem));
+    BookNotesFragment bookNotesFragment = new BookNotesFragment();
+    bookNotesFragment.setArguments(createBookBundle(searchItem));
 
-    showFragment(fragment);
+    showFragment(bookNotesFragment);
   }
 
   private Bundle createNoteBundle(SearchItem searchItem) {
@@ -300,10 +241,80 @@ public class SearchFragment extends BackStackFragment
   }
 
   private void openTextNote(SearchItem searchItem) {
-    TextNoteEditorFragment fragment = new TextNoteEditorFragment();
-    fragment.setArguments(createNoteBundle(searchItem));
+    TextNoteEditorFragment textNoteEditorFragment = new TextNoteEditorFragment();
+    textNoteEditorFragment.setArguments(createNoteBundle(searchItem));
 
-    showFragment(fragment);
+    showFragment(textNoteEditorFragment);
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_search, container, false);
+    context = view.getContext();
+
+    setupMainActivity();
+
+    setupSearchInput();
+    setupRecyclerView();
+    setupSortBtn();
+    setupFilterBtn();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_search_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+
+      case R.id.menu_search_help:
+        handleHelp();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onItemClicked(int position) {
+    SearchItem searchItem = searchModel.getSelectedSearchItem(position);
+    SearchTypeLut searchTypeLut = searchItem.getItemType();
+
+    switch (searchTypeLut) {
+      case SEARCH_SHELF:
+        openShelf(searchItem);
+        break;
+
+      case SEARCH_BOOK:
+        openBook(searchItem);
+        break;
+
+      case SEARCH_TEXT_NOTE:
+        openTextNote(searchItem);
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
   }
 
 }

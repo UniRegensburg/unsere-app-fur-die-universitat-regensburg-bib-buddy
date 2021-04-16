@@ -9,8 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -19,53 +17,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * @author Claudia Schönherr
  */
 public class LibraryFormFragment extends BackStackFragment {
+
   private final ChangeShelfListener listener;
-  private int redColor;
-  private int greenColor;
+
   private String[] shelfNames;
   private String oldShelfName;
   private Long shelfId;
   private View view;
-  private Context context;
 
-  public LibraryFormFragment(ChangeShelfListener listener) {
-    this.listener = listener;
+  private int redColor;
+  private int greenColor;
+
+  private void setupMembersFromBundle(Bundle bundle) {
+    shelfNames = bundle.getStringArray(LibraryKeys.SHELF_NAMES);
+    oldShelfName = bundle.getString(LibraryKeys.SHELF_NAME, "");
+    shelfId = bundle.getLong(LibraryKeys.SHELF_ID, 0);
   }
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    view = inflater.inflate(R.layout.fragment_library_form, container, false);
-    context = view.getContext();
-
-    Bundle bundle = this.getArguments();
-
-    if (bundle != null) {
-      shelfNames = bundle.getStringArray(LibraryKeys.SHELF_NAMES);
-      oldShelfName = bundle.getString(LibraryKeys.SHELF_NAME, "");
-      shelfId = bundle.getLong(LibraryKeys.SHELF_ID, 0);
-
-      setupShelfTextAndHeader();
-
-      MainActivity mainActivity = (MainActivity) requireActivity();
-      mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-      mainActivity.setVisibilitySortButton(false);
-      mainActivity.updateNavigationFragment(R.id.navigation_library);
-
-    }
-
-    setupUpdateShelfBtnListener();
-
-    redColor = getResources().getColor(R.color.red, null);
-    greenColor = getResources().getColor(R.color.green, null);
-
-    return view;
-  }
-
-  private void setupShelfTextAndHeader() {
+  private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
+
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(false);
 
     if (shelfId == 0) {
       mainActivity.updateHeaderFragment(getString(R.string.add_new_shelf));
@@ -75,22 +48,20 @@ public class LibraryFormFragment extends BackStackFragment {
       EditText editShelfName = view.findViewById(R.id.library_form_shelf_name_input);
       editShelfName.setText(oldShelfName);
     }
+
+    mainActivity.updateNavigationFragment(R.id.navigation_library);
   }
 
   private void setupUpdateShelfBtnListener() {
     FloatingActionButton updateShelfBtn = view.findViewById(R.id.confirm_btn);
-
-    updateShelfBtn.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleUserInput();
-      }
-    });
+    updateShelfBtn.setOnClickListener(v -> handleUserInput());
   }
 
   private void handleUserInput() {
     EditText editShelfName = view.findViewById(R.id.library_form_shelf_name_input);
     String shelfName = editShelfName.getText().toString().trim();
+
+    Context context = requireContext();
 
     if (DataValidation.isStringEmpty(shelfName)) {
       Toast.makeText(context, getString(R.string.invalid_name), Toast.LENGTH_SHORT).show();
@@ -109,7 +80,7 @@ public class LibraryFormFragment extends BackStackFragment {
     editShelfName.setBackgroundColor(greenColor);
 
     if (shelfId == 0) {
-      listener.onShelfAdded(shelfName, shelfId);
+      listener.onShelfAdded(shelfName);
     } else {
       listener.onShelfRenamed(shelfName);
     }
@@ -117,8 +88,33 @@ public class LibraryFormFragment extends BackStackFragment {
     closeFragment();
   }
 
+  public LibraryFormFragment(ChangeShelfListener listener) {
+    this.listener = listener;
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    view = inflater.inflate(R.layout.fragment_library_form, container, false);
+
+    Bundle bundle = this.getArguments();
+    assert bundle != null;
+    setupMembersFromBundle(bundle);
+
+    setupMainActivity();
+
+    setupUpdateShelfBtnListener();
+
+    redColor = getResources().getColor(R.color.red, null);
+    greenColor = getResources().getColor(R.color.green, null);
+
+    return view;
+  }
+
   public interface ChangeShelfListener {
-    default void onShelfAdded(String name, Long shelfId) {
+    default void onShelfAdded(String name) {
     }
 
     default void onShelfRenamed(String name) {

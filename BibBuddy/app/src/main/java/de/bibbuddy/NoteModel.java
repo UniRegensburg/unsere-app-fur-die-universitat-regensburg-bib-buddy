@@ -13,32 +13,55 @@ import java.util.stream.Collectors;
 public class NoteModel {
 
   private final NoteDao noteDao;
+  private final BookDao bookDao;
 
-  public NoteModel(Context context) {
-    DatabaseHelper databaseHelper = new DatabaseHelper(context);
-    this.noteDao = new NoteDao(databaseHelper);
+  private List<NoteItem> createItemList(List<Note> noteList) {
+    List<NoteItem> noteItemList = new ArrayList<>();
+
+    for (Note note : noteList) {
+      if (note.getType() == NoteTypeLut.TEXT) {
+        noteItemList
+            .add(new NoteTextItem(note, noteDao.findBookIdByNoteId(note.getId())));
+      } else if (note.getType() == NoteTypeLut.AUDIO) {
+        noteItemList
+            .add(new NoteAudioItem(note, noteDao.findBookIdByNoteId(note.getId())));
+      }
+    }
+
+    return noteItemList;
   }
 
   /**
-   * This method gets the Ids of all notes for a given book.
+   * Constructor for a NoteModel.
    *
-   * @param id      id of a book
-   * @return        a list with the Ids of all text notes
+   * @param context context for the BookModel
+   */
+  public NoteModel(Context context) {
+    DatabaseHelper databaseHelper = new DatabaseHelper(context);
+    this.noteDao = new NoteDao(databaseHelper);
+    this.bookDao = new BookDao(databaseHelper);
+  }
+
+  /**
+   * Gets the Ids of all notes for a given book.
+   *
+   * @param id id of a book
+   * @return a list with the Ids of all text notes
    */
   public List<Long> getTextNoteIdsForBook(Long id) {
     return noteDao.getTextNoteIdsForBook(id);
   }
 
   /**
-   * This method gets text string of a specific note without formatting xml tags.
+   * Gets text string of a specific note without formatting xml tags.
    *
-   * @param id   id of the note to look for
-   * @return     returns the notes text value without formatting texts
+   * @param id id of the note to look for
+   * @return returns the notes text value without formatting texts
    */
   public String findStrippedTextById(Long id) {
     return noteDao.findTextById(id).replaceAll(
         "(<p dir=\"ltr\"( style=\"margin-top:0; margin-bottom:0;\")?>|</p>|"
-            + "<div align=\"right\"  >|<div align=\"center\"  >|</div>|"
+            + "<div align=\"right\" {2}<div align=\"center\" {2}> >|</div>|"
             + "<span style=\"text-decoration:line-through;\">|</span>|<(/)?i>|"
             + "<(/)?b>|<(/)?u>|<(/)?br>|<(/)?blockquote>)",
         "");
@@ -47,10 +70,10 @@ public class NoteModel {
   /**
    * Creates a note object and pass it to the noteDao to add it to the database as well.
    *
-   * @param name         of the note object.
-   * @param type         of the note object.
-   * @param text         of the note object.
-   * @param noteFilePath string-value representing the path to a linked noteFile-object.
+   * @param name         of the note object
+   * @param type         of the note object
+   * @param text         of the note object
+   * @param noteFilePath string value representing the path to a linked noteFile-object
    */
   public void createNote(String name, NoteTypeLut type, String text, String noteFilePath) {
     Note note;
@@ -59,6 +82,7 @@ public class NoteModel {
     } else {
       note = new Note(name, type, text, noteFilePath);
     }
+
     noteDao.create(note);
   }
 
@@ -107,7 +131,7 @@ public class NoteModel {
     List<Note> noteList = noteDao.findAll();
 
     return noteList.stream()
-        .filter(n -> n.getType() == NoteTypeLut.AUDIO)
+        .filter(note -> note.getType() == NoteTypeLut.AUDIO)
         .collect(Collectors.toList());
   }
 
@@ -115,35 +139,19 @@ public class NoteModel {
     return noteDao.getNoteFilePath(getNoteById(id).getNoteFileId());
   }
 
-  private List<NoteItem> createItemList(List<Note> noteList) {
-    List<NoteItem> noteItemList = new ArrayList<>();
-
-    for (Note note : noteList) {
-      if (note.getType() == NoteTypeLut.TEXT) {
-        noteItemList
-            .add(new NoteTextItem(note, noteDao.findBookIdByNoteId(note.getId())));
-      } else if (note.getType() == NoteTypeLut.AUDIO) {
-        noteItemList
-            .add(new NoteAudioItem(note, noteDao.findBookIdByNoteId(note.getId())));
-      }
-    }
-
-    return noteItemList;
-  }
-
   public void linkNoteWithBook(Long bookId, Long noteId) {
     noteDao.linkNoteWithBook(bookId, noteId);
   }
 
   /**
-   * Gets a list of all noteItems from the database sorted by given sortCriteria.
+   * Gets a list of all noteItems from the database sorted by given sortTypeLut.
    *
-   * @param sortCriteria chosen by the user to sort the list
-   * @param noteList     to be sorted
+   * @param sortTypeLut chosen by the user to sort the list
+   * @param noteList    to be sorted
    * @return the sorted noteList
    */
-  public List<NoteItem> sortNoteList(SortCriteria sortCriteria, List<NoteItem> noteList) {
-    switch (sortCriteria) {
+  public List<NoteItem> sortNoteList(SortTypeLut sortTypeLut, List<NoteItem> noteList) {
+    switch (sortTypeLut) {
 
       case MOD_DATE_LATEST:
         noteList.sort(new SortDate());
@@ -162,36 +170,40 @@ public class NoteModel {
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
 
     return noteList;
   }
 
   /**
-   * Gets the noteList of a book sorted by sortCriteria.
+   * Gets the noteList of a book sorted by sortTypeLut.
    *
-   * @param sortCriteria currently applied to the list
-   * @param bookId       id of the book the noteList is linked to
+   * @param sortTypeLut currently applied to the list
+   * @param bookId      id of the book the noteList is linked to
    * @return the sorted noteList
    */
-  public List<NoteItem> getSortedNoteList(SortCriteria sortCriteria, Long bookId) {
+  public List<NoteItem> getSortedNoteList(SortTypeLut sortTypeLut, Long bookId) {
     List<Note> noteListDb = noteDao.getAllNotesForBook(bookId);
     List<NoteItem> noteList = createItemList(noteListDb);
 
-    return sortNoteList(sortCriteria, noteList);
+    return sortNoteList(sortTypeLut, noteList);
   }
 
   /**
-   * Gets the noteList for all notes in the database sorted by sortCriteria.
+   * Gets the noteList for all notes in the database sorted by sortTypeLut.
    *
-   * @param sortCriteria currently applied to the list
+   * @param sortTypeLut currently applied to the list
    * @return the sorted noteList
    */
-  public List<NoteItem> getAllSortedNoteList(SortCriteria sortCriteria) {
+  public List<NoteItem> getAllSortedNoteList(SortTypeLut sortTypeLut) {
     List<Note> allNoteList = noteDao.findAll();
     List<NoteItem> noteList = createItemList(allNoteList);
 
-    return sortNoteList(sortCriteria, noteList);
+    return sortNoteList(sortTypeLut, noteList);
+  }
+
+  public String getBookNameByBookId(Long bookId) {
+    return bookDao.findBookTitleByBookId(bookId);
   }
 }

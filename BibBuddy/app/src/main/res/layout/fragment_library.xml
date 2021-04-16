@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="100dp"
-    android:layout_marginBottom="75dp"
-    >
+    android:layout_marginBottom="75dp">
 
     <TextView
         android:id="@+id/list_view_library_empty"
@@ -16,14 +15,12 @@
         android:layout_marginHorizontal="40dp"
         android:text="@string/library_help"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_add_shelf"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
 
     <com.tsuryo.swipeablerv.SwipeableRecyclerView
@@ -39,8 +36,7 @@
         app:leftBgColor="@color/yellow"
         app:leftImage="@drawable/ic_edit"
         app:rightBgColor="@color/red"
-        app:rightImage="@drawable/ic_delete"
-        />
+        app:rightImage="@drawable/ic_delete" />
 
     <include
         android:id="@+id/btn_add_shelf"
@@ -48,7 +44,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:contentDescription="@string/add_shelf"
-        />
+        android:contentDescription="@string/add_shelf" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

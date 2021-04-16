@@ -35,11 +35,11 @@ public class SearchModel {
    * Gets the searchResultList based on the user input.
    *
    * @param searchInput    input of the search
-   * @param sortCriteria   sortCriteria for the searchResultList
+   * @param sortTypeLut    sortTypeLut for the searchResultList
    * @param filterCriteria filterCriteria for the searchResultList
-   * @return Returns the searchResultList
+   * @return returns the searchResultList
    */
-  public List<SearchItem> getSearchResultList(String searchInput, SortCriteria sortCriteria,
+  public List<SearchItem> getSearchResultList(String searchInput, SortTypeLut sortTypeLut,
                                               boolean[] filterCriteria) {
     searchResultList.clear();
 
@@ -55,7 +55,7 @@ public class SearchModel {
       searchNotes(searchInput);
     }
 
-    sortSearchResultList(sortCriteria);
+    sortSearchResultList(sortTypeLut);
 
     return searchResultList;
   }
@@ -65,7 +65,7 @@ public class SearchModel {
     for (Shelf shelf : shelfList) {
       searchResultList.add(
           new SearchItem(shelf.getName(), R.drawable.books, shelf.getId(), shelf.getModDate(),
-                         SearchItemType.SEARCH_SHELF));
+                         SearchTypeLut.SEARCH_SHELF));
     }
   }
 
@@ -74,7 +74,7 @@ public class SearchModel {
     for (Book book : bookList) {
       searchResultList.add(
           new SearchItem(book.getTitle(), R.drawable.ic_book, book.getId(), book.getModDate(),
-                         SearchItemType.SEARCH_BOOK));
+                         SearchTypeLut.SEARCH_BOOK));
     }
   }
 
@@ -83,13 +83,13 @@ public class SearchModel {
     for (Note note : noteList) {
       searchResultList.add(
           new SearchItem(note.getName(), R.drawable.document, note.getId(), note.getModDate(),
-                         SearchItemType.SEARCH_TEXT_NOTE));
+                         SearchTypeLut.SEARCH_TEXT_NOTE));
     }
   }
 
 
-  private void sortSearchResultList(SortCriteria sortCriteria) {
-    switch (sortCriteria) {
+  private void sortSearchResultList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
 
       case MOD_DATE_LATEST:
         searchResultList.sort(new SortDate());
@@ -108,7 +108,7 @@ public class SearchModel {
         break;
 
       default:
-        break;
+        throw new IllegalArgumentException();
     }
   }
 
@@ -117,7 +117,7 @@ public class SearchModel {
    * Gets the selected search item at the current position.
    *
    * @param position position of the clicked item
-   * @return Returns the clicked SearchItem
+   * @return returns the clicked SearchItem
    */
   public SearchItem getSelectedSearchItem(int position) {
     return searchResultList.get(position);
@@ -128,19 +128,23 @@ public class SearchModel {
   }
 
   /**
-   * Gets the sorted search result list by sortCriteria.
+   * Gets the sorted search result list by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
-   * @return Returns the sorted search results
+   * @param sortTypeLut sortTypeLut of the list
+   * @return returns the sorted search results
    */
-  public List<SearchItem> getSortedSearchResultList(SortCriteria sortCriteria) {
-    sortSearchResultList(sortCriteria);
+  public List<SearchItem> getSortedSearchResultList(SortTypeLut sortTypeLut) {
+    sortSearchResultList(sortTypeLut);
 
     return searchResultList;
   }
 
-  public Long getShelfIdByBook(Long id) {
-    return bookDao.findShelfIdByBook(id);
+  public Long getShelfIdByBook(Long bookId) {
+    return bookDao.findShelfIdByBook(bookId);
+  }
+
+  public String getShelfNameByBook(Long searchItemId) {
+    return bookDao.findShelfNameByBook(searchItemId);
   }
 
 }

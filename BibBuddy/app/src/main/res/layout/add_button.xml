@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="end|bottom">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:tooltipText="@string/add"
-            android:contentDescription="@string/add"
-            android:src="@drawable/add"
-            app:tint="@color/flirt"
-            app:backgroundTint="@color/white"
-            app:useCompatPadding="true"
-            tools:targetApi="o"
-            tools:ignore="MissingConstraints" />
+        android:id="@+id/add_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contentDescription="@string/add"
+        android:focusable="true"
+        android:src="@drawable/add"
+        android:tooltipText="@string/add"
+        app:backgroundTint="@color/white"
+        app:tint="@color/flirt"
+        app:useCompatPadding="true"
+        tools:ignore="MissingConstraints"
+        tools:targetApi="o" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

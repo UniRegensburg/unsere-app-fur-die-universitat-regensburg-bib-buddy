@@ -10,129 +10,23 @@ import java.io.FileWriter;
 import java.util.List;
 
 /**
- * The ExportBibTex creates and writes a BibTex file.
+ * The ShareBibTex creates and writes a BibTex file.
  * It contains methods for generation of contents that are
  * used for the export of the BibTex file.
  *
  * @author Silvia Ivanova, Luis Moßburger
  */
 
-public class ExportBibTex {
+public class ShareBibTex {
 
-  private static final String TAG = ExportBibTex.class.getSimpleName();
+  private static final String TAG = ShareBibTex.class.getSimpleName();
 
   private final String fileName;
 
-
-  /**
-   * The ExportBibTex is responsible for the creating, writing
-   * and retrieving of contents, needed for the BibTex Export.
-   *
-   * @param fileName   name of the BibTex file
-   */
-  public ExportBibTex(String fileName) {
-    this.fileName = fileName;
-  }
-
-  /**
-   * Generates the BibTex format for all books inclusive their
-   * notes from the entire library.
-   *
-   * @param libraryModel object of the LibraryModel class
-   * @param bookModel    object of the class BookModel
-   *                     used to retrieve book data
-   * @param noteModel    object of the class NoteModel
-   *                     used to retrieve note data
-   * @return             the BibTex format of a library as String
-   */
-  public String getBibDataLibrary(LibraryModel libraryModel,
-                                  BookModel bookModel, NoteModel noteModel) {
-    StringBuilder bibFormat = new StringBuilder();
-
-    List<ShelfItem> shelfItem = libraryModel.getCurrentLibraryList();
-
-    // for each shelf in the library
-    for (int i = 0; i < shelfItem.size(); i++) {
-      Long currentShelfId = shelfItem.get(i).getId();
-
-      bibFormat.append(getBibDataFromShelf(currentShelfId, bookModel,
-          noteModel));
-
-    }
-
-    return bibFormat.toString();
-  }
-
-  /**
-   * Generates the BibTex format for all books in a given shelf.
-   *
-   * @param shelfId id of the shelf
-   * @param bookModel  object of the class BookModel
-   *                   used to retrieve book data from a selected shelf
-   * @param noteModel  object of the class NoteModel
-   *                   used to retrieve note data from a selected shelf
-   * @return           the BibTex format of a collection of books as String
-   */
-  public String getBibDataFromShelf(Long shelfId, BookModel bookModel, NoteModel noteModel) {
-    List<Long> bookIdsCurrentShelf =
-        bookModel.getAllBookIdsForShelf(shelfId);
-    StringBuilder bibFormat = new StringBuilder();
-
-    // for each book in the current shelf
-    for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
-      Long bookId = bookIdsCurrentShelf.get(i);
-
-      bibFormat.append(getBibDataFromBook(bookId, bookModel, noteModel));
-
-    }
-
-    return bibFormat.toString();
-  }
-
-  /**
-   * Generates the BibTex format for a given book.
-   *
-   * @param bookId     id of the book
-   * @param bookModel  object of the class BookModel
-   *                   used to retrieve book data
-   * @param noteModel  object of the class NoteModel
-   *                   used to retrieve note data
-   * @return           the BibTex format of a book as String
-   */
-  public String getBibDataFromBook(Long bookId, BookModel bookModel, NoteModel noteModel) {
-    Book book = bookModel.getBookById(bookId);
-
-    return BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
-        + BibTexKeys.COMMA_SEPARATOR + "\n"
-
-        + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
-
-        + getBibAuthorNames(bookId, bookModel)
-
-        + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
-
-        + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
-
-        + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
-
-        + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
-        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
-
-        + getBibNotesFromBook(book, noteModel)
-
-        + BibTexKeys.YEAR + book.getPubYear() + "\n" + BibTexKeys.CLOSING_CURLY_BRACKET
-        + "\n" + "\n";
-
-  }
-
   private String getBibKey(Book book) {
-    // remove whitespaces from book's title
+    // Removes whitespaces from book's title
     return book.getTitle().replaceAll("\\s+",
-        "");
+                                      "");
   }
 
   private String getBibNotesFromBook(Book book, NoteModel noteModel) {
@@ -140,7 +34,7 @@ public class ExportBibTex {
     StringBuilder allNotes = new StringBuilder();
 
     for (int i = 0; i < notesList.size(); i++) {
-      String bookTextNotes = noteModel.findStrippedTextById(notesList.get(i));
+      String bookTextNotes = noteModel.findStrippedTextById(notesList.get(i)) + "; ";
       allNotes.append(bookTextNotes);
     }
 
@@ -175,6 +69,111 @@ public class ExportBibTex {
   }
 
   /**
+   * The ShareBibTex is responsible for the creating, writing
+   * and retrieving of contents, needed for the BibTex Export.
+   *
+   * @param fileName name of the BibTex file
+   */
+  public ShareBibTex(String fileName) {
+    this.fileName = fileName;
+  }
+
+  /**
+   * Generates the BibTex format for all books inclusive their
+   * notes from the entire library.
+   *
+   * @param libraryModel object of the LibraryModel class
+   * @param bookModel    object of the class BookModel
+   *                     used to retrieve book data
+   * @param noteModel    object of the class NoteModel
+   *                     used to retrieve note data
+   * @return the BibTex format of a library as String
+   */
+  public String getBibDataLibrary(LibraryModel libraryModel,
+                                  BookModel bookModel, NoteModel noteModel) {
+    StringBuilder bibFormat = new StringBuilder();
+
+    List<ShelfItem> shelfItem = libraryModel.getCurrentLibraryList();
+
+    // For each shelf in the library
+    for (int i = 0; i < shelfItem.size(); i++) {
+      Long currentShelfId = shelfItem.get(i).getId();
+
+      bibFormat.append(getBibDataFromShelf(currentShelfId, bookModel,
+                                           noteModel));
+
+    }
+
+    return bibFormat.toString();
+  }
+
+  /**
+   * Generates the BibTex format for all books in a given shelf.
+   *
+   * @param shelfId   id of the shelf
+   * @param bookModel object of the class BookModel
+   *                  used to retrieve book data from a selected shelf
+   * @param noteModel object of the class NoteModel
+   *                  used to retrieve note data from a selected shelf
+   * @return the BibTex format of a collection of books as String
+   */
+  public String getBibDataFromShelf(Long shelfId, BookModel bookModel, NoteModel noteModel) {
+    List<Long> bookIdsCurrentShelf =
+        bookModel.getAllBookIdsForShelf(shelfId);
+    StringBuilder bibFormat = new StringBuilder();
+
+    // For each book in the current shelf
+    for (int i = 0; i < bookIdsCurrentShelf.size(); i++) {
+      Long bookId = bookIdsCurrentShelf.get(i);
+
+      bibFormat.append(getBibDataFromBook(bookId, bookModel, noteModel));
+
+    }
+
+    return bibFormat.toString();
+  }
+
+  /**
+   * Generates the BibTex format for a given book.
+   *
+   * @param bookId    id of the book
+   * @param bookModel object of the class BookModel
+   *                  used to retrieve book data
+   * @param noteModel object of the class NoteModel
+   *                  used to retrieve note data
+   * @return the BibTex format of a book as String
+   */
+  public String getBibDataFromBook(Long bookId, BookModel bookModel, NoteModel noteModel) {
+    Book book = bookModel.getBookById(bookId);
+
+    return BibTexKeys.BOOK_TAG + BibTexKeys.OPENING_CURLY_BRACKET + getBibKey(book)
+        + BibTexKeys.COMMA_SEPARATOR + "\n"
+
+        + BibTexKeys.ISBN + BibTexKeys.OPENING_CURLY_BRACKET + book.getIsbn()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
+
+        + getBibAuthorNames(bookId, bookModel)
+
+        + BibTexKeys.BOOK_TITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getTitle()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
+
+        + BibTexKeys.SUBTITLE + BibTexKeys.OPENING_CURLY_BRACKET + book.getSubtitle()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
+
+        + BibTexKeys.PUBLISHER + BibTexKeys.OPENING_CURLY_BRACKET + book.getPublisher()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
+
+        + BibTexKeys.EDITION + BibTexKeys.OPENING_CURLY_BRACKET + book.getEdition()
+        + BibTexKeys.CLOSING_CURLY_BRACKET + BibTexKeys.COMMA_SEPARATOR + "\n"
+
+        + getBibNotesFromBook(book, noteModel)
+
+        + BibTexKeys.YEAR + book.getPubYear() + "\n" + BibTexKeys.CLOSING_CURLY_BRACKET
+        + "\n" + "\n";
+
+  }
+
+  /**
    * Writes a temporary BibTex file.
    *
    * @param context the context of the used fragment
@@ -193,7 +192,7 @@ public class ExportBibTex {
       fileWriter.close();
     } catch (Exception ex) {
       Toast.makeText(context, context.getString(R.string.exception_failed_temp_file),
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
 
       Log.e(TAG, ex.toString(), ex);
     }

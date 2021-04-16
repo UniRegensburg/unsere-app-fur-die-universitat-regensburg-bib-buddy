@@ -6,24 +6,30 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.stream.Collectors;
 
+/**
+ * ApiReader reads and returns data from the API.
+ *
+ * @author Luis Moßburger
+ */
 public class ApiReader implements Runnable {
 
   private static final String TAG = ApiReader.class.getSimpleName();
+
   private final String url;
-  private String metadata = null;
+
+  private String metadata;
 
   /**
-   * ApiReader reads and returns data from the API.
+   * Constructor of an ApiReader that can be used to read and return data from the API.
    *
-   * @param url that should be sent to API.
-   * @author Luis Moßburger.
+   * @param url that should be sent to API
    */
   ApiReader(String url) {
     this.url = url;
   }
 
   /**
-   * Read from API and return.
+   * Reads from API and return.
    */
   public void run() {
     try {

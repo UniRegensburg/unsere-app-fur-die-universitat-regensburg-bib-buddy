@@ -1,8 +1,10 @@
 package de.bibbuddy;
 
+import androidx.annotation.NonNull;
 import java.util.Objects;
 
 public class Author {
+
   private Long id;
   private String firstName;
   private String lastName;
@@ -10,6 +12,15 @@ public class Author {
   private Long createDate;
   private Long modDate;
   private Author cache;
+
+  private static Long copyLong(Long number) {
+    if (number == null) {
+      return null;
+    }
+
+    //noinspection BoxingBoxedValue
+    return Long.valueOf(number); // this is used because of a former bug
+  }
 
   public Author() {
   }
@@ -53,16 +64,8 @@ public class Author {
     this.title = title;
   }
 
-  private static Long copyLong(Long number) {
-    if (number == null) {
-      return null;
-    }
-
-    return Long.valueOf(number);
-  }
-
   /**
-   * Method to check if author object is completely empty.
+   * Checks if author object is completely empty.
    */
   public boolean isEmpty() {
     return firstName == null
@@ -102,13 +105,16 @@ public class Author {
     this.title = title;
   }
 
+  @SuppressWarnings("unused")
   public Long getModDate() {
     return modDate;
   }
 
   /**
-   * Method to copy an author object.
+   * Copies an author object.
    */
+  @NonNull
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
   public Author clone() {
 
     return new Author(copyLong(id), firstName, lastName, title, copyLong(createDate),

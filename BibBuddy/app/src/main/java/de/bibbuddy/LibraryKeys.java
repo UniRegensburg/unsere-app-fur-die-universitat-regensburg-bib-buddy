@@ -6,6 +6,7 @@ package de.bibbuddy;
  * @author Claudia Schönherr
  */
 public class LibraryKeys {
+
   public static final String SHELF_ID = "shelf_id";
   public static final String SHELF_NAME = "shelf_name";
   public static final String SHELF_NAMES = "shelf_names";
@@ -24,4 +25,5 @@ public class LibraryKeys {
   public static final String FRAGMENT_AUTHOR = "fragment_author";
 
   public static final String MANUAL_TEXT = "manual_text";
+
 }

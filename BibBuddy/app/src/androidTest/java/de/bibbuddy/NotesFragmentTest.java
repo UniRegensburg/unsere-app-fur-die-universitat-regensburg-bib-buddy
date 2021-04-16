@@ -36,6 +36,7 @@ public class NotesFragmentTest {
   /**
    * Initiate basic NotesFragment' setup before every test-case.
    */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   @Before
   public void init() {
     ActivityScenario scenario = ActivityScenario.launch(MainActivity.class);

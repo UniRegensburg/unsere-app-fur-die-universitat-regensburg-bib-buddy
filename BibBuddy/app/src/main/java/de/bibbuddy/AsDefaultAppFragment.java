@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
@@ -34,45 +33,24 @@ import java.util.List;
 public class AsDefaultAppFragment extends BackStackFragment
     implements LibraryRecyclerViewAdapter.LibraryListener, SwipeLeftRightCallback.Listener {
 
+  private final List<ShelfItem> selectedShelfItems = new ArrayList<>();
+
   private View view;
   private Context context;
   private LibraryModel libraryModel;
   private LibraryRecyclerViewAdapter adapter;
-  private List<ShelfItem> selectedShelfItems = new ArrayList<>();
 
-  private SortCriteria sortCriteria;
-  private ImportBibTex importBibTex;
+  private SortTypeLut sortTypeLut;
 
-
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-
-    // Called to have the fragment instantiate its user interface view.
-    view = inflater.inflate(R.layout.fragment_default_app, container, false);
-    context = view.getContext();
-
+  private void setupMainActivity() {
     MainActivity mainActivity = (MainActivity) requireActivity();
-    sortCriteria = mainActivity.getSortCriteria();
 
-    importBibTex = new ImportBibTex(context);
-
-    setupRecyclerView();
-    setupAddShelfBtn();
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     mainActivity.updateHeaderFragment(getString(R.string.header_default_app));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-
-    setupSortBtn();
-    setHasOptionsMenu(true);
-
-    setupDefaultApp();
-
-    selectedShelfItems.clear();
-
-    return view;
   }
 
   private void setupDefaultApp() {
@@ -80,9 +58,10 @@ public class AsDefaultAppFragment extends BackStackFragment
     Uri uri = mainActivity.getUriDefaultApp();
     String uriFileName = UriUtils.getUriFileName(mainActivity, uri);
 
+    ImportBibTex importBibTex = new ImportBibTex(context);
     if (!importBibTex.isBibFile(uriFileName)) {
       Toast.makeText(context, R.string.import_non_bib_file,
-          Toast.LENGTH_LONG).show();
+                     Toast.LENGTH_LONG).show();
       mainActivity.resetIsDefaultApp();
       onBackPressed();
     }
@@ -95,46 +74,10 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void setupSortBtn() {
-    MainActivity mainActivity = (MainActivity) requireActivity();
-
-    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
-    mainActivity.setVisibilitySortButton(true);
-
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> handleSortShelf());
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_library_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @SuppressLint("NonConstantResourceId")
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.menu_rename_shelf:
-        handleRenameShelf();
-        break;
-
-      case R.id.menu_delete_shelf:
-        handleDeleteShelf();
-        break;
-
-      case R.id.menu_help_library:
-        handleManualLibrary();
-        break;
-
-      case R.id.menu_imprint:
-        ((MainActivity) requireActivity()).openImprint();
-        break;
-
-      default:
-        break;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
 
   private void handleManualLibrary() {
     HelpFragment helpFragment = new HelpFragment();
@@ -146,27 +89,6 @@ public class AsDefaultAppFragment extends BackStackFragment
 
     helpFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
-    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
-
-    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
-      renameShelf.setVisible(false);
-      deleteShelf.setVisible(false);
-
-    } else if (selectedShelfItems.size() != 1) {
-      renameShelf.setVisible(false);
-      deleteShelf.setVisible(true);
-
-    } else {
-      renameShelf.setVisible(true);
-      deleteShelf.setVisible(true);
-
-    }
-
   }
 
   private void handleDeleteShelf() {
@@ -298,10 +220,11 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void handleSortShelf() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
         newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
           sortLibraryList();
         });
 
@@ -309,7 +232,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void sortLibraryList() {
-    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortCriteria);
+    List<ShelfItem> libraryList = libraryModel.getSortedLibraryList(sortTypeLut);
 
     adapter.setLibraryList(libraryList);
     adapter.notifyDataSetChanged();
@@ -318,7 +241,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   private void setupRecyclerView() {
     libraryModel = new LibraryModel(requireContext());
     List<ShelfItem> libraryList = libraryModel
-        .getSortedLibraryList(sortCriteria, libraryModel.getLibraryList(null));
+        .getSortedLibraryList(sortTypeLut, libraryModel.getLibraryList(null));
 
     SwipeableRecyclerView libraryRecyclerView =
         view.findViewById(R.id.library_recycler_view);
@@ -369,7 +292,7 @@ public class AsDefaultAppFragment extends BackStackFragment
     LibraryFormFragment libraryFormFragment =
         new LibraryFormFragment(new LibraryFormFragment.ChangeShelfListener() {
           @Override
-          public void onShelfAdded(String name, Long shelfId) {
+          public void onShelfAdded(String name) {
             libraryModel.addShelf(name, libraryModel.getShelfId());
             updateLibraryListView(libraryModel.getCurrentLibraryList());
             Toast.makeText(context, getString(R.string.shelf_added), Toast.LENGTH_SHORT).show();
@@ -392,7 +315,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   private void updateLibraryListView(List<ShelfItem> libraryList) {
-    libraryList = libraryModel.getSortedLibraryList(sortCriteria, libraryList);
+    libraryList = libraryModel.getSortedLibraryList(sortTypeLut, libraryList);
     adapter.notifyDataSetChanged();
     updateEmptyView(libraryList);
   }
@@ -421,6 +344,82 @@ public class AsDefaultAppFragment extends BackStackFragment
     return bundle;
   }
 
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    // Called to have the fragment instantiate its user interface view.
+    view = inflater.inflate(R.layout.fragment_default_app, container, false);
+    context = view.getContext();
+
+    setupMainActivity();
+    setupRecyclerView();
+
+    setupSortBtn();
+    setupAddShelfBtn();
+    setupDefaultApp();
+
+    selectedShelfItems.clear();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_library_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem renameShelf = menu.findItem(R.id.menu_rename_shelf);
+    MenuItem deleteShelf = menu.findItem(R.id.menu_delete_shelf);
+
+    if (selectedShelfItems == null || selectedShelfItems.isEmpty()) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(false);
+
+    } else if (selectedShelfItems.size() != 1) {
+      renameShelf.setVisible(false);
+      deleteShelf.setVisible(true);
+
+    } else {
+      renameShelf.setVisible(true);
+      deleteShelf.setVisible(true);
+    }
+
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.menu_rename_shelf:
+        handleRenameShelf();
+        break;
+
+      case R.id.menu_delete_shelf:
+        handleDeleteShelf();
+        break;
+
+      case R.id.menu_help_library:
+        handleManualLibrary();
+        break;
+
+      case R.id.menu_imprint:
+        ((MainActivity) requireActivity()).openImprint();
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override
   public void onShelfClicked(int position) {
     removeDefaultFragment();
@@ -432,7 +431,7 @@ public class AsDefaultAppFragment extends BackStackFragment
   }
 
   @Override
-  public void onShelfLongClicked(int position, ShelfItem shelfItem, View v) {
+  public void onShelfLongClicked(ShelfItem shelfItem, View v) {
 
     if (v.isSelected()) {
       v.setSelected(false);

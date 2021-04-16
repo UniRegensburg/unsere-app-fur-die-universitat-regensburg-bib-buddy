@@ -16,7 +16,11 @@ public class Book {
   private String volume = "";
   private String edition = "";
   private String addInfo = "";
+
+  @SuppressWarnings({"unused", "FieldCanBeLocal"})
+  // Can be used in the future and is here only to check for possible bugs
   private Long createDate;
+
   private Long modDate;
 
   /**
@@ -131,10 +135,6 @@ public class Book {
     return volume;
   }
 
-  public void setVolume(String volume) {
-    this.volume = volume;
-  }
-
   public String getEdition() {
     return edition;
   }
@@ -151,16 +151,8 @@ public class Book {
     this.addInfo = addInfo;
   }
 
-  public void setCreateDate(Long createDate) {
-    this.createDate = createDate;
-  }
-
   public Long getModDate() {
     return modDate;
-  }
-
-  public void setModDate(Long modDate) {
-    this.modDate = modDate;
   }
 
 }

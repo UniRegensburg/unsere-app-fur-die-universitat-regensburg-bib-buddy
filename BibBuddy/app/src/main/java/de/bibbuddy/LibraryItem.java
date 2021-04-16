@@ -10,30 +10,15 @@ public class LibraryItem implements SortableItem {
 
   private final int image;
   private final Long id;
+
+  @SuppressWarnings({"FieldCanBeLocal", "unused"})
+  // Can be used in the future
   private final Long parentId;
+
+  private final Long modDate;
+  private final String modDateStr;
+
   private String name;
-
-  private Long modDate;
-  private String modDateStr;
-
-  public LibraryItem(String name, int image, Long id) {
-    this(name, image, id, null);
-  }
-
-  /**
-   * Constructor of a LibraryItem.
-   *
-   * @param name     name of the LibraryItem
-   * @param image    image of the LibraryItem
-   * @param id       id of the LibraryItem
-   * @param parentId parentId of the LibraryItem
-   */
-  public LibraryItem(String name, int image, Long id, Long parentId) {
-    this.name = name;
-    this.image = image;
-    this.id = id;
-    this.parentId = parentId;
-  }
 
   /**
    * Constructor of a LibraryItem.

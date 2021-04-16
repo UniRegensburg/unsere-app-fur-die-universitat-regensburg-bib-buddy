@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -57,7 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   // Database Information
   private static final String DB_NAME = "BibBuddyStorage.db"; // DB
 
-  // database version
+  // Database version
   private static final int DB_VERSION = 1;
 
   // Table queries
@@ -241,9 +242,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
   // Constructor
   public DatabaseHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);
-    SQLiteDatabase db = this.getWritableDatabase();
   }
 
+  @SuppressLint("SQLiteString")
   @Override
   public void onCreate(SQLiteDatabase db) {
     db.execSQL(CREATE_TABLE_AUTHOR);
@@ -260,7 +261,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     db.execSQL(CREATE_TABLE_BOOK_NOTE_LNK);
     db.execSQL(CREATE_TABLE_AUTHOR_BOOK_LNK);
   }
-
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -29,39 +29,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * BookNotesView is responsible for the noteList of a certain book.
+ * BookNotesFragment is responsible for the noteList of a certain book.
  *
  * @author Sarah Kurek, Silvia Ivanova, Luis Moßburger
  */
-public class BookNotesView extends BackStackFragment implements SwipeLeftRightCallback.Listener {
+public class BookNotesFragment extends BackStackFragment
+    implements SwipeLeftRightCallback.Listener {
 
   private View view;
   private Context context;
-  private BookNotesViewModel bookNotesViewModel;
+  private BookNotesModel bookNotesModel;
   private NoteRecyclerViewAdapter adapter;
   private Long bookId;
   private ActivityResultLauncher<String> requestPermissionLauncher;
 
   private BookModel bookModel;
-  private NoteModel noteModel;
 
-  private ExportBibTex exportBibTex;
-  private SortCriteria sortCriteria;
-
-  @Override
-  protected void onBackPressed() {
-    if (adapter.getSelectedNoteItems().isEmpty()) {
-      closeFragment();
-    } else {
-      deselectNoteItems();
-    }
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setupPermissionLauncher();
-  }
+  private SortTypeLut sortTypeLut;
 
   /**
    * Register permissions callback, which handles the user's response to the
@@ -83,47 +67,16 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
         });
   }
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
 
-    enableBackPressedHandler();
-
-    view = inflater.inflate(R.layout.fragment_book_notes, container, false);
-    context = view.getContext();
-    bookNotesViewModel = new BookNotesViewModel(context);
-
+  private void setupMainActivity(Bundle bundle) {
     MainActivity mainActivity = (MainActivity) requireActivity();
-    sortCriteria = mainActivity.getSortCriteria();
 
-    Bundle bundle = this.getArguments();
-    if (bundle != null) {
-      bookId = bundle.getLong(LibraryKeys.BOOK_ID);
-    }
-
-    bookModel = new BookModel(requireContext(), getShelfId());
-    noteModel = new NoteModel(requireContext());
-
-    Book book = bookModel.getBookById(bookId);
-
-    String fileName = (book.getTitle() + book.getPubYear())
-        .replaceAll("\\s+", "");
-    exportBibTex = new ExportBibTex(fileName);
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.VISIBLE);
+    mainActivity.setVisibilitySortBtn(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
 
     mainActivity.updateHeaderFragment(bundle.getString(LibraryKeys.SHELF_NAME));
     mainActivity.updateNavigationFragment(R.id.navigation_library);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.VISIBLE);
-
-    setupRecyclerView(bookId);
-    setupSortBtn();
-    setHasOptionsMenu(true);
-    setupAddButton();
-    updateBookNoteList(adapter.getNoteList());
-    setFunctionsToolbar();
-    fillBookData();
-
-    return view;
   }
 
   private Long getShelfId() {
@@ -134,40 +87,13 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
   private void setupSortBtn() {
     ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
-    ((MainActivity) requireActivity()).setVisibilitySortButton(true);
     sortBtn.setOnClickListener(v -> handleSortNote());
   }
 
-  private void setFunctionsToolbar() {
-    ((MainActivity) requireActivity()).shareBtn.setOnClickListener(view -> checkEmptyNoteList());
+  private void setupFunctionsToolbar() {
+    requireActivity().findViewById(R.id.share_btn).setOnClickListener(view -> checkEmptyNoteList());
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_book_note_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    int itemId = item.getItemId();
-
-    if (itemId == R.id.menu_delete_note) {
-      handleDeleteNote(adapter.getSelectedNoteItems());
-    } else if (itemId == R.id.menu_help_book_note) {
-      handleManualBookNotes();
-    } else if (itemId == R.id.menu_imprint) {
-      ((MainActivity) requireActivity()).openImprint();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
-    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
-  }
 
   private void handleDeleteNote(List<NoteItem> selectedItems) {
     AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(context);
@@ -217,8 +143,8 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   private void performDeleteNotes(List<NoteItem> itemsToDelete) {
     deselectNoteItems();
 
-    bookNotesViewModel.deleteNotes(itemsToDelete);
-    adapter.setNoteList(bookNotesViewModel.getBookNoteList(bookId));
+    bookNotesModel.deleteNotes(itemsToDelete);
+    adapter.setNoteList(bookNotesModel.getBookNoteList(bookId));
     adapter.notifyDataSetChanged();
 
     if (itemsToDelete.size() > 1) {
@@ -239,30 +165,31 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void handleSortNote() {
-    SortDialog sortDialog = new SortDialog(context, sortCriteria,
+    SortDialog sortDialog = new SortDialog(context, sortTypeLut,
         newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          ((MainActivity) requireActivity()).setSortCriteria(newSortCriteria);
-          sortNoteList();
+        sortTypeLut = newSortCriteria;
+        ((MainActivity) requireActivity())
+                                                 .setSortTypeLut(newSortCriteria);
+        sortNoteList();
         });
 
     sortDialog.show();
   }
 
   private void sortNoteList() {
-    List<NoteItem> noteList = bookNotesViewModel.getSortedNoteList(sortCriteria, bookId);
+    List<NoteItem> noteList = bookNotesModel.getSortedNoteList(sortTypeLut, bookId);
     adapter.setNoteList(noteList);
   }
 
   private void checkEmptyNoteList() {
-    if (bookNotesViewModel.getBookNoteList(bookId).isEmpty()) {
-      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(getContext());
+    if (bookNotesModel.getBookNoteList(bookId).isEmpty()) {
+      AlertDialog.Builder alertDialogEmptyLib = new AlertDialog.Builder(requireContext());
       alertDialogEmptyLib.setTitle(R.string.empty_note_list);
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-          (dialog, which) -> {
-          });
+        (dialog, which) -> {
+        });
 
       alertDialogEmptyLib.create().show();
 
@@ -273,32 +200,33 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void handleManualBookNotes() {
-    HelpFragment helpFragment = new HelpFragment();
     String htmlAsString = getString(R.string.book_note_help_text);
 
     Bundle bundle = new Bundle();
-
     bundle.putString(LibraryKeys.MANUAL_TEXT, htmlAsString);
+
+    HelpFragment helpFragment = new HelpFragment();
     helpFragment.setArguments(bundle);
 
     helpFragment
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
-  private void setupAddButton() {
-    View addButtonView = view.findViewById(R.id.add_btn);
-    PopupMenu pm = new PopupMenu(getContext(), addButtonView);
-    pm.getMenuInflater().inflate(R.menu.add_note_menu, pm.getMenu());
+  private void setupAddBtn() {
+    View addBtnView = view.findViewById(R.id.add_btn);
+    PopupMenu popupMenu = new PopupMenu(requireContext(), addBtnView);
+    popupMenu.getMenuInflater().inflate(R.menu.add_note_menu, popupMenu.getMenu());
 
-    pm.setOnMenuItemClickListener(item -> {
+    popupMenu.setOnMenuItemClickListener(item -> {
 
       if (item.getItemId() == R.id.add_text_note) {
         Bundle bundle = new Bundle();
         bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-        TextNoteEditorFragment textFrag = new TextNoteEditorFragment();
-        textFrag.setArguments(bundle);
 
-        showFragment(textFrag, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR);
+        TextNoteEditorFragment textNoteEditorFragment = new TextNoteEditorFragment();
+        textNoteEditorFragment.setArguments(bundle);
+
+        showFragment(textNoteEditorFragment, LibraryKeys.FRAGMENT_TEXT_NOTE_EDITOR);
       } else {
         checkRecordPermission();
       }
@@ -306,7 +234,7 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
       return true;
     });
 
-    addButtonView.setOnClickListener(v -> pm.show());
+    addBtnView.setOnClickListener(v -> popupMenu.show());
   }
 
   private void checkRecordPermission() {
@@ -315,10 +243,11 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
 
       Bundle bundle = new Bundle();
       bundle.putLong(LibraryKeys.BOOK_ID, bookId);
-      VoiceNoteEditorFragment voiceFrag = new VoiceNoteEditorFragment();
-      voiceFrag.setArguments(bundle);
 
-      showFragment(voiceFrag, LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR);
+      VoiceNoteEditorFragment voiceNoteEditorFragment = new VoiceNoteEditorFragment();
+      voiceNoteEditorFragment.setArguments(bundle);
+
+      showFragment(voiceNoteEditorFragment, LibraryKeys.FRAGMENT_VOICE_NOTE_EDITOR);
     } else if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
       showAudioRecordRequest();
 
@@ -333,11 +262,11 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     reqAlertDialog.setMessage(R.string.record_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-        (dialog, which) -> requestPermissionLauncher.launch(
-            Manifest.permission.RECORD_AUDIO));
+      (dialog, which) -> requestPermissionLauncher.launch(
+                                         Manifest.permission.RECORD_AUDIO));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
-        (dialog, which) -> dialog.dismiss());
+      (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
   }
@@ -347,8 +276,9 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     updateEmptyView(noteList);
   }
 
-  private void fillBookData() {
+  private void setupBookData() {
     Bundle bundle = this.getArguments();
+    assert bundle != null;
     BookModel bookModel = new BookModel(context, bundle.getLong(LibraryKeys.SHELF_ID));
     Book book = bookModel.getBookById(bookId);
 
@@ -371,11 +301,14 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void setupRecyclerView(Long bookId) {
+    bookNotesModel = new BookNotesModel(context);
+
     SwipeableRecyclerView notesRecyclerView =
         view.findViewById(R.id.book_notes_recycler_view);
+
     adapter = new NoteRecyclerViewAdapter((MainActivity) requireActivity(),
-        bookNotesViewModel.getBookNoteList(bookId),
-        bookNotesViewModel.getNoteModel());
+                                          bookNotesModel.getBookNoteList(bookId),
+                                          bookNotesModel.getNoteModel());
 
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
@@ -393,9 +326,16 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void shareBookNoteBibIntent() {
+    NoteModel noteModel = new NoteModel(context);
+
+    Book book = bookModel.getBookById(bookId);
+    String fileName = (book.getTitle() + book.getPubYear())
+        .replaceAll("\\s+", "");
+    ShareBibTex shareBibTex = new ShareBibTex(fileName);
+
     String content =
-        exportBibTex.getBibDataFromBook(bookId, bookModel, noteModel);
-    Uri contentUri = exportBibTex.writeTemporaryBibFile(context, content);
+        shareBibTex.getBibDataFromBook(bookId, bookModel, noteModel);
+    Uri contentUri = shareBibTex.writeTemporaryBibFile(context, content);
 
     Intent shareBookNoteIntent =
         ShareCompat.IntentBuilder.from(requireActivity())
@@ -405,7 +345,78 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
     startActivity(Intent.createChooser(shareBookNoteIntent, "SEND"));
+  }
 
+  @Override
+  protected void onBackPressed() {
+    if (adapter.getSelectedNoteItems().isEmpty()) {
+      closeFragment();
+    } else {
+      deselectNoteItems();
+    }
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setupPermissionLauncher();
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_book_notes, container, false);
+    context = view.getContext();
+
+    Bundle bundle = requireArguments();
+    bookId = bundle.getLong(LibraryKeys.BOOK_ID);
+
+    setupMainActivity(bundle);
+    setupRecyclerView(bookId);
+
+    bookModel = new BookModel(context, getShelfId());
+
+    setupFunctionsToolbar();
+    setupSortBtn();
+    setupAddBtn();
+
+    updateBookNoteList(adapter.getNoteList());
+    setupBookData();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_book_note_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int itemId = item.getItemId();
+
+    if (itemId == R.id.menu_delete_note) {
+      handleDeleteNote(adapter.getSelectedNoteItems());
+    } else if (itemId == R.id.menu_help_book_note) {
+      handleManualBookNotes();
+    } else if (itemId == R.id.menu_imprint) {
+      ((MainActivity) requireActivity()).openImprint();
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_delete_note);
+    deleteNote.setVisible(adapter.getSelectedNoteItems().size() > 0);
   }
 
   @Override
@@ -413,7 +424,6 @@ public class BookNotesView extends BackStackFragment implements SwipeLeftRightCa
     deselectNoteItems();
     handleDeleteNote(Collections.singletonList(adapter.getNoteList().get(position)));
     adapter.notifyDataSetChanged();
-
   }
 
   @Override

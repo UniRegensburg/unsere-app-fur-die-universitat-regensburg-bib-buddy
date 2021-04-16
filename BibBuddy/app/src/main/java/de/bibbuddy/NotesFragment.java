@@ -21,82 +21,32 @@ import java.util.List;
 /**
  * NotesFragment is responsible for the Notes of a Book.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class NotesFragment extends BackStackFragment implements SwipeLeftRightCallback.Listener {
 
-  public List<NoteItem> noteList;
-  public NoteModel noteModel;
-
-  private MainActivity mainActivity;
+  private View view;
+  private NoteModel noteModel;
+  public List<NoteItem> noteList; // TODO why is this public only because of test? should be private
   private SwipeableRecyclerView notesRecyclerView;
   private NoteRecyclerViewAdapter adapter;
-  private SortCriteria sortCriteria;
-  private TextView emptyListView;
+  private SortTypeLut sortTypeLut;
 
-  @Override
-  protected void onBackPressed() {
-    if (adapter.getSelectedNoteItems().isEmpty()) {
-      closeFragment();
-    } else {
-      deselectNoteItems();
-    }
-  }
+  private void setupMainActivity() {
+    MainActivity mainActivity = (MainActivity) requireActivity();
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-    enableBackPressedHandler();
+    mainActivity.setVisibilityImportShareBtn(View.GONE, View.GONE);
+    mainActivity.setVisibilitySortBtn(true);
+    sortTypeLut = mainActivity.getSortTypeLut();
 
-    mainActivity = (MainActivity) requireActivity();
-    noteModel = new NoteModel(mainActivity);
-    noteList = noteModel.getNoteList();
-    sortCriteria = mainActivity.getSortCriteria();
-
-    View view = inflater.inflate(R.layout.fragment_notes, container, false);
-    notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
-    emptyListView = view.findViewById(R.id.empty_notes_list_view);
-
+    mainActivity.updateHeaderFragment(getString(R.string.navigation_notes));
     mainActivity.updateNavigationFragment(R.id.navigation_notes);
-    mainActivity.setVisibilityImportShareButton(View.GONE, View.GONE);
-
-    setupSortBtn();
-    setHasOptionsMenu(true);
-    setupRecyclerView(view);
-
-    return view;
   }
 
-  @Override
-  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.fragment_note_list_menu, menu);
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override
-  public void onPrepareOptionsMenu(Menu menu) {
-    MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
-    deleteNote.setVisible(!adapter.getSelectedNoteItems().isEmpty());
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    long id = item.getItemId();
-
-    if (id == R.id.menu_note_list_delete) {
-      handleDeleteNote(adapter.getSelectedNoteItems());
-    } else if (id == R.id.menu_note_list_help) {
-      handleHelpNotesFragment();
-    } else if (id == R.id.menu_imprint) {
-      mainActivity.openImprint();
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
 
   private void handleDeleteNote(List<NoteItem> itemsToDelete) {
-    AlertDialog.Builder alertDeleteBookNote = new AlertDialog.Builder(mainActivity);
+    AlertDialog.Builder alertDeleteBookNote =
+        new AlertDialog.Builder(requireActivity());
     alertDeleteBookNote.setCancelable(false);
 
     if (adapter.getSelectedNoteItems().size() > 1) {
@@ -153,6 +103,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
     noteList = noteModel.getNoteList();
     adapter.setNoteList(noteList);
 
+    MainActivity mainActivity = (MainActivity) requireActivity();
     if (!itemsToDelete.isEmpty()) {
       Toast.makeText(mainActivity, getString(R.string.deleted_notes), Toast.LENGTH_SHORT).show();
     } else {
@@ -176,11 +127,14 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
         .show(requireActivity().getSupportFragmentManager(), LibraryKeys.FRAGMENT_HELP_VIEW);
   }
 
-  private void setupRecyclerView(View view) {
+  private void setupRecyclerView() {
     notesRecyclerView = view.findViewById(R.id.note_list_recycler_view);
 
+    noteModel = new NoteModel(requireActivity());
+    noteList = noteModel.getNoteList();
+
     adapter =
-        new NoteRecyclerViewAdapter(mainActivity, noteList, noteModel);
+        new NoteRecyclerViewAdapter((MainActivity) requireActivity(), noteList, noteModel);
     notesRecyclerView.setAdapter(adapter);
     notesRecyclerView.setListener(this);
 
@@ -188,6 +142,7 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void updateEmptyListView(List<NoteItem> noteList) {
+    TextView emptyListView = view.findViewById(R.id.empty_notes_list_view);
     if (noteList.isEmpty()) {
       emptyListView.setVisibility(View.VISIBLE);
     } else {
@@ -196,25 +151,79 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   }
 
   private void setupSortBtn() {
-    ImageButton sortBtn = mainActivity.findViewById(R.id.sort_btn);
-    mainActivity.setVisibilitySortButton(true);
+    ImageButton sortBtn = requireActivity().findViewById(R.id.sort_btn);
     sortBtn.setOnClickListener(v -> sortNotes());
   }
 
   private void sortNotes() {
-    SortDialog sortDialog = new SortDialog(mainActivity, sortCriteria,
+    MainActivity mainActivity = (MainActivity) requireActivity();
+    SortDialog sortDialog = new SortDialog(mainActivity, sortTypeLut,
         newSortCriteria -> {
-          sortCriteria = newSortCriteria;
-          mainActivity.setSortCriteria(newSortCriteria);
+          sortTypeLut = newSortCriteria;
+          mainActivity.setSortTypeLut(newSortCriteria);
           sortNoteList();
         });
-
     sortDialog.show();
   }
 
   private void sortNoteList() {
-    noteList = noteModel.getAllSortedNoteList(sortCriteria);
+    noteList = noteModel.getAllSortedNoteList(sortTypeLut);
     adapter.setNoteList(noteList);
+  }
+
+  @Override
+  protected void onBackPressed() {
+    if (adapter.getSelectedNoteItems().isEmpty()) {
+      closeFragment();
+    } else {
+      deselectNoteItems();
+    }
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+
+    enableBackPressedHandler();
+
+    view = inflater.inflate(R.layout.fragment_notes, container, false);
+
+    setupMainActivity();
+    setupRecyclerView();
+    setupSortBtn();
+
+    setHasOptionsMenu(true);
+
+    return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.fragment_note_list_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public void onPrepareOptionsMenu(Menu menu) {
+    MenuItem deleteNote = menu.findItem(R.id.menu_note_list_delete);
+    deleteNote.setVisible(!adapter.getSelectedNoteItems().isEmpty());
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    long id = item.getItemId();
+
+    if (id == R.id.menu_note_list_delete) {
+      handleDeleteNote(adapter.getSelectedNoteItems());
+    } else if (id == R.id.menu_note_list_help) {
+      handleHelpNotesFragment();
+    } else if (id == R.id.menu_imprint) {
+      MainActivity mainActivity = (MainActivity) requireActivity();
+      mainActivity.openImprint();
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

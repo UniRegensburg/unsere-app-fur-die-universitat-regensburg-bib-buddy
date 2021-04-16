@@ -1,5 +1,6 @@
 package de.bibbuddy;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,13 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,18 +21,8 @@ public class MainActivity extends AppCompatActivity {
   private final String libraryFragmentTag = "library";
   private final String notesFragmentTag = "notes";
   private final String imprintFragmentTag = "imprint";
-  private String welcomeMsg = "";
-  private final String defaultAppFragmentTag = "defaultAppSelected";
 
-  public ImageButton importBtn;
-  public ImageButton shareBtn;
-  public ImageButton sortBtn;
-
-  BottomNavigationView bottomNavigationView;
-  FragmentManager fragmentManager;
-  DatabaseHelper dbHelper;
-
-  private ImageButton logoButton;
+  private String welcomeMessage = "";
   private HomeFragment homeFragment;
   private SearchFragment searchFragment;
   private LibraryFragment libraryFragment;
@@ -41,46 +30,12 @@ public class MainActivity extends AppCompatActivity {
   private ImprintFragment imprintFragment;
   private AsDefaultAppFragment defaultAppFragment;
 
-  private SortCriteria sortCriteria;
+  private SortTypeLut sortTypeLut;
   private boolean[] filterCriteria;
   private String searchText;
 
   private boolean isDefaultSelected;
   private Uri uri;
-
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    Toolbar toolbar = findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-    welcomeMsg = "";
-    logoButton = findViewById(R.id.headerLogo);
-    bottomNavigationView = findViewById(R.id.bottom_navigation);
-    fragmentManager = getSupportFragmentManager();
-
-    if (savedInstanceState == null) {
-      homeFragment = new HomeFragment();
-      updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
-    }
-
-    setupLogoButton();
-    setupBottomNavigationView();
-
-    dbHelper = new DatabaseHelper(this);
-
-    sortCriteria = SortCriteria.MOD_DATE_LATEST;
-    sortBtn = findViewById(R.id.sort_btn);
-
-    filterCriteria = new boolean[] {true, true, true};
-
-    searchText = "";
-
-    setupDefaultAppSelected();
-  }
 
   private void setupDefaultAppSelected() {
     Intent defaultAppIntent = getIntent();
@@ -97,14 +52,142 @@ public class MainActivity extends AppCompatActivity {
         isDefaultSelected = true;
         uri = defaultAppIntent.getData();
         switchToDefaultAppFragment();
-
       }
     }
 
   }
 
+  private void switchToDefaultAppFragment() {
+    if (defaultAppFragment == null) {
+      defaultAppFragment = new AsDefaultAppFragment();
+    }
+
+    String defaultAppFragmentTag = "defaultAppSelected";
+    updateFragment(defaultAppFragment, defaultAppFragmentTag);
+  }
+
+  @SuppressLint("NonConstantResourceId")
+  private void setupBottomNavigationView() {
+    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+    bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+      switch (item.getItemId()) {
+        case R.id.navigation_home:
+          if (homeFragment == null) {
+            homeFragment = new HomeFragment();
+          }
+
+          resetIsDefaultApp();
+          updateFragment(homeFragment, homeFragmentTag);
+          break;
+
+        case R.id.navigation_search:
+          if (searchFragment == null) {
+            searchFragment = new SearchFragment();
+          }
+
+          resetIsDefaultApp();
+          updateFragment(searchFragment, searchFragmentTag);
+          break;
+
+        case R.id.navigation_library:
+          if (libraryFragment == null) {
+            libraryFragment = new LibraryFragment();
+          }
+
+          resetIsDefaultApp();
+          updateFragment(libraryFragment, libraryFragmentTag);
+          break;
+
+        case R.id.navigation_notes:
+          if (notesFragment == null) {
+            notesFragment = new NotesFragment();
+          }
+
+          resetIsDefaultApp();
+          updateFragment(notesFragment, notesFragmentTag);
+          break;
+
+        default:
+          throw new IllegalArgumentException();
+      }
+
+      return true;
+    });
+  }
+
+  private void setupLogoBtn() {
+    ImageButton logoBtn = findViewById(R.id.headerLogo);
+    logoBtn.setOnClickListener(v -> {
+      if (homeFragment == null) {
+        homeFragment = new HomeFragment();
+      }
+
+      updateFragment(homeFragment, homeFragmentTag);
+    });
+  }
+
+  private void updateFragment(Fragment fragment, String tag) {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.fragment_container_view, fragment, tag)
+        .setReorderingAllowed(true)
+        .addToBackStack(null)
+        .commit();
+
+    updateHeader(tag);
+  }
+
+  private void updateHeader(String tag) {
+    // Changes header text according to fragment
+    View headerTextView = findViewById(R.id.headerText);
+    TextView headerText = (TextView) headerTextView;
+    switch (tag) {
+      case homeFragmentTag:
+        headerText.setText(getString(R.string.navigation_home));
+        break;
+      case searchFragmentTag:
+        headerText.setText(getString(R.string.navigation_search));
+        break;
+      case libraryFragmentTag:
+        headerText.setText(getString(R.string.navigation_library));
+        break;
+      case notesFragmentTag:
+        headerText.setText(getString(R.string.navigation_notes));
+        break;
+      case imprintFragmentTag:
+        headerText.setText(R.string.header_imprint);
+        break;
+
+      default:
+        headerText.setText(getString(R.string.app_name));
+    }
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+    Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
+    if (savedInstanceState == null) {
+      homeFragment = new HomeFragment();
+      updateFragment(homeFragment, homeFragmentTag);
+      setupDefaultAppSelected();
+    }
+
+    setupLogoBtn();
+    setupBottomNavigationView();
+
+    sortTypeLut = SortTypeLut.MOD_DATE_LATEST;
+    filterCriteria = new boolean[] {true, true, true}; // shelf, book, note
+    searchText = "";
+  }
+
   /**
-   * Checks if the BubBuddy-App is selected as
+   * Checks if the BibBuddy-App is selected as
    * default app for opening a certain files.
    *
    * @return true if BibBuddy-App is selected as default
@@ -128,112 +211,14 @@ public class MainActivity extends AppCompatActivity {
     isDefaultSelected = false;
   }
 
-  private void switchToDefaultAppFragment() {
-    if (defaultAppFragment == null) {
-      defaultAppFragment = new AsDefaultAppFragment();
-    }
-
-    updateFragment(R.id.fragment_container_view, defaultAppFragment, defaultAppFragmentTag);
-  }
-
-  private void setupBottomNavigationView() {
-    bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-      switch (item.getItemId()) {
-        case R.id.navigation_home:
-          if (homeFragment == null) {
-            homeFragment = new HomeFragment();
-          }
-          resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
-          break;
-
-        case R.id.navigation_search:
-          if (searchFragment == null) {
-            searchFragment = new SearchFragment();
-          }
-          resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, searchFragment, searchFragmentTag);
-          break;
-
-        case R.id.navigation_library:
-          if (libraryFragment == null) {
-            libraryFragment = new LibraryFragment();
-          }
-          resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, libraryFragment, libraryFragmentTag);
-          break;
-
-        case R.id.navigation_notes:
-          if (notesFragment == null) {
-            notesFragment = new NotesFragment();
-          }
-          resetIsDefaultApp();
-          updateFragment(R.id.fragment_container_view, notesFragment, notesFragmentTag);
-          break;
-
-        default:
-          break;
-      }
-
-      return true;
-    });
-  }
-
-  private void setupLogoButton() {
-    logoButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (homeFragment == null) {
-          homeFragment = new HomeFragment();
-        }
-        updateFragment(R.id.fragment_container_view, homeFragment, homeFragmentTag);
-      }
-    });
-  }
-
-  private void updateFragment(int id, Fragment fragment, String tag) {
-    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    fragmentTransaction.replace(id, fragment, tag);
-    fragmentTransaction.setReorderingAllowed(true);
-    fragmentTransaction.addToBackStack(null);
-    fragmentTransaction.commit();
-    updateHeader(tag);
-  }
-
   public void updateHeaderFragment(String name) {
     TextView headerView = findViewById(R.id.headerText);
     headerView.setText(name);
   }
 
   public void updateNavigationFragment(int item) {
-    bottomNavigationView = findViewById(R.id.bottom_navigation);
+    BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
     bottomNavigationView.getMenu().findItem(item).setChecked(true);
-  }
-
-  private void updateHeader(String tag) {
-    // change header text according to fragment
-    View headerTextView = findViewById(R.id.headerText);
-    TextView headerText = (TextView) headerTextView;
-    switch (tag) {
-      case "home":
-        headerText.setText(getString(R.string.navigation_home));
-        break;
-      case "search":
-        headerText.setText(getString(R.string.navigation_search));
-        break;
-      case "library":
-        headerText.setText(getString(R.string.navigation_library));
-        break;
-      case "notes":
-        headerText.setText(getString(R.string.navigation_notes));
-        break;
-      case "imprint":
-        headerText.setText(R.string.header_imprint);
-        break;
-
-      default:
-        headerText.setText(getString(R.string.app_name));
-    }
   }
 
   /**
@@ -242,11 +227,11 @@ public class MainActivity extends AppCompatActivity {
    * @param visibilityImport visibility of the import button
    * @param visibilityShare  visibility of the share button
    */
-  public void setVisibilityImportShareButton(int visibilityImport, int visibilityShare) {
-    importBtn = findViewById(R.id.import_btn);
+  public void setVisibilityImportShareBtn(int visibilityImport, int visibilityShare) {
+    ImageButton importBtn = findViewById(R.id.import_btn);
     importBtn.setVisibility(visibilityImport);
 
-    shareBtn = findViewById(R.id.share_btn);
+    ImageButton shareBtn = findViewById(R.id.share_btn);
     shareBtn.setVisibility(visibilityShare);
   }
 
@@ -255,7 +240,9 @@ public class MainActivity extends AppCompatActivity {
    *
    * @param isVisible if the button should be visible or not
    */
-  public void setVisibilitySortButton(boolean isVisible) {
+  public void setVisibilitySortBtn(boolean isVisible) {
+    ImageButton sortBtn = findViewById(R.id.sort_btn);
+
     if (isVisible) {
       sortBtn.setVisibility(View.VISIBLE);
     } else {
@@ -267,21 +254,20 @@ public class MainActivity extends AppCompatActivity {
    * Opens the imprint fragment.
    */
   public void openImprint() {
-
     if (imprintFragment == null) {
       imprintFragment = new ImprintFragment();
     }
 
-    updateFragment(R.id.fragment_container_view, imprintFragment, imprintFragmentTag);
+    updateFragment(imprintFragment, imprintFragmentTag);
     updateHeader(imprintFragmentTag);
   }
 
-  public SortCriteria getSortCriteria() {
-    return sortCriteria;
+  public SortTypeLut getSortTypeLut() {
+    return sortTypeLut;
   }
 
-  public void setSortCriteria(SortCriteria sortCriteria) {
-    this.sortCriteria = sortCriteria;
+  public void setSortTypeLut(SortTypeLut sortTypeLut) {
+    this.sortTypeLut = sortTypeLut;
   }
 
   public String getSearchText() {
@@ -300,11 +286,12 @@ public class MainActivity extends AppCompatActivity {
     filterCriteria[choice] = isChecked;
   }
 
-  public void setWelcomeMsg(String welcomeMsg) {
-    this.welcomeMsg = welcomeMsg;
+  public String getWelcomeMessage() {
+    return welcomeMessage;
   }
 
-  public String getWelcomeMsg() {
-    return welcomeMsg;
+  public void setWelcomeMessage(String welcomeMessage) {
+    this.welcomeMessage = welcomeMessage;
   }
+
 }

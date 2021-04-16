@@ -13,15 +13,15 @@ public enum NoteTypeLut {
 
   private final int id;
 
-  static NoteTypeLut valueOf(int id) {
-    return Stream.of(NoteTypeLut.values())
-      .filter(e -> e.getId() == id)
-      .findFirst()
-      .orElseThrow(IllegalArgumentException::new);
-  }
-
   NoteTypeLut(int id) {
     this.id = id;
+  }
+
+  static NoteTypeLut valueOf(int id) {
+    return Stream.of(values())
+        .filter(e -> e.getId() == id)
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   public int getId() {

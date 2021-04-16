@@ -20,10 +20,20 @@ import java.util.List;
 
 public class BookRecyclerViewAdapter
     extends RecyclerView.Adapter<BookRecyclerViewAdapter.BookViewHolder> {
+
   private final BookRecyclerViewAdapter.BookListener listener;
   private final Context context;
+
   private List<BookItem> bookList;
   private ViewGroup parent;
+
+  private String getNoteString(int noteCount) {
+    if (noteCount == 1) {
+      return noteCount + " " + context.getString(R.string.note);
+    }
+
+    return noteCount + " " + context.getString(R.string.navigation_notes);
+  }
 
   /**
    * Constructor of the BookRecyclerViewAdapter.
@@ -53,14 +63,6 @@ public class BookRecyclerViewAdapter
             .inflate(R.layout.list_view_item_book, parent, false));
   }
 
-  private String getNoteString(int noteCount) {
-    if (noteCount == 1) {
-      return noteCount + " " + context.getString(R.string.note);
-    }
-
-    return noteCount + " " + context.getString(R.string.navigation_notes);
-  }
-
   @Override
   public void onBindViewHolder(@NonNull BookRecyclerViewAdapter.BookViewHolder holder,
                                int position) {
@@ -81,8 +83,8 @@ public class BookRecyclerViewAdapter
     }
 
     holder.itemView.setOnClickListener(v -> {
-      if (getSelectedBookItems().size() > 0) {
-        listener.onBookLongClicked(position, bookItem, v);
+      if (!getSelectedBookItems().isEmpty()) {
+        listener.onBookLongClicked(bookItem, v);
       } else {
         listener.onBookClicked(position);
       }
@@ -93,7 +95,7 @@ public class BookRecyclerViewAdapter
         return false;
       }
 
-      listener.onBookLongClicked(position, bookItem, v);
+      listener.onBookLongClicked(bookItem, v);
       return true;
     });
   }
@@ -108,7 +110,7 @@ public class BookRecyclerViewAdapter
   }
 
   /**
-   * This method fetches the number of items selected in the recyclerView.
+   * Fetches the number of items selected in the recyclerView.
    *
    * @return the selected recyclerView items
    */
@@ -127,7 +129,7 @@ public class BookRecyclerViewAdapter
   public interface BookListener {
     void onBookClicked(int position);
 
-    void onBookLongClicked(int position, BookItem bookItem, View v);
+    void onBookLongClicked(BookItem bookItem, View v);
   }
 
   public static class BookViewHolder extends RecyclerView.ViewHolder {
@@ -141,7 +143,7 @@ public class BookRecyclerViewAdapter
     /**
      * Custom ViewHolder constructor to setup its basic view.
      *
-     * @param itemView View of the BookRecyclerView-item.
+     * @param itemView view of the BookRecyclerView-item
      */
     public BookViewHolder(@NonNull View itemView) {
       super(itemView);

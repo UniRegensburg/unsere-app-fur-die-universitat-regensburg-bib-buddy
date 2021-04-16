@@ -6,9 +6,14 @@ package de.bibbuddy;
  * @author Sarah Kurek
  */
 public class Shelf {
+
   private Long id;
-  private String name;
+  private final String name;
+
+  @SuppressWarnings({"unused", "FieldCanBeLocal"})
+  // Can be used in the future and is here only to check for possible bugs
   private Long createDate;
+
   private Long modDate;
   private Long shelfId;
 
@@ -27,9 +32,6 @@ public class Shelf {
     this.createDate = createDate;
     this.modDate = modDate;
     this.shelfId = shelfId;
-  }
-
-  public Shelf() {
   }
 
   /**
@@ -54,10 +56,6 @@ public class Shelf {
 
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
   }
 
   public Long getModDate() {

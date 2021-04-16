@@ -7,14 +7,14 @@ package de.bibbuddy;
  * @author Sarah Kurek
  */
 public class AuthorItem {
+
   private final int image;
   private final Author author;
-
 
   /**
    * Constructor of an AuthorItem.
    *
-   * @param author The Author
+   * @param author the Author
    */
   public AuthorItem(Author author) {
     this.image = R.drawable.ic_person;
@@ -27,14 +27,6 @@ public class AuthorItem {
 
   public String getLastName() {
     return author.getLastName();
-  }
-
-  public Long getId() {
-    return author.getId();
-  }
-
-  public Long getModDate() {
-    return author.getModDate();
   }
 
   public int getImage() {

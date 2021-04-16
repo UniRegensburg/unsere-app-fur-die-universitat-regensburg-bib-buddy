@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="40dp"
-    android:layout_marginBottom="75dp"
-    >
+    android:layout_marginBottom="75dp">
 
 
     <TextView
@@ -18,14 +17,12 @@
         android:layout_marginTop="60dp"
         android:text="@string/author_help"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_author"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
 
     <com.tsuryo.swipeablerv.SwipeableRecyclerView
@@ -42,14 +39,12 @@
         app:leftBgColor="@color/yellow"
         app:leftImage="@drawable/ic_edit"
         app:rightBgColor="@color/red"
-        app:rightImage="@drawable/ic_delete"
-        />
+        app:rightImage="@drawable/ic_delete" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        >
+        android:layout_gravity="end|bottom">
 
         <include
             android:id="@+id/btn_add_author"
@@ -57,16 +52,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/btn_confirm_author"
-            android:contentDescription="@string/add_author_btn"
-            />
+            android:contentDescription="@string/add_author_btn" />
 
         <include
             android:id="@+id/btn_confirm_author"
             layout="@layout/confirm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            />
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

@@ -3,7 +3,7 @@ package de.bibbuddy;
 /**
  * RichTextEditorPart is responsible for fetching parts of the text content of the RichTextEditor.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class RichTextEditorPart {
 

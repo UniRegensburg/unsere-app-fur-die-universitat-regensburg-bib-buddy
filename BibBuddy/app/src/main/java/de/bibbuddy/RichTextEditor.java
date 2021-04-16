@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * RichTextEditor is responsible for text note formatting.
  *
- * @author Sabrina Freisleben.
+ * @author Sabrina Freisleben
  */
 public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
@@ -39,7 +39,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
   private final List<Editable> historyList = new LinkedList<>();
 
-  private Context context;
+  private final Context context;
   private boolean historyEnable = true;
   private int historySize = 100;
   private boolean historyWorking = false;
@@ -56,65 +56,11 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   private boolean alignmentRight = false;
   private boolean alignmentCenter = false;
 
-  /**
-   * Constructor for the basic RichTextEditor.
-   *
-   * @param context of Fragment or Activity that is including the RichTextEditor.
-   * @param attrs   attributeSet of the RichTextEditor.
-   */
-  public RichTextEditor(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init(attrs);
-    this.context = context;
-  }
-
   private void init(AttributeSet attrs) {
     TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.RichTextEditor);
     historyEnable = array.getBoolean(R.styleable.RichTextEditor_historyEnable, true);
     historySize = array.getInt(R.styleable.RichTextEditor_historySize, historySize);
     array.recycle();
-  }
-
-  @Override
-  protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    addTextChangedListener(this);
-  }
-
-  @Override
-  protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    removeTextChangedListener(this);
-  }
-
-  /**
-   * Set or remove the text format bold depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type bold is not selected.
-   */
-  public void bold(boolean valid) {
-    bold = valid;
-
-    if (valid) {
-      applyStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
-    } else {
-      removeStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
-    }
-  }
-
-  /**
-   * Set or remove the text format italic depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type italic is not selected.
-   */
-  public void italic(boolean valid) {
-    italic = valid;
-
-    if (valid) {
-      applyStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
-    } else {
-      removeStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
-    }
   }
 
   private void applyStyleSpan(int style, int start, int end) {
@@ -128,7 +74,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     for (StyleSpan span : spans) {
       if (span.getStyle() == style) {
         list.add(new RichTextEditorPart(getEditableText().getSpanStart(span),
-            getEditableText().getSpanEnd(span)));
+                                        getEditableText().getSpanEnd(span)));
         getEditableText().removeSpan(span);
       }
     }
@@ -142,21 +88,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
           applyStyleSpan(style, end, part.getEnd());
         }
       }
-    }
-  }
-
-  /**
-   * Set or remove the text format underline depending on its related toolbar icon selection.
-   *
-   * @param valid if icon for format type underline is not selected.
-   */
-  public void underline(boolean valid) {
-    underline = valid;
-
-    if (valid) {
-      applyUnderlineSpan(getSelectionStart(), getSelectionEnd());
-    } else {
-      removeUnderlineSpan(getSelectionStart(), getSelectionEnd());
     }
   }
 
@@ -176,7 +107,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
     for (UnderlineSpan span : spans) {
       list.add(new RichTextEditorPart(getEditableText().getSpanStart(span),
-          getEditableText().getSpanEnd(span)));
+                                      getEditableText().getSpanEnd(span)));
       getEditableText().removeSpan(span);
     }
 
@@ -193,20 +124,6 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     }
   }
 
-  /**
-   * Set or remove the text format strikeThrough depending on its related toolbar icon selection.
-   *
-   * @param valid if the icon for format type strikeThrough is not selected.
-   */
-  public void strikeThrough(boolean valid) {
-    strikeThrough = valid;
-
-    if (valid) {
-      applyStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
-    } else {
-      removeStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
-    }
-  }
 
   private void applyStrikeThroughSpan(int start, int end) {
     if (start < end) {
@@ -226,7 +143,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
 
     for (StrikethroughSpan span : spans) {
       list.add(new RichTextEditorPart(getEditableText().getSpanStart(span),
-          getEditableText().getSpanEnd(span)));
+                                      getEditableText().getSpanEnd(span)));
       getEditableText().removeSpan(span);
     }
 
@@ -244,27 +161,10 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Set or remove the text format bullets depending on its related toolbar icon selection.
+   * Checks if the line does not contain a given span-Object yet and apply it, if that is true.
    *
-   * @param valid if the icon for format type bullets is not selected.
-   */
-  public void bullet(boolean valid) {
-    bullet = valid;
-
-    if (valid) {
-      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
-          new RichTextEditorBulletSpan());
-    } else {
-      checkContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
-          RichTextEditorBulletSpan.class);
-    }
-  }
-
-  /**
-   * Check if the line does not contain a given span-Object yet and apply it, if that is true.
-   *
-   * @param contain boolean if the given span-Object is already contained in the relevant string.
-   * @param span    that is checked for.
+   * @param contain boolean if the given span-Object is already contained in the relevant string
+   * @param span    that is checked for
    */
   private void checkNotContaining(Boolean contain, Object span) {
     String[] lines = TextUtils.split(getEditableText().toString(), "\n");
@@ -274,6 +174,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
       if (contain) {
         return;
       }
+
       int lineStart = getLineBoundaries()[0];
       int lineEnd = getLineBoundaries()[1];
       applyLineSpan(lineStart, lineEnd, span);
@@ -282,9 +183,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Get the current line (either of selected text or the current cursor position) start and end.
+   * Gets the current line (either of selected text or the current cursor position) start and end.
    *
-   * @return the current line start and end.
+   * @return the current line start and end
    */
   private int[] getLineBoundaries() {
     String[] lines = TextUtils.split(getEditableText().toString(), "\n");
@@ -295,9 +196,11 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
     while (i < lines.length) {
       int lineStart = 0;
       int lineEnd;
+
       for (lineEnd = 0; lineEnd < i; lineEnd++) {
         lineStart = lineStart + lines[lineEnd].length() + 1;
       }
+
       lineEnd = lineStart + lines[i].length();
       adjustCursor(lineStart, lineEnd);
       if (lineStart < lineEnd && lineStart <= getSelectionStart() && getSelectionEnd() <= lineEnd
@@ -305,6 +208,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
         start = lineStart;
         end = lineEnd;
       }
+
       i++;
     }
 
@@ -316,10 +220,10 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Adjust the cursor position when alignment has been changed.
+   * Adjusts the cursor position when alignment has been changed.
    *
-   * @param lineStart position of the current line.
-   * @param lineEnd   position of the current line.
+   * @param lineStart position of the current line
+   * @param lineEnd   position of the current line
    */
   private void adjustCursor(int lineStart, int lineEnd) {
     if (lineStart == lineEnd) {
@@ -334,11 +238,11 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Apply a given span-Object to a text line.
+   * Applies a given span-Object to a text line.
    *
-   * @param lineStart position of the current line.
-   * @param lineEnd   position of the current line.
-   * @param span      object that should be applied.
+   * @param lineStart position of the current line
+   * @param lineEnd   position of the current line
+   * @param span      object that should be applied
    */
   private void applyLineSpan(int lineStart, int lineEnd, Object span) {
     if (lineStart < lineEnd) {
@@ -352,9 +256,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
       }
 
       if (start < end) {
-        getEditableText()
-            .setSpan(span, start, end,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getEditableText().setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (span.equals(RichTextEditorQuoteSpan.class)) {
           applyStyleSpan(FORMAT_ITALIC, start, end);
           getEditableText().setSpan(
@@ -366,10 +268,10 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Check if the line does contain a given span-Object yet and remove it, if that is true.
+   * Checks if the line does contain a given span-Object yet and remove it, if that is true.
    *
-   * @param contain boolean if the given span-object is already contained in the string.
-   * @param span    object to check for.
+   * @param contain boolean if the given span-object is already contained in the string
+   * @param span    object to check for
    */
   private void checkContaining(Boolean contain, Object span) {
     String[] lines = TextUtils.split(getEditableText().toString(), "\n");
@@ -390,11 +292,11 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Remove a given span-object from a text line.
+   * Removes a given span-object from a text line.
    *
-   * @param lineStart    position of the current line.
-   * @param stringLength of string the span should be removed of.
-   * @param span         object that should be removed.
+   * @param lineStart    position of the current line
+   * @param stringLength of string the span should be removed of
+   * @param span         object that should be removed
    */
   private void removeLineSpan(int lineStart, int stringLength, Object span) {
     int lineEnd = lineStart + stringLength;
@@ -414,18 +316,21 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
           RichTextEditorBulletSpan[] spans =
               getEditableText()
                   .getSpans(start, end, RichTextEditorBulletSpan.class);
+
           for (RichTextEditorBulletSpan bulletSpan : spans) {
             getEditableText().removeSpan(bulletSpan);
           }
         } else {
           RichTextEditorQuoteSpan[] spans =
               getEditableText().getSpans(start, end, RichTextEditorQuoteSpan.class);
+
           for (RichTextEditorQuoteSpan quoteSpan : spans) {
             getEditableText().removeSpan(quoteSpan);
           }
 
           BackgroundColorSpan[] backgroundColorSpans =
               getEditableText().getSpans(start, end, BackgroundColorSpan.class);
+
           for (BackgroundColorSpan backgroundColorSpan : backgroundColorSpans) {
             getEditableText().removeSpan(backgroundColorSpan);
           }
@@ -437,10 +342,10 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Return whether the editable text contains a given span-object.
+   * Returns whether the editable text contains a given span-object.
    *
-   * @param span object that should be checked for.
-   * @return true if the text already contains the given span object.
+   * @param span object that should be checked for
+   * @return true if the text already contains the given span object
    */
   private boolean lineContainsFormat(Object span) {
     String[] lines = TextUtils.split(getEditableText().toString(), "\n");
@@ -474,12 +379,12 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Return whether a line at given index from the entire editable text lines contains a given
+   * Returns whether a line at given index from the entire editable text lines contains a given
    * span-object yet.
    *
-   * @param index of the line.
-   * @param span  object that should be checked for.
-   * @return true if the line already contains the given span object.
+   * @param index of the line
+   * @param span  object that should be checked for
+   * @return true if the line already contains the given span object
    */
   private boolean lineContainsFormat(int index, Object span) {
     String[] lines = TextUtils.split(getEditableText().toString(), "\n");
@@ -514,60 +419,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Set or remove the text format quote depending on its related toolbar icon selection.
+   * Applies a given alignment style.
    *
-   * @param valid if the icon for format type quote is not selected.
-   */
-  public void quote(boolean valid) {
-    quote = valid;
-
-    if (valid) {
-      checkNotContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
-          new RichTextEditorQuoteSpan());
-    } else {
-      checkContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
-          RichTextEditorQuoteSpan.class);
-    }
-  }
-
-  /**
-   * Align the text left.
-   */
-  public void alignLeft() {
-    applyAlignment(FORMAT_ALIGN_LEFT);
-    alignmentLeft = !alignmentLeft;
-  }
-
-  /**
-   * Align the text right, if it is not yet, otherwise align the text left.
-   */
-  public void alignRight() {
-    if (!alignmentRight) {
-      alignmentRight = true;
-      applyAlignment(FORMAT_ALIGN_RIGHT);
-    } else {
-      alignmentRight = false;
-      applyAlignment(FORMAT_ALIGN_LEFT);
-    }
-  }
-
-  /**
-   * Align the text central, if it is not yet, otherwise align the text left.
-   */
-  public void alignCenter() {
-    if (!alignmentCenter) {
-      alignmentCenter = true;
-      applyAlignment(FORMAT_ALIGN_CENTER);
-    } else {
-      alignmentCenter = false;
-      applyAlignment(FORMAT_ALIGN_LEFT);
-    }
-  }
-
-  /**
-   * Apply a given alignment style.
-   *
-   * @param style of the alignment to apply.
+   * @param style of the alignment to apply
    */
   private void applyAlignment(int style) {
     int start = getSelectionStart();
@@ -581,18 +435,18 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Adjust the alignment of a given line to a given style.
+   * Adjusts the alignment of a given line to a given style.
    *
-   * @param style of the alignment to adjust to.
-   * @param start of the line.
-   * @param end   of the line.
+   * @param style of the alignment to adjust to
+   * @param start of the line
+   * @param end   of the line
    */
   private void adjustAlignment(int style, int start, int end) {
     if (start >= end) {
       return;
     }
 
-    //Clear the text from alignments to avoid double assignments
+    // Clears the text from alignments to avoid double assignments
     Object[] spansToRemove = getEditableText().getSpans(start, end, AlignmentSpan.class);
     for (Object span : spansToRemove) {
       getEditableText().removeSpan(span);
@@ -611,7 +465,210 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Redo the last user input action.
+   * Applies the spans that represent the selected text format options.
+   *
+   * @param spannable          to apply
+   * @param lastCursorPosition current position of the cursor
+   * @param endOfString        end of the entire text string
+   */
+  private void applySpans(Spannable spannable, int lastCursorPosition, int endOfString) {
+    if (bold) {
+      applyStyleSpan(FORMAT_BOLD, lastCursorPosition, endOfString);
+    }
+
+    if (italic) {
+      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
+    }
+
+    if (underline) {
+      applyUnderlineSpan(lastCursorPosition, endOfString);
+    }
+
+    if (strikeThrough) {
+      applyStrikeThroughSpan(lastCursorPosition, endOfString);
+    }
+
+    if (bullet) {
+      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
+                         new RichTextEditorBulletSpan());
+    }
+
+    if (quote) {
+      checkNotContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
+                         new RichTextEditorQuoteSpan());
+      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
+      spannable.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.gray)),
+                        lastCursorPosition, endOfString, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
+    if (alignmentLeft) {
+      applyAlignment(FORMAT_ALIGN_LEFT);
+    }
+
+    if (alignmentRight) {
+      applyAlignment(FORMAT_ALIGN_RIGHT);
+    }
+
+    if (alignmentCenter) {
+      applyAlignment(FORMAT_ALIGN_CENTER);
+    }
+  }
+
+  @Override
+  protected void onAttachedToWindow() {
+    super.onAttachedToWindow();
+    addTextChangedListener(this);
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    removeTextChangedListener(this);
+  }
+
+  /**
+   * Constructor for the basic RichTextEditor.
+   *
+   * @param context of Fragment or Activity that is including the RichTextEditor
+   * @param attrs   attributeSet of the RichTextEditor
+   */
+  public RichTextEditor(Context context, AttributeSet attrs) {
+    super(context, attrs);
+
+    init(attrs);
+    this.context = context;
+  }
+
+  /**
+   * Sets or removes the text format bold depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type bold is not selected
+   */
+  public void bold(boolean valid) {
+    bold = valid;
+
+    if (valid) {
+      applyStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
+    } else {
+      removeStyleSpan(FORMAT_BOLD, getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format italic depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type italic is not selected
+   */
+  public void italic(boolean valid) {
+    italic = valid;
+
+    if (valid) {
+      applyStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
+    } else {
+      removeStyleSpan(FORMAT_ITALIC, getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format underline depending on its related toolbar icon selection.
+   *
+   * @param valid if icon for format type underline is not selected
+   */
+  public void underline(boolean valid) {
+    underline = valid;
+
+    if (valid) {
+      applyUnderlineSpan(getSelectionStart(), getSelectionEnd());
+    } else {
+      removeUnderlineSpan(getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format strikeThrough depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type strikeThrough is not selected
+   */
+  public void strikeThrough(boolean valid) {
+    strikeThrough = valid;
+
+    if (valid) {
+      applyStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
+    } else {
+      removeStrikeThroughSpan(getSelectionStart(), getSelectionEnd());
+    }
+  }
+
+  /**
+   * Sets or removes the text format bullets depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type bullets is not selected
+   */
+  public void bullet(boolean valid) {
+    bullet = valid;
+
+    if (valid) {
+      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
+                         new RichTextEditorBulletSpan());
+    } else {
+      checkContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
+                      RichTextEditorBulletSpan.class);
+    }
+  }
+
+  /**
+   * Sets or removes the text format quote depending on its related toolbar icon selection.
+   *
+   * @param valid if the icon for format type quote is not selected
+   */
+  public void quote(boolean valid) {
+    quote = valid;
+
+    if (valid) {
+      checkNotContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
+                         new RichTextEditorQuoteSpan());
+    } else {
+      checkContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
+                      RichTextEditorQuoteSpan.class);
+    }
+  }
+
+  /**
+   * Aligns the text left.
+   */
+  public void alignLeft() {
+    applyAlignment(FORMAT_ALIGN_LEFT);
+    alignmentLeft = !alignmentLeft;
+  }
+
+  /**
+   * Aligns the text right, if it is not yet, otherwise align the text left.
+   */
+  public void alignRight() {
+    if (!alignmentRight) {
+      alignmentRight = true;
+      applyAlignment(FORMAT_ALIGN_RIGHT);
+    } else {
+      alignmentRight = false;
+      applyAlignment(FORMAT_ALIGN_LEFT);
+    }
+  }
+
+  /**
+   * Aligns the text central, if it is not yet, otherwise align the text left.
+   */
+  public void alignCenter() {
+    if (!alignmentCenter) {
+      alignmentCenter = true;
+      applyAlignment(FORMAT_ALIGN_CENTER);
+    } else {
+      alignmentCenter = false;
+      applyAlignment(FORMAT_ALIGN_LEFT);
+    }
+  }
+
+  /**
+   * Redoes the last user input action.
    */
   public void redo() {
     if (!redoValid()) {
@@ -632,9 +689,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Check if there is a redo-able user input action.
+   * Checks if there is a redo-able user input action.
    *
-   * @return true, if there is a valid user input action to redo.
+   * @return true, if there is a valid user input action to redo
    */
   public boolean redoValid() {
     if (historyEnable && historySize > 0 && !historyList.isEmpty()
@@ -647,7 +704,7 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Undo the last user input action.
+   * Undoes the last user input action.
    */
   public void undo() {
     if (!undoValid()) {
@@ -662,9 +719,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Check if there is an undo-able user input action.
+   * Checks if there is an undo-able user input action.
    *
-   * @return true, if there is a valid user input action to undo.
+   * @return true, if there is a valid user input action to undo
    */
   public boolean undoValid() {
     if (historyEnable && historySize > 0 && !historyWorking) {
@@ -675,10 +732,10 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Save the current text format as a span before any further user input action to provide a
+   * Saves the current text format as a span before any further user input action to provide a
    * history of redo-able and undo-able actions.
    *
-   * @param text current editable text as charSequence.
+   * @param text current editable text as charSequence
    */
   public void beforeTextChanged(CharSequence text, int start, int count, int after) {
     if (historyEnable && !historyWorking) {
@@ -687,9 +744,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Apply selected text format options as spans on new inserted text.
+   * Applies selected text format options as spans on new inserted text.
    *
-   * @param text current editable text as charSequence.
+   * @param text current editable text as charSequence
    */
   @Override
   public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
@@ -716,59 +773,9 @@ public class RichTextEditor extends AppCompatEditText implements TextWatcher {
   }
 
   /**
-   * Apply the spans that represent the selected text format options.
+   * Saves current text state after any user input action to provide a history of input actions.
    *
-   * @param spannable          to apply.
-   * @param lastCursorPosition current position of the cursor.
-   * @param endOfString        end of the entire text string.
-   */
-  private void applySpans(Spannable spannable, int lastCursorPosition, int endOfString) {
-    if (bold) {
-      applyStyleSpan(FORMAT_BOLD, lastCursorPosition, endOfString);
-    }
-
-    if (italic) {
-      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
-    }
-
-    if (underline) {
-      applyUnderlineSpan(lastCursorPosition, endOfString);
-    }
-
-    if (strikeThrough) {
-      applyStrikeThroughSpan(lastCursorPosition, endOfString);
-    }
-
-    if (bullet) {
-      checkNotContaining(lineContainsFormat(RichTextEditorBulletSpan.class),
-          new RichTextEditorBulletSpan());
-    }
-
-    if (quote) {
-      checkNotContaining(lineContainsFormat(RichTextEditorQuoteSpan.class),
-          new RichTextEditorQuoteSpan());
-      applyStyleSpan(FORMAT_ITALIC, lastCursorPosition, endOfString);
-      spannable.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.gray)),
-          lastCursorPosition, endOfString, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    }
-
-    if (alignmentLeft) {
-      applyAlignment(FORMAT_ALIGN_LEFT);
-    }
-
-    if (alignmentRight) {
-      applyAlignment(FORMAT_ALIGN_RIGHT);
-    }
-
-    if (alignmentCenter) {
-      applyAlignment(FORMAT_ALIGN_CENTER);
-    }
-  }
-
-  /**
-   * Save current text state after any user input action to provide a history of input actions.
-   *
-   * @param text current text content as editable.
+   * @param text current text content as editable
    */
   public void afterTextChanged(Editable text) {
     if (historyEnable && !historyWorking) {

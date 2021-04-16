@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_text_note_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,16 +13,16 @@
         android:id="@+id/formatArrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_gravity="end"
         android:layout_marginHorizontal="40dp"
         android:layout_marginTop="16dp"
         android:background="@null"
         android:contentDescription="@string/format_options"
-        android:src="@drawable/format_down"
+        android:orientation="vertical"
         android:scaleType="fitCenter"
+        android:src="@drawable/format_down"
         android:tint="@color/black"
-        android:layout_gravity="end"
-        android:translationZ="11dp"
-        android:orientation="vertical" />
+        android:translationZ="11dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,10 +33,11 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:scrollbars="horizontal"
             android:translationZ="15dp"
             android:visibility="gone"
-            android:background="@color/white">
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -48,8 +50,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/undo"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/undo"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -58,8 +60,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/redo"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/redo"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -68,8 +70,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/bold"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/bold"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -78,8 +80,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/italic"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/italic"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -88,8 +90,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/strike_through"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/strike_through"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -98,8 +100,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/underline"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/underline"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -108,8 +110,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/bullets"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/bullets"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -118,8 +120,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/quote"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/quote"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -128,8 +130,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_left"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/align_left"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -138,8 +140,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_right"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/align_right"
                     android:tint="@color/black" />
 
                 <ImageButton
@@ -148,8 +150,8 @@
                     android:layout_height="48dp"
                     android:backgroundTint="@color/editor_toolbar_selector"
                     android:contentDescription="@null"
-                    android:src="@drawable/align_center"
                     android:scaleType="fitCenter"
+                    android:src="@drawable/align_center"
                     android:tint="@color/black" />
 
             </LinearLayout>

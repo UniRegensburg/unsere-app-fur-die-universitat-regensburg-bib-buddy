@@ -14,22 +14,43 @@ import java.util.List;
  *
  * @author Sarah Kurek, Claudia Schönherr
  */
-public class ShelfDao implements InterfaceShelfDao {
+public class ShelfDao {
 
   private static final String TAG = ShelfDao.class.getSimpleName();
 
   private final DatabaseHelper dbHelper;
 
+  private String partSqlQuery(Long id) {
+    if (id == null) {
+      return " IS NULL";
+    } else {
+      return " = " + id;
+    }
+  }
+
+  private Shelf createShelfData(Cursor cursor) {
+
+    return new Shelf(Long.parseLong(cursor.getString(0)), // Id
+                     cursor.getString(1), // Name
+                     Long.parseLong(cursor.getString(2)), // Create date
+                     Long.parseLong(cursor.getString(3)), // Mod date
+                     null // parent shelf id is deprecated
+    );
+  }
+
   public ShelfDao(DatabaseHelper dbHelper) {
     this.dbHelper = dbHelper;
   }
 
-  @Override
-  public boolean create(Shelf shelf) {
+  /**
+   * Save a shelf in the database.
+   *
+   * @param shelf that should be saved.
+   */
+  public void create(Shelf shelf) {
     Long currentTime = new Date().getTime();
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-    try {
+    try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(DatabaseHelper.NAME, shelf.getName());
       contentValues.put(DatabaseHelper.CREATE_DATE, currentTime);
@@ -41,16 +62,11 @@ public class ShelfDao implements InterfaceShelfDao {
 
     } catch (SQLiteException ex) {
       Log.e(TAG, ex.toString(), ex);
-      return false;
 
-    } finally {
-      db.close();
     }
 
-    return true;
   }
 
-  @Override
   public Shelf findById(long id) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
@@ -79,32 +95,7 @@ public class ShelfDao implements InterfaceShelfDao {
     return shelf;
   }
 
-
-  // Gets all shelves in a list view
-  @Override
-  public List<Shelf> findAll() {
-    List<Shelf> shelfList = new ArrayList<Shelf>();
-    String selectQuery = "SELECT  * FROM " + DatabaseHelper.TABLE_NAME_SHELF;
-
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    Cursor cursor = db.rawQuery(selectQuery, null);
-
-    if (cursor.moveToFirst()) {
-      do {
-        Shelf shelf = createShelfData(cursor);
-
-        shelfList.add(shelf);
-      } while (cursor.moveToNext());
-    }
-
-    cursor.close();
-
-    return shelfList;
-  }
-
-
   // Deletes single shelf entry
-  @Override
   public void delete(Long id) {
     SQLiteDatabase db = dbHelper.getWritableDatabase();
     db.delete(DatabaseHelper.TABLE_NAME_SHELF, DatabaseHelper._ID + " = ?",
@@ -113,28 +104,21 @@ public class ShelfDao implements InterfaceShelfDao {
     db.close();
   }
 
-  private String partSqlQuery(Long id) {
-    if (id == null) {
-      return " IS NULL";
-    } else {
-      return " = " + id;
-    }
-  }
-
   /**
-   * Method to find all sub-shelves of a certain shelf with the parentId.
+   * Finds all sub-shelves of a certain shelf with the parentId.
    *
    * @param id current shelfId
    * @return list with all sub-shelves for the current shelf
    */
   public List<Shelf> findAllByParentId(Long id) {
-    List<Shelf> shelfList = new ArrayList<Shelf>();
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
     String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF
         + " WHERE " + DatabaseHelper.SHELF_ID + partSqlQuery(id);
 
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
+    List<Shelf> shelfList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);
@@ -155,12 +139,13 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to find the last added shelfId.
+   * Finds the last added shelfId.
    *
    * @return last added shelfId
    */
   public Long findLatestId() {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
+
     String selectQuery = "SELECT " + DatabaseHelper._ID + " FROM "
         + DatabaseHelper.TABLE_NAME_SHELF + " ORDER BY " + DatabaseHelper._ID + " DESC LIMIT 1";
 
@@ -179,15 +164,15 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to count all Notes for a certain Shelf.
+   * Counts all Notes for a certain Shelf.
    *
    * @param shelfBookIds list with all bookIds for current shelf
    * @return count of all books for current shelf
    */
   public int countAllNotesForShelf(List<Long> shelfBookIds) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    int noteCount = 0;
 
+    int noteCount = 0;
     for (Long bookId : shelfBookIds) {
       String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
           + DatabaseHelper.TABLE_NAME_BOOK_NOTE_LNK + " WHERE "
@@ -208,14 +193,13 @@ public class ShelfDao implements InterfaceShelfDao {
   }
 
   /**
-   * Method to count all Books for a certain Shelf.
+   * Counts all Books for a certain Shelf.
    *
    * @param shelfId current shelfId
    * @return count of all books for the current shelf
    */
   public int countAllBooksForShelf(Long shelfId) {
     SQLiteDatabase db = dbHelper.getReadableDatabase();
-    int bookCount = 0;
 
     String selectQuery = "SELECT COUNT(" + DatabaseHelper._ID + ") FROM "
         + DatabaseHelper.TABLE_NAME_SHELF_BOOK_LNK + " WHERE "
@@ -223,6 +207,7 @@ public class ShelfDao implements InterfaceShelfDao {
 
     Cursor cursor = db.rawQuery(selectQuery, new String[] {String.valueOf(shelfId)});
 
+    int bookCount = 0;
     if (cursor.moveToFirst()) {
       do {
         bookCount = Integer.parseInt(cursor.getString(0));
@@ -253,16 +238,6 @@ public class ShelfDao implements InterfaceShelfDao {
     db.close();
   }
 
-  private Shelf createShelfData(Cursor cursor) {
-
-    return new Shelf(Long.parseLong(cursor.getString(0)), // Id
-                     cursor.getString(1), // Name
-                     Long.parseLong(cursor.getString(2)), // Create date
-                     Long.parseLong(cursor.getString(3)), // Mod date
-                     null // parent shelf id is deprecated
-    );
-  }
-
   /**
    * Finds all shelf names which contain the searchInput.
    *
@@ -270,8 +245,6 @@ public class ShelfDao implements InterfaceShelfDao {
    * @return a list of shelves which have the searchInput in the name
    */
   public List<Shelf> findShelvesByName(String searchInput) {
-    List<Shelf> shelfList = new ArrayList<>();
-
     SQLiteDatabase db = dbHelper.getReadableDatabase();
 
     String selectQuery = "SELECT * FROM " + DatabaseHelper.TABLE_NAME_SHELF + " WHERE "
@@ -279,6 +252,7 @@ public class ShelfDao implements InterfaceShelfDao {
 
     Cursor cursor = db.rawQuery(selectQuery, null);
 
+    List<Shelf> shelfList = new ArrayList<>();
     if (cursor.moveToFirst()) {
       do {
         Shelf shelf = createShelfData(cursor);

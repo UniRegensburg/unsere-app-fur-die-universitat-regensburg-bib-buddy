@@ -19,6 +19,45 @@ public class LibraryModel {
   private List<ShelfItem> libraryList;
   private Long currentShelfId;
 
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+  }
+
+  private void sortLibraryList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
+      case MOD_DATE_LATEST:
+        libraryList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        libraryList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        libraryList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        libraryList.sort(new SortName().reversed());
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
+
   /**
    * The LibraryModel contains all the shelf data for the LibraryFragment.
    *
@@ -36,7 +75,7 @@ public class LibraryModel {
    * Adds a new book to the bookList and database.
    *
    * @param name     name of the new shelf
-   * @param parentId parentId of the new shelf (is deprecated)
+   * @param parentId parentId of the new shelf (can be used in future)
    */
   public void addShelf(String name, Long parentId) {
     Shelf shelf = new Shelf(name, parentId);
@@ -59,7 +98,7 @@ public class LibraryModel {
   /**
    * Gets the libraryList of the current parentId of the shelf.
    *
-   * @param parentId parentId of the shelf (is deprecated)
+   * @param parentId parentId of the shelf (can be used in future)
    * @return the libraryList of the given id
    */
   public List<ShelfItem> getLibraryList(Long parentId) {
@@ -110,8 +149,7 @@ public class LibraryModel {
       return;
     }
 
-    for (ShelfItem shelf : selectedShelfItems
-    ) {
+    for (ShelfItem shelf : selectedShelfItems) {
       Long shelfId = shelf.getId();
 
       List<Long> bookIds = bookDao.getAllBookIdsForShelf(shelfId);
@@ -123,33 +161,8 @@ public class LibraryModel {
       }
 
       shelfDao.delete(shelfId);
-      deleteShelfFromLibraryList(shelf);
+      libraryList.removeIf(shelf::equals);
     }
-  }
-
-  private void deleteShelfFromLibraryList(ShelfItem shelf) {
-    for (int i = 0; i < libraryList.size(); i++) {
-      if (shelf.equals(libraryList.get(i))) {
-        libraryList.remove(i);
-      }
-    }
-  }
-
-  private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
-
-    for (Long authorId : authorIds) {
-      authorDao.delete(authorId, bookId);
-    }
-  }
-
-  private void deleteNotes(Long bookId) {
-    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
-
-    for (Long noteId : noteIds) {
-      noteDao.delete(noteId);
-    }
-
   }
 
   /**
@@ -172,52 +185,28 @@ public class LibraryModel {
     }
   }
 
-  private void sortLibraryList(SortCriteria sortCriteria) {
-    switch (sortCriteria) {
-
-      case MOD_DATE_LATEST:
-        libraryList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_OLDEST:
-        libraryList.sort(new SortDate().reversed());
-        break;
-
-      case NAME_ASCENDING:
-        libraryList.sort(new SortName());
-        break;
-
-      case NAME_DESCENDING:
-        libraryList.sort(new SortName().reversed());
-        break;
-
-      default:
-        break;
-    }
-  }
-
   /**
-   * Gets the sorted search result list by sortCriteria.
+   * Gets the sorted search result list by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return the sorted shelves
    */
-  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria) {
-    sortLibraryList(sortCriteria);
+  public List<ShelfItem> getSortedLibraryList(SortTypeLut sortTypeLut) {
+    sortLibraryList(sortTypeLut);
 
     return libraryList;
   }
 
   /**
-   * Gets the sorted libraryList by sortCriteria.
+   * Gets the sorted libraryList by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return the sorted libraryList
    */
-  public List<ShelfItem> getSortedLibraryList(SortCriteria sortCriteria,
+  public List<ShelfItem> getSortedLibraryList(SortTypeLut sortTypeLut,
                                               List<ShelfItem> libraryList) {
     this.libraryList = libraryList;
-    sortLibraryList(sortCriteria);
+    sortLibraryList(sortTypeLut);
 
     return libraryList;
   }

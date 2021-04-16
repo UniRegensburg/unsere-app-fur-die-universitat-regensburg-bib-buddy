@@ -24,28 +24,28 @@
             android:src="@drawable/books" />
 
         <TextView
-                android:id="@+id/item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="-5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_toEndOf="@+id/library_icon"
-                android:text="Medium Text"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/library_icon"
+            android:text="Medium Text"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/image_note"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_below="@+id/item_name"
-            android:layout_toEndOf="@+id/text_book"
             android:layout_marginStart="30dp"
             android:layout_marginTop="3dp"
+            android:layout_toEndOf="@+id/text_book"
             android:contentDescription="@string/description_note"
-            android:src="@drawable/pen" />
+            android:src="@drawable/document" />
 
         <ImageView
             android:id="@+id/image_books"
@@ -64,11 +64,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/item_name"
             android:layout_marginStart="5dp"
-            android:padding="2dp"
             android:layout_toEndOf="@+id/image_note"
+            android:padding="2dp"
             android:text="@string/navigation_notes"
-            android:textSize="16dp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_book"
@@ -79,8 +79,8 @@
             android:layout_toEndOf="@+id/image_books"
             android:padding="2dp"
             android:text="@string/book"
-            android:textSize="16dp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

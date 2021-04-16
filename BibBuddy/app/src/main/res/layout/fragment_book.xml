@@ -2,12 +2,11 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_book"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="75dp"
-    android:layout_marginTop="40dp">
+    android:layout_marginTop="40dp"
+    android:layout_marginBottom="75dp">
 
     <TextView
         android:id="@+id/list_view_book_empty"
@@ -30,23 +29,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
         android:clipToPadding="false"
         android:orientation="vertical"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
         android:scrollbars="vertical"
         app:layoutManager="LinearLayoutManager"
-        app:rightBgColor="@color/red"
-        app:rightImage="@drawable/ic_delete"
         app:leftBgColor="@color/yellow"
-        app:leftImage="@drawable/ic_edit"/>
+        app:leftImage="@drawable/ic_edit"
+        app:rightBgColor="@color/red"
+        app:rightImage="@drawable/ic_delete" />
 
     <include
-            layout="@layout/add_button"
-            android:id="@+id/btn_add_book"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:contentDescription="@string/add_book" />
+        android:id="@+id/btn_add_book"
+        layout="@layout/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:contentDescription="@string/add_book" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

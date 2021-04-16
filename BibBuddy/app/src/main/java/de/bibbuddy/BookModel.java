@@ -7,16 +7,83 @@ import java.util.List;
 /**
  * The BookModel contains all the book data for the BookFragment.
  *
- * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger.
+ * @author Claudia Schönherr, Silvia Ivanova, Luis Moßburger
  */
 
 public class BookModel {
+
   private final BookDao bookDao;
   private final AuthorDao authorDao;
   private final NoteDao noteDao;
-  private Long shelfId;
 
   private List<BookItem> bookList;
+  private Long shelfId;
+
+
+  private String convertAuthorListToString(List<Author> authorList) {
+    if (authorList == null) {
+      return "";
+    }
+
+    StringBuilder authors = new StringBuilder();
+
+    boolean savedAuthor = false;
+    for (Author author : authorList) {
+
+      if (savedAuthor) {
+        authors.append(", ");
+      }
+
+      if (author.getTitle() != null) {
+        authors.append(author.getTitle()).append(" ");
+      }
+
+      authors.append(author.getFirstName()).append(" ").append(author.getLastName());
+      savedAuthor = true;
+    }
+
+    return authors.toString();
+  }
+
+  private void deleteAuthors(Long bookId) {
+    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
+
+    for (Long authorId : authorIds) {
+      authorDao.delete(authorId, bookId);
+    }
+  }
+
+  private void deleteNotes(Long bookId) {
+    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
+
+    for (Long noteId : noteIds) {
+      noteDao.delete(noteId);
+    }
+
+  }
+
+  private void sortBookList(SortTypeLut sortTypeLut) {
+    switch (sortTypeLut) {
+      case MOD_DATE_LATEST:
+        bookList.sort(new SortDate());
+        break;
+
+      case MOD_DATE_OLDEST:
+        bookList.sort(new SortDate().reversed());
+        break;
+
+      case NAME_ASCENDING:
+        bookList.sort(new SortName());
+        break;
+
+      case NAME_DESCENDING:
+        bookList.sort(new SortName().reversed());
+        break;
+
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
 
   /**
    * Constructor for a BookModel.
@@ -24,7 +91,6 @@ public class BookModel {
    * @param context context for the BookModel
    * @param shelfId shelfId of the selected book
    */
-
   public BookModel(Context context, Long shelfId) {
     this.shelfId = shelfId;
 
@@ -35,7 +101,7 @@ public class BookModel {
   }
 
   /**
-   * Gets all books from the databse.
+   * Gets all books from the database.
    *
    * @return a list with objects of the class Book
    */
@@ -63,30 +129,6 @@ public class BookModel {
     return bookDao.getAllBookIdsForShelf(id);
   }
 
-  private String convertAuthorListToString(List<Author> authorList) {
-    if (authorList == null) {
-      return "";
-    }
-
-    StringBuilder authors = new StringBuilder();
-
-    boolean savedAuthor = false;
-    for (Author author : authorList) {
-
-      if (savedAuthor) {
-        authors.append(", ");
-      }
-
-      if (author.getTitle() != null) {
-        authors.append(author.getTitle()).append(" ");
-      }
-
-      authors.append(author.getFirstName()).append(" ").append(author.getLastName());
-      savedAuthor = true;
-    }
-
-    return authors.toString();
-  }
 
   /**
    * Adds a new book to the bookList and database.
@@ -149,23 +191,6 @@ public class BookModel {
     return convertAuthorListToString(getAuthorList(bookId));
   }
 
-  private void deleteAuthors(Long bookId) {
-    List<Long> authorIds = bookDao.getAllAuthorIdsForBook(bookId);
-
-    for (Long authorId : authorIds) {
-      authorDao.delete(authorId, bookId);
-    }
-  }
-
-  private void deleteNotes(Long bookId) {
-    List<Long> noteIds = noteDao.getAllNoteIdsForBook(bookId);
-
-    for (Long noteId : noteIds) {
-      noteDao.delete(noteId);
-    }
-
-  }
-
   /**
    * Deletes all selected books and their respective notes.
    *
@@ -183,15 +208,7 @@ public class BookModel {
       deleteAuthors(bookId);
 
       bookDao.delete(bookId, shelfId);
-      deleteBookFromBookList(book);
-    }
-  }
-
-  private void deleteBookFromBookList(BookItem book) {
-    for (int i = 0; i < bookList.size(); i++) {
-      if (book.equals(bookList.get(i))) {
-        bookList.remove(i);
-      }
+      bookList.removeIf(book::equals);
     }
   }
 
@@ -215,68 +232,44 @@ public class BookModel {
     this.shelfId = shelfId;
   }
 
-  private void sortBookList(SortCriteria sortCriteria) {
-    switch (sortCriteria) {
-
-      case MOD_DATE_LATEST:
-        bookList.sort(new SortDate());
-        break;
-
-      case MOD_DATE_OLDEST:
-        bookList.sort(new SortDate().reversed());
-        break;
-
-      case NAME_ASCENDING:
-        bookList.sort(new SortName());
-        break;
-
-      case NAME_DESCENDING:
-        bookList.sort(new SortName().reversed());
-        break;
-
-      default:
-        break;
-    }
-  }
-
   /**
-   * Gets the sorted bookList by sortCriteria.
+   * Gets the sorted bookList by sortTypeLut.
    *
-   * @param sortCriteria sortCriteria of the list
+   * @param sortTypeLut sortTypeLut of the list
    * @return the sorted bookList
    */
-  public List<BookItem> getSortedBookList(SortCriteria sortCriteria) {
-    sortBookList(sortCriteria);
+  public List<BookItem> getSortedBookList(SortTypeLut sortTypeLut) {
+    sortBookList(sortTypeLut);
 
     return bookList;
   }
 
   /**
-   * Gets the sorted bookList by sortCriteria with the given bookList.
+   * Gets the sorted bookList by sortTypeLut with the given bookList.
    *
-   * @param sortCriteria sortCriteria of the list
-   * @param bookList     bookList that should be sorted
+   * @param sortTypeLut sortTypeLut of the list
+   * @param bookList    bookList that should be sorted
    * @return the sorted bookList
    */
-  public List<BookItem> getSortedBookList(SortCriteria sortCriteria, List<BookItem> bookList) {
+  public List<BookItem> getSortedBookList(SortTypeLut sortTypeLut, List<BookItem> bookList) {
     this.bookList = bookList;
-    sortBookList(sortCriteria);
+    sortBookList(sortTypeLut);
 
     return bookList;
   }
 
   /**
-   * Find an amount of last modified books.
+   * Finds an amount of last modified books.
    *
-   * @param amount of books to retrieve.
-   * @return a list of the retrieved books.
+   * @param amount of books to retrieve
+   * @return a list of the retrieved books
    */
   public List<Book> findModifiedBooks(int amount) {
     return bookDao.findModifiedBooks(amount);
   }
 
   /**
-   * Method that finds the shelfId of a book in the database.
+   * Finds the shelfId of a book in the database.
    *
    * @param id id of the book
    * @return the shelfId of the book
@@ -286,17 +279,17 @@ public class BookModel {
   }
 
   /**
-   * Find the shelf name of a book in the database.
+   * Finds the shelf name of a book in the database.
    *
-   * @param id of the book.
-   * @return the shelf name of the book.
+   * @param id of the book
+   * @return the shelf name of the book
    */
   public String findShelfNameByBook(Long id) {
     return bookDao.findShelfNameByBook(id);
   }
 
   /**
-   * Method to count all Notes for a specific Book.
+   * Counts all Notes for a specific Book.
    *
    * @param bookId current bookId
    * @return count of all notes that belong to the current book
