@@ -42,6 +42,11 @@ public class ShelfDao {
     this.dbHelper = dbHelper;
   }
 
+  /**
+   * Save a shelf in the database.
+   *
+   * @param shelf that should be saved.
+   */
   public void create(Shelf shelf) {
     Long currentTime = new Date().getTime();
 

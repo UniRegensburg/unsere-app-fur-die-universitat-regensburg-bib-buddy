@@ -166,12 +166,12 @@ public class BookNotesFragment extends BackStackFragment
 
   private void handleSortNote() {
     SortDialog sortDialog = new SortDialog(context, sortTypeLut,
-                                           newSortCriteria -> {
-                                             sortTypeLut = newSortCriteria;
-                                             ((MainActivity) requireActivity())
+        newSortCriteria -> {
+        sortTypeLut = newSortCriteria;
+        ((MainActivity) requireActivity())
                                                  .setSortTypeLut(newSortCriteria);
-                                             sortNoteList();
-                                           });
+        sortNoteList();
+        });
 
     sortDialog.show();
   }
@@ -188,8 +188,8 @@ public class BookNotesFragment extends BackStackFragment
       alertDialogEmptyLib.setMessage(R.string.empty_note_list_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-                                            (dialog, which) -> {
-                                            });
+        (dialog, which) -> {
+        });
 
       alertDialogEmptyLib.create().show();
 
@@ -262,11 +262,11 @@ public class BookNotesFragment extends BackStackFragment
     reqAlertDialog.setMessage(R.string.record_permission_alert_msg);
 
     reqAlertDialog.setPositiveButton(R.string.ok,
-                                     (dialog, which) -> requestPermissionLauncher.launch(
+      (dialog, which) -> requestPermissionLauncher.launch(
                                          Manifest.permission.RECORD_AUDIO));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
-                                     (dialog, which) -> dialog.dismiss());
+      (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
   }

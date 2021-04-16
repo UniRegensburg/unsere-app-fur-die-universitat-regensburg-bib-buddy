@@ -66,6 +66,11 @@ public class AuthorDao {
     this.dbHelper = dbHelper;
   }
 
+  /**
+   * Save an author object to database.
+   *
+   * @param author object that should be saved.
+   */
   public void create(Author author) {
     Long currentTime = new Date().getTime();
 

@@ -158,11 +158,11 @@ public class NotesFragment extends BackStackFragment implements SwipeLeftRightCa
   private void sortNotes() {
     MainActivity mainActivity = (MainActivity) requireActivity();
     SortDialog sortDialog = new SortDialog(mainActivity, sortTypeLut,
-                                           newSortCriteria -> {
-                                             sortTypeLut = newSortCriteria;
-                                             mainActivity.setSortTypeLut(newSortCriteria);
-                                             sortNoteList();
-                                           });
+        newSortCriteria -> {
+          sortTypeLut = newSortCriteria;
+          mainActivity.setSortTypeLut(newSortCriteria);
+          sortNoteList();
+        });
     sortDialog.show();
   }
 
