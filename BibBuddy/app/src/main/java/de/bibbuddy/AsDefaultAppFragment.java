@@ -221,12 +221,12 @@ public class AsDefaultAppFragment extends BackStackFragment
 
   private void handleSortShelf() {
     SortDialog sortDialog = new SortDialog(context, sortTypeLut,
-                                           newSortCriteria -> {
-                                             sortTypeLut = newSortCriteria;
-                                             ((MainActivity) requireActivity())
-                                                 .setSortTypeLut(newSortCriteria);
-                                             sortLibraryList();
-                                           });
+        newSortCriteria -> {
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
+          sortLibraryList();
+        });
 
     sortDialog.show();
   }

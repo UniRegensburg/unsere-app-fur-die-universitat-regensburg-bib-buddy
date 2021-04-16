@@ -56,6 +56,11 @@ public class NoteDao {
     this.dbHelper = dbHelper;
   }
 
+  /*
+  * Creates a new Note.
+  *
+  * @param note the note that should be created
+  * */
   public void create(Note note) {
     Long currentTime = new Date().getTime();
     try (SQLiteDatabase db = dbHelper.getWritableDatabase()) {

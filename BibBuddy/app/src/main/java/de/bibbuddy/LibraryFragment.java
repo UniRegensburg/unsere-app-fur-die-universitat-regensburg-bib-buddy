@@ -70,8 +70,8 @@ public class LibraryFragment extends BackStackFragment
       alertDialogEmptyLib.setMessage(R.string.empty_library_description);
 
       alertDialogEmptyLib.setPositiveButton(R.string.ok,
-                                            (dialog, which) -> {
-                                            });
+        (dialog, which) -> {
+      });
 
       alertDialogEmptyLib.create().show();
 
@@ -223,12 +223,12 @@ public class LibraryFragment extends BackStackFragment
 
   private void handleSortShelf() {
     SortDialog sortDialog = new SortDialog(context, sortTypeLut,
-                                           newSortCriteria -> {
-                                             sortTypeLut = newSortCriteria;
-                                             ((MainActivity) requireActivity())
-                                                 .setSortTypeLut(newSortCriteria);
-                                             sortLibraryList();
-                                           });
+        newSortCriteria -> {
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
+          sortLibraryList();
+        });
     sortDialog.show();
   }
 

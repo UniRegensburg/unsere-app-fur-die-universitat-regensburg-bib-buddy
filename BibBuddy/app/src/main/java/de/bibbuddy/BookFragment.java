@@ -253,12 +253,12 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private void handleSortBook() {
     SortDialog sortDialog = new SortDialog(context, sortTypeLut,
-                                           newSortCriteria -> {
-                                             sortTypeLut = newSortCriteria;
-                                             ((MainActivity) requireActivity())
-                                                 .setSortTypeLut(newSortCriteria);
-                                             sortBookList();
-                                           });
+        newSortCriteria -> {
+          sortTypeLut = newSortCriteria;
+          ((MainActivity) requireActivity())
+          .setSortTypeLut(newSortCriteria);
+          sortBookList();
+        });
 
     sortDialog.show();
   }
@@ -276,8 +276,8 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
       alertDialogEmptyShelf.setMessage(R.string.empty_shelf_description);
 
       alertDialogEmptyShelf.setPositiveButton(R.string.ok,
-                                              (dialog, which) -> {
-                                              });
+        (dialog, which) -> {
+      });
 
       alertDialogEmptyShelf.create().show();
     } else {
@@ -351,10 +351,10 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     nonBibFileAlertDialog.setMessage(R.string.import_non_bib_file_description);
 
     nonBibFileAlertDialog.setPositiveButton(R.string.ok,
-                                            (dialog, which) -> filePicker());
+        (dialog, which) -> filePicker());
 
     nonBibFileAlertDialog.setNegativeButton(R.string.cancel,
-                                            (dialog, which) -> dialog.dismiss());
+        (dialog, which) -> dialog.dismiss());
 
     nonBibFileAlertDialog.create().show();
   }
@@ -398,7 +398,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
     reqAlertDialog
         .setPositiveButton(R.string.ok,
-                           (dialog, which) -> ActivityCompat
+          (dialog, which) -> ActivityCompat
                                .requestPermissions(requireActivity(),
                                                    new String[] {
                                                        Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -406,7 +406,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
                                ));
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
-                                     (dialog, which) -> dialog.dismiss());
+        (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
   }

@@ -126,7 +126,7 @@ public class BookFormFragment extends BackStackFragment {
 
   private void switchToAuthorFragment() {
     AuthorFragment authorFragment = new AuthorFragment(authorList,
-                                                       authorList -> this.authorList = authorList);
+        authorList -> this.authorList = authorList);
 
     showFragment(authorFragment, LibraryKeys.FRAGMENT_AUTHOR);
   }
