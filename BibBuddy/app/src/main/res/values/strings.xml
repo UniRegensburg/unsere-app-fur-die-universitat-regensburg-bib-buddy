@@ -81,6 +81,10 @@
     <string name="add_book_manually_text">Selbst hinzufügen</string>
     <string name="add_book_online_text">ISBN eingeben</string>
     <string name="added_book">Ok, wir haben das Buch hinzugefügt.</string>
+    <string name="camera_permission_needed">Erlaubnis für Zugriff auf Kamera erforderlich</string>
+    <string name="camera_permission_alert_msg">
+        Hey, wir brauchen zuerst Zugriff auf die Kamera, um die ISBN scannen zu können - bitte erlauben und nochmal versuchen!
+    </string>
 
     <!-- Book | Change book -->
     <string name="change_book">Buchdaten ändern</string>
@@ -192,7 +196,7 @@
     <string name="storage_permission_alert_msg">
         Hey, wir brauchen Zugriff, um Dateien zu speichern - bitte erlauben und nochmal versuchen!
     </string>
-    <string name="storage_permission_denied">Zugriff verweigert :(</string>
+    <string name="permission_denied">Zugriff verweigert :(</string>
 
     <!-- Export | Menu -->
 

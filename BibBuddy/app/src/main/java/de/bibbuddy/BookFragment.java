@@ -49,13 +49,13 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
   private final List<BookItem> selectedBookItems = new ArrayList<>();
 
-  private final ActivityResultLauncher<String> requestPermissionLauncher =
+  private final ActivityResultLauncher<String> requestStoragePermissionLauncher =
       registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
         if (isGranted) {
           filePicker();
         } else {
-          Toast.makeText(requireContext(), R.string.storage_permission_denied, Toast.LENGTH_SHORT)
-              .show();
+          Toast.makeText(requireContext(),
+                  R.string.permission_denied, Toast.LENGTH_SHORT).show();
         }
       });
 
@@ -79,6 +79,16 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
                   }
                 }
               }
+            }
+          });
+
+  private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
+          registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+              handleAddBookBarcodeFragment();
+            } else {
+              Toast.makeText(requireContext(),
+                      R.string.permission_denied, Toast.LENGTH_SHORT).show();
             }
           });
 
@@ -222,7 +232,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     }
 
     if (notesNumber == 1) {
-      return getString(R.string.one) + getString(R.string.note);
+      return " " + getString(R.string.one) + " " + getString(R.string.note);
     }
 
     return " " + notesNumber + " " + getString(R.string.notes);
@@ -359,16 +369,28 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
     } else if (shouldShowRequestPermissionRationale(
         Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-      showRequestPermissionDialog();
+      showRequestStoragePermissionDialog();
 
     } else {
 
-      requestPermissionLauncher.launch(
+      requestStoragePermissionLauncher.launch(
           Manifest.permission.READ_EXTERNAL_STORAGE);
     }
   }
 
-  private void showRequestPermissionDialog() {
+  private void checkCameraPermission() {
+    if (ContextCompat.checkSelfPermission(
+            context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+      handleAddBookBarcodeFragment();
+    } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+      showRequestCameraPermissionDialog();
+    } else {
+      requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+    }
+  }
+
+  private void showRequestStoragePermissionDialog() {
     AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(requireContext());
 
     reqAlertDialog.setTitle(R.string.storage_permission_needed);
@@ -385,6 +407,21 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
     reqAlertDialog.setNegativeButton(R.string.cancel,
                                      (dialog, which) -> dialog.dismiss());
+
+    reqAlertDialog.create().show();
+  }
+
+  private void showRequestCameraPermissionDialog() {
+    AlertDialog.Builder reqAlertDialog = new AlertDialog.Builder(context);
+    reqAlertDialog.setTitle(R.string.camera_permission_needed);
+    reqAlertDialog.setMessage(R.string.camera_permission_alert_msg);
+
+    reqAlertDialog.setPositiveButton(R.string.ok,
+            (dialog, which) -> requestCameraPermissionLauncher.launch(
+                    Manifest.permission.CAMERA));
+
+    reqAlertDialog.setNegativeButton(R.string.cancel,
+            (dialog, which) -> dialog.dismiss());
 
     reqAlertDialog.create().show();
   }
@@ -441,7 +478,7 @@ public class BookFragment extends BackStackFragment implements BookRecyclerViewA
 
     popupMenu.setOnMenuItemClickListener(item -> {
       if (item.getItemId() == R.id.add_book_scan) {
-        handleAddBookBarcodeFragment();
+        checkCameraPermission();
       } else if (item.getItemId() == R.id.add_book_online) {
         handleAddBookOnline();
       } else if (item.getItemId() == R.id.add_book_manually) {

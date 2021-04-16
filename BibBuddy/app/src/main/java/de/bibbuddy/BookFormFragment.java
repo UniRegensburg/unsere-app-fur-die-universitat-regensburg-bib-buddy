@@ -146,13 +146,13 @@ public class BookFormFragment extends BackStackFragment {
       return;
     }
 
+    closeFragment();
+
     if (book.getId() == 0) {
       listener.onBookAdded(book, authorList);
     } else {
       listener.onBookChanged(book, authorList);
     }
-
-    closeFragment();
   }
 
   private void handleIsbn() {

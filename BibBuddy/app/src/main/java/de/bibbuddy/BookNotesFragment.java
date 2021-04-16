@@ -372,8 +372,7 @@ public class BookNotesFragment extends BackStackFragment
     view = inflater.inflate(R.layout.fragment_book_notes, container, false);
     context = view.getContext();
 
-    Bundle bundle = this.getArguments();
-    assert bundle != null;
+    Bundle bundle = requireArguments();
     bookId = bundle.getLong(LibraryKeys.BOOK_ID);
 
     setupMainActivity(bundle);

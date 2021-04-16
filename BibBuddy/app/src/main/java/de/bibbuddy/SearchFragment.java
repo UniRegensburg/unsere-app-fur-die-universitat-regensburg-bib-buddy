@@ -235,7 +235,6 @@ public class SearchFragment extends BackStackFragment
 
     Bundle bundle = new Bundle();
     bundle.putLong(LibraryKeys.BOOK_ID, searchModel.getBookIdByNoteId(noteId));
-    bundle.putString(LibraryKeys.BOOK_TITLE, searchModel.getBookTitleByBookId(noteId));
     bundle.putLong(LibraryKeys.NOTE_ID, noteId);
 
     return bundle;
@@ -297,9 +296,6 @@ public class SearchFragment extends BackStackFragment
   @Override
   public void onItemClicked(int position) {
     SearchItem searchItem = searchModel.getSelectedSearchItem(position);
-
-    ((MainActivity) requireActivity()).updateHeaderFragment(searchItem.getName());
-
     SearchTypeLut searchTypeLut = searchItem.getItemType();
 
     switch (searchTypeLut) {

@@ -143,10 +143,6 @@ public class SearchModel {
     return bookDao.findShelfIdByBook(bookId);
   }
 
-  public String getBookTitleByBookId(Long noteId) {
-    return bookDao.findBookTitleByBookId(noteId);
-  }
-
   public String getShelfNameByBook(Long searchItemId) {
     return bookDao.findShelfNameByBook(searchItemId);
   }

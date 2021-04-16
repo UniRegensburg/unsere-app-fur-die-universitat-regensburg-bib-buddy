@@ -1,6 +1,7 @@
 package de.bibbuddy;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,18 +32,11 @@ public class BookBarcodeScannerFragment extends BackStackFragment
     implements BookFormFragment.ChangeBookListener {
 
   private static final String TAG = BookBarcodeScannerFragment.class.getSimpleName();
-  private static final int REQUEST_CAMERA_PERMISSION = 201;
 
   private SurfaceView surfaceView;
   private CameraSource cameraSource;
   private BarcodeDetector barcodeDetector;
   private Long shelfId;
-
-  @Override
-  protected void closeFragment() {
-    barcodeDetector.release();
-    super.closeFragment();
-  }
 
   @Nullable
   @Override
@@ -53,8 +47,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
 
     surfaceView = view.findViewById(R.id.surface_view);
 
-    Bundle bundle = getArguments();
-    assert bundle != null;
+    Bundle bundle = requireArguments();
     shelfId = bundle.getLong(LibraryKeys.SHELF_ID);
 
     setupDetectorsAndSources(view);
@@ -92,8 +85,7 @@ public class BookBarcodeScannerFragment extends BackStackFragment
               == PackageManager.PERMISSION_GRANTED) {
             cameraSource.start(surfaceView.getHolder());
           } else {
-            ActivityCompat.requestPermissions(mainActivity, new
-                String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            closeFragment();
           }
         } catch (IOException ex) {
           Log.e(TAG, ex.toString(), ex);
@@ -130,7 +122,6 @@ public class BookBarcodeScannerFragment extends BackStackFragment
       }
     });
   }
-
 
   private void handleIsbnInput(String isbn) {
     String cleanIsbn = isbn.replaceAll("\\s", "");
