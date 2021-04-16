@@ -3,7 +3,7 @@
 Bib Buddy offers a platform for concentrated literary work. For that, we create an open atmosphere for your thoughts and ideas during research. Our service makes your literary work as intuitive as never before!
 
 ## Watch the video!
-[![Watch the video](https://user-images.githubusercontent.com/44579990/115031462-78aa3300-9ec8-11eb-8a00-1525ddf38488.png)](https://github.com/UniRegensburg/unsere-app-fur-die-universitat-regensburg-bib-buddy/blob/app-video/ScreenshotsWiki/VideoBenutzung.mp4?raw=true)
+[![Watch the video](https://user-images.githubusercontent.com/44579990/115031462-78aa3300-9ec8-11eb-8a00-1525ddf38488.png)](ScreenshotsWiki/VideoBenutzung.mp4?raw=true)
 
 ## Functionality
 ### Your library
